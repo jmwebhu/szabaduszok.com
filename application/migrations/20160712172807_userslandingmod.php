@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class users extends Migration
+class userslandingmod extends Migration
 {
   public function up()
   {

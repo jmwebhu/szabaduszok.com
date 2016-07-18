@@ -12,16 +12,19 @@ class landing_pages extends Migration
           'landing_page_id' => ['integer', 'unsigned' => true],
           'type' => ['integer', 'unsigned' => true],
           'counter' => ['integer', 'unsigned' => true],
+		  'name' => ['string[100]', 'default' => null]
        ),
        'landing_page_id'
     );
-
-    $this->add_index('landing_pages', 'name_index', ['name'], 'normal');
+	
+	$this->add_index('landing_pages', 'name_index', ['name'], 'normal');
+   
   }
 
   public function down()
   {
-    $this->drop_table('landing_pages');
+	  $this->remove_index('landing_pages', 'name_index');
+		$this->drop_table('landing_pages');
 
     // $this->remove_column('table_name', 'column_name');
   }
