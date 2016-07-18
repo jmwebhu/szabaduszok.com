@@ -1,0 +1,203 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+<!-- bloc-16 -->
+<div class="bloc tc-black bgc-anti-flash-white l-bloc" id="bloc-16">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1 class="mg-md text-center">
+					Szabadúszók
+				</h1>
+				<div class="panel">
+					<div class="panel-heading">
+						<h2 class="mg-clear tc-black">
+							Szabadúszó kereső
+						</h2>
+					</div>
+					<div class="panel-body">
+						<form id="form_4" novalidate>
+							<ul class="nav nav-tabs">
+								<li data-content="complex" class="active"><span class="ion ion-settings icon-dark-gray"></span>Részletes</li>
+								<li data-content="simple"><span class="ion ion-search icon-dark-gray"></span>Egyszerű</li>								
+							</ul>
+							
+							<div class="tab-content">
+								<div id="complex" class="tab-pane fade in active">
+								
+									<input type="hidden" name="complex" value="1">
+									
+									<p class="search-form-paragraph">
+										Mutasd azokat a Szabadúszókat, akik az alábbi <span class="bold">iparágba</span> dolgoznak:
+									</p>
+									<select class="form-control" name="iparag" id="iparag">
+										<option value="1" >Bármelyikbe</option>
+										<option value="2" >Informatika</option>
+										<option value="3" >Marketing</option>
+									</select>
+									<p class="search-form-paragraph">
+										ÉS a következő <span class="bold">szakterülethez</span> értenek:
+									</p>
+									<select class="form-control" name="szakkterulet" id="szakkterulet">
+										<option value="1" >Bármelyikhez</option>
+										<option value="2" >Webfejlesztés</option>
+										<option value="3" >Online marketing</option>
+									</select>
+									<p class="search-form-paragraph">
+										ÉS az alábbi <span class="bold">képességek:</span>
+									</p>
+									<div class="form-group">
+										<input class="form-control" id="search_skills" placeholder="Kezdj el gépelni" />
+									</div>
+									<select class="form-control" name="skill-relation" id="skill-relation">
+										<option value="1" >Bármelyikével</option>
+										<option value="2" >Mindegyikével</option>
+									</select>
+									<p class="search-form-paragraph">
+										rendelkeznek.
+									</p>
+								</div>
+								
+								<div id="simple" class="tab-pane fade">
+									<input type="hidden" name="simple" value="1">
+									<p class="search-form-paragraph">
+										Mutasd azokat a Szabadúszókat, akiknek a profiljában megtalálható az alábbi <span class="bold">kifejezés</span>:
+									</p>
+									
+									<div class="form-group">
+										<input class="form-control" id="search-term" placeholder="Keresett kifejezés">
+									</div>
+								</div>
+							</div>
+									
+							<button class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
+								<span class="ion ion-search icon-spacer icon-white"></span>Mehet
+							</button>
+						</form>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 text-center" id="list-results">
+						<p class=" project-count-paragraph">
+							Összes Szabadúszó: <strong>21</strong>
+						</p>
+						<p class=" project-count-paragraph">
+							Keresési találatok száma: <strong>9</strong>
+						</p>
+					</div>					
+				</div>
+				
+				<div class="row">
+					<nav class="col-sm-12 text-center" id="pager">					
+						  <ul class="pagination">
+						    <li>
+						      <a href="#" aria-label="Előző">
+						        <span aria-hidden="true">&laquo;</span>
+						      </a>
+						    </li>
+						    <li><a href="#">1</a></li>
+						    <li><a href="#">2</a></li>
+						    <li><a href="#">3</a></li>
+						    <li><a href="#">4</a></li>
+						    <li><a href="#">5</a></li>
+						    <li>
+						      <a href="#" aria-label="Következő">
+						        <span aria-hidden="true">&raquo;</span>
+						      </a>
+						    </li>
+						  </ul>																	
+					</nav>
+				</div>
+				<div class="row">
+					<div class="col-sm-12 list">
+						<div class="row">
+							<div class="col-sm-12 list">
+								<div class="row">
+									<div class="col-sm-12 list">
+									
+										<a href="{{ ROOT }}szabaduszo" class="anchor-no-effect">
+											<div class="row project-row bgc-white">
+												<div class="col-sm-2">
+													<div class="text-center">
+														<span class="ion ion-person icon-xl freelancer-list-sign hidden-xs"></span>
+													</div>
+												</div>											
+												<div class="col-sm-10 list-details">
+													<span class="ion ion-person pull-left icon-sm project-sign icon-lapis-lazuli"></span>
+													<h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli">
+														Kis Pista
+													</h3>
+													<div class="divider-h project-title-divider">
+														<span class="divider"></span>
+													</div><span class="ion ion-briefcase pull-left icon-sm project-profession-sign icon-dark-gray"></span>
+													<h4 class="mg-md project-profession">
+														Informatika
+													</h4><span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+													<h4 class="mg-sm text-justify project-profession">
+														Webfejlesztés
+													</h4>
+													<p class="text-justify  project-short-description mg-sm">
+														Új számlázó rendszer fejlesztésére keresünk olyan szabadúszó backend fejlesztőt, aki hosszú távon tud projekt alapú munkákat vállalni. Blah balh blah Blah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blah
+													</p>
+													<p class=" text-left text-right project-share-date">
+														Csatlakozott: 2016-05-22
+													</p><span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray"></span>
+													<p class="project-skill-tag ">
+														php
+													</p>
+													<p class="project-skill-tag ">
+														mysql
+													</p>
+												</div>											
+											</div>
+										</a>
+										
+										<a href="{{ ROOT }}szabaduszo" class="anchor-no-effect">
+											<div class="row project-row bgc-white">
+												<div class="col-sm-2">
+													<div class="text-center">
+														<span class="ion ion-person icon-xl freelancer-list-sign hidden-xs"></span>
+													</div>
+												</div>											
+												<div class="col-sm-10 list-details">
+													<span class="ion ion-person pull-left icon-sm project-sign icon-lapis-lazuli"></span>
+													<h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli">
+														Kis Pista
+													</h3>
+													<div class="divider-h project-title-divider">
+														<span class="divider"></span>
+													</div><span class="ion ion-briefcase pull-left icon-sm project-profession-sign icon-dark-gray"></span>
+													<h4 class="mg-md project-profession">
+														Informatika
+													</h4><span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+													<h4 class="mg-sm text-justify project-profession">
+														Webfejlesztés
+													</h4>
+													<p class="text-justify  project-short-description mg-sm">
+														Új számlázó rendszer fejlesztésére keresünk olyan szabadúszó backend fejlesztőt, aki hosszú távon tud projekt alapú munkákat vállalni. Blah balh blah Blah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blahBlah balh blah
+													</p>
+													<p class=" text-left text-right project-share-date">
+														Csatlakozott: 2016-05-22
+													</p><span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray"></span>
+													<p class="project-skill-tag ">
+														php
+													</p>
+													<p class="project-skill-tag ">
+														mysql
+													</p>
+												</div>											
+											</div>
+										</a>
+																				
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-16 END -->
+{% endblock content %}

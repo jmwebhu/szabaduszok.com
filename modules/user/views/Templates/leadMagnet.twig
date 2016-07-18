@@ -1,0 +1,15 @@
+{% extends "Templates/emailDefault.twig" %}
+
+{% block content %}
+
+<h1>Hello!</h1>
+
+<p>Joó Martin vagyok, a Szabaduszok.com -tól. Köszönjük, hogy meglátogattad platformunkat. Ahogy ígértük, most megkapod tőlünk a(z)</p>
+
+<h2>{{ leadmagnet.name }}</h2>
+
+<p>című tanulmányunkat! A letöltéshez, kattints az alábbi gombra:</p>
+
+<a class="cta text-center center" target="_blank" href="{{ leadmagnet.getUrl() }}">Letöltés</a>
+
+{% endblock content %}

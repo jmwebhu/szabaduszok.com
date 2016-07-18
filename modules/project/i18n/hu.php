@@ -1,0 +1,51 @@
+<?php
+
+return [
+    'projectSearchPlaceholder'          => 'Projektek keresése',
+    'search'                            => 'Keresés',
+    'pr_name'                           => 'Mi legyen a projekt neve?',
+    'pr_necessary_activity'             => 'Milyen foglalkozású szabadúszót keresel?',
+    'pr_short_description'              => 'Hogy írnád körül röviden a projektet?',
+    'pr_long_description'               => 'Hogy írnád körül hosszabban a projektet?',
+    'pr_email'                          => 'Milyen e-mail címen jelentkezhetnek?',
+    'pr_phonenumber'                    => 'Milyen telefon számon jelentkezhetnek?',
+
+    'pr_short_description_form'         => 'Ez fog megjelenni a kezdőoldali listában. Legyen rövid és lényegre törő',
+    'pr_long_description_form'          => 'Ez fog megjelenni a projekt adatlapján. Leírhatod mik az elvárások stb',
+    'freelancerToFind'                  => 'Keresett szabadúszó',
+    'projectReadError'                  => 'Úgy tűnik ez a projekt már nem létezik',
+    'joinText'                          => 'Jelentkezz az alábbi elérhetőségek valamelyikén',
+    'joinTextEmail'                          => 'Jelentkezz az alábbi e-mail címen',
+    'nextToOriginalSite'                => 'Tovább az eredeti oldalra',
+    'projectExternalText'               => 'A projekt nem a szabaduszok.com -ról származik, így tehát nincs hirdető sem.',
+    'projectExternalNextText'           => 'A \'Tovább az eredeti oldalra\' linkre kattintva érhető el további információ',
+    'delete'                            => 'Törlöm',
+    'projectDeleteText'                 => 'Biztosan törölni akarod a projektet? A művelet vissza nem vonható!',
+    'projectDeleteTitle'                => 'Projekt törlése',
+    'myProjects'                        => 'Projektjeim',
+    'noProjects'                        => 'Sajnos még nincsenek saját projektjeid. A fejlécben található \'Új projekt\' gomb megnyomásával tudsz újat indítani ',
+
+    'newProjectEmailHeader'             => 'Kedves Szabadúszó!',
+    'newProjectEmailText'               => 'Örömmel értesítünk, hogy a szabaduszok.com platformon új projektet indítottak. Nézd meg most, hogy ne maradj le róla!',
+    'newProjectEmailProjectDetails'     => 'Megmutatjuk Neked a projekt adatait:',
+    'newProjectEmailCallToAction'       => 'Tekintsd meg az elérhetőségeket az alábbi linkre kattintva',
+    'interestedIn'                      => 'Érdekel!',
+
+    'countOfProjects'                   => 'Keresési találatok száma',
+    'countOfAllProjects'                => 'Összes projekt száma',
+    'countOfMyProjects'                 => 'Projektjeim száma',
+    'projectPayText'                    => 'Ahhoz, hogy a projekted látható legyen a Szabadúszók számára, ki kell fizetned, ez mindössze nettó',
+    'paymentSuccessText'                => 'Gratulálunk! Sikeresen kifezetted a projektet, így az már elérhető minden Szabadúszó számára. Hamarosan küldjük a számlát a profilodon megadott adatokkal.',
+    'unpaid'                            => 'Fizetetlen',
+    'projectPayMethodText'              => 'Két féle fizetési mód áll rendelkezésre',
+    'payPal'                            => 'PayPal',
+    'bankTransfer'                      => 'Banki átutalás',
+    'projectPayMethodPaypalText'        => 'Ha a PayPal -t választod, a projekt azonnal látható lesz, és 4 munkaórán belül a számlát is megkapod e-mailben. Nincs más dolgod, csak rákattintani a \'Buy Now\' gombra, a fizetés és jóváhagyás automatikusan történik.',
+    'projectPayMethodBankTransferText'  => 'Amennyiben a banki átutalást választod, a feldolgozás banktól függően 3-5 munkanapot is igényelhet. Amint beérkezik bankszámlánkra a pénz, a projekt 4 munkaórán belül látható lesz, és a számlát is megkapod e-mailben',
+    'bankTransferText'                  => 'Banki átutaláshoz az alábbi adatok szükségesek. Kérjük töltsd ki a közlemény rovatot is!',
+    'bankTransferNumber'                => 'Bankszámlaszám',
+    'bankTransferName'                  => 'Kedvezményezett neve',
+    'bankTransferBank'                  => 'Bank neve',
+    'bankTransferComment'               => 'Közlemény'
+
+];

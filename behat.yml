@@ -1,0 +1,13 @@
+context:
+    parameters:
+        base_url: "http://127.0.0.1/v21.szabaduszok.com"
+    paths:
+        features: features
+        bootstrap: features/bootstrap
+    extensions:
+        Behat\MinkExtension\Extension:
+            javascript_session: selenium2
+            goutte: ~
+            selenium2:
+                browser: chrome
+                capabilities: { "browserName": "chrome", "browser": "chrome", "version":  "*"}

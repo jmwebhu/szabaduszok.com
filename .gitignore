@@ -1,0 +1,12 @@
+application/cache
+application/logs
+vendor
+composer.lock
+docs
+nbproject
+web
+uploads/cv/*
+uploads/picture/*
+application/config/base.php
+.htaccess
+db

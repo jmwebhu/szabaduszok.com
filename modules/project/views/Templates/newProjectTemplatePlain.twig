@@ -1,0 +1,11 @@
+Hello {{ user.lastname }}!
+
+Van egy új projektünk számodra! A részleteket itt olvashatod:
+
+{{ project.name }}
+{% for skill in project.skills.find_all() %}
+{{ skill.name }}
+{% endfor %}													
+{{ project.short_description }}
+
+URL: {{ root }}szabaduszo-projekt/{{ project.slug }}

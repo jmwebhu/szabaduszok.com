@@ -1,0 +1,109 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+<div class="bloc tc-black bgc-white l-bloc" id="bloc-38">
+	<div class="container bloc-lg">		
+		<div class="row">
+			<div class="col-sm-12 howitworks text-justify">				
+				<h1 class="mg-md text-center tc-black">
+					Hogyan működik a Szabaduszok.com?
+				</h1>
+				
+				<p>A használathoz, mind Megbízóknak, mind Szabadúszóknak létre kell hozni egy profilt. A Megbízó létrehozza a Projektet, amire Szabadúszók jelentkezhetnek, vagy pedig a Megbízó fog keresni megfelelő embert a Szabadúszó listában. Ebből adódóan, minél jobb egy profil, annál nagyobb az esély a Projekt megszerzésére.</p>
+				
+				<h2>A platform főbb részei</h2>
+				<ul>
+					<li>Projekt indítás</li>
+					<li>Projektek böngészése</li>
+					<li>Szabaúdszók böngészése</li>
+				</ul>
+				
+				<h3>Projekt indítás</h3>
+				<p>Megbízóknak elérhető a menüben az 'Új projekt' menüpont, ahol lehetőség van új Projektet létrehozni. Ha <span class="bold">publikus</span> megbízást akarsz közzé tenni, ez a legkézenfekvőbb megoldás. A folyamat a következő:</p>
+				<ul>
+					<li>Megadod az <span class="bold">adatokat</span></li>
+					<li><span class="bold">Értesítjük</span> az összes olyan Szabadúszót, akit érdekel a Projekt</li>
+					<li><span class="bold">Kiválasztod</span> a legjobb jelentkezőt</li>
+				</ul>				
+				
+				<p>Ha esetleg <span class="bold">privát</span> Projekted van, amit nem szeretnél megosztani, arra is van megoldás. Ebben az esetben ne indíts új Projektet, hanem:</p>
+				<ul>
+					<li>Nézd meg a <a href="{{ ROOT }}szabaduszok">Szabadúszók</a> oldalt</li>
+					<li>Használd a keresőt, válaszd ki a legjobb embereket, és keresd fel őket</li>
+				</ul>				
+				
+				<p>Így csak azokkal kell megosztanod a részleteket, akik részt vesznek a megvalósításban.</p>
+				
+				<h3>Projektek böngészése</h3>
+				<p><a href="{{ ROOT }}szabaduszo-projektek">Ezen az oldalon</a> látható az összes rendszerben lévő projekt. Itt tudnak a Szabadúszók böngészni, és jelentkezni a Projektekre.</p>
+				
+				<h3>Szabadúszók böngészése</h3>
+				<p><a href="{{ ROOT }}szabaduszok">Ezen az oldalon</a> pedig az összes rendszerben lévő Szabaúdszó látható. Itt tudnak a Megbízók böngészni, és megkeresni Szabadúszókat. Minnél jobb egy profil, annál többen fognak kattintani. A Szabadúszók értékelés szerint vannak rendezve, tehát a listában előbb fognak megjelenni azok a felhasználók, akikről jobb a többi felhasználó véleménye.</p>
+				
+				<h2>Iparágak, szakterületek, képességek</h2>
+				<p>Minden Szabadúszó, és Projekt profil rendelkezik a fent említett három dologgal. Ez azért fontos, mert így lehet a legjobb találatokat elérni.</p>
+				
+				<p>Az <span class="bold">iparág</span> a legtágabb kategória, ilyenek lehetnek például:</p>
+				<ul>
+					<li>Informatika</li>
+					<li>Marketing</li>
+				</ul>
+				
+				<p>A <span class="bold">szakterület</span> egyel szűkebb kategória. Itt tehát az iparágon belüli konkrétabb, kézzel foghatóbb területre, szakértelemre gondolunk, például:</p>
+				<ul>
+					<li>Webfejlesztés</li>
+					<li>Online marketing</li>
+					<li>SEO</li>
+					<li>Tanácsadás</li>
+				</ul>
+				
+				<p>A fenti két dolog lényege, hogy logikailag kategorizáljuk, mind a Szabadúszókat, mind a Projekteket.</p>
+				
+				<p>A <span class="bold">képesség</span> pedig a legszűkebb, legkonkrétabb kategória. Itt tehát a szakterületen belüli konkrét, egyértelmű képességre, kompetenciára gondolunk:</p>
+				<ul>
+					<li>PHP, MySQL, Javascript</li>
+					<li>Facebook, AdWords, AdRoll, remarketing</li>
+					<li>Szöveg írás, pr, kreatív</li>
+					<li>Agilis, scrum</li>
+				</ul>
+				
+				<p>Az iparágak, szakterületek, képességek a következő aloldalakon kapnak fontos szerepet:</p>
+				<ul>
+					<li>Profil létrehozása</li>
+					<li>Projekt indítása</li>
+					<li>Projektek keresése</li>
+					<li>Szabadúszók keresése</li>
+					<li>Projekt értesítő beállítása</li>
+				</ul>
+				
+				<p>Keresésnél, és értesítőnél meg lehet adni a képességek közti kapcsolatot. Ez lehet 'Bármelyik', 'Mindegyik'. Ez azt jelenti, hogy bármelyik esetén legalább egy, egyező képességet keres a rendszer, mindegyik esetén, pedig az összes megadott képességnek egyezni kell.</p>
+				
+				<div class="col-sm-12 text-center img-cont">
+				  	<a href="{{ ROOT }}media/img/howitworks/szabaduszok-iparagak.png"><img src="{{ ROOT }}media/img/howitworks/szabaduszok-iparagak.png" alt="Szabaduszok.com iparágak, szakterületek, képességek" class="img-rounded img-responsive"></a>
+				  	<p>Kattints a képre a teljes mérethez!</p>
+				</div>								
+				
+				<h2>Értékelés</h2>
+				<p>Minden felhasználót lehet értékelni a platformon. Ennek lényege, hogy javítsuk / megkönnyítsük a kiválasztás folyamatát. Szabadúszót csak Megbízó, utóbbit pedig csak Szabadúszó értékelhet. Azért, hogy ne lehessen a konkurencia értékelését manipulálni.</p>
+				<p><span class="bold">A Szabadúszó listában, minden felhasználó értékelés szerint csökkenő sorrendben jelenik meg!</span> Vagyis minnél több értékelést kapott egy profil, annál nagyobb esélye lesz, hogy megtalálják a leendő Partnerek.</p>
+				
+				<div class="col-sm-12 text-center img-cont">
+					<a href="{{ ROOT }}media/img/howitworks/szabaduszok-ertekeles.png"><img src="{{ ROOT }}media/img/howitworks/szabaduszok-ertekeles.png" alt="Szabaduszok.com értékelés" class="img-rounded"></a>
+					<p>Kattints a képre a teljes mérethez!</p>
+				</div>		
+				
+				<h2>Projekt értesítő</h2>
+				<p>Szabadúszó profil oldalon be lehet állítani, hogy milyen Projektekről szeretnél értesítést kapni. Egyszerűen meg kell adni azokat az iparágakat, szakterületek, képességeket, amikre kíváncsi vagy, és mi <span class="bold">értesítünk Téged minden fontos, új Projektről.</span> Az értesítőt, regisztráció után kitöltjük az ott beálított adatokkal. Ezt bármikor lehet módosítani.</p>			
+				
+				<div class="col-sm-12 text-center img-cont">
+					<a href="{{ ROOT }}media/img/howitworks/szabaduszok-projekt-ertesito.png"><img src="{{ ROOT }}media/img/howitworks/szabaduszok-projekt-ertesito.png" alt="Szabaduszok.com értékelés" class="img-rounded img-responsive"></a>
+					<p>Kattints a képre a teljes mérethez!</p>
+				</div>
+				
+				<h2>Továbbra is kérdésed van?</h2>
+				<a class="text-center" href="{{ ROOT }}szabaduszok-irj-nekunk">Írj nekünk!</a>			
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

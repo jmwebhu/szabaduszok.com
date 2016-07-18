@@ -1,0 +1,158 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+
+    
+<!-- bloc-0 -->
+<div class="bloc bloc-fill-screen bgc-outer-space bg-szabaduszok-hero-48 d-bloc" id="bloc-0">
+	{% include 'Templates/header.twig' %}
+	<div class="container" id="hero">
+		<input type="hidden" name="landing-page" value="{{ landingPage }}">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1 class="text-center mountain-hero-text tc-white">
+					A magyar freelancer platform
+				</h1>
+				<h3 class="text-center mg-lg mountain-hero-text-sub animDelay06, .animDelay04-hvr tc-white">
+					Szabadúszók és Megbízók egy helyen. Hogy az ötlet <span class="bold">valóra</span> váljon
+				</h3>	
+			<div class="text-center">
+					<a href="{{ ROOT }}erdekel" class="btn btn-xl animDelay1 erdekel-cta btn-lime-green">Érdekel</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container fill-bloc-bottom-edge">
+		<div class="row">
+			<div class="col-sm-12">
+				<a id="scroll-hero" class="blocs-hero-btn-dwn" href="#"><span class="fa fa-chevron-down"></span></a>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-0 END -->
+
+<!-- bloc-1 -->
+<div class="bloc tc-black bgc-white" id="bloc-1">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-12">
+				<h2 class="mg-md text-center  tc-black">
+					Mi a platform célja?
+				</h2>
+				<h3 class="mg-md tc-black text-center">
+					Sikeresen megváltoztatni a magyar Szabadúszók, és Megbízók életét
+				</h3>
+				<p class="text-justify">
+					Létrehozni egy olyan platformot, ahol magyar Szabadúszók, és Megbízók, Ötlet gazdák alkotnak egy nagy közösséget. Ahol Felhasználók ezrei, Projektek százai vannak jelen, és bárki, akinek szakértelemre, külső segítségre van szüksége, itt hirdeti meg az adott Projektet. A Szabadúszók pedig kedvükre válogathatnak jobbnál jobb munkák között, illetve hirdethetik magukat a Szabadúszó listában.
+				</p>				
+				<p class="text-justify">
+					Ha Szabadúszó vagy, Projekteket tudsz keresni, és hirdetni magad a Megbízók számára.			
+					Ha Projekted, vagy Projekt ötleted van, itt vonhatsz be külső segítséget, szakértelmet a megvalósításhoz. Megbízhatsz Szabadúszókat.
+				</p>
+				<p class="text-center bold">
+					Sikeresen forradalmasítjuk a magyar piacot, és megváltoztatjuk a magyar Szabadúszók, Megbízók életét.
+				</p>
+				<p class="text-center">Ha kérdésed van, olvasd el a <a href="{{ ROOT }}szabaduszok-hogyan-mukodik">Hogyan működik?</a> oldalt, vagy <a href="{{ ROOT }}szabaduszok-irj-nekunk">Írj nekünk!</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-1 END -->
+
+<!-- bloc-2 -->
+<div class="bloc bgc-white l-bloc  tc-black" id="bloc-2">
+	<div class="container bloc-sm">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="text-center tc-black">
+					<span class="ion ion-person icon-round icon-md"></span>
+				</div>
+				<h3 class="text-center mg-md tc-black">
+					Szabadúszók
+				</h3>
+				<p class="text-center ">
+					{{ countOfFreelancers }}
+				</p>
+			</div>
+			<div class="col-sm-4">
+				<div class="text-center tc-black">
+					<span class="ion ion-person-stalker icon-round icon-md"></span>
+				</div>
+				<h3 class="text-center mg-md tc-black">
+					Megbízók
+				</h3>
+				<p class="text-center ">
+					{{ countOfProjectOwners }}
+				</p>
+			</div>
+			<div class="col-sm-4">
+				<div class="text-center">
+					<span class="ion ion-folder icon-round icon-md animated shake-hvr"></span>
+				</div>
+				<h3 class="text-center mg-md tc-black">
+					Projektek
+				</h3>
+				<p class="text-center ">
+					{{ countOfProjects }}
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-2 END -->
+
+<!-- ScrollToTop Button -->
+<a class="bloc-button btn btn-d scrollToTop" onclick="scrollToTarget('1')"><span class="fa fa-chevron-up"></span></a>
+<!-- ScrollToTop Button END-->
+
+{% include "Landingpages/index.twig" %}
+
+<!-- Footer - bloc-21 -->
+{#<div class="bloc l-bloc bgc-white" id="bloc-21">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-3">
+				<img src="img/ny-times.png" class="img-responsive" />
+			</div>
+			<div class="col-sm-3">
+				<img src="img/forbes.png" class="img-responsive" />
+			</div>
+			<div class="col-sm-3">
+				<img src="img/wired.png" class="img-responsive" />
+			</div>
+			<div class="col-sm-3">
+				<img src="img/guardian.png" class="img-responsive" />
+			</div>
+		</div>
+	</div>
+</div>#}
+<!-- Footer - bloc-21 END -->
+
+<!-- Footer - bloc-22 -->
+{#<div class="bloc bgc-white l-bloc" id="bloc-22">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-2 col-sm-offset-5 col-xs-6 col-xs-offset-3">
+				<img src="img/placeholder-user.png" class="img-responsive img-circle" />
+			</div>
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
+				<h3 class="statement-bloc-text">
+					"Eventually everything connects - people, ideas, objects. The quality of the connections is the key to quality per se."
+				</h3>
+				<p class="text-center">
+					<strong>Charles Eames</strong>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>#}
+<!-- Footer - bloc-22 END -->
+    
+
+</body>
+    
+<!-- Google Analytics -->
+ 
+<!-- Google Analytics END -->
+{% endblock content %}

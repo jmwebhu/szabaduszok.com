@@ -1,0 +1,184 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+<div class="bloc tc-black bgc-anti-flash-white l-bloc" id="bloc-13">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-12">
+				<form id="project-form" method="post" action="{{ formAction }}">
+					
+					<input type="hidden" value="{{ project.project_id }}" name="project_id">									
+				
+					<h1 class="mg-md text-center tc-black">
+						{{ pageTitle }}
+					</h1>
+					<span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="mg-clear tc-black">
+								Keresett Szabadúszó
+							</h3>
+						</div>
+						<div class="panel-body">
+							<span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Iparágak*
+								</label>
+								<select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
+								{% for industry in industries %}
+								<option value="{{ industry.industry_id }}" {% if project.has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
+								{% endfor %}
+								</select>
+							</div>							
+							<p class="text-justify">
+								Általános iparág, pl.: informatika
+							</p><span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Szakterületek*
+								</label>
+								<select id="professions" class="form-control" name="professions[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
+								{% for profession in project.professions.find_all() %}
+								<option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
+								{% endfor %}
+	 							</select>
+							</div>
+							<p class="text-justify">
+								Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés. Választhatsz meglévőt, vagy hozhatsz létre újat.
+							</p><span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Szükséges képességek
+								</label>
+								<select id="skills" class="form-control" name="skills[]" multiple="multiple">
+								{% for skill in project.skills.find_all() %}
+								<option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
+								{% endfor %}
+								</select>		
+							</div>
+							<p class="text-justify">
+								Szakterületen belüli konkrét képességek, amik a Projekthez szükségesek, pl.: php. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat.
+							</p>
+						</div>
+					</div>
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="mg-clear tc-black">
+								Projekt adatai
+							</h3>
+						</div>
+						<div class="panel-body">
+							<span class="ion ion-folder pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Projekt neve*
+								</label>
+								<input id="name" name="name" class="form-control" required data-rules='{"notEmpty": "true"}' value="{{ project.name }}">
+							</div><span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Rövid leírás*
+								</label><textarea id="short-description" name="short_description" class="form-control" rows="2" cols="50" required data-rules='{"notEmpty": "true"}'>{{ project.short_description }}</textarea>
+							</div>
+							<p class="text-justify">
+								Ez fog megjelenni a projekt listában, tehát mindenki ezt látja először. Legyen tömör, és egyértelmű.
+							</p><span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Hosszabb leírás*
+								</label>
+								<textarea class="form-control" rows="20" cols="50" id="long-description" name="long_description" data-rules='{"notEmpty": "true"}'>{{ project.long_description }}</textarea>
+							</div>
+							<p class="text-justify">
+								Ez fog megjelenni, ha valaki rákattint a projektra a listából. Ez lehet részletesebb.
+							</p>
+						</div>
+					</div>
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="mg-clear tc-black">
+								Nettó költségvetés
+							</h3>
+						</div>
+						<div class="panel-body">
+							<p class="text-justify">
+								Lehetőséged van megadni tól - ig költségvetést, amit a munkáért fizetsz. Ez lehet, fix összeg, és órabér. Ha konkrét összeget, vagy órabért fizetsz, akkor elég csak az alsó határt kitöltened. Kérjük ügyelj rá, hogy <strong>nettó</strong> összegeket adj meg.
+							</p>
+							<div class="radio">
+								<label>
+									<input type="radio" name="salary_type" id="salary-type-hourly" value="1" 
+									
+									{% if project %}
+										{% if project.salary_type == 1 %}
+										checked
+										{% endif %}
+									{% else %}
+									checked
+									{% endif %}
+									
+									>Órabér
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="salary_type" value="2" id="salary-type-fix" {% if project.salary_type == 2 %}checked{% endif %}>Fix összeg
+								</label>
+							</div>
+							
+							<span class="ion ion-arrow-graph-down-right pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Nettó alsó határ*
+								</label>
+								<input class="form-control" type="text" id="salary-low" name="salary_low" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ project.salary_low }}">
+							</div>
+							
+							<span class="ion ion-arrow-graph-up-right pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Nettó felső határ
+								</label>
+								<input class="form-control" type="text" id="salary-high" name="salary_high" data-rules='{"number": "true"}' value="{{ project.salary_high }}">
+							</div>
+						</div>
+					</div>
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="mg-clear tc-black">
+								Elérhetőségek
+							</h3>
+						</div>
+						<div class="panel-body">
+							<p class="text-justify">
+								Ha a projektre más elérhetőségeken várod a jelentkezéseket, mint amit a profilodon megadtál, itt lehetőséged van rá.
+							</p><span class="ion ion-email pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									E-mail cím*
+								</label>
+								<input class="form-control" id="email" name="email" type="email" value="{{ email }}" required data-rules='{"notEmpty": "true", "email": "true"}'>
+							</div><span class="ion ion-android-phone-portrait pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Telefonszám*
+								</label>
+								<input class="form-control" type="tel" id="phonenumber" name="phonenumber" value="{{ phonenumber }}" required data-rules='{"notEmpty": "true"}'>
+							</div>
+						</div>
+					</div> 
+					
+					{% if hasCancel %}
+					<a href="{{ ROOT }}szabaduszo-projekt/{{ project.slug }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+					{% endif %}	
+					
+					<button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit" id="submit">
+						<span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- bloc-13 END -->
+{% endblock content %}

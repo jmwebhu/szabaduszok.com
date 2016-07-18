@@ -1,0 +1,77 @@
+<div id="freelancer" class="landing-page container freelancer" style="display: none;">
+    <div class="container fill-bloc-top-edge landing" id="landing-header-container">
+        <nav class="navbar row landing">									
+            <img src="{{ ROOT }}media/img/szabaduszok-logo-web.png" alt="Szabaduszok.com a magyar freelancer platform" />			
+        </nav>	
+    </div>
+
+    <div class="landing body">        
+        
+        <h1 class="text-center tc-black landing main-header">Pörgesd Fel a Karriered Még Ma!</h1>
+        <h2 class="text-center tc-black landing">Egy Szabadúszónak rengeteg dologgal kell foglalkozni. Szerződések, számlák, feladat menedzsment, munkák megszerzése... Mi levesszük a projekt vadászat terhét a válladról!</h2>
+
+        <div class="text-left col-sm-6 left">
+            <ul class="list-group tc-black">
+                <li class="list-group-item">
+                    <span class="fa fa-check feature-list-item lime-green"></span>
+                    <span class="bold">Válogass</span> a Projekt között
+                </li>
+                <li class="list-group-item">
+                    <span class="fa fa-check feature-list-item lime-green"></span>
+                    Fókuszálj a <span class="bold">fontos feladatokra</span>
+                </li>	
+                <li class="list-group-item">
+                    <span class="fa fa-check feature-list-item lime-green"></span>
+                    A Szabaduszok.com <span class="bold">teljesen ingyenes</span>
+                </li>               
+                <li class="list-group-item">
+                    <span class="fa fa-check feature-list-item lime-green"></span>
+                    Ajándékba elküldünk egy tanulmányt, 12 olyan eszközről, ami <span class="bold">nélkülözhetetlen projektek, feladatok kezeléséhez</span> 
+                </li>
+            </ul>
+        </div>		
+
+        <div class="text-left col-sm-6 right">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h2 class="mg-clear tc-black text-center">
+                        Add meg az e-mail címed, és készíts egy profilt!
+                    </h2>
+                </div>
+                <div class="panel-body text-center">
+                    <form method="GET" action="{{ ROOT }}szabaduszo-regisztracio" class="landing-form">
+                        <span class='error-label has-error general-error-label block mb10 text-center'></span>		
+                        <input class="landing-email form-control" type="email" autofocus required placeholder="E-mail cím" name="email">
+                        <input class="landing-email form-control" type="hidden" autofocus required placeholder="E-mail cím" name="landing_page_name" value="freelancer">
+                        <button type="submit" class="btn btn-xl animDelay1 erdekel-cta btn-lime-green call-to-action">TOVÁBB</button>                                                
+                    </form>                                            
+                        
+                    <span class="fa fa-lock feature-list-item"></span>Mi sem szeretjük a spam -et. E-mail címedet <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank">Adatvédelmi nyilatkozatunknak</a> megfelelően kezeljük!
+                    <ul class="contact text-center">
+                        <li>
+                            <span class="ion ion-android-phone-portrait feature-list-item"></span>
+                            06301923380
+                        </li>
+                        <li>
+                            <span class="ion ion-email feature-list-item"></span>
+                            hello@szabaduszok.com
+                        </li>
+                    </ul>
+                </div>                
+            </div>                               
+        </div> 
+                    
+        <h1 class="mg-md text-center  tc-black">
+            Mi az a Szabaduszok.com?
+        </h1>
+        <h2 class="mg-md tc-black text-center">
+            Egy olyan webes platform, ahol böngészhetsz a Megbízók Projektjei közül, és jelentkezhetsz rájuk
+        </h2>
+        <p class="text-center description">
+            A lényeg, hogy, minél könnyebben és gyorsabban találj magadnak megfelelő munkát, megfelelő Megbízót.    
+        </p>				       
+        <p class="text-center bold description-last">
+            Sikeresen forradalmasítjuk a magyar piacot, és megváltoztatjuk a magyar Szabadúszók, Megbízók életét.
+        </p>
+    </div>
+</div>

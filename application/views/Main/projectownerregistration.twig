@@ -1,0 +1,434 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+
+{# MailMaster js #}
+<script type="text/javascript" src="https://d1ursyhqs5x9h1.cloudfront.net/sw/scripts/mailmaster-scripts-1.0.js"></script>
+<script type="text/javascript" src="https://d1ursyhqs5x9h1.cloudfront.net/sw/scripts/mmutils.min.js"></script>
+<script type="text/javascript">
+ 
+glsPontok = '';
+mmjQuery = jQuery.noConflict();
+
+mmjQuery(window).load(function () {
+	var parent_url = decodeURIComponent( document.location.hash.replace( /^#/, '' ) ),link;
+	
+
+	var error = false;
+	var emailuniquefail = false;
+	var emailuniquecheck = false;
+	var checkNum = 0;	
+    var vatCheck = false;
+
+    function setHeight(extraHeight) {
+		try {
+			messaging.postMessage({ if_height: parseInt(mmjQuery.getDocHeight())+extraHeight,form_id: 92980}, parent_url, parent );
+			/* Set referer hidden field */
+			if (mmjQuery("#mssysform929801464960970 input[name='mssys_referer_page']").length == 0) {
+				mmjQuery("#mssysform929801464960970").append('<input type="hidden" name="mssys_referer_page" value="'+parent_url+'">');
+			}
+		} catch(err) {
+			/* There is no parent window */
+		}
+	};
+    
+    
+	
+	
+
+	
+			   			
+	
+	
+	mmjQuery(".mezo178214").hide();
+			
+	mmjQuery("#mmform-container1464960970 .submitbutton").click(function () {
+        vatCheck = false;
+        mmjQuery(this).addClass('mm-submit-disabled');
+		if (mmjQuery(this).attr('id') == 'want_upsell') {
+			mmjQuery("#mssysform929801464960970 input[name='mssys_want_upsell']").val('1');
+		} else if (mmjQuery(this).attr('id') == 'dont_want_upsell') {
+			mmjQuery("#mssysform929801464960970 input[name='mssys_want_upsell']").val('0');
+		}
+		mmjQuery("#mssysform929801464960970").trigger('submit');
+	});
+	
+	if (mmjQuery("#mmform-container1464960970 .postalsamechk").length > 0) {
+		if (mmjQuery("#mmform-container1464960970 .postalsamechk").is(":checked")) {
+			mmjQuery("#mmform-container1464960970 div[id^='containermssys_postal_']").hide();
+		}
+	}
+	mmjQuery("#mmform-container1464960970 .postalsamechk").click(function () {
+		if (mmjQuery(this).prop('checked')) {
+			mmjQuery("#mmform-container1464960970 div[id^='containermssys_postal_']").hide();
+		} else {
+			mmjQuery("#mmform-container1464960970 div[id^='containermssys_postal_']").show();			
+		}
+		setHeight(0);
+	});
+	if (mmjQuery("#mmform-container1464960970 .billsamechk").length > 0) {
+		if (mmjQuery("#mmform-container1464960970 .billsamechk").is(":checked")) {
+			mmjQuery("#mmform-container1464960970 div[id^='containermssys_bill_']").hide();
+		}
+	}	
+	mmjQuery("#mmform-container1464960970 .billsamechk").click(function () {
+		if (mmjQuery(this).prop('checked')) {
+			mmjQuery("#mmform-container1464960970 div[id^='containermssys_bill_']").hide();
+		} else {
+			mmjQuery("#mmform-container1464960970 div[id^='containermssys_bill_']").show();			
+		}
+		setHeight(0);
+	});
+	
+	
+	mmjQuery("#mssysform929801464960970").submit(function (event) {
+		error = false;
+		emailuniquefail = false;		
+		mmjQuery("#mmform-container1464960970 .error-container").hide();
+		mmjQuery("#mmform-container1464960970 .error-field").removeClass('error-field');
+		/*mmjQuery("input[name='form_submit']").attr('disabled',true);*/
+		if (mmjQuery("#mmform-container1464960970 .submitbutton img").length == 0) {
+			mmjQuery("#mmform-container1464960970 .submitbutton").html("Folyamatban...");
+		}
+     	if (mmjQuery("#mmform-container1464960970 .postalsamechk").prop('checked') && mmjQuery("#mmform-container1464960970 input[name='shipping_method']:checked").attr("osm_shipping_methods") != 'pickpackpont' && mmjQuery("#mmform-container1464960970 input[name='shipping_method']:checked").attr("osm_shipping_methods") != 'shipping_glspont' && mmjQuery("#mmform-container1464960970 input[name='shipping_method']:checked").attr("osm_shipping_methods") != 'mplpont') {			
+			mmjQuery("#mmform-container1464960970 #mssys_postal_company").val(mmjQuery("#mmform-container1464960970 #mssys_bill_company").val());
+			mmjQuery("#mmform-container1464960970 #mssys_postal_country").val(mmjQuery("#mmform-container1464960970 #mssys_bill_country option:selected").val());
+			mmjQuery("#mmform-container1464960970 #mssys_postal_zip").val(mmjQuery("#mmform-container1464960970 #mssys_bill_zip").val());
+			mmjQuery("#mmform-container1464960970 #mssys_postal_city").val(mmjQuery("#mmform-container1464960970 #mssys_bill_city").val());
+			mmjQuery("#mmform-container1464960970 #mssys_postal_address").val(mmjQuery("#mmform-container1464960970 #mssys_bill_address").val());
+			mmjQuery("#mmform-container1464960970 #mssys_postal_state").val(mmjQuery("#mmform-container1464960970 #mssys_bill_state").val());
+		}		
+		if (mmjQuery("#mmform-container1464960970 .billsamechk").prop('checked')) {			
+			mmjQuery("#mmform-container1464960970 #mssys_bill_company").val(mmjQuery("#mmform-container1464960970 #mssys_postal_company").val());
+			mmjQuery("#mmform-container1464960970 #mssys_bill_country").val(mmjQuery("#mmform-container1464960970 #mssys_postal_country option:selected").val());
+			mmjQuery("#mmform-container1464960970 #mssys_bill_zip").val(mmjQuery("#mmform-container1464960970 #mssys_postal_zip").val());
+			mmjQuery("#mmform-container1464960970 #mssys_bill_city").val(mmjQuery("#mmform-container1464960970 #mssys_postal_city").val());
+			mmjQuery("#mmform-container1464960970 #mssys_bill_address").val(mmjQuery("#mmform-container1464960970 #mssys_postal_address").val());
+			mmjQuery("#mmform-container1464960970 #mssys_bill_state").val(mmjQuery("#mmform-container1464960970 #mssys_postal_state").val());
+		}
+		
+		mmjQuery('input[type="file"]').each(function(){
+			var errormsg = '';
+			if (!checkExtension(mmjQuery(this).val())) {
+				errormsg = "A feltöltendő fájl kiterjesztése nem engedélyezett.";
+				error = true;
+				mmjQuery(this).focus();
+			}
+			if (errormsg != '') {
+				alert(errormsg);
+			}
+		});		
+		
+		
+		if (!emailuniquecheck) {
+			if (mmjQuery("#mmform-container1464960970 #containeremail input[name='email']").val() != '') {
+				mmjQuery.ajax({
+				 type: "GET",
+				 url: "https://sw.marketingszoftverek.hu/api/check-email-uniqueness-json.php",
+				 data: {mssys_formid:'wp7l3HEQ4uRBFSksRi4JO_BsAwrpd80',email:mmjQuery("#mmform-container1464960970 input[name='email']").val()},
+				 cache: false,
+				 dataType: "jsonp",
+				 jsonp: 'jsonp_callback',
+				 async: false,
+				 success: function(msg){				 
+					 /*mmjQuery("input[name='form_submit']").removeAttr("disabled");*/
+					 if (msg.response == '1') {
+						mmjQuery("#mmform-container1464960970 #containeremail .error-container").show().html('Ezzel az email címmel már feliratkozott korábban!');		     	
+						mmjQuery("#mmform-container1464960970 .submitbutton").removeClass('mm-submit-disabled');
+  				        mmjQuery("#mmform-container1464960970 .submitbutton").html("Rögzít");
+						emailuniquefail = true;
+						mmjQuery("#mmform-container1464960970 input[name='email']").focus();
+					 } else {
+						if (!error) {	    
+							emailuniquecheck = true;
+							emailuniquefail = false;
+							mmjQuery("#mssysform929801464960970").trigger("submit");
+							mmjQuery("#mmform-container1464960970 #containeremail .error-container").hide();
+						} else {
+							emailuniquecheck = false;
+							mmjQuery("#mmform-container1464960970 input[name='email']").focus();
+						}
+					 }
+				}
+				});
+				event.preventDefault();
+			}
+		}
+		
+		if (emailuniquefail) {
+			mmjQuery("#mmform-container1464960970 input[name='email']").addClass('error-field');
+			mmjQuery("#mmform-container1464960970 #containeremail .error-container").show();
+			error = true;
+		}
+								
+						
+		
+		if (!checkMail(mmjQuery("#mmform-container1464960970 input[name='email']").val()) ) {
+			mmjQuery("#mmform-container1464960970 input[name='email']").addClass('error-field').focus();
+			mmjQuery("#mmform-container1464960970 #containeremail .error-container").show();			
+			error = true;
+		}		
+				
+				
+		
+		
+						
+																																																																															
+		setHeight(0);
+		if (error) {			
+			/*mmjQuery("input[name='form_submit']").removeAttr("disabled");*/
+            mmjQuery("#mmform-container1464960970 .submitbutton").removeClass('mm-submit-disabled');
+			if (mmjQuery("#mmform-container1464960970 .submitbutton img").length == 0) {
+				mmjQuery("#mmform-container1464960970 .submitbutton").html("Rögzít");
+			}
+			return false;			
+		} else {			
+			/*mmjQuery("input[name='form_submit']").removeAttr("disabled");*/
+			
+						messaging.postMessage({setmmcookie:1}, parent_url, parent );
+			return true;
+		}
+	});
+
+			    		    		    		    		    		    		    		    		    		    		    		    		    		    		    	mmjQuery('#mssys-character-encoding').val('utf-8');
+
+	mmjQuery(".prodqty, .shippingmethodradio,.prodchk,input[name='prod_id']").trigger('change');
+	setHeight(20);setTimeout(function(){setHeight(20)},1000);
+	
+	mmUtility.saveUtmParams();
+	
+	
+	
+	
+});
+mmjQuery.getDocHeight = function(){
+    return Math.max(
+        mmjQuery(document).height(),
+        mmjQuery(window).height(),
+        /* For opera: */
+        document.documentElement.clientHeight
+    );
+};
+
+function mmNumberFormat(number, decimals, dec_point, thousands_sep) {
+ 
+    var n = number, c = isNaN(decimals = Math.abs(decimals)) ? 2 : decimals;
+	var d = dec_point == undefined ? "," : dec_point;
+	var t = thousands_sep == undefined ? "." : thousands_sep, s = n < 0 ? "-" : "";
+	var i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", j = (j = i.length) > 3 ? j % 3 : 0;
+ 
+	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+
+
+
+</script>
+{# end mailmaster script #}
+
+
+<div class="bloc bgc-anti-flash-white l-bloc tc-black" id="bloc-8">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-12">
+				<form action="http://hirlevel.szabaduszok.com/t/sub" method="post" enctype="multipart/form-data" id="mssysform929491464870694" class="mssysform mssysnsid92949" target="_top">
+					<h1 class="mg-md text-center tc-black">
+						Projekt tulajdonos regisztráció
+					</h1>
+					
+					<input name="mssys_formid" type="hidden" value="wp7l3HEQ4uRDX_2NsD74VL1SWAqc6aI">
+					<input type="hidden" name="character-encoding" id="mssys-character-encoding" value="">
+					
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="mg-clear tc-black">
+								Személyes profil
+							</h3>
+						</div>
+						<!-- end panel-heading -->
+						
+						<div class="panel-body">
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" id="ceges" name="ceges" >Céges?
+								</label>							
+							</div>
+							
+							<span class="fa fa-building pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Cégnév
+								</label>
+								<input class="form-control" id="mssys_company" name="mssys_company" type="text" value="">
+							</div>
+							
+							<span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Kapcsolattartó
+								</label>
+								<input id="kapcsolattarto" class="form-control" name="kapcsolattarto" type="text" value="">
+							</div>
+							
+							<span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Vezetéknév
+								</label>
+								<input class="form-control" id="mssys_lastname" name="mssys_lastname" type="text" value="">
+							</div>
+							
+							<span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Keresztnév
+								</label>
+								<input class="form-control" id="mssys_firstname" name="mssys_firstname" type="text" value="">
+							</div>
+							
+							<span class="ion ion-email pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Email
+								</label>
+								<input class="form-control" id="email" name="email" type="email" value="">
+							</div>
+							
+							<span class="ion ion-android-phone-portrait pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Telefonszám
+								</label>
+								<input class="form-control" id="mssys_phone" name="mssys_phone" type="tel" value="">
+							</div>
+							
+							<span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Irányítószám
+								</label>
+								<input class="form-control" id="mssys_bill_zip" name="mssys_bill_zip" type="text" value="" placeholder="Számlázási">
+							</div>
+							
+							<span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Város
+								</label>								
+								<input class="form-control" id="mssys_bill_city" name="mssys_bill_city" type="text" value="" placeholder="Számlázási">
+							</div>
+							
+							<span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Utca és házszám
+								</label>
+								<input class="form-control" id="mssys_bill_address" name="mssys_bill_address" type="text" value="" placeholder="Számlázási">
+							</div>
+							
+							<span class="ion ion-image pull-left icon-dark-gray icon-sm"></span>
+							<div class="form-group">
+								<label>
+									Profilkép
+								</label>
+								<input class="form-control" id="profil_kep" name="profil_kep" type="file" accept="image/*">
+							</div>
+						</div>
+						<!-- end panel-body szemelyes profil -->
+						
+					</div>
+					<!-- end panel szemelyes profil -->
+					
+					<div class="panel">
+						<div class="panel-heading">
+							<h3 class="mg-clear tc-black">
+								Szakmai profil
+							</h3>
+						</div>
+						
+						<div class="panel-body">
+							<span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Iparág
+								</label>
+								<select class="form-control" name="iparag" id="iparag">
+									<option value="1" >Kérlek válassz egyet</option>
+									<option value="2" >Informatika</option>
+									<option value="3" >Marketing</option>
+								</select>
+							</div>
+														
+							<p class="text-justify">
+								Általános iparág, pl.: informatika								
+							</p>
+							
+							<span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+							<div class="form-group">
+								<label class="mg-clear">
+									Szakterület
+								</label>
+								<input class="form-control" id="szakterulet" name="szakterulet" type="text" value="" placeholder="Kezdj el gépelni">
+							</div>
+							
+							<p class="text-justify">
+								Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés. Választhatsz meglévőt, vagy hozhatsz létre újat.
+							</p>
+							
+							<span class="ion ion-clipboard icon-sm pull-left icon-dark-gray"></span>
+							<div class="form-group">
+								<label>
+									Rövid szakmai bemutatkozás
+								</label>
+								<textarea id="rovid_szakmai_bemutatkozas" name="rovid_szakmai_bemutatkozas" class="form-control" rows="4" cols="50"></textarea>
+							</div>
+							
+						</div>
+						<!-- end panel-body szakmai profil -->
+						
+					</div>
+					<!-- end panel szakmai profil -->
+					
+					<span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+					<div class="form-group">
+						<label class="password-label">
+							Jelszó*
+						</label>
+						<input id="jelszo" name="jelszo" type="password" value="" class="form-control">
+					</div>
+					<p class="text-justify">
+						Legalább 6 karakter
+					</p>
+					
+					<span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+					<div class="form-group">
+						<label class="password-label">
+							Jelszó mégegyszer
+						</label>
+						<input class="form-control" type="password" id="input_586" name="password_again" />
+					</div>
+					
+					<a href="#" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>										 
+					<button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
+						<span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
+					</button>
+					
+				</form>			
+			</div>
+			<!-- end col-sm-12 -->
+		</div>
+		<!-- end row -->
+	</div>
+	<!-- end container -->
+</div>
+<!-- end bloc-8 -->
+
+</form>
+
+
+			
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% block content %}
+    {{ forms.form('userForm', 'POST', ROOT, 'user/registration', 'form') }}
+
+        {{ forms.input('email', user.email, 'text', 'input') }}
+        {{ forms.input('password', user.password, 'password', 'input') }}
+        {{ forms.input('password_confirm', user.password_confirm, 'password', 'input') }}
+
+        {{ forms.input('name', user.name, 'text', 'input', 'inCaseOfPersonOwnName') }}
+        {{ forms.input('contact_name', user.contact_name, 'text', 'input') }}
+
+        {{ forms.input('address_postal_code', user.address_postal_code, 'text', 'input') }}
+        {{ forms.input('address_city', user.address_city, 'text', 'input') }}
+        {{ forms.input('address_street', user.address_street, 'text', 'input') }}
+        {{ forms.input('address_housenumber', user.address_housenumber, 'text', 'input') }}
+
+        {{ forms.input('phonenumber', user.phonenumber, 'text', 'input') }}
+        {{ forms.input('tax_number', user.tax_number, 'text', 'input') }}
+        {{ forms.input('activity', user.activity, 'text', 'input') }}
+
+        {{ forms.button('save', 'submitUserForm', 'submit', 'userForm') }}
+
+    </form>
+{% endblock content %}

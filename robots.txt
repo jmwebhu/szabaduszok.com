@@ -1,0 +1,10 @@
+# robots.txt for http://www.szabaduszok.com/
+
+User-agent: *
+Disallow: /cron/
+
+User-agent: *
+Disallow: /test/
+
+User-agent: *
+Disallow: /migrate/

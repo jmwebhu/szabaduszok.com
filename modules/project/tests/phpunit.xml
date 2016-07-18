@@ -1,0 +1,29 @@
+<!--
+	This is an example phpunit.xml file to get you started
+	Copy it to a directory, update the relative paths and rename to phpunit.xml
+	Then to run tests cd into it's directory and just run
+		phpunit
+	(it'll automatically use any phpunit.xml file in the current directory)
+
+	Any options you specify when calling phpunit will override the ones in here
+-->
+<phpunit colors="true" bootstrap="../../unittest/bootstrap.php">
+	<testsuites>
+		<testsuite name="Model_Project Tests">
+			<file>./</file>
+		</testsuite>
+	</testsuites>
+
+
+	<filter>
+	  <whitelist processUncoveredFilesFromWhitelist="true">
+	    <directory suffix=".php">../classes/Model/</directory>	    
+	    <!--  any other directories you want to check -->
+	  </whitelist>
+	</filter>
+
+	<logging>
+           <log type="coverage-html" target="./log/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
+           <log type="testdox" target="./log/testdox.html" />    
+       </logging>
+</phpunit>

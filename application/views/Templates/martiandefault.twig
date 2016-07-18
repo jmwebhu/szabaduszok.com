@@ -1,0 +1,28 @@
+{% import 'Templates/formmacros.twig' as forms %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Language" content="en" />
+        <title>A magyar Freelancer platform</title>
+        <link rel="shortcut icon" href="{{ getImage('favicon.png') }}">
+
+        <meta name="keywords" content="{{ meta_keywords }}" />
+        <meta name="description" content="{{ meta_description }}" />
+        <meta name="copyright" content="{{ meta_copywrite }}" />
+
+        <script src='//cdn.tinymce.com/4/tinymce.min.js'></script>
+
+        {% autoescape false %}{{ assets['css'] }}{% endautoescape %}
+
+        <script>
+            var ROOT = '{{ ROOT }}';
+        </script>
+    </head>
+    <body>
+    {% include 'Templates/martianheader.twig' %}
+    <main>{% block content %}{% endblock content %}</main>
+    {% autoescape false %}{{ assets['js'] }}{% endautoescape %}
+    </body>
+</html>

@@ -1,0 +1,40 @@
+{% macro form(id, method, root, action, class) %}
+
+    {% import _self as forms %}
+    <form method="{{ method|default('POST') }}" action="{{ root }}{{ action }}" id="{{ id }}" {{ forms.getClass(class) }}>
+
+{% endmacro %}
+
+{% macro input(name, value, type, class, placeholder, noLabel) %}
+    {% import _self as forms %}
+
+    {% if name == 'su_email' or noLabel is not null %}
+    {% else %}
+    <label for="{{ name }}">{{ name|i18n }}</label>
+    {% endif %}
+    <input type="{{ type|default('text') }}" name="{{ name }}" value="{{ value }}" id="{{ name }}" {{ forms.getClass(class) }} {{ forms.getPlaceholder(placeholder) }} />
+
+{% endmacro %}
+
+{% macro button(label, id, type, form, class) %}
+
+    {% import _self as forms %}
+    <button type="{{ type|default('button') }}" {{ forms.getId(id) }} {{ forms.getClass(class) }} {{ forms.getForm(form) }}>{{ label|i18n }}</button>
+
+{% endmacro %}
+
+{% macro getClass(class) %}
+{% if class %}class="{{ class }}"{% endif %}
+{% endmacro %}
+
+{% macro getId(id) %}
+{% if id %}id="{{ id }}"{% endif %}
+{% endmacro %}
+
+{% macro getForm(form) %}
+{% if id %}form="{{ form }}"{% endif %}
+{% endmacro %}
+
+{% macro getPlaceholder(placeholer) %}
+{% if placeholder %}placeholer="{{ placeholer|i18n }}"{% endif %}
+{% endmacro %}

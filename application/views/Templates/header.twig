@@ -1,0 +1,62 @@
+<div class="container fill-bloc-top-edge {% if noHeader is null %}standard-header{% endif %}" id="header-container">
+	<nav class="navbar row">
+					
+		<div class="navbar-header">
+			<a class="navbar-brand" href="{{ ROOT }}"><img src="{{ ROOT }}media/img/szabaduszok-logo-web.png" alt="Szabaduszok.com a magyar freelancer platform" /></a>
+			<button id="nav-toggle" type="button" class="ui-navbar-toggle navbar-toggle" data-toggle="collapse" data-target=".navbar-1">
+				<span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+			</button>				
+		</div>
+		<div class="navbar-collapse navbar-1 collapse">
+			<ul class="site-navigation nav navbar-nav pull-right">
+			
+			{% if loggedUser.loaded() %}
+				{# Menu szabaduszok eseten #}
+				{% if loggedUser.type == 1 %}
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="projects-anchor" href="{{ ROOT }}szabaduszo-projektek" class="ltc-white">Projektek</a>					
+				</li>
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="profile-anchor" href="{{ ROOT }}szabaduszo/{{ loggedUser.slug }}" class="ltc-white">Profilom</a>					
+				</li>
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="freelancers-anchor" href="{{ ROOT }}szabaduszok" class="ltc-white">Szabadúszók</a>					
+				</li>
+				<li class="hidden-nav-item text-centeri fs20">
+					<a href="{{ ROOT }}szabaduszok-kilepes" class="ltc-white">Kilépés</a>					
+				</li>			
+				{% else %}
+				{# Menu Megbizok eseten #}
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="new-project-anchor" href="{{ ROOT }}uj-szabaduszo-projekt" class="ltc-white">Új projekt</a>					
+				</li>
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="profile-anchor" href="{{ ROOT }}megbizo/{{ loggedUser.slug }}" class="ltc-white">Profilom</a>					
+				</li>
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="freelancers-anchor" href="{{ ROOT }}szabaduszok" class="ltc-white">Szabadúszók</a>					
+				</li>				
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="projects-anchor" href="{{ ROOT }}szabaduszo-projektek" class="ltc-white">Projektek</a>					
+				</li>								
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="logout-anchor" href="{{ ROOT }}szabaduszok-kilepes" class="ltc-white">Kilépés</a>					
+				</li>
+				{% endif %}
+			{% else %}
+			{# Menu kulso felhasznalo eseten #}
+			<li class="hidden-nav-item text-centeri fs20">
+				<a id="login-anchor" id="header-login" href="{{ ROOT }}szabaduszok-belepes" class="ltc-white">Belépés</a>					
+			</li>
+			<li class="hidden-nav-item text-centeri fs20">
+				<a id="interested-anchor" class="ltc-white" href="{{ ROOT }}erdekel">Érdekel</a>					
+			</li>
+			<li class="hidden-nav-item text-centeri fs20">
+				<a id="how-it-works-anchor" class="ltc-white" href="{{ ROOT }}szabaduszok-hogyan-mukodik">Hogyan működik?</a>					
+			</li>		
+			{% endif %}							
+																					
+			</ul>
+		</div>				
+	</nav>
+</div>

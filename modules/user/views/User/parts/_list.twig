@@ -1,0 +1,70 @@
+<div class="row">
+	<div class="col-sm-12 list">
+		<div class="row">
+			<div class="col-sm-12 list">
+				<div class="row">
+					<div class="col-sm-12 list">
+					
+					{% for user in users %}
+					<a href="{{ ROOT }}szabaduszo/{{ user.slug }}" class="anchor-no-effect">
+						<div class="row project-row bgc-white">
+							<div class="col-sm-4 project-img mobile-hide text-center vcenter">							
+								<img src="{% if user.list_picture_path %}{{ ROOT }}uploads/picture/{{ user.list_picture_path }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded img-responsive list-image center-block hidden-xs {% if user.list_picture_path is null %}freelancer-placeholder-img{% endif %}" alt="Szabaduszok.com - A magyar freelancer platform {{ user.name() }}">								
+							</div>
+							<div class="col-sm-8 list-details">
+								<span class="ion ion-person pull-left icon-sm project-sign icon-lapis-lazuli"></span>
+								<h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli project-title-list">
+									{% if user.name() %}
+									{{ user.name() }}
+									{% else %}
+									Még nincs adat 
+									{% endif %}
+								</h3>
+								<div class="divider-h project-title-divider">
+									<span class="divider"></span>
+								</div>
+								
+								<span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray prof-free-list"></span>
+								{% for profession in user.professions.find_all() %}
+								<span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
+								{% else %}
+								<span class="tag">Még nincs adat</span> 
+								{% endfor %}
+								
+								<span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray cb"></span>
+								{% for skill in user.skills.find_all() %}
+								<span id="{{ skill.skill_id }}" class="tag skill-list">{{ skill.name }}</span>
+								{% else %}
+								<span class="tag">Még nincs adat</span>
+								{% endfor %}			
+							
+								<p class="text-justify project-short-description cb">
+									{{ user.short_description }}
+								</p>
+																				
+								<p class="text-left text-right project-share-date">
+									Utolsó belépés: {{ user.last_login() }}
+								</p>
+								
+								<select class="rating" data-init="{{ user.rating_points_avg|number_format(2, '.', ' ') }}" id="{{ user.user_id }}">
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+								</select>
+								
+																				
+							</div>
+						</div>
+					</a>
+					{% else %}
+					<p class="text-center">Sajnos nincsenek felhasználók</p>
+					{% endfor %}
+																																			
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	
