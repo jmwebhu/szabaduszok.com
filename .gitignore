@@ -1,6 +1,6 @@
 application/cache
 application/logs
-vendor
+/vendor
 composer.lock
 docs
 nbproject
