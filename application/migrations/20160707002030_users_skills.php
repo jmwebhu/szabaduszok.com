@@ -11,8 +11,7 @@ class users_skills extends Migration
        (
           'user_id' => ['integer', 'unsigned' => true],
           'skill_id' => ['integer', 'unsigned' => true],
-       ),
-       'user_id'
+       )
     );
 
     // $this->add_column('table_name', 'column_name', array('datetime', 'default' => NULL));
