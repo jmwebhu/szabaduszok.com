@@ -71,8 +71,8 @@ abstract class Kohana_Minion_Task {
 			// If we didn't get a valid task, generate the help
 			$task = 'help';
 		}
-
-		$class = Minion_Task::convert_task_to_class_name($task);
+		
+		$class = Minion_Task::convert_task_to_class_name($task);		
 
 		if ( ! class_exists($class))
 		{
