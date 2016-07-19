@@ -167,9 +167,10 @@ class Array_Builder_Select extends Array_Builder
 	 */
 	protected function validate()
 	{
-		if (!$this->_from && (!is_array($this->_from) || !is_string($this->_from)))
+		
+		if (!is_array($this->_from) || !is_string($this->_from))
 		{
-			throw new Exception_Array_Builder_Select('_from is required');
+			throw new Exception_Array_Builder_Select('_from is required, and is must be an array or a string');
 		}
 	}
 	
