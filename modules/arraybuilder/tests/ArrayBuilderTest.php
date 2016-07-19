@@ -2325,7 +2325,7 @@ class ArrayBuilderTest extends Unittest_TestCase
 		$this->invokeMethod($select, 'addWhereExpressions', []);
 		$this->invokeMethod($select, 'evaluateExpressions', []);
 
-		$evaluates = $select->getEvaluates();
+		$evaluates = $select->getEvaluates();	
 
 		$this->assertFalse($evaluates[0]);
 		$this->assertTrue($evaluates[1]);

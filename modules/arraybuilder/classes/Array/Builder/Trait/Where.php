@@ -214,19 +214,17 @@ trait Array_Builder_Trait_Where
 		}
 		
 		// _where -ben es _from -ban levo ertek, ezek lesznek osszehasonlitva
-		$whereValue = $whereItem['val'];
-		$fromValue 	= $fromItem[$whereItem['col']];
-		
-		// _expression hozzadasa relacio alapjan
-		$this->addwhereExpressionByRelation($fromValue, $whereValue, $fromIndex, $whereIndex, $whereItem['rel']);
-		
+		$whereValue = Arr::get($whereItem, 'val');
+		$fromValue 	= Arr::get($fromItem, Arr::get($whereItem, 'col', ''));
+
 		// Az adott _where tipusa nyito, vagy zaro relacio
 		if (in_array($whereItem['type'], $this->getOpenCloseIndexes()))
 		{
 			return false;
 		}
-	
 		
+		// _expression hozzadasa relacio alapjan
+		$this->addwhereExpressionByRelation($fromValue, $whereValue, $fromIndex, $whereIndex, Arr::get($whereItem, 'rel'));				
 	}	
 	
 	/**
@@ -287,7 +285,7 @@ trait Array_Builder_Trait_Where
 	{
 		if (is_numeric($fromValue))
 		{
-			$this->_expressions[$fromIndex][$whereIndex] = $fromValue == $whereValue;
+			$this->_expressions[$fromIndex][$whereIndex] = ($relation == Array_Builder::REL_EQUALS) ? $fromValue == $whereValue : $fromValue != $whereValue;
 		}
 		else
 		{
