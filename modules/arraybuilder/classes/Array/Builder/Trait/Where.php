@@ -243,12 +243,13 @@ trait Array_Builder_Trait_Where
 	 */
 	protected function addWhereExpressions()
 	{
-		// Vegmegy az bemeneti _from ertekeken
+		// Vegmegy az bemeneti $_from ertekeken
 		foreach ($this->_from as $fromIndex => $fromItem)
 		{
-			// Vegmegy az osszes where erteken
+			// Vegmegy az osszes $_where erteken
 			foreach ($this->_where as $whereIndex => $whereItem)
 			{
+				// Kitolti az $_expression ertekeket a $_from es $_where alapjan
 				$this->addWhereExpression($fromItem, $whereItem, $fromIndex, $whereIndex);
 			}
 		}
@@ -271,6 +272,7 @@ trait Array_Builder_Trait_Where
 	 */
 	protected function addWhereExpression($fromItemTmp, array $whereItem, $fromIndex, $whereIndex)
 	{
+		// Objektumbol tomb
 		$fromItem = $this->getArrayFromObject($fromItemTmp);
 	
 		// Ha meg nincs az adott indexhez elem
@@ -279,17 +281,18 @@ trait Array_Builder_Trait_Where
 			$this->_expressions[$fromIndex] = [];
 		}
 		
-		// _where -ben es _from -ban levo ertek, ezek lesznek osszehasonlitva
+		// $_where -ben es $_from -ban levo ertek, ezek lesznek osszehasonlitva
 		$whereValue = Arr::get($whereItem, 'value');
 		$fromValue 	= Arr::get($fromItem, Arr::get($whereItem, 'column', ''));
 
-		// Az adott _where tipusa nyito, vagy zaro relacio
+		// Az adott $_where tipusa nyito, vagy zaro relacio
 		if (in_array($whereItem['type'], $this->getOpenCloseIndexes()))
 		{
+			// Akkor nincs mit kiertekelni, ignoralni kell
 			return false;
 		}
 		
-		// _expression hozzadasa relacio alapjan
+		// $_expressions beallitasa relacio alapjan
 		$this->addwhereExpressionByRelation($fromValue, $whereValue, $fromIndex, $whereIndex, Arr::get($whereItem, 'relation'));				
 	}	
 	
@@ -359,11 +362,15 @@ trait Array_Builder_Trait_Where
 	 */
 	protected function addWhereExpressionEquals($fromValue, $whereValue, $fromIndex, $whereIndex, $relation)
 	{
+		// Numerikus ertek, egyszeru osszehasonlito operatorok tipus relacio alapjan
 		if (is_numeric($fromValue))
 		{
-			$this->_expressions[$fromIndex][$whereIndex] = ($relation == Array_Builder::REL_EQUALS) ? $fromValue == $whereValue : $fromValue != $whereValue;
+			$this->_expressions[$fromIndex][$whereIndex] = 
+				($relation == Array_Builder::REL_EQUALS) 
+					? $fromValue == $whereValue 
+					: $fromValue != $whereValue;
 		}
-		else
+		else	// Szoveges ertek
 		{
 			/**
 			 * bug.v21.2 es bug.v21.3 miatt kell strcoll, es mb_
@@ -377,7 +384,7 @@ trait Array_Builder_Trait_Where
 	}
 	
 	/**
-	 * _expression kitoltese 'LIKE'
+	 * _expression kitoltese 'LIKE' relacio eseten
 	 * 
 	 * @param mixed $fromValue	$_from egy elemenek erteke. Ez lesz osszehasonlitva a $whereValue -val
 	 * @param mixed $whereValue	$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
@@ -420,43 +427,20 @@ trait Array_Builder_Trait_Where
 	 */
 	protected function evaluateExpressions()
 	{
+		// Vegmegy bemeneti $_from ertekeken
 		foreach ($this->_from as $fromIndex => $fromItem)
 		{
+			// Objektumbol tomb
 			$fromItem = $this->getArrayFromObject($fromItem);
 				
+			// Vegmegy $_where ertekeken
 			foreach ($this->_where as $whereIndex => $whereItem)
 			{
 				$type = Arr::get($whereItem, 'type');													
 				$this->evaluate($type, $fromIndex, $whereIndex);
 			}
 		}
-	}	
-	
-	/**
-	 * Visszaadja a $_where tombbol az elso indexet, de csak a tenyleges WHERE
-	 * elemeket veszi figyelembe. Ezen kivul lehet meg AND_OPEN, OR_OPEN, azokat
-	 * figyelmen kivul hagyja.
-	 * 
-	 * @param void
-	 * @return int
-	 * 
-	 * @uses Array_Builder_Trait_Where::_where
-	 * @uses Array_Builder_Trait_Where::getOpenCloseIndexes
-	 */
-	public function getFirstRealWhereIndex()
-	{
-		$firstIndex = null;
-		foreach ($this->_where as $index => $item)
-		{
-			if (!in_array($item['type'], $this->getOpenCloseIndexes()))
-			{
-				$firstIndex = $index;
-				break;
-			}
-		}
-		
-		return $firstIndex;
-	}
+	}			
 	
 	/**
 	 * Kierteleki egy sor kifejezeseit. Az adott relacio alapjan kapott indexekhez tartozo kifejezeseket
@@ -569,7 +553,7 @@ trait Array_Builder_Trait_Where
 	{
 		$evaulate = null;			
 		
-		// A kovetkezo WHERE -tol megy egeszen a CLOSE hivasig
+		// A kovetkezo WHERE -tol megy egeszen a CLOSE hivasig, amit egy break biztosit
 		for ($i = $whereIndex + 1; $i < count($this->_expressions[$fromIndex]); $i++)
 		{
 			// Nincs ilyen indexu $_where elem. A $_where indexek nem szekvencionalisak, mert az OPEN, CLOSE zaradekok nem szerepelnek benn
@@ -585,11 +569,12 @@ trait Array_Builder_Trait_Where
 			
 			$currentExpression = $this->_expressions[$fromIndex][$i];								
 			
+			// Ez az elso WHERE az OPEN -en belul, igy initeljuk, es johet a kovetkezo
 			if (!$evaulate)
 			{
 				$evaulate = $currentExpression;
 			}
-			else
+			else	// Nem ez az elso WHERE 
 			{				
 				$evaulate = ($this->_where[$i]['type'] == Array_Builder::WHERE_AND) ? ($evaulate && $currentExpression) : ($evaulate || $currentExpression);
 			}						
@@ -597,6 +582,35 @@ trait Array_Builder_Trait_Where
 		
 		return $evaulate;
 	}	
+	
+	/**
+	 * Visszaadja a $_where tombbol az elso indexet, de csak a tenyleges WHERE
+	 * elemeket veszi figyelembe. Ezen kivul lehet meg AND_OPEN, OR_OPEN, azokat
+	 * figyelmen kivul hagyja.
+	 * 
+	 * @param void
+	 * @return int
+	 * 
+	 * @uses Array_Builder_Trait_Where::_where
+	 * @uses Array_Builder_Trait_Where::getOpenCloseIndexes
+	 */
+	public function getFirstRealWhereIndex()
+	{
+		$firstIndex = null;
+		
+		// Vegmegy az osszes $_where erteken
+		foreach ($this->_where as $index => $item)
+		{
+			// Nem WHERE_OPEN vagy WHERE_CLOSE, tehat 'igaz' WHERE
+			if (!in_array($item['type'], $this->getOpenCloseIndexes()))
+			{
+				$firstIndex = $index;
+				break;
+			}
+		}
+		
+		return $firstIndex;
+	}
 
 	/**
 	 * Visszaadja, hogy van -e szukseg break utasitasra az Array_Builder_Trait_Where::evaulateByOpen() hivaskor
