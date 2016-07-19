@@ -13,7 +13,7 @@ trait Array_Builder_Trait_Where
 	
 	/**
 	 * A $_where ertekekbol osszeallitott logikai kifejezesek. Annyi eleme van, amennyi a $_from tombnek, es minden elem egy ujabb tomb,
-	 * amiben annyi elem van, amennyi a $_where tombnek.
+	 * amiben annyi elem van, amennyi a $_where tombben.
 	 *
 	 * Tehat minden bemeneti elemhez tartozik egy elem az $_expressions tombben, ami egy tovabbi tomb. Ebben a tombben pedig annyi elem van,
 	 * amennyi a $_where tombben, ezek pedig bool ertekek.
@@ -128,6 +128,7 @@ trait Array_Builder_Trait_Where
 	 */
 	public function and_where_open()
 	{
+		//$this->_whereGroup[count($this->_where)] = ['type' => Array_Builder::WHERE_AND_OPEN];
 		return $this->where(null, null, null, self::WHERE_AND_OPEN);
 	}
 	
@@ -167,6 +168,18 @@ trait Array_Builder_Trait_Where
 	}
 	
 	/**
+	 * Visszaadja egy tombben a {type}_open {type}_close WHERE tipusokat
+	 * Ezeket tobb helyen is figyelmen kivul kell hagyi a where kiertelekese soran
+	 * 
+	 * @return array
+	 */
+	protected function getOpenCloseIndexes()
+	{
+		return [Array_Builder::WHERE_AND_OPEN, Array_Builder::WHERE_OR_OPEN, 
+			Array_Builder::WHERE_AND_CLOSE, Array_Builder::WHERE_OR_CLOSE];
+	}
+	
+	/**
 	 * Visszaad egy logikai kifejezest, amit a beallitott $_where ertekek alapjan allit ossze
 	 */
 	protected function addWhereExpressions()
@@ -175,9 +188,9 @@ trait Array_Builder_Trait_Where
 		foreach ($this->_from as $index => $fromItem)
 		{
 			// Vegmegy az osszes where erteken
-			foreach ($this->_where as $whereItem)
+			foreach ($this->_where as $whereIndex => $whereItem)
 			{
-				$this->addWhereExpression($fromItem, $whereItem, $index);
+				$this->addWhereExpression($fromItem, $whereItem, $index, $whereIndex);
 			}
 		}
 	}
@@ -188,8 +201,9 @@ trait Array_Builder_Trait_Where
 	 * @param array|ORM $fromItem		$_from egy eleme
 	 * @param array		$whereItem		$_where egy eleme
 	 * @param int	 	$index			$_from -on belul a $fromItem indexe. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param inr		$whereIndex		Aktualis $whereItem indexe $_where -n belul
 	 */
-	protected function addWhereExpression($fromItem, array $whereItem, $index)
+	protected function addWhereExpression($fromItem, array $whereItem, $index, $whereIndex)
 	{
 		$isLast = ($index == 2);
 		$fromItem = $this->getArrayFromObject($fromItem);
@@ -204,6 +218,12 @@ trait Array_Builder_Trait_Where
 		$rel 		= Arr::get($whereItem, 'rel');
 		$val 		= Arr::get($whereItem, 'val');
 		$fromValue 	= Arr::get($fromItem, $col);
+		
+		// Az adott _where tipusa nyito, vagy zaro relacio
+		if (in_array($whereItem['type'], $this->getOpenCloseIndexes()))
+		{
+			return false;
+		}
 	
 		// $_where -ben levo relacio alapjan osszehasonlitja a $_from es $_where ertekeket
 		switch ($rel)
@@ -212,7 +232,7 @@ trait Array_Builder_Trait_Where
 
 				if (is_numeric($fromValue))
 				{
-					$this->_expressions[$index][] = $fromValue == $val;
+					$this->_expressions[$index][$whereIndex] = $fromValue == $val;
 				}
 				else
 				{
@@ -221,31 +241,31 @@ trait Array_Builder_Trait_Where
 					 * Igy case insensitive marad es utf8 biztos
 					 */
 					$cmp 							= Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $val);									
-					$this->_expressions[$index][] 	= $cmp == 0;
+					$this->_expressions[$index][$whereIndex] 	= $cmp == 0;
 				}
 				
 				break;
 	
 			case self::REL_GRATER_OR_EQUALS:
-				$this->_expressions[$index][] = $fromValue >= $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue >= $val;
 				break;
 	
 			case self::REL_GREATER:
-				$this->_expressions[$index][] = $fromValue > $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue > $val;
 				break;
 	
 			case self::REL_LESS:
-				$this->_expressions[$index][] = $fromValue < $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue < $val;
 				break;
 	
 			case self::REL_LESS_OR_EQUALS:
-				$this->_expressions[$index][] = $fromValue <= $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue <= $val;
 				break;
 					
 			case self::REL_NOT_EQUALS:				
 				if (is_numeric($fromValue))
 				{
-					$this->_expressions[$index][] = $fromValue != $val;
+					$this->_expressions[$index][$whereIndex] = $fromValue != $val;
 				}
 				else
 				{
@@ -254,7 +274,7 @@ trait Array_Builder_Trait_Where
 					 * Igy case insensitive marad es utf8 biztos
 					 */
 					$cmp 							= Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $val);									
-					$this->_expressions[$index][] 	= $cmp != 0;				
+					$this->_expressions[$index][$whereIndex] 	= $cmp != 0;				
 				}
 				break;
 	
@@ -271,7 +291,7 @@ trait Array_Builder_Trait_Where
 					$exp = (stripos($fromValueLower, $valLower) === false) ? false : true;
 				}
 
-				$this->_expressions[$index][] = $exp;
+				$this->_expressions[$index][$whereIndex] = $exp;
 				break;
 		}
 	}	
@@ -287,10 +307,32 @@ trait Array_Builder_Trait_Where
 				
 			foreach ($this->_where as $whereIndex => $whereItem)
 			{
-				$type = Arr::get($whereItem, 'type');	
+				$type = Arr::get($whereItem, 'type');													
 				$this->evaluate($type, $fromIndex, $whereIndex);
 			}
 		}
+	}	
+	
+	/**
+	 * Visszaadja a $_where tombbol az elso indexet, de csak a tenyleges WHERE
+	 * elemeket veszi figyelembe. Ezen kivul lehet meg AND_OPEN, OR_OPEN, azokat
+	 * figyelmen kivul hagyja.
+	 * 
+	 * @return int
+	 */
+	public function getFirstRealWhereIndex()
+	{
+		$firstIndex = null;
+		foreach ($this->_where as $index => $item)
+		{
+			if (!in_array($item['type'], $this->getOpenCloseIndexes()))
+			{
+				$firstIndex = $index;
+				break;
+			}
+		}
+		
+		return $firstIndex;
 	}
 	
 	/**
@@ -303,16 +345,39 @@ trait Array_Builder_Trait_Where
 	 * @return boolean
 	 */
 	protected function evaluate($rel, $fromIndex, $whereIndex)
-	{
+	{			
 		// Csak egyetlen WHERE ertek van
-		$onlyOneWhere = (count($this->_where) == 1) ? true : false;
-	
-		// Egy WHERE eseten ugyanaz lesz a kiertelekeles, mint a kifejezes. Elso WHERE eseten pedig initeli az _expressions -t
-		if ($onlyOneWhere || $whereIndex == 0)
+		$onlyOneWhere			= (count($this->_where) == 1) ? true : false;
+		
+		// Elso olyan index a where zaradekbol, ami nem OPEN, vagy CLOSE, hanem igaz WHERE
+		$firstRealWhereIndex	= $this->getFirstRealWhereIndex();
+		
+		// Egy WHERE eseten ugyanaz lesz a kiertelekeles, mint a kifejezes. Elso WHERE eseten pedig initeli az _evaluates -t
+		if ($onlyOneWhere || $whereIndex == $firstRealWhereIndex)
 		{		
-			$this->_evaluates[$fromIndex] = $this->_expressions[$fromIndex][$whereIndex];
-				
+			$this->_evaluates[$fromIndex] = array_values($this->_expressions[$fromIndex])[0];				
 			return false;
+		}
+		
+		/**
+		 * Meg nincs fromIndex, ami azt jelenti, hogy tobb where van, es ez nem egy 'igazi' where, hanem open
+		 * Ilyen eset, akkor fordul elo, ha pl ->and_where_open() hivassal kezdik a where zaradekot
+		 * 
+		 * Ebben az esetben inicializalni kell az _evaulates tomb adott indexet.
+		 * 
+		 * Ha AND_OPEN tipusu, akkor true -t kap, igy nem lesz befolyasa a (...) kozti reszhez,
+		 * OR_OPEN eseten pedig false, a vegso kiertekeles igy fog kinezni:
+		 * 
+		 * AND_OPEN:		TRUE && (tenyleges feltetelek)		=> (TRUE && TRUE) = TRUE, (TRUE && FALSE) = FALSE
+		 * OR_OPEN:		FALSE || (tenyleges feltetelek)		=> (FALSE || TRUE) = TRUE, (FALSE || FALSE) = FALSE
+		 * 
+		 * Tehat a kiertelekes minden esetben a tenyleges feltetelek eredmenyevel lesz egyenlo
+		 * 
+		 * @see ArrayBuilderTest::testEvaulateExpressionsAndWhereOpenClose
+		 */
+		if (!isset($this->_evaluates[$fromIndex]) && in_array($this->_where[$whereIndex]['type'], $this->getOpenCloseIndexes()))
+		{
+			$this->_evaluates[$fromIndex] = ($rel == Array_Builder::WHERE_AND_OPEN) ? true : false;
 		}
 	
 		// Tobb WHERE ertek eseten relacio alapjan kiertekeli a kifejezeseket
@@ -327,20 +392,12 @@ trait Array_Builder_Trait_Where
 				break;
 			
 			case self::WHERE_AND_OPEN:
-				$this->_evaluates[$fromIndex] = $this->evaulateByOpen(self::WHERE_AND, $fromIndex, $whereIndex);
+				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] && $this->evaulateByOpen(self::WHERE_AND, $fromIndex, $whereIndex);
 				break;
 			
 			case self::WHERE_OR_OPEN:
-				var_dump('where_or_open');
-				exit;
-				$this->_evaluates[$fromIndex] = $this->evaulateByOpen(self::WHERE_OR, $fromIndex, $whereIndex);				
+				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] || $this->evaulateByOpen(self::WHERE_OR, $fromIndex, $whereIndex);				
 				break;			
-			
-			case self::WHERE_OR_CLOSE:
-				break;
-			
-			case self::WHERE_AND_CLOSE:
-				break;
 		}
 	}
 	
@@ -355,12 +412,16 @@ trait Array_Builder_Trait_Where
 	 */
 	protected function evaulateByOpen($type, $fromIndex, $whereIndex)
 	{
-		var_dump('fuck');
-		exit;
-		$evaulate = $this->getNextEvaulateByOpen($type, $fromIndex, $whereIndex);
+		$evaulate = null;			
 		
+		// A kovetkezo WHERE -tol megy egeszen a CLOSE hivasig
 		for ($i = $whereIndex + 1; $i < count($this->_expressions[$fromIndex]); $i++)
 		{
+			if (!isset($this->_where[$i]))
+			{
+				continue;
+			}			
+			
 			// Az eredetileg ertekelt kifejezes AND, az aktualis pedig AND_CLOSE
 			if ($type == self::WHERE_AND && $this->_where[$i]['type'] == self::WHERE_AND_CLOSE)
 			{
@@ -373,31 +434,18 @@ trait Array_Builder_Trait_Where
 				break;
 			}
 			
-			$currentExpression = $this->_expressions[$fromIndex][$i];
-			$evaulate = ($type == self::WHERE_AND) ? ($evaulate && $currentExpression) : ($evaulate || $currentExpression);
+			$currentExpression = $this->_expressions[$fromIndex][$i];								
+			
+			if (!$evaulate)
+			{
+				$evaulate = $currentExpression;
+			}
+			else
+			{				
+				$evaulate = ($this->_where[$i]['type'] == self::WHERE_AND) ? ($evaulate && $currentExpression) : ($evaulate || $currentExpression);
+			}						
 		}
 		
 		return $evaulate;
-	}
-	
-	/**
-	 * Visszaadja a kovetkezo kiertekelst az evaulateByOpen() -hez
-	 * 
-	 * @param string $type		Relacio tipusa (AND, OR)
-	 * @param int $fromIndex	Aktualis _from index
-	 * @param int $whereIndex	Aktualis _where index
-	 * 
-	 * @return bool
-	 */
-	protected function getNextEvaulateByOpen($type, $fromIndex, $whereIndex)
-	{
-		switch ($type)
-		{
-			case self::WHERE_OR:
-				return $this->_evaluates[$fromIndex] || $this->_expressions[$fromIndex][$whereIndex];
-			
-			case self::WHERE_AND:
-				return $this->_evaluates[$fromIndex] && $this->_expressions[$fromIndex][$whereIndex];
-		}
 	}
 }
