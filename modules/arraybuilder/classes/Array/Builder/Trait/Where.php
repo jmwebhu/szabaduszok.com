@@ -185,12 +185,12 @@ trait Array_Builder_Trait_Where
 	protected function addWhereExpressions()
 	{
 		// Vegmegy az bemeneti _from ertekeken
-		foreach ($this->_from as $index => $fromItem)
+		foreach ($this->_from as $fromIndex => $fromItem)
 		{
 			// Vegmegy az osszes where erteken
 			foreach ($this->_where as $whereIndex => $whereItem)
 			{
-				$this->addWhereExpression($fromItem, $whereItem, $index, $whereIndex);
+				$this->addWhereExpression($fromItem, $whereItem, $fromIndex, $whereIndex);
 			}
 		}
 	}
@@ -200,22 +200,25 @@ trait Array_Builder_Trait_Where
 	 *
 	 * @param array|ORM $fromItemTmp	$_from egy eleme
 	 * @param array		$whereItem		$_where egy eleme
-	 * @param int	 	$index			$_from -on belul a $fromItem indexe. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param int	 	$fromIndex		$_from -on belul a $fromItem indexe. Ez az index lesz az $_expressions uj elemenek indexe is.
 	 * @param int		$whereIndex		Aktualis $whereItem indexe $_where -n belul
 	 */
-	protected function addWhereExpression($fromItemTmp, array $whereItem, $index, $whereIndex)
+	protected function addWhereExpression($fromItemTmp, array $whereItem, $fromIndex, $whereIndex)
 	{
 		$fromItem = $this->getArrayFromObject($fromItemTmp);
 	
 		// Ha meg nincs az adott indexhez elem
-		if (empty($this->_expressions[$index]))
+		if (empty($this->_expressions[$fromIndex]))
 		{
-			$this->_expressions[$index] = [];
+			$this->_expressions[$fromIndex] = [];
 		}
 		
 		// _where -ben es _from -ban levo ertek, ezek lesznek osszehasonlitva
 		$whereValue = $whereItem['val'];
 		$fromValue 	= $fromItem[$whereItem['col']];
+		
+		// _expression hozzadasa relacio alapjan
+		$this->addwhereExpressionByRelation($fromValue, $whereValue, $fromIndex, $whereIndex, $whereItem['rel']);
 		
 		// Az adott _where tipusa nyito, vagy zaro relacio
 		if (in_array($whereItem['type'], $this->getOpenCloseIndexes()))
@@ -223,53 +226,68 @@ trait Array_Builder_Trait_Where
 			return false;
 		}
 	
+		
+	}	
+	
+	/**
+	 * A kapott relacio alapjan vizsgalja a kapott _where es _from ertekeket, ez
+	 * alapjan pedig kitolti az _expression tombot.
+	 * 
+	 * @param mixed $fromValue	$_from egy elemenek erteke. Ez lesz osszehasonlitva a $val -val
+	 * @param mixed $whereValue	$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
+	 * @param int $fromIndex	$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param int $whereIndex	$_where -en beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param string $relation	Relacio. Array_Builder konstans
+	 */
+	protected function addwhereExpressionByRelation($fromValue, $whereValue, $fromIndex, $whereIndex, $relation)
+	{
 		// $_where -ben levo relacio alapjan osszehasonlitja a $_from es $_where ertekeket
-		switch ($whereItem['rel'])
+		switch ($relation)
 		{
 			case self::REL_EQUALS: default:			
-				$this->addWhereExpressionEquals($fromValue, $whereValue, $index, $whereIndex, Array_Builder::REL_EQUALS);
+				$this->addWhereExpressionEquals($fromValue, $whereValue, $fromIndex, $whereIndex, Array_Builder::REL_EQUALS);
 				break;
 	
 			case self::REL_GRATER_OR_EQUALS:
-				$this->_expressions[$index][$whereIndex] = $fromValue >= $whereValue;
+				$this->_expressions[$fromIndex][$whereIndex] = $fromValue >= $whereValue;
 				break;
 	
 			case self::REL_GREATER:
-				$this->_expressions[$index][$whereIndex] = $fromValue > $whereValue;
+				$this->_expressions[$fromIndex][$whereIndex] = $fromValue > $whereValue;
 				break;
 	
 			case self::REL_LESS:
-				$this->_expressions[$index][$whereIndex] = $fromValue < $whereValue;
+				$this->_expressions[$fromIndex][$whereIndex] = $fromValue < $whereValue;
 				break;
 	
 			case self::REL_LESS_OR_EQUALS:
-				$this->_expressions[$index][$whereIndex] = $fromValue <= $whereValue;
+				$this->_expressions[$fromIndex][$whereIndex] = $fromValue <= $whereValue;
 				break;
 					
 			case self::REL_NOT_EQUALS:				
-				$this->addWhereExpressionEquals($fromValue, $whereValue, $index, $whereIndex, Array_Builder::REL_NOT_EQUALS);
+				$this->addWhereExpressionEquals($fromValue, $whereValue, $fromIndex, $whereIndex, Array_Builder::REL_NOT_EQUALS);
 				break;
 	
 			case self::REL_LIKE:
-				$this->addWhereExpressionLike($fromValue, $whereValue, $index, $whereIndex);
+				$this->addWhereExpressionLike($fromValue, $whereValue, $fromIndex, $whereIndex);
 				break;
 		}
-	}	
+	}
 	
 	/**
 	 * _expression kitoltese '=', vagy '!=' relacio eseten
 	 * 
 	 * @param mixed $fromValue	$_from egy elemenek erteke. Ez lesz osszehasonlitva a $val -val
 	 * @param mixed $whereValue	$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
-	 * @param int $index		$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param int $fromIndex	$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
 	 * @param int $whereIndex	$_where -en beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
 	 * @param string $relation	Relacio. Array_Builder konstans
 	 */
-	protected function addWhereExpressionEquals($fromValue, $whereValue, $index, $whereIndex, $relation)
+	protected function addWhereExpressionEquals($fromValue, $whereValue, $fromIndex, $whereIndex, $relation)
 	{
 		if (is_numeric($fromValue))
 		{
-			$this->_expressions[$index][$whereIndex] = $fromValue == $whereValue;
+			$this->_expressions[$fromIndex][$whereIndex] = $fromValue == $whereValue;
 		}
 		else
 		{
@@ -279,8 +297,8 @@ trait Array_Builder_Trait_Where
 			 * 
 			 * @see ArrayBuilderTest (group bug.v21.2, bug.v21.3)
 			 */
-			$cmp									 = Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $whereValue);											
-			$this->_expressions[$index][$whereIndex] = ($relation == Array_Builder::REL_EQUALS) ? $cmp == 0 : $cmp != 0;
+			$cmp											= Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $whereValue);											
+			$this->_expressions[$fromIndex][$whereIndex]	= ($relation == Array_Builder::REL_EQUALS) ? $cmp == 0 : $cmp != 0;
 		}
 	}
 	
@@ -288,11 +306,11 @@ trait Array_Builder_Trait_Where
 	 * _expression kitoltese 'LIKE'
 	 * 
 	 * @param mixed $fromValue	$_from egy elemenek erteke. Ez lesz osszehasonlitva a $val -val
-	 * @param mixed $whereValue		$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
-	 * @param int $index		$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param mixed $whereValue	$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
+	 * @param int $fromIndex	$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
 	 * @param int $whereIndex	$_where -en beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
 	 */
-	protected function addWhereExpressionLike($fromValue, $whereValue, $index, $whereIndex)
+	protected function addWhereExpressionLike($fromValue, $whereValue, $fromIndex, $whereIndex)
 	{
 		$fromValueLower = mb_strtolower($fromValue);
 		$valLower 		= mb_strtolower($whereValue);
@@ -306,7 +324,7 @@ trait Array_Builder_Trait_Where
 			$exp = (stripos($fromValueLower, $valLower) === false) ? false : true;
 		}
 
-		$this->_expressions[$index][$whereIndex] = $exp;
+		$this->_expressions[$fromIndex][$whereIndex] = $exp;
 	}
 	
 	/**
@@ -351,13 +369,13 @@ trait Array_Builder_Trait_Where
 	/**
 	 * Kierteleki egy sor kifejezeseit. Az adott relacio alapjan kapott indexekhez tartozo kifejezeseket
 	 *
-	 * @param string	$rel			WHERE kifejezesek kozti relacio
+	 * @param string	$relation		WHERE kifejezesek kozti relacio
 	 * @param int 		$fromIndex		$_from index
 	 * @param int 		$whereIndex		$_where index
 	 *
 	 * @return boolean
 	 */
-	protected function evaluate($rel, $fromIndex, $whereIndex)
+	protected function evaluate($relation, $fromIndex, $whereIndex)
 	{			
 		// Csak egyetlen WHERE ertek van
 		$onlyOneWhere			= (count($this->_where) == 1) ? true : false;
@@ -388,13 +406,19 @@ trait Array_Builder_Trait_Where
 		 * 
 		 * @see ArrayBuilderTest::testEvaulateExpressionsAndWhereOpenClose
 		 */
-		if (!isset($this->_evaluates[$fromIndex]) && in_array($this->_where[$whereIndex]['type'], $this->getOpenCloseIndexes()))
+		if (!isset($this->_evaluates[$fromIndex]) && 
+			in_array($this->_where[$whereIndex]['type'], $this->getOpenCloseIndexes()))
 		{
-			$this->_evaluates[$fromIndex] = ($rel == Array_Builder::WHERE_AND_OPEN) ? true : false;
+			$this->_evaluates[$fromIndex] = ($relation == Array_Builder::WHERE_AND_OPEN) ? true : false;
 		}
 	
-		// Tobb WHERE ertek eseten relacio alapjan kiertekeli a kifejezeseket
-		switch ($rel)
+		$this->evaulateByRelation($relation, $fromIndex, $whereIndex);
+	}
+	
+	protected function evaulateByRelation($relation, $fromIndex, $whereIndex)
+	{
+		// Relacio alapjan kiertekeli a kifejezeseket
+		switch ($relation)
 		{
 			case self::WHERE_AND:
 				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] && $this->_expressions[$fromIndex][$whereIndex];
@@ -460,5 +484,5 @@ trait Array_Builder_Trait_Where
 		}
 		
 		return $evaulate;
-	}
+	}		
 }
