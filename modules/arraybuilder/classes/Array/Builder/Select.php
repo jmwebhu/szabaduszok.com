@@ -148,7 +148,7 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * Lekerdezes futtatasa
 	 *
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 */
 	public function execute()
 	{

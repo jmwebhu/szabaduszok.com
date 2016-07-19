@@ -20,30 +20,30 @@ trait Array_Builder_Trait_Where
 	 *
 	 * Pl.:
 	 *
-	 * $_from = [
+	 * ```$_from = [
 	 * 		111 => ['id' => 1, 'name' => 'first', 'budget' => 2000],
 	 * 		112 => ['id' => 2, 'name' => 'second', 'budget' => 3000],
 	 * 		...
-	 * ];
+	 * ];```
 	 *
-	 * $_where = [
+	 * ```$_where = [
 	 * 		['type' => 'AND', 'column' => 'budget', 'relation' => '>', 'value' => 5000],
 	 * 		['type' => 'OR', 'column' => 'id', 'relation' => '=', 'value' => 2],
 	 * 		...
-	 * ];
+	 * ];```
 	 *
 	 * Ebben az esetben az $_expressions tomb igy fog kinezni:
 	 *
-	 * $_expressions = [
+	 * ```$_expressions = [
 	 * 		111 => [false, false],
 	 * 		112 => [false, true],
 	 * 		...
-	 * ];
+	 * ];```
 	 *
 	 * A kiertekeleskor pedig ezek a bool ertekek lesznek vizsgalva a $_where -ben levo 'type' alapjan. Pl.:
 	 *
-	 * 	111 =>	false || false
-	 * 	112 =>	false || true
+	 * 	```111 =>	false || false
+	 * 	112 =>	false || true```
 	 *
 	 * @var array $_expressions
 	 */
@@ -56,17 +56,17 @@ trait Array_Builder_Trait_Where
 	 * Ez a tomb hatarozza, hogy egy adott $_from elem szerepel -e a visszateresi ertekben
 	 * 
 	 * Pl.:
-	 * $_expressions = [
+	 * ```$_expressions = [
 	 * 		111 => [false, false],
 	 * 		112 => [false, true],
 	 * 		...
-	 * ];
+	 * ];```
 	 * 
-	 * $_evaluates = [
+	 * ```$_evaluates = [
 	 *		111 => false,
 	 *		112 => true,
 	 *		...
-	 * ];
+	 * ];```
 	 *
 	 * @var array $_evaluates
 	 */
@@ -98,7 +98,9 @@ trait Array_Builder_Trait_Where
 	 * @param string $value			Ertek
 	 * @param string $type			Tipus (and, or). Nem kotelezo
 	 *
-	 * @return ArrayBuilder
+	 * @return Array_Builder
+	 * 
+	 * @uses Array_Builder_Trait_Where::_where
 	 */
 	public function where($column, $relation, $value, $type = null)
 	{
@@ -121,9 +123,9 @@ trait Array_Builder_Trait_Where
 	 * @param string $relation		Relacio
 	 * @param string $value			Ertek	 
 	 *
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 * 
-	 * @uses Array_Builder_Trait_Where::where()		$_where beallitasa
+	 * @uses Array_Builder_Trait_Where::where()
 	 */
 	public function and_where($column, $relation, $value)
 	{
@@ -137,9 +139,9 @@ trait Array_Builder_Trait_Where
 	 * @param string $relation		Relacio
 	 * @param string $value			Ertek
 	 *
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 * 
-	 * @uses Array_Builder_Trait_Where::where()		$_where beallitasa
+	 * @uses Array_Builder_Trait_Where::where()	
 	 */
 	public function or_where($column, $relation, $value)
 	{
@@ -151,19 +153,19 @@ trait Array_Builder_Trait_Where
 	 *
 	 * Pl.:
 	 *
-	 * 	->and_where_open()
-	 * 		->where('id', '=', 1)
-	 * 		->where('name', 'LIKE', 'name')
-	 * 	->and_where_close()
-	 * 	->or_where('budget', '>', 100000)
+	 * 	``` ->and_where_open()
+	 *			->where('id', '=', 1)
+	 *			->where('name', 'LIKE', 'name')
+	 *		->and_where_close()
+	 *		->or_where('budget', '>', 100000)```
 	 *
 	 * 	Eredmeny:
-	 * 		WHERE (id = 1 AND name LIKE 'name') OR budget > 100000
+	 * 	```WHERE (id = 1 AND name LIKE 'name') OR budget > 100000```
 	 * 
 	 * @param void
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 * 
-	 * @uses Array_Builder_Trait_Where::where()		$_where beallitasa
+	 * @uses Array_Builder_Trait_Where::where()
 	 */
 	public function and_where_open()
 	{
@@ -174,9 +176,10 @@ trait Array_Builder_Trait_Where
 	 * Lezarja az and_where_open() altal megnyitott zarojelet
 	 * 
 	 * @param void
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 * 
-	 * @uses Array_Builder_Trait_Where::where()		$_where beallitasa
+	 * @uses Array_Builder_Trait_Where::where()
+	 * @see Array_Builder_Trait_Where::and_where_open()
 	 */
 	public function and_where_close()
 	{
@@ -188,19 +191,19 @@ trait Array_Builder_Trait_Where
 	 *
 	 * Pl.:
 	 *
-	 * 	->or_where_open()
-	 * 		->where('id', '=', 1)
-	 * 		->where('name', 'LIKE', 'name')
-	 * 	->or_where_close()
-	 * 	->and_where('budget', '>', 100000)
+	 * 	```	->or_where_open()
+	 *			->where('id', '=', 1)
+	 *			->where('name', 'LIKE', 'name')
+	 *		->or_where_close()
+	 *		->and_where('budget', '>', 100000)```
 	 *
 	 * 	Eredmeny:
-	 * 		WHERE (id = 1 OR name LIKE 'name') AND budget > 100000
+	 * 	````WHERE (id = 1 OR name LIKE 'name') AND budget > 100000```
 	 * 
 	 * @param void
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 * 
-	 * @uses Array_Builder_Trait_Where::where()		$_where beallitasa
+	 * @uses Array_Builder_Trait_Where::where()
 	 */
 	public function or_where_open()
 	{
@@ -211,9 +214,10 @@ trait Array_Builder_Trait_Where
 	 * Lezarja az or_where_open() altal megnyitott zarojelet
 	 * 
 	 * @param void
-	 * @return ArrayBuilder
+	 * @return Array_Builder
 	 * 
-	 * @uses Array_Builder_Trait_Where::where()		$_where beallitasa
+	 * @uses Array_Builder_Trait_Where::where()
+	 * @see Array_Builder_Trait_Where::or_where_open()
 	 */
 	public function or_where_close()
 	{
