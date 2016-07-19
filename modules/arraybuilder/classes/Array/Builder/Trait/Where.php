@@ -198,26 +198,24 @@ trait Array_Builder_Trait_Where
 	/**
 	 * Kiertelekeli a kapott $_where es $_from ertekek alapjan a relaciokat. Osszeallitja az $_expressions tombot
 	 *
-	 * @param array|ORM $fromItem		$_from egy eleme
+	 * @param array|ORM $fromItemTmp	$_from egy eleme
 	 * @param array		$whereItem		$_where egy eleme
 	 * @param int	 	$index			$_from -on belul a $fromItem indexe. Ez az index lesz az $_expressions uj elemenek indexe is.
-	 * @param inr		$whereIndex		Aktualis $whereItem indexe $_where -n belul
+	 * @param int		$whereIndex		Aktualis $whereItem indexe $_where -n belul
 	 */
-	protected function addWhereExpression($fromItem, array $whereItem, $index, $whereIndex)
+	protected function addWhereExpression($fromItemTmp, array $whereItem, $index, $whereIndex)
 	{
-		$isLast = ($index == 2);
-		$fromItem = $this->getArrayFromObject($fromItem);
+		$fromItem = $this->getArrayFromObject($fromItemTmp);
 	
 		// Ha meg nincs az adott indexhez elem
 		if (empty($this->_expressions[$index]))
 		{
 			$this->_expressions[$index] = [];
 		}
-	
-		$col 		= Arr::get($whereItem, 'col');
-		$rel 		= Arr::get($whereItem, 'rel');
-		$val 		= Arr::get($whereItem, 'val');
-		$fromValue 	= Arr::get($fromItem, $col);
+		
+		// _where -ben es _from -ban levo ertek, ezek lesznek osszehasonlitva
+		$whereValue = $whereItem['val'];
+		$fromValue 	= $fromItem[$whereItem['col']];
 		
 		// Az adott _where tipusa nyito, vagy zaro relacio
 		if (in_array($whereItem['type'], $this->getOpenCloseIndexes()))
@@ -226,75 +224,90 @@ trait Array_Builder_Trait_Where
 		}
 	
 		// $_where -ben levo relacio alapjan osszehasonlitja a $_from es $_where ertekeket
-		switch ($rel)
+		switch ($whereItem['rel'])
 		{
-			case self::REL_EQUALS: default:
-
-				if (is_numeric($fromValue))
-				{
-					$this->_expressions[$index][$whereIndex] = $fromValue == $val;
-				}
-				else
-				{
-					/**
-					 * bug.v21.2 es bug.v21.3 miatt kell strcoll, es mb_
-					 * Igy case insensitive marad es utf8 biztos
-					 */
-					$cmp 							= Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $val);									
-					$this->_expressions[$index][$whereIndex] 	= $cmp == 0;
-				}
-				
+			case self::REL_EQUALS: default:			
+				$this->addWhereExpressionEquals($fromValue, $whereValue, $index, $whereIndex, Array_Builder::REL_EQUALS);
 				break;
 	
 			case self::REL_GRATER_OR_EQUALS:
-				$this->_expressions[$index][$whereIndex] = $fromValue >= $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue >= $whereValue;
 				break;
 	
 			case self::REL_GREATER:
-				$this->_expressions[$index][$whereIndex] = $fromValue > $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue > $whereValue;
 				break;
 	
 			case self::REL_LESS:
-				$this->_expressions[$index][$whereIndex] = $fromValue < $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue < $whereValue;
 				break;
 	
 			case self::REL_LESS_OR_EQUALS:
-				$this->_expressions[$index][$whereIndex] = $fromValue <= $val;
+				$this->_expressions[$index][$whereIndex] = $fromValue <= $whereValue;
 				break;
 					
 			case self::REL_NOT_EQUALS:				
-				if (is_numeric($fromValue))
-				{
-					$this->_expressions[$index][$whereIndex] = $fromValue != $val;
-				}
-				else
-				{
-					/**
-					 * bug.v21.2 es bug.v21.3 miatt kell strcoll, es mb_
-					 * Igy case insensitive marad es utf8 biztos
-					 */
-					$cmp 							= Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $val);									
-					$this->_expressions[$index][$whereIndex] 	= $cmp != 0;				
-				}
+				$this->addWhereExpressionEquals($fromValue, $whereValue, $index, $whereIndex, Array_Builder::REL_NOT_EQUALS);
 				break;
 	
 			case self::REL_LIKE:
-				$fromValueLower = mb_strtolower($fromValue);
-				$valLower 		= mb_strtolower($val);
-
-				if (empty($valLower))
-				{
-					$exp = true;					
-				}
-				else
-				{
-					$exp = (stripos($fromValueLower, $valLower) === false) ? false : true;
-				}
-
-				$this->_expressions[$index][$whereIndex] = $exp;
+				$this->addWhereExpressionLike($fromValue, $whereValue, $index, $whereIndex);
 				break;
 		}
 	}	
+	
+	/**
+	 * _expression kitoltese '=', vagy '!=' relacio eseten
+	 * 
+	 * @param mixed $fromValue	$_from egy elemenek erteke. Ez lesz osszehasonlitva a $val -val
+	 * @param mixed $whereValue	$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
+	 * @param int $index		$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param int $whereIndex	$_where -en beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param string $relation	Relacio. Array_Builder konstans
+	 */
+	protected function addWhereExpressionEquals($fromValue, $whereValue, $index, $whereIndex, $relation)
+	{
+		if (is_numeric($fromValue))
+		{
+			$this->_expressions[$index][$whereIndex] = $fromValue == $whereValue;
+		}
+		else
+		{
+			/**
+			 * bug.v21.2 es bug.v21.3 miatt kell strcoll, es mb_
+			 * Igy case insensitive marad es utf8 biztos
+			 * 
+			 * @see ArrayBuilderTest (group bug.v21.2, bug.v21.3)
+			 */
+			$cmp									 = Text::compareStringsUtf8SafeCaseInsensitive($fromValue, $whereValue);											
+			$this->_expressions[$index][$whereIndex] = ($relation == Array_Builder::REL_EQUALS) ? $cmp == 0 : $cmp != 0;
+		}
+	}
+	
+	/**
+	 * _expression kitoltese 'LIKE'
+	 * 
+	 * @param mixed $fromValue	$_from egy elemenek erteke. Ez lesz osszehasonlitva a $val -val
+	 * @param mixed $whereValue		$_where egy elemenek erteke. Ez lesz osszehasonlitva a $fromValue -val
+	 * @param int $index		$_from -on beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 * @param int $whereIndex	$_where -en beluli index. Ez az index lesz az $_expressions uj elemenek indexe is.
+	 */
+	protected function addWhereExpressionLike($fromValue, $whereValue, $index, $whereIndex)
+	{
+		$fromValueLower = mb_strtolower($fromValue);
+		$valLower 		= mb_strtolower($whereValue);
+
+		if (empty($valLower))
+		{
+			$exp = true;					
+		}
+		else
+		{
+			$exp = (stripos($fromValueLower, $valLower) === false) ? false : true;
+		}
+
+		$this->_expressions[$index][$whereIndex] = $exp;
+	}
 	
 	/**
 	 * Kiertekeli az osszeallitott $_expressions tombot es beallitja az $_evaluates tomb ertekeit
