@@ -22,8 +22,8 @@ return array
 			 */
 			'hostname'   => '127.0.0.1',
 			'database'   => $baseconfig['db'],
-			'username'   => 'root',
-			'password'   => '',
+			'username'   => $baseconfig['db_user'],
+			'password'   => $baseconfig['db_password'],
 			'persistent' => FALSE,
 		),
 		'table_prefix' => '',
