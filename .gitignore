@@ -10,3 +10,4 @@
 /application/config/base.php
 /.htaccess
 /db
+/modules/arraybuilder/docs
