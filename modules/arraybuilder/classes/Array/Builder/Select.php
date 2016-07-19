@@ -8,23 +8,23 @@
  * @author 		Joó Martin <joomartin@jmweb.hu>
  * @package		Core
  * @copyright	(c) 2016 Szabaduszok.com
- * @date		2017.06.04
  * @version		1.0
  * @link		https://www.dropbox.com/s/7d49u7sl7fu9cs9/Fejleszt%C3%A9si%20le%C3%ADr%C3%A1s%2C%20rendszerterv.pages?dl=0
  * @see			Array_Builder
+ * 
+ * 2017.06.04
  *
  * Pelda:
  *
- * $projects = AB::select()
+ * ```$projects = AB::select()
  *		->from('projects')
  *		->where('search_text', 'LIKE', 'web')
  *		->order_by('name')
  *		->limit(3)->offset(1)
- *		->execute()->as_array();
+ *		->execute()->as_array();```
  *
  * @todo IN operator
  * @todo JOIN
- * @todo _where_open / close
  */
 
 class Array_Builder_Select extends Array_Builder
@@ -53,7 +53,7 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * ORDER_BY zaradek
 	 *
-	 * ['col', 'dir']
+	 * ['column', 'direction']
 	 *
 	 * @var array $_order_by
 	 */
@@ -67,12 +67,14 @@ class Array_Builder_Select extends Array_Builder
 	
 	/**
 	 * LIMIT zaradek
+	 * 
 	 * @var null|int $_limit
 	 */
 	protected $_limit = null;
 	
 	/**
 	 * OFFSET zaradek
+	 * 
 	 * @var null|int $_offset
 	 */
 	protected $_offset = null;
@@ -81,6 +83,9 @@ class Array_Builder_Select extends Array_Builder
 	 * Beallitja a $_select erteket
 	 *
 	 * @param array|string 	$columns		Lekerdezendo mezok array -kent megadva. Vagy string, lehet hasznalni a '*' jelet.
+	 * @return Array_Builder
+	 * 
+	 * @uses Array_Builder_Select::_select
 	 */
 	public function select($columns = null)
 	{
@@ -99,7 +104,10 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * LIMIT zaradek beallitasa
 	 *
-	 * @param int $limit
+	 * @param int $limit		LIMIT zaradek
+	 * @return Array_Builder
+	 * 
+	 * @uses Array_Builder_Select::_limit
 	 */
 	public function limit($limit)
 	{
@@ -111,7 +119,10 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * OFFSET zaradek beallitasa
 	 *
-	 * @param int $offset
+	 * @param int $offset	OFFSET zaradek
+	 * @return Array_Builder
+	 * 
+	 * @uses Array_Builder_Select::_offset
 	 */
 	public function offset($offset)
 	{
@@ -123,14 +134,16 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * ORDER_BY beallitasa
 	 *
-	 * @param string $col		Mezonev
-	 * @param string $dir		Irany. Alapertelmezetten novekvo, tehat ASC
-	 * @return ArrayBuilder
+	 * @param string $column		Mezonev
+	 * @param string $direction		Irany. Alapertelmezetten novekvo, tehat ASC
+	 * 
+	 * @return Array_Builder
+	 * @uses Array_Builder_Select::_order_by
 	 */
-	public function order_by($col, $dir = self::ORDER_ASC)
+	public function order_by($column, $direction = self::ORDER_ASC)
 	{
-		$this->_order_by['col'] = $col;
-		$this->_order_by['dir'] = $dir;
+		$this->_order_by['column'] = $column;
+		$this->_order_by['direction'] = $direction;
 	
 		return $this;
 	}
@@ -148,7 +161,15 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * Lekerdezes futtatasa
 	 *
+	 * @param void
 	 * @return Array_Builder
+	 * 
+	 * @uses Array_Builder_Select::validate()
+	 * @uses Array_Builder_Trait_Where::addWhereExpressions()
+	 * @uses Array_Builder_Trait_Where::validate()
+	 * @uses Array_Builder_Select::setResult()
+	 * @uses Array_Builder_Select::orderResult()
+	 * @uses Array_Builder_Select::limitResult()
 	 */
 	public function execute()
 	{
@@ -164,6 +185,12 @@ class Array_Builder_Select extends Array_Builder
 
 	/**
 	 ÷ Ellenorzi a parameterek execute() elott
+	 * 
+	 * @param void
+	 * @return void
+	 * 
+	 * @throws Exception_Array_Builder_Select	Helytelen $_from paramter eseten
+	 * @uses Array_Builder::_from
 	 */
 	protected function validate()
 	{		
@@ -175,9 +202,16 @@ class Array_Builder_Select extends Array_Builder
 	
 	/**
 	 * Visszaadja az osszes lekerdezett rekorbol a $_select -ben megadott mezoket.
+	 * Mindenkepp tobb elemu tombot ad vissza.
+	 * 
 	 * Ha a $_select -ben olyan mezonev szerepel, ami nem letezik a $_result -ban, akkor NULL -t ad vissza ertekkent
 	 *
+	 * @param void
 	 * @return array		Rekordok
+	 * 
+	 * @uses Array_Builder::_result
+	 * @uses Array_Builder_Select::_select
+	 * @uses Array_Builder::getArrayFromObject()
 	 */
 	public function as_array()
 	{
@@ -208,7 +242,11 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * Visszaad egy rekordot.
 	 *
-	 * @return array			Rekord
+	 * @param void
+	 * @return array		Rekord
+	 * 
+	 * @uses Array_Builder_Select::as_array()
+	 * @uses Array_Builder::_result
 	 */
 	public function current()
 	{
@@ -219,16 +257,21 @@ class Array_Builder_Select extends Array_Builder
 	}
 	
 	/**
-	 * Visszaad egyetlen mezo erteket. Csak akkor hasznalhato, ha egy rekordot ad vissza a lekerdezed
+	 * Visszaadja egyetlen mezo erteket. Csak akkor hasznalhato, ha egy rekordot ad vissza a lekerdezes
 	 *
-	 * @param string $col		Mezonev
+	 * @param string $column	Mezonev
+	 * @return mixed			Mezo ertek	
+	 * 
+	 * @uses Array_Builder::getArrayFromObject()
+	 * @uses Array_Builder::_result
+	 * @uses Array_Builder_Select::current()
 	 */
-	public function get($col)
+	public function get($column)
 	{
 		$this->current();
 		
 		$array 			= $this->getArrayFromObject($this->_result);
-		$this->_result 	= Arr::get($array, $col);
+		$this->_result 	= Arr::get($array, $column);
 	
 		return $this->_result;
 	}
@@ -236,7 +279,10 @@ class Array_Builder_Select extends Array_Builder
 	/**
 	 * Visszadja az eredmenyhalmaz darabszamat
 	 * 
+	 * @param void
 	 * @return int $count	Darabszam
+	 * 
+	 * @uses Array_Builder::_result
 	 */
 	public function count()
 	{
@@ -245,10 +291,16 @@ class Array_Builder_Select extends Array_Builder
 	
 	/**
 	 * Eredmeny limitalasa LIMIT es OFFSET zaradekban megadott ertekeknek megfeleloen
+	 * 
+	 * @param void
+	 * @return void
+	 * 
+	 * @uses Array_Builder::_result
+	 * @uses Array_Builder::_offset
+	 * @uses Array_Builder::_limit
 	 */
 	protected function limitResult()
 	{
-
 		if ($this->_limit)
 		{
 			$offset			= ($this->_offset) ? $this->_offset : 0;
@@ -258,12 +310,19 @@ class Array_Builder_Select extends Array_Builder
 	
 	/**
 	 * Rendezi a teljes $_result tombot az $_order_by ertekek alapjan
+	 * 
+	 * @param void
+	 * @return mixed	Csak akkor ter vissza false -val, ha nincs megadva rendezes
+	 * 
+	 * @uses Array_Builder_Select::_order_by
+	 * @uses Array_Builder::_result
+	 * @uses Array_Builder_Select::order()
 	 */
 	protected function orderResult()
 	{
-		$col = Arr::get($this->_order_by, 'col');
+		$column = Arr::get($this->_order_by, 'column');
 	
-		if (!$col)
+		if (!$column)
 		{
 			return false;
 		}
@@ -278,41 +337,43 @@ class Array_Builder_Select extends Array_Builder
 	 * @param array|ORM $b  Masik elem
 	 *
 	 * @return int          1, 0, -1
+	 * 
+	 * @uses Array_Builder::getArrayFromObject()
+	 * @uses Array_Builder_Select::_order_by
 	 */
 	protected function order($a, $b)
 	{
 		// Konvertalas tombokke
-		$a	 	= $this->getArrayFromObject($a);
-		$b	 	= $this->getArrayFromObject($b);
+		$arrayA	 	= $this->getArrayFromObject($a);
+		$arrayB	 	= $this->getArrayFromObject($b);
 	
 		// $_order_by ertekek
-		$dir 	= Arr::get($this->_order_by, 'dir');
-		$col 	= Arr::get($this->_order_by, 'col');
+		$direction 	= Arr::get($this->_order_by, 'direction');
+		$column 	= Arr::get($this->_order_by, 'column');
 	
 		// Osszahasonlitando ertekek
-		$aVal	= Arr::get($a, $col);
-		$bVal	= Arr::get($b, $col);
+		$aValue		= Arr::get($arrayA, $column);
+		$bValue		= Arr::get($arrayB, $column);
 	
 		// Szam ertekek eseten egyszeru operatorok
-		if (is_numeric($aVal) && is_numeric($bVal))
+		if (is_numeric($aValue) && is_numeric($bValue))
 		{		
-			$aVal = floatval($aVal);
-			$bVal = floatval($bVal);
+			$aValue = floatval($aValue);
+			$bValue = floatval($bValue);
 					
-			if ($aVal < $bVal)
+			if ($aValue < $bValue)
 			{
-				return ($dir == self::ORDER_ASC) ? -1 : 1;
+				return ($direction == self::ORDER_ASC) ? -1 : 1;
 			}
-			elseif ($aVal > $bVal)
+			elseif ($aValue > $bValue)
 			{
-				return ($dir == self::ORDER_ASC) ? 1 : -1;
+				return ($direction == self::ORDER_ASC) ? 1 : -1;
 			}
 		}
 		else	// String ertekek eseten case-insensitive strcasecmp
 		{
-			//$cmp = strcasecmp($aVal, $bVal);
-			$cmp = Text::compareStringsUtf8SafeCaseInsensitive($aVal, $bVal);		
-			return ($dir == self::ORDER_ASC) ? $cmp : (-1 * $cmp);
+			$cmp = Text::compareStringsUtf8SafeCaseInsensitive($aValue, $bValue);		
+			return ($direction == self::ORDER_ASC) ? $cmp : (-1 * $cmp);
 		}
 	
 		return 0;
@@ -320,6 +381,14 @@ class Array_Builder_Select extends Array_Builder
 	
 	/**
 	 * Beallitja a $_result erteket a lekerdezes eredmenyere. Az as_array(), current() es get() ebbol fog dolgozni
+	 * 
+	 * @param void
+	 * @return void
+	 * 
+	 * @uses Array_Builder_Trait_Where::_where
+	 * @uses Array_Builder::_result
+	 * @uses Array_Builder_Trait_Where::_evaluates
+	 * @uses Array_Builder::_from
 	 */
 	protected function setResult()
 	{

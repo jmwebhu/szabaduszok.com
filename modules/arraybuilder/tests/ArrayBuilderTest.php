@@ -2515,4 +2515,47 @@ class ArrayBuilderTest extends Unittest_TestCase
 		$this->assertFalse($evaluates[2]);
 		$this->assertTrue($evaluates[3]);*/
 	}
+	
+	/**
+	 * @group order_by
+	 */
+	public function testOrderBy()
+	{
+		$data = [
+			['name' => 'Béla'], ['name' => 'Martin'], ['name' => 'Ferenc'], ['name' => 'Anna']
+		];
+		
+		$result = AB::select()->from($data)->order_by('name')->execute()->as_array();
+
+		$this->assertEquals('Anna', $result[0]['name']);
+		$this->assertEquals('Béla', $result[1]['name']);
+		$this->assertEquals('Ferenc', $result[2]['name']);
+		$this->assertEquals('Martin', $result[3]['name']);
+		
+		$result = AB::select()->from($data)->order_by('name', 'DESC')->execute()->as_array();
+
+		$this->assertEquals('Martin', $result[0]['name']);
+		$this->assertEquals('Ferenc', $result[1]['name']);
+		$this->assertEquals('Béla', $result[2]['name']);
+		$this->assertEquals('Anna', $result[3]['name']);		
+	}
+	
+	/**
+	 * @group limit
+	 * @group offset
+	 */
+	public function testLimitOffset()
+	{
+		$data = [
+			['name' => 'Béla'], ['name' => 'Martin'], ['name' => 'Ferenc'], ['name' => 'Anna']
+		];
+		
+		$result = AB::select()->from($data)->order_by('name')->limit(1)->execute()->current();
+
+		$this->assertEquals('Anna', $result['name']);
+		
+		$result = AB::select()->from($data)->order_by('name')->limit(1)->offset(1)->execute()->current();
+
+		$this->assertEquals('Béla', $result['name']);
+	}
 }
