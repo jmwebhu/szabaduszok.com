@@ -15,7 +15,7 @@
  *
  * Pelda:
  *
- * $projects = AB::insert('projects')->set($keys)->values($values)->execute();
+ * ```$projects = AB::insert('projects')->set($keys)->values($values)->execute();```
  *
  */
 
@@ -62,13 +62,14 @@ class Array_Builder_Insert extends Array_Builder
 	 * 
 	 * Pl.:
 	 * 
-	 * $skill = new Model_Skill(12);
-	 * ...
-	 * ...->set($skill->skill_id)->values($skill);
+	 * ```$skill = new Model_Skill(12);
+	 *    ...
+	 *	->set($skill->skill_id)->values($skill);```
 	 * 
 	 * Ilyenkor a cache 12 indexebe szurja be a modelt
 	 * 
-	 * @param array $index	Mezo nevek
+	 * @param array $index	Index
+	 * @return Array_Builder
 	 */
 	public function set($index)
 	{
@@ -86,6 +87,7 @@ class Array_Builder_Insert extends Array_Builder
 	 * VALUES zaradek
 	 * 
 	 * @param array|Object $values		Ertekek
+	 * @return Array_Builder
 	 */
 	public function values($values)
 	{
@@ -96,9 +98,9 @@ class Array_Builder_Insert extends Array_Builder
 
 	/**
 	 * Lekerdezes futtatasa
-	 * {@inheritDoc}
 	 * @see Array_Builder::execute()
 	 * 
+	 * @param void
 	 * @return array
 	 */
 	public function execute()

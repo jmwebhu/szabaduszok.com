@@ -8,21 +8,20 @@
  * @author 		Joó Martin <joomartin@jmweb.hu>
  * @package		Core
  * @copyright	(c) 2016 Szabaduszok.com
- * @date		2017.06.05
  * @version		1.0
  * @link		https://www.dropbox.com/s/7d49u7sl7fu9cs9/Fejleszt%C3%A9si%20le%C3%ADr%C3%A1s%2C%20rendszerterv.pages?dl=0
  * @see			Array_Builder
  *
+ * 2017.06.05
+ * 
  * Pelda:
  * 
- * $skill = new Model_Skill(1);
- * 
- * $skill->delete();
- * 
- * $delete = AB::delete('skills', 1)->execute();
+ * ```$delete = AB::delete('skills', 1)->execute();```
  * 
  * NINCS WHERE ZARADEK! Mivel az esetek legnagyobb reszeben csak a cache tomb x. elemet toroljuk, igy a tablenev mellett az id -t lehet megadni.
- *
+ * CSAK CACHE -BOL DOLGOZIK.
+ * 
+ * @todo ne csak cache -vel mukodjon, hanem sima array -vel is
  */
 
 class Array_Builder_Delete extends Array_Builder
@@ -56,10 +55,9 @@ class Array_Builder_Delete extends Array_Builder
 	}	
 
 	/**
-	 * Lekerdezes futtatasa
-	 * {@inheritDoc}
-	 * @see Array_Builder::execute()
+	 * Lekerdezes futtatasa	 
 	 * 
+	 * @param void  
 	 * @return array
 	 */
 	public function execute()
