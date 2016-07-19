@@ -5,6 +5,6 @@ return [
 	'cache_default'		=> 'sqlite',
 	'db'				=> 'v21.szabaduszok.com',
 	'db_user'			=> 'root',
-	'db_password'		=> ''
+	'db_password'		=> '',
 	//'env'				=> 20,
 ];
