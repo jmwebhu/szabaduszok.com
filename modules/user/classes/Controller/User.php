@@ -206,7 +206,7 @@ class Controller_User extends Controller_DefaultTemplate
 			$this->context->title				= 'Szabadúszó profil szerkesztés';
 			$this->context->hasCancel			= (int) $authorization->hasCancel();
 			$this->context->user				= $user;
-			$this->context->industries			= $industry->getAll();
+			$this->context->industries			= $industry->getAll();			
 			$this->context->hasPrivacyCheckbox	= Viewhelper_User::hasPrivacyCheckbox('edit');
 			$this->context->pageTitle			= Viewhelper_User::getPageTitleFreelancer('edit');
 			$this->context->passwordText		= Viewhelper_User::getPasswordText('edit');
