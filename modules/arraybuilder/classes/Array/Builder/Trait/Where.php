@@ -169,7 +169,7 @@ trait Array_Builder_Trait_Where
 	 */
 	public function and_where_open()
 	{
-		return $this->where(null, null, null, Array_Builder::WHERE_AND_OPEN);
+		//return $this->where(null, null, null, Array_Builder::WHERE_AND_OPEN);
 	}
 	
 	/**
@@ -183,7 +183,7 @@ trait Array_Builder_Trait_Where
 	 */
 	public function and_where_close()
 	{
-		return $this->where(null, null, null, Array_Builder::WHERE_AND_CLOSE);
+		//return $this->where(null, null, null, Array_Builder::WHERE_AND_CLOSE);
 	}
 	
 	/**
@@ -207,7 +207,7 @@ trait Array_Builder_Trait_Where
 	 */
 	public function or_where_open()
 	{
-		return $this->where(null, null, null, Array_Builder::WHERE_OR_OPEN);
+		//return $this->where(null, null, null, Array_Builder::WHERE_OR_OPEN);
 	}
 	
 	/**
@@ -221,7 +221,7 @@ trait Array_Builder_Trait_Where
 	 */
 	public function or_where_close()
 	{
-		return $this->where(null, null, null, Array_Builder::WHERE_OR_CLOSE);
+		//return $this->where(null, null, null, Array_Builder::WHERE_OR_CLOSE);
 	}
 	
 	/**
@@ -430,7 +430,7 @@ trait Array_Builder_Trait_Where
 	 * @uses Array_Builder_Trait_Where::_where
 	 */
 	protected function evaluateExpressions()
-	{
+	{		
 		// Vegmegy bemeneti $_from ertekeken
 		foreach ($this->_from as $fromIndex => $fromItem)
 		{
@@ -473,7 +473,9 @@ trait Array_Builder_Trait_Where
 		// Egy WHERE eseten ugyanaz lesz a kiertelekeles, mint a kifejezes. Elso WHERE eseten pedig initeli az _evaluates -t
 		if ($onlyOneWhere || $whereIndex == $firstRealWhereIndex)
 		{		
-			$this->_evaluates[$fromIndex] = array_values($this->_expressions[$fromIndex])[0];				
+			$this->_evaluates[$fromIndex]			= array_values($this->_expressions[$fromIndex])[0];	
+			//$this->_where[$whereIndex]['evaluated']	= true;
+			
 			return false;
 		}
 		
@@ -498,8 +500,22 @@ trait Array_Builder_Trait_Where
 		{
 			$this->_evaluates[$fromIndex] = ($relation == Array_Builder::WHERE_AND_OPEN) ? true : false;
 		}
-	
-		$this->evaulateByRelation($relation, $fromIndex, $whereIndex);
+		
+		/**
+		 * Meg nem volt kiertekelve. Azert kell vizsgalni, mert open() hivasknal
+		 * a zarojelek kozti where() -eket megjeloljuk egy 'evaluated' flaggel.
+		 * Itt azert kell ez az ellenorzes, mert azok mar ki vannak ertelekve, igy
+		 * ignoralni kell oket.
+		 * 
+		 * issue#1 emiatt volt
+		 * 
+		 * @see Array_Builder_Trait_Where::evaulateByRelation()
+		 * @see Array_Builder_Trait_Where::evaulateByOpen()
+		 */
+		//if (!isset($this->_where[$whereIndex]['evaluated']))
+		//{			
+			$this->evaulateByRelation($relation, $fromIndex, $whereIndex);
+		//}			
 	}
 	
 	/**
@@ -519,29 +535,39 @@ trait Array_Builder_Trait_Where
 	 */
 	protected function evaulateByRelation($relation, $fromIndex, $whereIndex)
 	{
-		// Relacio alapjan kiertekeli a kifejezeseket
-		switch ($relation)
-		{
-			case Array_Builder::WHERE_AND:
-				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] && $this->_expressions[$fromIndex][$whereIndex];
-				break;
-	
-			case Array_Builder::WHERE_OR:				
-				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] || $this->_expressions[$fromIndex][$whereIndex];
-				break;
+		/*if (!isset($this->_where[$whereIndex]['evaluated']))
+		{*/
+			// Relacio alapjan kiertekeli a kifejezeseket
+			switch ($relation)
+			{			
+				case Array_Builder::WHERE_AND:
+					$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] && $this->_expressions[$fromIndex][$whereIndex];
+					break;
+
+				case Array_Builder::WHERE_OR:				
+					$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] || $this->_expressions[$fromIndex][$whereIndex];
+					break;
+
+				/*case Array_Builder::WHERE_AND_OPEN:	
+					$whereAndOpen					= $this->evaulateByOpen(Array_Builder::WHERE_AND, $fromIndex, $whereIndex);
+					$this->_evaluates[$fromIndex]	= $this->_evaluates[$fromIndex] && $whereAndOpen;	
+					break;*/
+
+				/*case Array_Builder::WHERE_OR_OPEN:
+					$whereOrOpen					= $this->evaulateByOpen(Array_Builder::WHERE_OR, $fromIndex, $whereIndex);
+					$this->_evaluates[$fromIndex]	= $this->_evaluates[$fromIndex] || $whereOrOpen;				
+					break;	*/
+
+				default: break;
+			}	
 			
-			case Array_Builder::WHERE_AND_OPEN:
-				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] && $this->evaulateByOpen(Array_Builder::WHERE_AND, $fromIndex, $whereIndex);
-				break;
-			
-			case Array_Builder::WHERE_OR_OPEN:
-				$this->_evaluates[$fromIndex] = $this->_evaluates[$fromIndex] || $this->evaulateByOpen(Array_Builder::WHERE_OR, $fromIndex, $whereIndex);				
-				break;			
-		}
+			// Megjeloli az adott where -t, mint kiertekelt
+			//$this->_where[$whereIndex]['evaluated'] = true;	
+		//}								
 	}
 	
 	/**
-	 * Kiertekeli a nyito kifejezest (_OPEN)
+	 * Kiertekeli a nyito kifejezes (_OPEN) tartalmat
 	 * 
 	 * @param string $type		Relacio tipusa (OR, AND)
 	 * @param int  $fromIndex	Aktualis index a _from tombben
@@ -554,17 +580,23 @@ trait Array_Builder_Trait_Where
 	 * @uses Array_Builder_Trait_Where::hasBreak
 	 */
 	protected function evaulateByOpen($type, $fromIndex, $whereIndex)
-	{
+	{		
 		$evaulate = null;			
 		
 		// A kovetkezo WHERE -tol megy egeszen a CLOSE hivasig, amit egy break biztosit
-		for ($i = $whereIndex + 1; $i < count($this->_expressions[$fromIndex]); $i++)
+		for ($i = $whereIndex + 1; $i <= $this->getLastExpressionIndex($fromIndex); $i++)
 		{
 			// Nincs ilyen indexu $_where elem. A $_where indexek nem szekvencionalisak, mert az OPEN, CLOSE zaradekok nem szerepelnek benn
 			if (!isset($this->_where[$i]))
 			{
 				continue;
-			}			
+			}
+
+			/**
+			 * Megjeloli az adott where -t, mint kiertekelt
+			 * issue#1
+			 */
+			//$this->_where[$i]['evaluated'] = true;	
 			
 			if ($this->hasBreak($type, $i))
 			{
@@ -581,11 +613,26 @@ trait Array_Builder_Trait_Where
 			else	// Nem ez az elso WHERE 
 			{				
 				$evaulate = ($this->_where[$i]['type'] == Array_Builder::WHERE_AND) ? ($evaulate && $currentExpression) : ($evaulate || $currentExpression);
-			}						
-		}
+			}								
+		}		
 		
 		return $evaulate;
 	}	
+	
+	/**
+	 * Visszaadja az $_expressions tomb egy elemenek az utolso indexet
+	 * 
+	 * @param int $fromIndex	$_expressions egy indexe
+	 * @return int				Utolso index
+	 * 
+	 * @uses Array_Builder_Select_Where::_expressions
+	 */
+	protected function getLastExpressionIndex($fromIndex)
+	{
+		$keys = array_keys($this->_expressions[$fromIndex]);
+		
+		return $keys[count($keys) - 1];
+	}
 	
 	/**
 	 * Visszaadja a $_where tombbol az elso indexet, de csak a tenyleges WHERE
