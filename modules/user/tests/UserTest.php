@@ -365,4 +365,28 @@ class UserTest extends Unittest_TestCase
 		$this->assertTrue(in_array(4, $userProfileIds));
 		$this->assertTrue(in_array(1, $userProfileIds));
 	}
+	
+	/**
+	 * @covers Model_User::postWebpage
+	 * @dataProvider testFixUrlDataProvider
+	 * 
+	 * @group url
+	 */
+	public function testFixUrl($expected, $actual)
+	{
+		$this->assertEquals($expected, $actual);
+	}
+	
+	public function testFixUrlDataProvider()
+	{
+		$user = new Model_User();
+		
+		return [
+			['http://jmweb.hu', $this->invokeMethod($user, 'fixUrl', [['webpage' => 'jmweb.hu'], 'webpage'])],
+			['http://jmweb.hu', $this->invokeMethod($user, 'fixUrl', [['webpage' => 'http://jmweb.hu'], 'webpage'])],
+			['https://jmweb.hu', $this->invokeMethod($user, 'fixUrl', [['webpage' => 'https://jmweb.hu'], 'webpage'])],
+			['', $this->invokeMethod($user, 'fixUrl', [['webpage' => ''], 'webpage'])],
+			[null, $this->invokeMethod($user, 'fixUrl', [['webpage' => null], 'webpage'])]
+		];
+	}
 }

@@ -61,12 +61,21 @@
 									{% endif %}									
 								</div>
 								
-                                                                <div class="col-5 fs18">
+								<div class="col-5 fs18">
 									<span class="ion ion-email icon-dark-gray"></span>
 								</div>
 								<div class="col-95 fs18 profile-email-container">
-                                                                    <a href="mailto:{{ user.email }}">E-mail küldése</a>
+									<a href="mailto:{{ user.email }}">E-mail küldése</a>
 								</div>
+								
+								{% if user.webpage %}
+								<div class="col-5 fs16 profile-webpage-icon-container">
+									<span class="fa fa-chrome icon-dark-gray"></span>
+								</div>
+								<div class="col-95 fs18 profile-webpage-container">
+									<a href="{{ user.webpage }}" target="_blank">Weboldal megtekintése</a>
+								</div>
+								{% endif %}
                                                                 
 								{% if user.cv_path %}
 								<div class="col-5 fs18">

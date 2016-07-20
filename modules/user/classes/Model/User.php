@@ -49,8 +49,9 @@ class Model_User extends Model_Auth_User
 		'search_text'				=> ['type' => 'string', 'null' => true],
 		'old_user_id'				=> ['type' => 'int', 'null' => true],
 		'password_plain'			=> ['type' => 'string', 'null' => true],
-                'landing_page_id'			=> ['type' => 'int', 'null' => true],
-                'need_project_notification'             => ['type' => 'int', 'null' => true],
+		'landing_page_id'			=> ['type' => 'int', 'null' => true],
+		'need_project_notification'	=> ['type' => 'int', 'null' => true],
+		'webpage'					=> ['type' => 'string', 'null' => true],
 	];
 	
     protected $_has_many = [
@@ -271,6 +272,7 @@ class Model_User extends Model_Auth_User
     	}    			
 		
 		$this->fixPostalCode($post);
+		$this->fixUrl($post, 'webpage');
 		
     	if ($id)
     	{
@@ -313,6 +315,28 @@ class Model_User extends Model_Auth_User
     
     	return $this;
     }
+	
+	/**
+	 * A weboldal ele teszi a 'http' stringet, ha nincs ott
+	 * 
+	 * @param array $post	_POST adatok
+	 * @return string		Javitott URL
+	 */
+	protected function fixUrl(array &$post, $index)
+	{
+		$webpage = Arr::get($post, $index);
+		if (!empty($webpage))
+		{
+			$needPrefix = (stripos($webpage, 'http://') === false && stripos($webpage, 'https://') === false);
+		
+			if ($needPrefix)
+			{
+				$post[$index] = 'http://' . $post[$index];				
+			}
+		}				
+		
+		return $post[$index];
+	}
 	
 	/**
 	 * NULL -ra allitja az iranyitoszamot, ha ures string
@@ -578,15 +602,18 @@ class Model_User extends Model_Auth_User
 		// Vegmegy a post profilokon
 		foreach (Arr::get($post, 'profiles') as $url)
 		{
+			$temp = ['url' => $url];
+			$fixedUrl = $this->fixUrl($temp, 'url');
+			
 			// Vegmegy a rendszerben levo profilokon
 			foreach ($baseUrls as $profileId => $baseUrl)
 			{
 				// Ha kapott url megfelel valamelyik rendszerben levonek
-				if (strpos($url, $baseUrl) !== false)
+				if (stripos($fixedUrl, $baseUrl) !== false)
 				{
 					$userProfile				= new Model_User_Profile();
 					$userProfile->profile_id	= $profileId;
-					$userProfile->url			= $url;
+					$userProfile->url			= $fixedUrl;
 					$userProfile->user_id		= $this->pk();
 					
 					$userProfile->save();
