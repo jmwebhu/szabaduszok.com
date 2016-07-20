@@ -26,22 +26,6 @@
     color: #E86A10 !important;
 }
 
-/*.landing-page.freelancer h1 {
-    color: #ecf0f1 !important;
-}*Ŗ
-
-.landing-page h2 {
-    font-size: 24px !important;
-}
-
-/*.landing-page.freelancer h2, .landing-page.freelancer p {
-    color: #fff !important;
-}*/
-
-/*.landing-page.freelancer .panel-heading h2 {
-    color: #000 !important;
-}*/
-
 .landing-page .call-to-action {
     margin: 10px auto;
     /*background-color:#F0BF2B;*/
@@ -73,7 +57,7 @@
 }
 
 .landing-page.container {
-    background-image: url("../../../../media/img/szabaduszok-startup-rocket.jpg");
+    background-image: url("../img/szabaduszok-startup-rocket.jpg");
 }
 
 /*.landing-page.container.freelancer {
