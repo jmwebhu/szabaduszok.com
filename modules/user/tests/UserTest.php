@@ -368,25 +368,25 @@ class UserTest extends Unittest_TestCase
 	
 	/**
 	 * @covers Model_User::postWebpage
-	 * @dataProvider testFixWebpageDataProvider
+	 * @dataProvider testFixUrlDataProvider
 	 * 
-	 * @group webpage
+	 * @group url
 	 */
-	public function testFixWebpage($expected, $actual)
+	public function testFixUrl($expected, $actual)
 	{
 		$this->assertEquals($expected, $actual);
 	}
 	
-	public function testFixWebpageDataProvider()
+	public function testFixUrlDataProvider()
 	{
 		$user = new Model_User();
 		
 		return [
-			['http://jmweb.hu', $this->invokeMethod($user, 'fixWebpage', [['webpage' => 'jmweb.hu']])],
-			['http://jmweb.hu', $this->invokeMethod($user, 'fixWebpage', [['webpage' => 'http://jmweb.hu']])],
-			['https://jmweb.hu', $this->invokeMethod($user, 'fixWebpage', [['webpage' => 'https://jmweb.hu']])],
-			['', $this->invokeMethod($user, 'fixWebpage', [['webpage' => '']])],
-			[null, $this->invokeMethod($user, 'fixWebpage', [['webpage' => null]])]
+			['http://jmweb.hu', $this->invokeMethod($user, 'fixUrl', [['webpage' => 'jmweb.hu'], 'webpage'])],
+			['http://jmweb.hu', $this->invokeMethod($user, 'fixUrl', [['webpage' => 'http://jmweb.hu'], 'webpage'])],
+			['https://jmweb.hu', $this->invokeMethod($user, 'fixUrl', [['webpage' => 'https://jmweb.hu'], 'webpage'])],
+			['', $this->invokeMethod($user, 'fixUrl', [['webpage' => ''], 'webpage'])],
+			[null, $this->invokeMethod($user, 'fixUrl', [['webpage' => null], 'webpage'])]
 		];
 	}
 }

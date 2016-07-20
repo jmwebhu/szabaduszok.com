@@ -272,7 +272,7 @@ class Model_User extends Model_Auth_User
     	}    			
 		
 		$this->fixPostalCode($post);
-		$this->fixWebpage($post);
+		$this->fixUrl($post, 'webpage');
 		
     	if ($id)
     	{
@@ -322,20 +322,20 @@ class Model_User extends Model_Auth_User
 	 * @param array $post	_POST adatok
 	 * @return string		Javitott URL
 	 */
-	protected function fixWebpage(array &$post)
+	protected function fixUrl(array &$post, $index)
 	{
-		$webpage = Arr::get($post, 'webpage');
+		$webpage = Arr::get($post, $index);
 		if (!empty($webpage))
 		{
 			$needPrefix = (stripos($webpage, 'http://') === false && stripos($webpage, 'https://') === false);
 		
 			if ($needPrefix)
 			{
-				$post['webpage'] = 'http://' . $post['webpage'];				
+				$post[$index] = 'http://' . $post[$index];				
 			}
 		}				
 		
-		return $post['webpage'];
+		return $post[$index];
 	}
 	
 	/**
@@ -602,15 +602,18 @@ class Model_User extends Model_Auth_User
 		// Vegmegy a post profilokon
 		foreach (Arr::get($post, 'profiles') as $url)
 		{
+			$temp = ['url' => $url];
+			$fixedUrl = $this->fixUrl($temp, 'url');
+			
 			// Vegmegy a rendszerben levo profilokon
 			foreach ($baseUrls as $profileId => $baseUrl)
 			{
 				// Ha kapott url megfelel valamelyik rendszerben levonek
-				if (strpos($url, $baseUrl) !== false)
+				if (stripos($fixedUrl, $baseUrl) !== false)
 				{
 					$userProfile				= new Model_User_Profile();
 					$userProfile->profile_id	= $profileId;
-					$userProfile->url			= $url;
+					$userProfile->url			= $fixedUrl;
 					$userProfile->user_id		= $this->pk();
 					
 					$userProfile->save();
