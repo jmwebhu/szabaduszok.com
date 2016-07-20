@@ -49,8 +49,9 @@ class Model_User extends Model_Auth_User
 		'search_text'				=> ['type' => 'string', 'null' => true],
 		'old_user_id'				=> ['type' => 'int', 'null' => true],
 		'password_plain'			=> ['type' => 'string', 'null' => true],
-                'landing_page_id'			=> ['type' => 'int', 'null' => true],
-                'need_project_notification'             => ['type' => 'int', 'null' => true],
+		'landing_page_id'			=> ['type' => 'int', 'null' => true],
+		'need_project_notification'	=> ['type' => 'int', 'null' => true],
+		'webpage'					=> ['type' => 'string', 'null' => true],
 	];
 	
     protected $_has_many = [
@@ -271,6 +272,7 @@ class Model_User extends Model_Auth_User
     	}    			
 		
 		$this->fixPostalCode($post);
+		$this->fixWebpage($post);
 		
     	if ($id)
     	{
@@ -313,6 +315,28 @@ class Model_User extends Model_Auth_User
     
     	return $this;
     }
+	
+	/**
+	 * A weboldal ele teszi a 'http' stringet, ha nincs ott
+	 * 
+	 * @param array $post	_POST adatok
+	 * @return string		Javitott URL
+	 */
+	protected function fixWebpage(array &$post)
+	{
+		$webpage = Arr::get($post, 'webpage');
+		if (!empty($webpage))
+		{
+			$needPrefix = (stripos($webpage, 'http://') === false && stripos($webpage, 'https://') === false);
+		
+			if ($needPrefix)
+			{
+				$post['webpage'] = 'http://' . $post['webpage'];				
+			}
+		}				
+		
+		return $post['webpage'];
+	}
 	
 	/**
 	 * NULL -ra allitja az iranyitoszamot, ha ures string
