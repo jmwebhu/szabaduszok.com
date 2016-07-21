@@ -35,6 +35,9 @@ class profiles extends Migration
   {
     $this->drop_table('profiles');
 
-    // $this->remove_column('table_name', 'column_name');
+    $this->sql("DELETE FROM `profiles` WHERE slug = 'linkedin'");
+	$this->sql("DELETE FROM `profiles` WHERE slug = 'stackoverflow'");
+	$this->sql("DELETE FROM `profiles` WHERE slug = 'facebook'");
+	$this->sql("DELETE FROM `profiles` WHERE slug = 'twitter'");
   }
 }

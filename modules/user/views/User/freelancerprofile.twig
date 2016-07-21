@@ -30,7 +30,7 @@
 							
 							<div class="external-profile-container">
 								{% for userProfile in user.profiles.find_all() %}
-									<a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ userProfile.profile.name }}">
+									<a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.name() }} - {{ userProfile.profile.name }} profil">
 										<span class="{{ userProfile.profile.icon_type }} {{ userProfile.profile.icon }} icon-sm icon-blue fs24"></span>
 									</a>									
 								{% endfor %}
