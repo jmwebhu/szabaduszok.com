@@ -17,12 +17,12 @@ class Email extends Kohana_Email
 
             if (!$mail)
             {
-                    throw new Exception(__('emailSendError'));
+				throw new Exception(__('emailSendError: ' . $to));
             }	    	
 
             if (Kohana::$environment == Kohana::DEVELOPMENT)
             {
-                    file_put_contents($to . '.html', $message);
+				file_put_contents($to . '.html', $message);
             }    		
     	}
     	catch (Exception $ex)
