@@ -1080,12 +1080,16 @@ class Model_User extends Model_Auth_User
      */
     public function sendProjectNotification()
     {
-        $notificationModel = new Model_Project_Notification();
-        $notifications     = $notificationModel->where('is_sended', '=', 0)->find_all();
+        $notificationModel	= new Model_Project_Notification();
+        $notifications		= $notificationModel->where('is_sended', '=', 0)->find_all();
+		
+		$signupModel		= new Model_Signup();
+        $signups			= $signupModel->find_all();
+		
+		$limit = Kohana::$config->load('cron')->get('notificationLimit');                
         
         if ($notifications)
-        {
-            $limit = Kohana::$config->load('cron')->get('notificationLimit');                
+        {            
             foreach ($notifications as $i => $notification)
             {
                 /**
@@ -1109,7 +1113,14 @@ class Model_User extends Model_Auth_User
                     return false;
                 }
             }
-        }               
+        }  
+		
+		/**
+		 * @todo 
+		 *  - osszegyujteni projekteket az elozo ciklusbol
+		 *  - vegmenni feliratkozokon
+		 *  - mindegyik projektrol kuldeni ertesitot
+		 */
         
         return true;
     }
