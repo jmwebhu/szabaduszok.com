@@ -720,9 +720,9 @@ class Controller_User extends Controller_DefaultTemplate
 	        	 */
 
 	        	$withPicture	= AB::select()->from($users)->where('profile_picture_path', '!=', '')->and_where('type', '=', 1)->order_by('lastname')->execute()->as_array();
-	        	$withName		= AB::select()->from($users)->where('firstname', '!=', '')->and_where('type', '=', 1)->order_by('lastname')->execute()->as_array();
-	        	$withoutName	= AB::select()->from($users)->where('firstname', '=', '')->order_by('lastname')->execute()->as_array();
-	        	$merged			= Arr::merge($withPicture, $withName, $withoutName);	
+	        	$withoutPicture	= AB::select()->from($users)->where('profile_picture_path', '=', '')->and_where('type', '=', 1)->order_by('lastname')->execute()->as_array();
+	        	//$withoutName	= AB::select()->from($users)->where('firstname', '=', '')->order_by('lastname')->execute()->as_array();
+	        	$merged			= Arr::merge($withPicture, $withoutPicture);	
 
 	        	$users 			= AB::select()->from($merged)->where('user_id', '!=', '')->limit($limit)->offset($offset)->execute()->as_array();
 	        }	                	        	     
