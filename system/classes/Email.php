@@ -6,6 +6,7 @@ class Email extends Kohana_Email
     {
     	try
     	{
+			$mail	   = false;			
             $headers   = array();
             $headers[] = "MIME-Version: 1.0";
             $headers[] = "Content-type: text/html; charset=UTF-8";
@@ -13,17 +14,20 @@ class Email extends Kohana_Email
             $headers[] = "Reply-To: Szabaduszok.com Csapata <hello@szabaduszok.com>";
             $headers[] = "X-Mailer: PHP/" . phpversion();
 
-            $mail = mail($to, $subject, $message, implode("\r\n", $headers));
+			if ($to)
+			{
+				$mail = mail($to, $subject, $message, implode("\r\n", $headers));
+				
+				if (!$mail)
+				{
+					throw new Exception(__('emailSendError: ' . $to));
+				}	    	
 
-            if (!$mail)
-            {
-				throw new Exception(__('emailSendError: ' . $to));
-            }	    	
-
-            if (Kohana::$environment == Kohana::DEVELOPMENT)
-            {
-				file_put_contents($to . '.html', $message);
-            }    		
+				if (Kohana::$environment == Kohana::DEVELOPMENT)
+				{
+					file_put_contents($to . '.html', $message);
+				}
+			}                            		
     	}
     	catch (Exception $ex)
     	{    		    		
