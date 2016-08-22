@@ -1501,7 +1501,7 @@ class Model_User extends Model_Auth_User
     {
         $lead = $leadMagnet->getCurrentByType($type);
         
-        if ($lead->loaded())
+        if ($email && $lead->loaded())
         {
             $html = Twig::getHtmlFromTemplate('Templates/leadMagnet.twig', [
                 'leadmagnet'    => $lead,
