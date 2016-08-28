@@ -1,13 +1,4 @@
 var Default = {
-	/*
-	 * processResults: function (data) {					
-					console.log(data);
-		            return {
-		                results: data
-		            };
-		        },
-	 */
-	
 	getSelect2Object: function (url) {
 		return {
 			theme: "bootstrap",
@@ -22,7 +13,7 @@ var Default = {
 		                term: params.term // search term
 		            };
 		        },
-		        processResults: function (data) {										
+		        processResults: function (data) {
 		            return {
 		                results: data
 		            };
@@ -31,7 +22,7 @@ var Default = {
 		    },
 		    minimumInputLength: 1,
 		    tags: true,
-		    tokenSeparators: [',',';'],
+		    tokenSeparators: [',',';']
 		};	
 	},
 	submitClick: function () {

@@ -42,7 +42,7 @@ class ORM extends Kohana_ORM
     {                             
         $singular   = $emptyModel->object_name();
         $className  = 'Model_' . ucfirst($singular);
-        $modelTemp  = new $className();
+        $modelTemp  = new $className();		
         
         // Azonosito, tehat letezik
         if (Text::isId($value))
@@ -50,7 +50,15 @@ class ORM extends Kohana_ORM
             $model = $modelTemp->findByPk($value);                
         }
         else	// Uj elem
-        {                        
+        {                      			
+			$byName				= new $className();
+			$byNameModel		= $byName->where('name', '=', mb_strtolower($value))->find(); 
+			
+			if ($byNameModel->loaded())
+			{
+				return $byNameModel;
+			}
+			
 			$modelTemp->name    = mb_strtolower($value);
             $model              = $modelTemp->save();
 
@@ -105,7 +113,7 @@ class ORM extends Kohana_ORM
 		 * @todo REFACT ALIAS
 		 */
 
-		$tmp = AB::select(['skill_id', 'name'])->from($items)->where('name', 'LIKE', $term)->order_by('name')->execute()->as_array();
+		$tmp = AB::select([$this->primary_key(), 'name'])->from($items)->where('name', 'LIKE', $term)->order_by('name')->execute()->as_array();
 		foreach ($tmp as $item)
 		{
 			$firstChar = substr($term, 0, 1);
