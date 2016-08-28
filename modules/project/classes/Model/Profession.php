@@ -29,25 +29,4 @@ class Model_Profession extends ORM
 	{
 		return $this->where('name', '=', $name);
 	}
-	
-	public function autocomplete($term)
-	{
-		$professions = $this->getAll();
-		$result = [];
-
-		/**
-		 * @todo REFACT ALIAS
-		 */
-
-		$tmp = AB::select(['profession_id', 'name'])->from($professions)->where('name', 'LIKE', $term)->order_by('name')->execute()->as_array();
-		foreach ($tmp as $item)
-		{
-			$result[] = [
-				'text'	=> Arr::get($item, 'name'),
-				'id'  	=> Arr::get($item, 'profession_id'),
-			]; 
-		}
-	
-		return $result;
-	}
 }

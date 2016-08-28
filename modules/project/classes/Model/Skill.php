@@ -18,26 +18,5 @@ class Model_Skill extends ORM
 		'skill_id'		=> ['type' => 'int', 'key' => 'PRI'],
 		'name'			=> ['type' => 'string', 'null' => true],
 		'slug'			=> ['type' => 'string', 'null' => true],
-	];
-	
-	public function autocomplete($term)
-	{	
-		$skills = $this->getAll();
-		$result = [];
-
-		/**
-		 * @todo REFACT ALIAS
-		 */
-
-		$tmp = AB::select(['skill_id', 'name'])->from($skills)->where('name', 'LIKE', $term)->order_by('name')->execute()->as_array();
-		foreach ($tmp as $item)
-		{
-			$result[] = [
-				'text'	=> Arr::get($item, 'name'),
-				'id'  	=> Arr::get($item, 'skill_id'),
-			]; 
-		}			
-		
-		return $result;
-	}
+	];		
 }

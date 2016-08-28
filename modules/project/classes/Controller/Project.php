@@ -397,22 +397,22 @@ class Controller_Project extends Controller_DefaultTemplate
 	        switch ($this->request->param('actiontarget'))
 	        {
 	        	case 'del':
-                            $project = new Model_Project(Input::post('id'));
-                            $json = json_encode($project->del());
+					$project = new Model_Project(Input::post('id'));
+					$json = json_encode($project->del());
 
-                            break;
+					break;
 	                
 	            case 'professionAutocomplete':
 	            	$profession = new Model_Profession();              	
-	            	$json = json_encode($profession->autocomplete(Input::get('term')));
+	            	$json = json_encode($profession->relationAutocomplete(Input::get('term')));
 	            	            	
 	            	break;
 	            	
 	            case 'skillAutocomplete':
-                            $skill = new Model_Skill();
-                            $json = json_encode($skill->autocomplete(Input::get('term')));
+					$skill = new Model_Skill();
+					$json = json_encode($skill->relationAutocomplete(Input::get('term')));
 
-                            break;
+					break;
 	                
 	            default:
 	            	throw new HTTP_Exception_400('Action target not found');

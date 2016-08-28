@@ -51,7 +51,7 @@ class ORM extends Kohana_ORM
         }
         else	// Uj elem
         {                        
-            $modelTemp->name    = $value;
+			$modelTemp->name    = mb_strtolower($value);
             $model              = $modelTemp->save();
 
             // Slug generalas, hozzadas cache gyujtemenyhez           
@@ -95,4 +95,30 @@ class ORM extends Kohana_ORM
 			$cache->set($relationModel->table_name(), $cacheRelations);
 		}        
     }
+	
+	public function relationAutocomplete($term)
+	{
+		$items = $this->getAll();
+		$result = [];
+
+		/**
+		 * @todo REFACT ALIAS
+		 */
+
+		$tmp = AB::select(['skill_id', 'name'])->from($items)->where('name', 'LIKE', $term)->order_by('name')->execute()->as_array();
+		foreach ($tmp as $item)
+		{
+			$firstChar = substr($term, 0, 1);
+			$isLower = ctype_lower($firstChar);			
+			
+			$text = ($isLower) ? mb_strtolower(Arr::get($item, 'name')) : ucfirst(Arr::get($item, 'name'));
+			
+			$result[] = [
+				'text'	=> $text,
+				'id'  	=> Arr::get($item, $this->primary_key())
+			];  
+		}			
+		
+		return $result;
+	}
 }
