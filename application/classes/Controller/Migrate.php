@@ -39,10 +39,10 @@ class Controller_Migrate extends Controller
 	
 	public function before()
 	{
-		//$user = Auth::instance()->get_user();
-		//if (!$user->is_admin)
-		//{
-		//	exit;
-		//}
+		$user = Auth::instance()->get_user();
+		if (!$user->is_admin)
+		{
+			exit;
+		}
 	}
 }
