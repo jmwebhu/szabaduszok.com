@@ -94,7 +94,11 @@ class ORM extends Kohana_ORM
 			foreach ($postData as $value)
 			{            
 				$relation       = $this->getOrCreate($value, $relationEndModel);
-				$relationIds[]  = $relation->pk();
+				
+				if (!$this->has($relationEndModel->object_plural(), $relation->pk()))
+				{
+					$relationIds[]  = $relation->pk();
+				}				
 
 				$cacheRelations[$this->pk()][] = $relation;
 			}                
