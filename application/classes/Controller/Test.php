@@ -4,9 +4,9 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {	        
-		$pass = Model_User::generatePassword();
-		echo Debug::vars($pass);
-		echo Debug::vars(Auth::instance()->hash($pass));
+		$skill = 67;
+		$count = DB::select([DB::expr('COUNT(user_id)'), 'count'])->from('users_skills')->where('skill_id', '=', $skill)->execute()->get('count');
+		echo Debug::vars($count);		
     }	
 
     public function action_clearcache()

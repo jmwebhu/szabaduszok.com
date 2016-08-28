@@ -181,6 +181,7 @@ class Migrate
 	
 	public static function mergeTags()
 	{
+		$result = [];
 		/**
 		 * @todo
 		 * - Lekerdezni az osszes skill -t
@@ -196,38 +197,74 @@ class Migrate
 		
 		$skills = DB::select()->from('skills')->execute()->as_array();
 		foreach ($skills as $i => $skill)
-		{
-			if (!count($skills))
-			{
-				echo Debug::vars('continue: ', $skill['skill_id']);
-				continue;
-			}
-			
+		{	
 			$matches = DB::select()->from('skills')->where('name', '=', $skill['name'])->and_where('skill_id', '!=', $skill['skill_id'])->execute()->as_array();						
 			foreach ($matches as $match)
 			{
-				$userSkills = DB::select()->from('users_skills')->where('skill_id', '=', $match['skill_id'])->execute()->as_array();
-				foreach ($userSkills as $userSkill)
+				$alreadyInMatches = false;
+				foreach ($result as $skillId => $item)
 				{
-					DB::update('users_skills')->set(['skill_id' => null])->where('skill_id', '=', $userSkill['skill_id'])->execute();					
-				}
-				
-				DB::delete('skills')->where('skill_id', '=', $match['skill_id'])->execute();
-				
-				foreach ($skills as $j => $tmpSkill) 
-				{
-					if ($tmpSkill['skill_id'] == $match['skill_id'])
+					if (in_array($skill['skill_id'], $item['matches']))
 					{
-						unset($skills[$j]);
+						$alreadyInMatches = true;
+						break;
 					}
 				}
+				
+				if (!$alreadyInMatches)
+				{
+					if (!isset($result[$skill['skill_id']]))
+					{
+						$result[$skill['skill_id']] = ['matches' => []];
+					}
+
+					$result[$skill['skill_id']]['matches'][] = $match['skill_id'];
+				}								
+			}	
+		}		
+		
+		foreach ($result as $skillId => $item)
+		{
+			$matches = $item['matches'];
+			$userModel = new Model_User();
+			$users = $userModel->find_all();
+
+			foreach ($users as $user)
+			{
+				$userMatches = [];
+				
+				if (is_array($matches))
+				{
+					$userMatches = DB::select()->from('users_skills')->where('user_id', '=', $user->user_id)->and_where('skill_id', 'IN', $matches)->execute()->as_array();
+				}
+				
+				$exists = count($userMatches) != 0;
+				
+				// vagy az eredeti skillel, vagy valamelyik egyezessel rendelkezik auser
+				if ($exists || $user->has('skills', $skillId))
+				{
+					// ha nincs eredeti, hozzaadja
+					if (!$user->has('skills', $skillId))
+					{
+						$user->add('skills', $skillId);
+					}
+					
+					// Torli az egyezeseket
+					if (is_array($matches))
+					{
+						DB::delete('users_skills')->where('user_id', '=', $user->user_id)->and_where('skill_id', 'IN', $matches)->execute();
+					}									
+				}									
 			}
-			
-			$newSkillName = mb_strtolower($skill['name']);
-			DB::update('skills')->set(['name' => $newSkillName])->where('skill_id', '=', $skill['skill_id'])->execute();			
-			DB::update('users_skills')->set(['skill_id' => $skill['skill_id']])->where('skill_id', 'IS', null)->execute();
-			
-			unset($skills[$i]);									
-		}
-	}
+		}	
+		
+		foreach ($result as $skillId => $item)
+		{
+			$matches = $item['matches'];
+			if (is_array($matches))
+			{
+				DB::delete('skills')->where('skill_id', 'IN', $matches)->execute();						
+			}			
+		}	
+	}	
 }
