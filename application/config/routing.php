@@ -84,6 +84,12 @@ Route::set('migrateSlug', 'migrate/slug')
 		'action'     => 'slug',
 ));
 
+Route::set('migrateMergeTags', 'migrate/mergetags')
+->defaults(array(
+		'controller' => 'Migrate',
+		'action'     => 'mergetags',
+));
+
 Route::set('testIndex', 'test/index')
 ->defaults(array(
 		'controller' => 'Test',

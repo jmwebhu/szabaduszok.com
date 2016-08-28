@@ -32,12 +32,17 @@ class Controller_Migrate extends Controller
 		Migrate::slug();
 	}
 	
+	public function action_mergetags()
+	{
+		Migrate::mergeTags();
+	}
+	
 	public function before()
 	{
-		$user = Auth::instance()->get_user();
-		if (!$user->is_admin)
-		{
-			exit;
-		}
+		//$user = Auth::instance()->get_user();
+		//if (!$user->is_admin)
+		//{
+		//	exit;
+		//}
 	}
 }

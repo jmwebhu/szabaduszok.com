@@ -178,4 +178,56 @@ class Migrate
 			}
 		}
 	}
+	
+	public static function mergeTags()
+	{
+		/**
+		 * @todo
+		 * - Lekerdezni az osszes skill -t
+		 * - Vegmenni, es keresni case insensitive egyezeseket
+		 * - Ha vannak egyezesek, le kell kerdezni az osszes user_skills -t, ami ezt hasznalja
+		 * - A user_skills -t atmenetileg NULL -ra kell allitani
+		 * - Torolni az osszes egyezest
+		 * - Az eredeti talalatot, konvertalni kisbetusre
+		 * - Minden user_skills -t, ami jelenleg NULL, at kell irni, az eredeti talalatra
+		 * 
+		 * - !!!Jelolni az egyezesekben, hogy feldolgozva
+		 */
+		
+		$skills = DB::select()->from('skills')->execute()->as_array();
+		foreach ($skills as $i => $skill)
+		{
+			if (!count($skills))
+			{
+				echo Debug::vars('continue: ', $skill['skill_id']);
+				continue;
+			}
+			
+			$matches = DB::select()->from('skills')->where('name', '=', $skill['name'])->and_where('skill_id', '!=', $skill['skill_id'])->execute()->as_array();						
+			foreach ($matches as $match)
+			{
+				$userSkills = DB::select()->from('users_skills')->where('skill_id', '=', $match['skill_id'])->execute()->as_array();
+				foreach ($userSkills as $userSkill)
+				{
+					DB::update('users_skills')->set(['skill_id' => null])->where('skill_id', '=', $userSkill['skill_id'])->execute();					
+				}
+				
+				DB::delete('skills')->where('skill_id', '=', $match['skill_id'])->execute();
+				
+				foreach ($skills as $j => $tmpSkill) 
+				{
+					if ($tmpSkill['skill_id'] == $match['skill_id'])
+					{
+						unset($skills[$j]);
+					}
+				}
+			}
+			
+			$newSkillName = mb_strtolower($skill['name']);
+			DB::update('skills')->set(['name' => $newSkillName])->where('skill_id', '=', $skill['skill_id'])->execute();			
+			DB::update('users_skills')->set(['skill_id' => $skill['skill_id']])->where('skill_id', 'IS', null)->execute();
+			
+			unset($skills[$i]);									
+		}
+	}
 }
