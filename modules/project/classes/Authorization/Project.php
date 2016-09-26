@@ -3,6 +3,24 @@
 class Authorization_Project extends Authorization
 {
 	/**
+	 * @todo
+	 */
+	public function __call($method, $arguments) 
+	{
+        /*if (method_exists($this, $method))
+        {
+            $before = $this->before();
+
+            if ($before)
+            {
+            	return true;
+            }
+
+            return call_user_func_array([$this, $method], $arguments);
+        }*/
+    }
+
+	/**
 	 * Lathatja -e a felvitel oldalt
 	 */
 	public function canCreate()
@@ -78,7 +96,7 @@ class Authorization_Project extends Authorization
 		return false;
 	}
 	
-	public function before()
+	protected function before()
 	{	
 		if ($this->_user->is_admin == 1)
 		{
