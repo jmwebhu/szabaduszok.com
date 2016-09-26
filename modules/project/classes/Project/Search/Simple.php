@@ -25,5 +25,4 @@ class Project_Search_Simple implements Project_Search
 
         return $projects->and_where('search_text', 'LIKE', $searchTerm)->execute()->as_array();
     }
-
 }
