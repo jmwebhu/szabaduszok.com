@@ -136,14 +136,12 @@ abstract class Entity
      * @param $from     Forras objektum
      * @param $to       Cel objektum
      *
-     * @return boolean  false, ha valamelyik parameter nem megfelelo, vagy nem letezo adattagot akar mappelni. Mindent logol
+     * @return boolean  false, ha valamelyik parameter nem megfelelo.
      */
     protected function map($from, $to)
     {
         try
         {
-            $result = true;
-
             // Csak objektumok lehetnek a parameterek
             if (!is_object($from) || !is_object($to))
             {
@@ -151,19 +149,14 @@ abstract class Entity
                 return false;
             }
 
+            $fromClass  = get_class($from);
+            $isEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
+            $realFrom   = ($isEntity) ? $this->getStdObject() : $from;
+
             // Vegmegy a Model osszes mezojen, es $this mezokhoz rendeli az ertekeket
-            foreach ($from as $key => $value)
+            foreach ($realFrom as $key => $value)
             {
-                // Csak akkor ha letezik
-                if (property_exists($to, $key))
-                {
-                    $to->{$key} = $value;
-                }
-                else    // Log bejegyzes keszitese
-                {
-                    $result = false;
-                    Log::instance()->add(Log::NOTICE, $key . ' not exists in class ' . get_class($this));
-                }
+                $to->{$key} = $value;
             }
         }
         catch (Exception $ex)
@@ -171,6 +164,50 @@ abstract class Entity
             Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
         }
 
-        return $result;
+        return true;
+    }
+
+    /**
+     * Visszaad egy stdClass -t, ami az Entity addattagjait tartlmazza "ORM-kompatibilis" modon.
+     *
+     * Az Entity privat addattagjai "_" jellel vannak prefixalva, pl.: $_name, ezeket kell eltavolitani
+     *
+     * @return stdClass     Ugyanazokat az adattagokat es ertekeket tartalmazza, mint a $this, csak "_" prefix nelkul
+     */
+    protected function getStdObject()
+    {
+        $entityStd          = new stdClass();
+        $disabledProperties = ['_model', '_business'];
+
+        foreach ($this as $key => $value)
+        {
+            if (!in_array($key, $disabledProperties))
+            {
+                $unprefixedName = $this->getUnprefixedPropertyName($key);
+                $entityStd->{$unprefixedName} = $value;
+            }
+        }
+
+        return $entityStd;
+    }
+
+    /**
+     * Visszaadja a "_" jellel prefixalt adattag prefix nelkuli nevet
+     *
+     * @param $prefixedName
+     * @return string
+     */
+    protected function getUnprefixedPropertyName($prefixedName)
+    {
+        $unprefixedName = $prefixedName;
+
+        // Ha tenlyeg '_' prefixalt
+        if (substr($prefixedName, 0, 1) == '_')
+        {
+            // Levagja az elso karaktert
+            $unprefixedName = substr($prefixedName, 1);
+        }
+
+        return $unprefixedName;
     }
 }
