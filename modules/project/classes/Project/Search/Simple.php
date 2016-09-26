@@ -12,13 +12,12 @@ class Project_Search_Simple implements Project_Search
      */
     public function search(array $data, Model_Project $project)
     {
-        $projects		= $project->getAll();
         $searchTerm 	= Arr::get($data, 'search_term');
 
         /**
          * @var $projects Array_Builder
          */
-        $projects = AB::select()->from($projects)->where('is_active', '=', 1)->order_by('created_at', 'DESC');
+        $projects = AB::select()->from('projects')->where('is_active', '=', 1)->order_by('created_at', 'DESC');
         if (!$searchTerm)
         {
             return $projects->execute()->as_array();

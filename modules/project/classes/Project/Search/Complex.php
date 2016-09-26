@@ -23,8 +23,7 @@ class Project_Search_Complex implements Project_Search
      */
     public function search(array $data, Model_Project $project)
     {
-        $projectsAll    = $project->getAll();
-        $projectsActive	= AB::select()->from($projectsAll)->where('is_active', '=', 1)->order_by('created_at', 'DESC')->execute()->as_array();
+        $projectsActive	= AB::select()->from('projects')->where('is_active', '=', 1)->order_by('created_at', 'DESC')->execute()->as_array();
 
         // Szukites iparagakra
         $projectsIndustries     = $this->searchByRelation(
@@ -121,9 +120,9 @@ class Project_Search_Complex implements Project_Search
              * @var $project Model_Project
              */
 
-            $search = $this->searchBySkillsAndSkillRelation($project, $postSkills, $projectSkill, $skillRelation);
+            $found = $this->searchBySkillsAndSkillRelation($project, $postSkills, $projectSkill, $skillRelation);
 
-            if ($search)
+            if ($found)
             {
                 $result[] = $project;
             }
@@ -148,7 +147,7 @@ class Project_Search_Complex implements Project_Search
 
         // Projekt kepessegei
         $projectSkills		 	= Arr::get($cacheProjectsSkills, $project->project_id, []);
-        $has					= false;
+        $has					= ($relation == self::SKILL_RELATION_OR) ? false : true;
 
         // Ha nincs a projekthez kepesseg
         if (empty($projectSkills))

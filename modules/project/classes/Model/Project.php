@@ -332,28 +332,5 @@ class Model_Project extends ORM
     	$projects = $this->getAll();    	
     	
     	return AB::select()->from($projects)->where('is_active', '=', 1)->order_by('created_at', 'DESC')->limit($limit)->offset($offset)->execute()->as_array();        	
-    }   
-    
-    /**
-     * Projekt kereses. POST -tol fuggoen reszletes, vagy egyszeru
-     * 
-     * @param array $post	_POST adatok
-     * @return array
-     */
-    public function search(array $post)
-    {
-    	// Reszletes kereses
-    	if (Arr::get($post, 'complex'))
-    	{
-    		$projects = $this->searchComplex($post);    		
-    	}
-    	else 	// Egyszeru kereses
-    	{
-    		$projects = $this->searchSimple($post);
-    	}
-    	
-    	usort($projects, ['Model_Project', 'sortByDate']);
-    	
-   		return $projects;
     }
 }
