@@ -146,7 +146,7 @@ class Project_Search_Complex implements Project_Search
         $cacheProjectsSkills    = $projectSkill->getAll();
 
         // Projekt kepessegei
-        $projectSkills		 	= Arr::get($cacheProjectsSkills, $project->project_id, []);
+        $projectSkills          = Arr::get($cacheProjectsSkills, $project->project_id, []);
         $has                    = ($relation == self::SKILL_RELATION_OR) ? false : true;
 
         // Ha nincs a projekthez kepesseg

@@ -1,6 +1,6 @@
 <?php
 
-class ProjectTest extends Unittest_TestCase
+class ProjectSearchComplexTest extends Unittest_TestCase
 {
     /**
      * @group complexSearch
