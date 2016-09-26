@@ -70,7 +70,7 @@ abstract class Entity
     }
 
     /**
-     * Entity mentese. Betolti az ertekeit a Modelbe es elmenti azt.
+     * Entity mentese elore beallitott ertetkekbol. Betolti az ertekeit a Modelbe es elmenti azt.
      *
      * @return bool     true, ha sikerult a muvelet
      */
@@ -83,6 +83,36 @@ abstract class Entity
 
             $this->mapThisToModel();
             $this->_model->save();
+
+            $this->setPrimaryKeyFromModel();
+        }
+        catch (Exception $ex)
+        {
+            $result = false;
+            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+        }
+        finally
+        {
+            Model_Database::trans_end([$result]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Entity mentese kapott adatokbol. Elmenti a Modelt, es visszatolti az Entity -be
+     *
+     * @return bool     true, ha sikerult a muvelet
+     */
+    public function submit(array $data)
+    {
+        try
+        {
+            $result = true;
+            Model_Database::trans_start();
+
+            $this->_model->submit($data);
+            $this->mapModelToThis();
         }
         catch (Exception $ex)
         {
@@ -145,18 +175,23 @@ abstract class Entity
             // Csak objektumok lehetnek a parameterek
             if (!is_object($from) || !is_object($to))
             {
-                Log::instance()->add(Log::NOTICE, 'Try to map non-object values');
+                Log::instance()->add(Log::NOTICE, 'Trying to map non-object value');
                 return false;
             }
 
-            $fromClass  = get_class($from);
-            $isEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
-            $realFrom   = ($isEntity) ? $this->getStdObject() : $from;
+            $fromClass      = get_class($from);
+
+            $isFromEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
+            $isToEntity     = !$isFromEntity;
+
+            $realFrom       = ($isFromEntity) ? $this->getStdObject() : $from->object();
+            $prefix         = ($isToEntity) ? '_' : '';
 
             // Vegmegy a Model osszes mezojen, es $this mezokhoz rendeli az ertekeket
             foreach ($realFrom as $key => $value)
             {
-                $to->{$key} = $value;
+                $fullKey        = $prefix . $key;
+                $to->{$fullKey} = $value;
             }
         }
         catch (Exception $ex)
@@ -209,5 +244,16 @@ abstract class Entity
         }
 
         return $unprefixedName;
+    }
+
+    /**
+     * Beallitja az elsodleges kulcs erteket Model alapjan
+     */
+    protected function setPrimaryKeyFromModel()
+    {
+        // Elsodleges kulcs ertekenek betoltese
+        $primaryKey         = $this->_model->primary_key();
+        $prefixed           = '_' . $primaryKey;
+        $this->{$prefixed}  = $this->_model->pk();
     }
 }
