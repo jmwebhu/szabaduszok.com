@@ -253,4 +253,388 @@ class ProjectTest extends Unittest_TestCase
         $this->assertFalse($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project3, $skills, $projectSkill3, Project_Search_Complex::SKILL_RELATION_AND]));
         $this->assertFalse($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project4, $skills, $projectSkill4, Project_Search_Complex::SKILL_RELATION_AND]));
     }
+
+    /**
+     * @group complexSearch
+     * @covers Project_Search_Complex::searchByRelation()
+     */
+    public function testSearchByRelationIndustryOk()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+        $project1->name = 'first';
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+        $project2->name = 'second';
+
+        $project3 = new Model_Project();
+        $project3->project_id = 3;
+        $project3->name = 'third';
+
+        $projectIndustries = [
+            1 => [
+                1, 2
+            ],
+            2 => [
+                3, 4
+            ],
+            3 => [
+                5, 6
+            ]
+        ];
+
+        $projectIndustry1  = $this->getMockBuilder('\Model_Project_Industry')->getMock();
+        $projectIndustry1->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectIndustries));
+
+        $industries = [1, 3, 4];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertTrue(in_array(2, $ids));
+        $this->assertFalse(in_array(3, $ids));
+
+        $industries = [6];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+
+        $industries = [7, 1, 8, 6];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+    }
+
+    /**
+     * @group complexSearch
+     * @covers Project_Search_Complex::searchByRelation()
+     */
+    public function testSearchByRelationIndustryNotOk()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+        $project1->name = 'first';
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+        $project2->name = 'second';
+
+        $project3 = new Model_Project();
+        $project3->project_id = 3;
+        $project3->name = 'third';
+
+        $projectIndustries = [
+            1 => [
+                1, 2
+            ],
+            2 => [
+                3, 4
+            ],
+            3 => [
+                5, 6
+            ]
+        ];
+
+        $projectIndustry1  = $this->getMockBuilder('\Model_Project_Industry')->getMock();
+        $projectIndustry1->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectIndustries));
+
+        $industries = [10];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertFalse(in_array(3, $ids));
+
+        $industries = [7, 11];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertFalse(in_array(3, $ids));
+    }
+
+    /**
+     * @group complexSearch
+     * @covers Project_Search_Complex::searchByRelation()
+     */
+    public function testSearchByRelationIndustryNoPostOk()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+        $project1->name = 'first';
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+        $project2->name = 'second';
+
+        $project3 = new Model_Project();
+        $project3->project_id = 3;
+        $project3->name = 'third';
+
+        $projectIndustries = [
+            1 => [
+                1, 2
+            ],
+            2 => [
+                3, 4
+            ],
+            3 => [
+                5, 6
+            ]
+        ];
+
+        $projectIndustry1  = $this->getMockBuilder('\Model_Project_Industry')->getMock();
+        $projectIndustry1->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectIndustries));
+
+        $industries = [];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertTrue(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+    }
+
+    /**
+     * @group complexSearch
+     * @covers Project_Search_Complex::searchByRelation()
+     */
+    public function testSearchByRelationProfessionOk()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+        $project1->name = 'first';
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+        $project2->name = 'second';
+
+        $project3 = new Model_Project();
+        $project3->project_id = 3;
+        $project3->name = 'third';
+
+        $projectProfessions = [
+            1 => [
+                1, 2
+            ],
+            2 => [
+                3, 4
+            ],
+            3 => [
+                5, 6
+            ]
+        ];
+
+        $projectIndustry1  = $this->getMockBuilder('\Model_Project_Profession')->getMock();
+        $projectIndustry1->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectProfessions));
+
+        $professions = [1, 3, 4];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertTrue(in_array(2, $ids));
+        $this->assertFalse(in_array(3, $ids));
+
+        $professions = [6];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+
+        $professions = [7, 1, 8, 6];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+    }
+
+    /**
+     * @group complexSearch
+     * @covers Project_Search_Complex::searchByRelation()
+     */
+    public function testSearchByRelationProfessionNotOk()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+        $project1->name = 'first';
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+        $project2->name = 'second';
+
+        $project3 = new Model_Project();
+        $project3->project_id = 3;
+        $project3->name = 'third';
+
+        $projectProfessions = [
+            1 => [
+                1, 2
+            ],
+            2 => [
+                3, 4
+            ],
+            3 => [
+                5, 6
+            ]
+        ];
+
+        $projectIndustry1  = $this->getMockBuilder('\Model_Project_Industry')->getMock();
+        $projectIndustry1->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectProfessions));
+
+        $professions = [10];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertFalse(in_array(3, $ids));
+
+        $professions = [7, 11];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
+        $this->assertFalse(in_array(3, $ids));
+    }
+
+    /**
+     * @group complexSearch
+     * @covers Project_Search_Complex::searchByRelation()
+     */
+    public function testSearchByRelationProfessionNoPostOk()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+        $project1->name = 'first';
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+        $project2->name = 'second';
+
+        $project3 = new Model_Project();
+        $project3->project_id = 3;
+        $project3->name = 'third';
+
+        $projectProfessions = [
+            1 => [
+                1, 2
+            ],
+            2 => [
+                3, 4
+            ],
+            3 => [
+                5, 6
+            ]
+        ];
+
+        $projectIndustry1  = $this->getMockBuilder('\Model_Project_Industry')->getMock();
+        $projectIndustry1->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectProfessions));
+
+        $professions = [];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
+        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertTrue(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+    }
 }

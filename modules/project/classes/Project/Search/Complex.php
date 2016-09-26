@@ -54,7 +54,7 @@ class Project_Search_Complex implements Project_Search
      *
      * @param array $projects           Projektek
      * @param array $postRelations      POST kapcsolatok azonositoi
-     * @param ORM $relationModel     Keresett kapcsolat ures modelje
+     * @param ORM $relationModel        Keresett kapcsolat ures modelje pl Model_Project_Skill
      *
      * @return array                    Talalati lista
      */
