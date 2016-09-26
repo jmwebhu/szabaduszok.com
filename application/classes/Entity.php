@@ -18,11 +18,6 @@ abstract class Entity
      * @var ORM
      */
     protected $_model;
-    /**
-     * Entity -hez tartozo BO peldany
-     * @var BO
-     */
-    protected $_business;
 
     /**
      * Entity constructor.
@@ -31,10 +26,8 @@ abstract class Entity
     {
         $entity     = $this->getEntityName();
         $modelClass = 'Model_' . $entity;
-        $boClass    = 'BO_' . $entity;
 
         $this->_model       = new $modelClass($id);
-        $this->_business    = new $boClass();
     }
 
     /**
@@ -51,22 +44,7 @@ abstract class Entity
     public function setModel(ORM $model)
     {
         $this->_model = $model;
-    }
-
-    /**
-     * @return BO
-     */
-    public function getBusiness()
-    {
-        return $this->_business;
-    }
-
-    /**
-     * @param BO $business
-     */
-    public function setBusiness(BO $business)
-    {
-        $this->_business = $business;
+        $this->mapModelToThis();
     }
 
     /**
