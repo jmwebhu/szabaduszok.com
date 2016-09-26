@@ -70,6 +70,34 @@ abstract class Entity
     }
 
     /**
+     * Entity mentese. Betolti az ertekeit a Modelbe es elmenti azt.
+     *
+     * @return bool     true, ha sikerult a muvelet
+     */
+    public function save()
+    {
+        try
+        {
+            $result = true;
+            Model_Database::trans_start();
+
+            $this->mapThisToModel();
+            $this->_model->save();
+        }
+        catch (Exception $ex)
+        {
+            $result = false;
+            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+        }
+        finally
+        {
+            Model_Database::trans_end([$result]);
+        }
+
+        return $result;
+    }
+
+    /**
      * Visszaadja az Entity nevet, pl Entity_Project eseten "Project"
      *
      * @return String
@@ -83,28 +111,66 @@ abstract class Entity
     }
 
     /**
-     * Hozzarendeli a betoltott Model ertekeit az Entity mezoihez
+     * Hozzarendeli a Model adattagjait az Entity adattagjaihoz
+     *
+     * @uses Entity::map()
      */
     protected function mapModelToThis()
     {
-        // Ha nincs betoltve, nem kell semmit csinalni
-        if (!$this->_model->loaded())
+        $this->map($this->_model, $this);
+    }
+
+    /**
+     * Hozzarendeli az Entity adattagjait a Model adattagjaihoz
+     *
+     * @uses Entity::map()
+     */
+    protected function mapThisToModel()
+    {
+        $this->map($this, $this->_model);
+    }
+
+    /**
+     * A $from objektum adattagjait hozzarendeli a $to objektum adattagjaihoz
+     *
+     * @param $from     Forras objektum
+     * @param $to       Cel objektum
+     *
+     * @return boolean  false, ha valamelyik parameter nem megfelelo, vagy nem letezo adattagot akar mappelni. Mindent logol
+     */
+    protected function map($from, $to)
+    {
+        try
         {
-            return true;
+            $result = true;
+
+            // Csak objektumok lehetnek a parameterek
+            if (!is_object($from) || !is_object($to))
+            {
+                Log::instance()->add(Log::NOTICE, 'Try to map non-object values');
+                return false;
+            }
+
+            // Vegmegy a Model osszes mezojen, es $this mezokhoz rendeli az ertekeket
+            foreach ($from as $key => $value)
+            {
+                // Csak akkor ha letezik
+                if (property_exists($to, $key))
+                {
+                    $to->{$key} = $value;
+                }
+                else    // Log bejegyzes keszitese
+                {
+                    $result = false;
+                    Log::instance()->add(Log::NOTICE, $key . ' not exists in class ' . get_class($this));
+                }
+            }
+        }
+        catch (Exception $ex)
+        {
+            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
         }
 
-        // Vegmegy a Model osszes mezojen, es $this mezokhoz rendeli az ertekeket
-        foreach ($this->_model as $key => $value)
-        {
-            // Csak akkor ha letezik
-            if (property_exists($this, $key))
-            {
-                $this->{$key} = $value;
-            }
-            else    // Log bejegyzes keszitese
-            {
-                \Log::instance()->add(\Log::NOTICE, $key . ' not exists in class ' . get_class($this));
-            }
-        }
+        return $result;
     }
 }
