@@ -298,8 +298,11 @@ class Controller_Project extends Controller_DefaultTemplate
         		$this->context->searchTerm			= Input::post('search_term');
         		$this->context->current				= 'simple';
         	}        	
-        	
-        	$projects = $project->search(Input::post_all());
+
+        	$entity = new Entity_Project();
+            Project_Search_Factory::getAndSetSearch(Input::post_all(), $entity);
+
+        	$projects = $entity->search(Input::post_all());
         }    
         else
         {        	        	

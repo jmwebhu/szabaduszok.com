@@ -3,6 +3,11 @@
 class Entity_Project extends Entity
 {
     /**
+     * @var Project_Search
+     */
+    private $_search;
+
+    /**
      * @var int
      */
     protected $_project_id;
@@ -341,5 +346,32 @@ class Entity_Project extends Entity
     public function setSlug($slug)
     {
         $this->_slug = $slug;
+    }
+
+    /**
+     * @return Project_Search
+     */
+    public function getSearch()
+    {
+        return $this->_search;
+    }
+
+    /**
+     * @param Project_Search $search
+     */
+    public function setSearch(Project_Search $search)
+    {
+        $this->_search = $search;
+    }
+
+    /**
+     * Kereses. Delegal a tartalmazott Project_Search Strategy -nek
+     *
+     * @param array $data       Keresei feltetelek
+     * @return array            Talalatok
+     */
+    public function search(array $data)
+    {
+        return $this->_search->search($data, new Model_Project());
     }
 }
