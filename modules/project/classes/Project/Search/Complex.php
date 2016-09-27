@@ -24,11 +24,11 @@ class Project_Search_Complex implements Project_Search
     public function search(array $data, Model_Project $project)
     {
         // Aktiv projektek
-        $projectsActive	= AB::select()->from('projects')->where('is_active', '=', 1)->order_by('created_at', 'DESC')->execute()->as_array();
+        $activeProjects         = $project->getActivesOrderedByCreated();
 
         // Szukites iparagakra
         $projectsIndustries     = $this->searchRelationsInProjects(
-            $projectsActive,
+            $activeProjects,
             Arr::get($data, 'industries', []),
             new Model_Project_Industry()
         );

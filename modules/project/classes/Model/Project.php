@@ -328,9 +328,26 @@ class Model_Project extends ORM
      */
     public function getOrdered($limit, $offset)
     {
-    	// Csak az aktiv projektek
-    	$projects = $this->getAll();    	
-    	
-    	return AB::select()->from($projects)->where('is_active', '=', 1)->order_by('created_at', 'DESC')->limit($limit)->offset($offset)->execute()->as_array();        	
+    	return AB::select()
+            ->from('projects')
+            ->where('is_active', '=', 1)
+            ->order_by('created_at', 'DESC')
+            ->limit($limit)->offset($offset)
+            ->execute()->as_array();
+    }
+
+    /**
+     * Visszaadja az aktiv projekteket created_at szerint rendezve a megadott iranyba
+     *
+     * @param string $direction     Rendezes iranya
+     * @return array                Aktiv projektek
+     */
+    public function getActivesOrderedByCreated($direction = 'DESC')
+    {
+        return AB::select()
+            ->from('projects')
+            ->where('is_active', '=', 1)
+            ->order_by('created_at', $direction)
+            ->execute()->as_array();
     }
 }
