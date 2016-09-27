@@ -24,10 +24,10 @@ abstract class Entity
      */
     public function __construct($id = null)
     {
-        $entity     = $this->getEntityName();
-        $modelClass = 'Model_' . $entity;
+        $entity         = $this->getEntityName();
+        $modelClass     = 'Model_' . $entity;
 
-        $this->_model       = new $modelClass($id);
+        $this->_model   = new $modelClass($id);
     }
 
     /**
@@ -143,8 +143,7 @@ abstract class Entity
             if ($this->validateObjects($from, $to)) {
                 $this->mapProperties($from, $to);
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
             $result = false;
         }
@@ -256,8 +255,8 @@ abstract class Entity
      */
     protected function setStdObjectUnprefixedProperty($entityStd, $key, $value)
     {
-        $unprefixedName = $this->getUnprefixedPropertyName($key);
-        $entityStd->{$unprefixedName} = $value;
+        $unprefixedName                 = $this->getUnprefixedPropertyName($key);
+        $entityStd->{$unprefixedName}   = $value;
     }
 
     /**
