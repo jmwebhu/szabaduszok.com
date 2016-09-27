@@ -1,80 +1,211 @@
 <?php
 
+/**
+ * Class Project_Search_Complex
+ *
+ * Reszletes kereses, iparagak, szakteruletek, kepessegek alapjan
+ *
+ * @author  Joo Martin
+ * @since   2.2
+ * @version 1.0
+ */
+
 class Project_Search_Complex implements Project_Search
 {
     /**
-     * Keresett Kepessegek kozti VAGY kapcsolat
-     * @var int
+     * @var int Keresett Kepessegek kozti VAGY kapcsolat
      */
     const SKILL_RELATION_OR = 1;
+
     /**
-     * Keresett Kepessegek kozti ES kapcsolat
-     * @var int
+     * @var int Keresett Kepessegek kozti ES kapcsolat
      */
     const SKILL_RELATION_AND = 2;
 
     /**
-     * Osszetett, felteteles kereses
-     *
-     * @param array $data               Keresesi feltetelek
-     * @param Model_Project $project    Ures project
-     *
-     * @return array                    Talalatok
+     * @var array Keresett iparagak azonositoi
      */
-    public function search(array $data, Model_Project $project)
+    private $_searchedIndustryIds = [];
+
+    /**
+     * @var array Keresett szakteruletek azonositoi
+     */
+    private $_searchedProfessionIds = [];
+
+    /**
+     * @var array Keresett kepessegek azonositoi
+     */
+    private $_searchedSkillIds = [];
+
+    /**
+     * @var int Keresett kepessegek kozti kapcsolat (ES, VAGY)
+     */
+    private $_skillRelation;
+
+    /**
+     * @var Model_Project Mindig az aktualisan keresett projekt peldanya
+     */
+    private $_currentProject;
+
+    /**
+     * @var array Keresesi talalatok
+     */
+    private $_matchedProjects = [];
+
+    /**
+     * @var ORM Egy peldany a keresett kapcsolat osszekoto modeljebol, ez lehet Model_Project_Industry, vagy
+     * Model_Project_Profession. Mivel a ket kapcsolat keresese ugyanugy van megvalositva, ezzel fogjuk megkulonboztetni
+     * hogy eppen a $_searchedIndustryIds -bol vagy a $_searchedProfessionIds -bol kell keresni
+     */
+    private $_searchedRelationModel;
+
+    /**
+     * @var array Mindig az aktualisan keresett kapcsolat azonositoit tartalmazza
+     */
+    private $_searchedRelationIds = [];
+
+    /**
+     * Project_Search_Complex constructor.
+     *
+     * @param array $searchedIndustryIds
+     * @param array $searchedProfessionIds
+     * @param array $searchedSkillIds
+     * @param int $skillRelation
+     */
+    public function __construct(
+        array $searchedIndustryIds, array $searchedProfessionIds, array $searchedSkillIds, $skillRelation)
     {
-        // Aktiv projektek
-        $activeProjects         = $project->getActivesOrderedByCreated();
+        $this->_searchedIndustryIds     = $searchedIndustryIds;
+        $this->_searchedProfessionIds   = $searchedProfessionIds;
+        $this->_searchedSkillIds        = $searchedSkillIds;
+        $this->_skillRelation           = $skillRelation;
 
-        // Szukites iparagakra
-        $projectsIndustries     = $this->searchRelationsInProjects(
-            $activeProjects,
-            Arr::get($data, 'industries', []),
-            new Model_Project_Industry()
-        );
-
-        // Szukites szakteruletekre
-        $projectsProfessions    = $this->searchRelationsInProjects(
-            $projectsIndustries,
-            Arr::get($data, 'professions', []),
-            new Model_Project_Profession()
-        );
-
-        // Szukites kepessegekre
-        $projectsSkills         = $this->searchSkillsInProjects(
-            $projectsProfessions,
-            Arr::get($data, 'skills', []),
-            Arr::get($data, 'skill_relation', 1),
-            new Model_Project_Skill()
-
-        );
-
-        return $projectsSkills;
+        $this->_currentProject          = new Model_Project();
     }
 
     /**
-     * Keresi a kapott kapcsolatokat a kapott projektekben
-     *
-     * @param array $projects               Osszes projekt
-     * @param array $searchedRelationIds    Keresett kapcsolat azonositok
-     * @param ORM $relationModel            A keresett kapcsolat ures model -je, pl Model_Project_Skill
-     *
-     * @return array                        Azok a projektek, amikben megtalalhato legalabb egy a keresett azonositokbol
+     * @return Model_Project
      */
-    protected function searchRelationsInProjects(array $projects, array $searchedRelationIds, ORM $relationModel)
+    public function getCurrentProject()
     {
-        $result = [];
+        return $this->_currentProject;
+    }
+
+    /**
+     * @param Model_Project $currentProject
+     */
+    public function setCurrentProject($currentProject)
+    {
+        $this->_currentProject = $currentProject;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchedIndustryIds()
+    {
+        return $this->_searchedIndustryIds;
+    }
+
+    /**
+     * @param array $searchedIndustryIds
+     */
+    public function setSearchedIndustryIds($searchedIndustryIds)
+    {
+        $this->_searchedIndustryIds = $searchedIndustryIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchedProfessionIds()
+    {
+        return $this->_searchedProfessionIds;
+    }
+
+    /**
+     * @param array $searchedProfessionIds
+     */
+    public function setSearchedProfessionIds($searchedProfessionIds)
+    {
+        $this->_searchedProfessionIds = $searchedProfessionIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchedSkillIds()
+    {
+        return $this->_searchedSkillIds;
+    }
+
+    /**
+     * @param array $searchedSkillIds
+     */
+    public function setSearchedSkillIds($searchedSkillIds)
+    {
+        $this->_searchedSkillIds = $searchedSkillIds;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkillRelation()
+    {
+        return $this->_skillRelation;
+    }
+
+    /**
+     * @param int $searchSkillRelation
+     */
+    public function setSkillRelation($searchSkillRelation)
+    {
+        $this->_skillRelation = $searchSkillRelation;
+    }
+
+    /**
+     * Osszetett, felteteles kereses
+     *
+     * @return array                    Talalatok
+     */
+    public function search()
+    {
+        // Osszes aktiv projekt
+        $this->_matchedProjects = $this->_currentProject->getActivesOrderedByCreated();
+
+        // Szukites iparagakra
+        $this->_searchedRelationModel = new Model_Project_Industry();
+        $this->_matchedProjects = $this->searchRelationsInProjects();
+
+        // Szukites szakteruletekre
+        $this->_searchedRelationModel = new Model_Project_Profession();
+        $this->_matchedProjects = $this->searchRelationsInProjects();
+
+        // Szukites kepessegekre
+        $this->_searchedRelationModel = new Model_Project_Skill();
+        $this->_matchedProjects = $this->searchSkillsInProjects();
+
+        return $this->_matchedProjects;
+    }
+
+    /**
+     * Keresi a kapcsolatokat a projetkekben
+     *
+     * @return array    Azok a projektek, amikben megtalalhato legalabb egy, a keresett azonositokbol
+     */
+    protected function searchRelationsInProjects()
+    {
+        $result                     = [];
+        $this->_searchedRelationIds = $this->getRelationIdsByModel();
 
         // Nincs keresendo adat
-        if (empty($searchedRelationIds)) {
-            return $projects;
+        if (empty($this->_searchedRelationIds)) {
+            return $this->_matchedProjects;
         }
 
-        // Osszes projekthez tartozo osszes kapcsolat, pl osszes iparag
-        $allRelationIds = $relationModel->getAll();
-
-        foreach ($projects as $project) {
-            $found = $this->searchRelationsInOneProject($project, $allRelationIds, $searchedRelationIds);
+        foreach ($this->_matchedProjects as $project) {
+            $this->_currentProject = $project;
+            $found = $this->searchRelationsInOneProject();
 
             if ($found) {
                 $result[] = $project;
@@ -82,6 +213,25 @@ class Project_Search_Complex implements Project_Search
         }
 
         return $result;
+    }
+
+    /**
+     * A $_searchedRelationModel tipusa alapjan visszaadja azt a tombot, amelyikben keresni kell.
+     * Pl.: Ha Model_Project_Industry tipus, akkor a _searchedIndustryIds adja vissza
+     *
+     * @return array                Kapcsolat azonositok
+     */
+    protected function getRelationIdsByModel()
+    {
+        $class = get_class($this->_searchedRelationModel);
+
+        switch ($class) {
+            case 'Model_Project_Industry': default:
+                return $this->_searchedIndustryIds;
+
+            case 'Model_Project_Profession':
+                return $this->_searchedProfessionIds;
+        }
     }
 
     /**
@@ -95,14 +245,11 @@ class Project_Search_Complex implements Project_Search
      *
      * @return bool                         true, ha a keresett kapcsolatok kozul legalabb az egyik megtalalhato a projektben
      */
-    protected function searchRelationsInOneProject(Model_Project $project, array $allRelationIds, array $searchedRelationIds)
+    protected function searchRelationsInOneProject()
     {
-        // Adott projekt kapcsolatai
-        $projectRelationIds = Arr::get($allRelationIds, $project->project_id, []);
-
         // Vegmegy a postban kapott, keresett kapcsolatokon. Ha barmelyik megtalalhato a projekt kapcsolatai kozt, true
-        foreach ($searchedRelationIds as $searchedRelationId) {
-            $found = $this->searchOneRelationInOneProjectRelations($searchedRelationId, $projectRelationIds);
+        foreach ($this->_searchedRelationIds as $searchedRelationId) {
+            $found = $this->searchOneRelationInOneProjectRelations($searchedRelationId);
 
             if ($found) {
                 return true;
@@ -120,8 +267,14 @@ class Project_Search_Complex implements Project_Search
      *
      * @return bool                         true, ha a keresett kapcsolat megtalalhato a projekt kapcsolatai kozott
      */
-    protected function searchOneRelationInOneProjectRelations($searchedRelationId, array $projectRelationIds)
+    protected function searchOneRelationInOneProjectRelations($searchedRelationId)
     {
+        // Osszes projekthez tartozo osszes kapcsolat, pl osszes iparag
+        $allRelationIds         = $this->_searchedRelationModel->getAll();
+
+        // Adott projekt kapcsolatai
+        $projectRelationIds     = Arr::get($allRelationIds, $this->_currentProject->project_id, []);
+
         // Ha a postbol kapott kapcsolat megtalalhato a projekt kapcsolatai kozott
         if (in_array($searchedRelationId, $projectRelationIds)) {
             return true;

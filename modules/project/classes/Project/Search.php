@@ -10,5 +10,5 @@ interface Project_Search
      *
      * @return array                    Talalatok
      */
-    public function search(array $data, Model_Project $project);
+    public function search();
 }

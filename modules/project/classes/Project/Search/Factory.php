@@ -12,17 +12,21 @@ class Project_Search_Factory
     public static function getAndSetSearch(array $data, Entity_Project $project = null)
     {
         // Reszletes kereses
-        if (Arr::get($data, 'complex'))
-        {
-            $search = new Project_Search_Complex();
-        }
-        else 	// Egyszeru kereses
-        {
+        if (Arr::get($data, 'complex')) {
+
+            $industryIds    = Arr::get($data, 'industries', []);
+            $professionIds  = Arr::get($data, 'professions', []);
+            $skillIds       = Arr::get($data, 'skills', []);
+            $skillRelation  = Arr::get($data, 'skill_relation', []);
+
+            $search = new Project_Search_Complex($industryIds, $professionIds, $skillIds, $skillRelation);
+
+        } else {    // Egyszeru kereses
             $search = new Project_Search_Simple();
         }
 
-        if ($project)
-        {
+        if ($project) {
+            $search->setCurrentProject($project->getModel());
             $project->setSearch($search);
         }
 

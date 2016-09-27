@@ -26,23 +26,23 @@ class Model_Project extends ORM
 	];
     
     protected $_table_columns = [
-    	'project_id'			=> ['type' => 'int', 'key' => 'PRI'],
-    	'user_id'			=> ['type' => 'int', 'null' => true],
-        'name'				=> ['type' => 'string', 'null' => true],
-    	'short_description'		=> ['type' => 'string', 'null' => true],
-    	'long_description'		=> ['type' => 'string', 'null' => true],
-        'email'				=> ['type' => 'string', 'null' => true],
-        'phonenumber'			=> ['type' => 'string', 'null' => true],
-    	'is_active'			=> ['type' => 'int', 'null' => true],
-    	'is_paid'			=> ['type' => 'int', 'null' => true],
-        'search_text'			=> ['type' => 'string', 'null' => true],
-    	'expiration_date'		=> ['type' => 'datetime', 'null' => true],
-    	'salary_type'			=> ['type' => 'int', 'null' => true],
-        'salary_low'			=> ['type' => 'int', 'null' => true],
-        'salary_high'			=> ['type' => 'int', 'null' => true],
-    	'slug'				=> ['type' => 'string', 'null' => true],
-    	'created_at'			=> ['type' => 'datetime', 'null' => true],
-    	'updated_at'			=> ['type' => 'datetime', 'null' => true], 
+    	'project_id'        => ['type' => 'int', 'key' => 'PRI'],
+    	'user_id'           => ['type' => 'int', 'null' => true],
+        'name'              => ['type' => 'string', 'null' => true],
+    	'short_description' => ['type' => 'string', 'null' => true],
+    	'long_description'  => ['type' => 'string', 'null' => true],
+        'email'             => ['type' => 'string', 'null' => true],
+        'phonenumber'       => ['type' => 'string', 'null' => true],
+    	'is_active'         => ['type' => 'int', 'null' => true],
+    	'is_paid'           => ['type' => 'int', 'null' => true],
+        'search_text'       => ['type' => 'string', 'null' => true],
+    	'expiration_date'   => ['type' => 'datetime', 'null' => true],
+    	'salary_type'       => ['type' => 'int', 'null' => true],
+        'salary_low'        => ['type' => 'int', 'null' => true],
+        'salary_high'       => ['type' => 'int', 'null' => true],
+    	'slug'              => ['type' => 'string', 'null' => true],
+    	'created_at'        => ['type' => 'datetime', 'null' => true],
+    	'updated_at'        => ['type' => 'datetime', 'null' => true],
     ];
 
     /**
@@ -59,26 +59,26 @@ class Model_Project extends ORM
      * @var array $_belongs_to N - 1 es 1 - 1 kapcsolatokat definialja
      */
     protected $_belongs_to = [
-        'user' => [
+        'user'          => [
             'model'         => 'User',
             'foreign_key'   => 'user_id'
         ]
     ];
     
     protected $_has_many = [
-    	'industries' => [
+    	'industries'    => [
     		'model'     	=> 'Industry',
     		'through'		=> 'projects_industries',
    			'far_key'		=> 'industry_id',
    			'foreign_key'	=> 'project_id',
    		],
-   		'professions' => [
+   		'professions'   => [
     		'model'     	=> 'Profession',
     		'through'		=> 'projects_professions',
     		'far_key'		=> 'profession_id',
    			'foreign_key'	=> 'project_id',
    		],
-    	'skills' => [
+    	'skills'        => [
     		'model'     	=> 'Skill',
    			'through'		=> 'projects_skills',
    			'far_key'		=> 'skill_id',
