@@ -4,136 +4,118 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 {
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchBySkillsAndSkillRelation()
+     * @covers Project_Search_Complex::searchSkillsInProjects()
      */
-    public function testSearchBySkillsAndSkillRelationOrOk()
+    public function testSearchSkillsInProjectsOrOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
         $project1->name = 'first';
 
-        $projectSkill1  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills1 = [
-            1 => [
-                1, 2, 3, 8, 10
-            ]
-        ];
-
-        $projectSkill1->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($projectSkills1));
-
         $project2 = new Model_Project();
         $project2->project_id = 2;
         $project2->name = 'second';
-
-        $projectSkill2  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills2 = [
-            2 => [
-                1, 8, 10
-            ]
-        ];
-
-        $projectSkill2->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($projectSkills2));
 
         $project3 = new Model_Project();
         $project3->project_id = 3;
         $project3->name = 'third';
 
-        $projectSkill3  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills3 = [
-            3 => [
-                1
-            ]
-        ];
-
-        $projectSkill3->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($projectSkills3));
-
         $project4 = new Model_Project();
         $project4->project_id = 4;
         $project4->name = 'third';
-
-        $projectSkill4  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills4 = [
-            4 => [
-                3
-            ]
-        ];
-
-        $projectSkill4->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($projectSkills4));
 
         $project5 = new Model_Project();
         $project5->project_id = 5;
         $project5->name = 'third';
 
-        $projectSkill5  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills5 = [
-            5 => []
-        ];
-
-        $projectSkill5->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($projectSkills5));
-
         $skills   = [1, 3];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
 
-        $this->assertTrue($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project1, $skills, $projectSkill1, Project_Search_Complex::SKILL_RELATION_OR]));
-        $this->assertTrue($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project2, $skills, $projectSkill2, Project_Search_Complex::SKILL_RELATION_OR]));
-        $this->assertTrue($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project3, $skills, $projectSkill3, Project_Search_Complex::SKILL_RELATION_OR]));
-        $this->assertTrue($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project4, $skills, $projectSkill4, Project_Search_Complex::SKILL_RELATION_OR]));
-        $this->assertTrue($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project5, $skills, $projectSkill5, Project_Search_Complex::SKILL_RELATION_OR]));
+        $projectSkills = [
+            1 => [
+                1, 2, 3, 8, 10
+            ],
+            2 => [
+                1, 8, 10
+            ],
+            3 => [
+                1
+            ],
+            4 => [
+                3
+            ],
+            5 => []
+        ];
+
+        $projectSkill  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $projectSkill->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($projectSkills));
+
+        $projects = $this->invokeMethod(
+            $complexSearch,
+            'searchSkillsInProjects',
+            [[$project1, $project2, $project3, $project4, $project5], $skills, Project_Search_Complex::SKILL_RELATION_OR, $projectSkill]);
+
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertTrue(in_array(1, $ids));
+        $this->assertTrue(in_array(2, $ids));
+        $this->assertTrue(in_array(3, $ids));
+        $this->assertTrue(in_array(4, $ids));
+        $this->assertTrue(in_array(5, $ids));
     }
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchBySkillsAndSkillRelation()
+     * @covers Project_Search_Complex::searchSkillsInProjects()
      */
-    public function testSearchBySkillsAndSkillRelationOrNotOk()
+    public function testSearchSkillsInProjectsOrNotOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
         $project1->name = 'first';
 
-        $projectSkill1  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills1 = [
-            1 => [
-                2, 8, 10
-            ]
-        ];
-
-        $projectSkill1->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($projectSkills1));
-
         $project2 = new Model_Project();
         $project2->project_id = 2;
         $project2->name = 'second';
 
-        $projectSkill2  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
-        $projectSkills2 = [
+        $skills   = [1, 3];
+
+        $projectSkills = [
+            1 => [
+                2, 8, 10
+            ],
             2 => [
                 8
             ]
         ];
 
-        $projectSkill2->expects($this->any())
+        $projectSkill  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $projectSkill->expects($this->any())
             ->method('getAll')
-            ->will($this->returnValue($projectSkills2));
-
-        $skills   = [1, 3];
+            ->will($this->returnValue($projectSkills));
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
 
-        $this->assertFalse($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project1, $skills, $projectSkill1, Project_Search_Complex::SKILL_RELATION_OR]));
-        $this->assertFalse($this->invokeMethod($complexSearch, 'searchBySkillsAndSkillRelation', [$project2, $skills, $projectSkill2, Project_Search_Complex::SKILL_RELATION_OR]));
+        $projects = $this->invokeMethod(
+            $complexSearch,
+            'searchSkillsInProjects',
+            [[$project1, $project2], $skills, Project_Search_Complex::SKILL_RELATION_OR, $projectSkill]);
+
+        $ids = [];
+
+        foreach ($projects as $project) {
+            $ids[] = $project->project_id;
+        }
+
+        $this->assertFalse(in_array(1, $ids));
+        $this->assertFalse(in_array(2, $ids));
     }
 
     /**

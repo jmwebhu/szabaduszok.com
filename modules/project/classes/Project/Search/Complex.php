@@ -41,10 +41,12 @@ class Project_Search_Complex implements Project_Search
         );
 
         // Szukites kepessegekre
-        $projectsSkills         = $this->searchBySkills(
+        $projectsSkills         = $this->searchSkillsInProjects(
             $projectsProfessions,
             Arr::get($data, 'skills', []),
-            Arr::get($data, 'skill_relation', 1)
+            Arr::get($data, 'skill_relation', 1),
+            new Model_Project_Skill()
+
         );
 
         return $projectsSkills;
@@ -100,7 +102,7 @@ class Project_Search_Complex implements Project_Search
 
         // Vegmegy a postban kapott, keresett kapcsolatokon. Ha barmelyik megtalalhato a projekt kapcsolatai kozt, true
         foreach ($searchedRelationIds as $searchedRelationId) {
-            $found = $this->searchOneRelationInOneProject($searchedRelationId, $projectRelationIds);
+            $found = $this->searchOneRelationInOneProjectRelations($searchedRelationId, $projectRelationIds);
 
             if ($found) {
                 return true;
@@ -114,11 +116,11 @@ class Project_Search_Complex implements Project_Search
      * A kapott projekt kapcsolatai kozott keresi a kapott kapcsolat azonostitot
      *
      * @param $searchedRelationId           Keresett kapcsolat azonosito
-     * @param array $projectRelationIds     Egy projekthez tartozo osszes kapcsolat azonosito
+     * @param array $projectRelationIds     Egy projekthez tartozo osszes kapcsolat azonositoi
      *
      * @return bool                         true, ha a keresett kapcsolat megtalalhato a projekt kapcsolatai kozott
      */
-    protected function searchOneRelationInOneProject($searchedRelationId, array $projectRelationIds)
+    protected function searchOneRelationInOneProjectRelations($searchedRelationId, array $projectRelationIds)
     {
         // Ha a postbol kapott kapcsolat megtalalhato a projekt kapcsolatai kozott
         if (in_array($searchedRelationId, $projectRelationIds)) {
@@ -133,31 +135,26 @@ class Project_Search_Complex implements Project_Search
      * skill_relation -tol fugg, hogy VAGY / ES kapcsolat van a keresett kepessegek kozott
      *
      * @param array $projects			Projektek (alapesetben a szakteruletekre szukitett projektek)
-     * @param array $postSkills			POST kepessegek
+     * @param array $searchedSkillIds			POST kepessegek
      * @param int 	$skillRelation		Keresett kepessegek kapcsolata (ES / VAGY)
      *
      * @return array
      */
-    protected function searchBySkills(array $projects, array $postSkills, $skillRelation = 1)
+    protected function searchSkillsInProjects(array $projects, array $searchedSkillIds, $skillRelation, Model_Project_Skill $projectSkill)
     {
-        if (empty($postSkills))
-        {
+        if (empty($searchedSkillIds)) {
             return $projects;
         }
 
-        $result         = [];
-        $projectSkill   = new Model_Project_Skill();
+        $result = [];
 
-        foreach ($projects as $project)
-        {
+        foreach ($projects as $project) {
             /**
              * @var $project Model_Project
              */
+            $found = $this->searchSkillsInOneProject($project, $searchedSkillIds, $skillRelation, $projectSkill);
 
-            $found = $this->searchBySkillsAndSkillRelation($project, $postSkills, $projectSkill, $skillRelation);
-
-            if ($found)
-            {
+            if ($found) {
                 $result[] = $project;
             }
         }
@@ -169,50 +166,41 @@ class Project_Search_Complex implements Project_Search
      * Visszaadja, hogy a kapott projektben megtalalhatok -e a kapott kepessegek
      *
      * @param Model_Project $project		        Projekt
-     * @param array $postSkills		                Keresett kepessegek
+     * @param array $searchedSkillIds		                Keresett kepessegek
      * @param Model_Project_Skill $projectSkill     Ures model
-     * @param int $relation                         ES / VAGY kapcsolat
+     * @param int $skillRelation                         ES / VAGY kapcsolat
      *
      * @return bool
      */
-    protected function searchBySkillsAndSkillRelation(Model_Project $project, array $postSkills, Model_Project_Skill $projectSkill, $relation)
+    protected function searchSkillsInOneProject(Model_Project $project, array $searchedSkillIds, $skillRelation, Model_Project_Skill $projectSkill)
     {
-        $cacheProjectsSkills    = $projectSkill->getAll();
+        // Osszes projekthez tartozo osszes kepesseg
+        $allRelationIds     = $projectSkill->getAll();
 
         // Projekt kepessegei
-        $projectSkills          = Arr::get($cacheProjectsSkills, $project->project_id, []);
-        $has                    = ($relation == self::SKILL_RELATION_OR) ? false : true;
+        $projectSkillIds    = Arr::get($allRelationIds, $project->project_id, []);
+        $found              = ($skillRelation == self::SKILL_RELATION_OR) ? false : true;
 
         // Ha nincs a projekthez kepesseg
-        if (empty($projectSkills))
-        {
+        if (empty($projectSkillIds)) {
             return true;
         }
 
         // Vegmegy a postban kapott, keresett kepessegeken
-        foreach ($postSkills as $postSkillId)
-        {
-            switch ($relation)
-            {
-                case self::SKILL_RELATION_OR: default:
-                    // Ha a postbol kapott kepsseg megtalalhato a projekt kepessegei kozott
-                    if (in_array($postSkillId, $projectSkills))
-                    {
-                        $has = true;
-                        break;
-                    }
-                    break;
+        foreach ($searchedSkillIds as $searchedSkillId) {
+            $found = in_array($searchedSkillId, $projectSkillIds);
 
-                case self::SKILL_RELATION_AND:
-                    // Ha a postbol kapott kepesseg NEM talalhato a projekt kepessegei kozott
-                    if (!in_array($postSkillId, $projectSkills))
-                    {
-                        $has = false;
-                    }
-                    break;
+            // Vagy eseten, ha legalabb egy talalt volt, akkor leallitja a keresest
+            if ($skillRelation == self::SKILL_RELATION_OR && $found) {
+                break;
+            }
+
+            // Es eseten, ha legalabb az egyik kepesseg nem talalhato, akkor leallitja a keresest
+            if ($skillRelation == self::SKILL_RELATION_AND && !$found) {
+                break;
             }
         }
 
-        return $has;
+        return $found;
     }
 }
