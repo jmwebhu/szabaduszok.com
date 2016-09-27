@@ -168,7 +168,7 @@ abstract class Entity
 
         // Ha Entity, akkor lekerdezi a stdObject -et (ahol nincsenek "_" prefixek az adattagok elott)
         // Ha ORM, akkor array -e alakitja
-        $realFrom       = ($isFromEntity) ? $this->getStdObject() : $from->object();
+        $realFrom       = ($isFromEntity) ? $this->mapThisToStdObject() : $from->object();
         $prefix         = ($isToEntity) ? '_' : '';
 
         // Vegmegy az osszes mezojen, es a $to mezokhoz rendeli az ertekeket

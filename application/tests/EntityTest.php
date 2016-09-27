@@ -96,7 +96,7 @@ class EntityTest extends Unittest_TestCase
         $project->setSalaryHigh(2500);
         $project->setSlug('teszt');
 
-        $obj = $this->invokeMethod($project, 'getStdObject');
+        $obj = $this->invokeMethod($project, 'mapThisToStdObject');
 
         $this->assertEquals(1, $obj->project_id);
         $this->assertEquals('Teszt', $obj->name);
