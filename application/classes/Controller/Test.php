@@ -5,14 +5,13 @@ class Controller_Test extends Controller
     public function action_index()
     {
         $data = [
-            'industries' => [1,2,3,4,5,6],
+            'industries' => [1, 2],
             'complex' => true
         ];
 
-        $complexSearch = Project_Search_Factory::getAndSetSearch($data);
-        $res = $complexSearch->search();
+        $search = Project_Search_Factory::getAndSetSearch($data);
+        $res = $search->search();
         echo Debug::vars($res);
-        exit;
     }	
 
     public function action_clearcache()

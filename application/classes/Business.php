@@ -7,27 +7,23 @@ class Business
      */
     private $_model;
 
-    public static function getIdsFromModels(array $models)
+    public static function getIdsFromModelsMulti(array $models)
     {
         $ids = [];
         foreach ($models as $i => $item) {
-            if (is_array($item)) {
-                foreach ($item as $model) {
-                    if (!isset($ids[$i])) {
-                        $ids[$i] = [];
-                    }
+            if (!isset($ids[$i])) {
+                $ids[$i] = [];
+            }
 
-                    $ids[$i][] = self::checkAndGetIdFromModel($model);
-                }
-            } else {
-                $ids[$i][] = self::checkAndGetIdFromModel($item);
+            foreach ($item as $model) {
+                $ids[$i][] = self::checkAndGetIdFromModel($model);
             }
         }
 
         return $ids;
     }
 
-    public static function checkAndGetIdFromModel(ORM $model)
+    public static function checkAndGetIdFromModel($model)
     {
         if ($model instanceof ORM && $model->loaded()) {
             return $model->pk();

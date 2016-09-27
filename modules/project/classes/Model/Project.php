@@ -254,6 +254,10 @@ class Model_Project extends ORM
      */
     public function getAndCacheRelations()
     {
+        if (!$this->loaded()) {
+            return false;
+        }
+
     	$cache 				= Cache::instance();
     	
     	$projectIndustry 	= new Model_Project_Industry();
@@ -263,8 +267,8 @@ class Model_Project extends ORM
     	// Kapcsolatok kiszedese cache -bol.
     	$industries 		= $projectIndustry->getAll();    	
     	$professions		= $projectProfession->getAll();    	
-    	$skills 			= $projectSkill->getAll();    	    	
-    	
+    	$skills 			= $projectSkill->getAll();
+
     	// Nincsenek iparagak cache -ben a projekthez
     	if (!isset($industries[$this->project_id]))
     	{
@@ -276,7 +280,7 @@ class Model_Project extends ORM
     		{
     			$resultIndustries[] = $industry;
     		}
-    		
+
     		$industries[$this->project_id] = $resultIndustries;
     		$cache->set('projects_industries', $industries);
     	}

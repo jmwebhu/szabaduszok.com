@@ -256,10 +256,6 @@ class Project_Search_Complex implements Project_Search
         // Keresendo tomb beallitasa
         $this->_searchedRelationIds     = $this->getSearchedRelationIds();
 
-        // Osszes projekt osszes kapcsolata. Azert ezzel dolgozik, mert ez benn van cache -ben, igy nem kell lekerdezni semmit
-        $allRelationModels              = $relationModel->getAll();
-        $this->_allRelationIds          = Business::getIdsFromModels($allRelationModels);
-
         // Nincs keresendo adat
         if (empty($this->_searchedRelationIds)) {
             return $this->_matchedProjects;
@@ -284,6 +280,10 @@ class Project_Search_Complex implements Project_Search
      */
     protected function searchRelationsInOneProject()
     {
+        // Osszes projekt osszes kapcsolata. Azert ezzel dolgozik, mert ez benn van cache -ben, igy nem kell lekerdezni semmit
+        $allRelationModel = $this->_searchedRelationModel->getAll();
+        $this->_allRelationIds = Business::getIdsFromModelsMulti($allRelationModel);
+
         // Vegmegy a keresett kapcsolatokon. Ha barmelyik megtalalhato a projekt kapcsolatai kozt, true
         foreach ($this->_searchedRelationIds as $searchedRelationId) {
             $found = $this->searchOneRelationInOneProject($searchedRelationId);
@@ -305,8 +305,7 @@ class Project_Search_Complex implements Project_Search
      */
     protected function searchOneRelationInOneProject($searchedRelationId)
     {
-        // Adott projekt kapcsolatai
-        $projectRelationIds     = Arr::get($this->_allRelationIds, $this->_currentProject->project_id, []);
+        $projectRelationIds = Arr::get($this->_allRelationIds, $this->_currentProject->pk(), []);
 
         // Ha a keresett kapott kapcsolat megtalalhato a projekt kapcsolatai kozott
         if (in_array($searchedRelationId, $projectRelationIds)) {
