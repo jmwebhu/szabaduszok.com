@@ -54,8 +54,7 @@ abstract class Entity
      */
     public function save()
     {
-        try
-        {
+        try {
             $result = true;
             Model_Database::trans_start();
 
@@ -63,14 +62,10 @@ abstract class Entity
             $this->_model->save();
 
             $this->setPrimaryKeyFromModel();
-        }
-        catch (Exception $ex)
-        {
+        } catch (Exception $ex) {
             $result = false;
             Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
-        }
-        finally
-        {
+        } finally {
             Model_Database::trans_end([$result]);
         }
 
@@ -84,21 +79,16 @@ abstract class Entity
      */
     public function submit(array $data)
     {
-        try
-        {
+        try {
             $result = true;
             Model_Database::trans_start();
 
             $this->_model->submit($data);
             $this->mapModelToThis();
-        }
-        catch (Exception $ex)
-        {
+        } catch (Exception $ex) {
             $result = false;
             Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
-        }
-        finally
-        {
+        } finally {
             Model_Database::trans_end([$result]);
         }
 
@@ -148,33 +138,72 @@ abstract class Entity
      */
     protected function map($from, $to)
     {
-        try
-        {
-            // Csak objektumok lehetnek a parameterek
-            if (!is_object($from) || !is_object($to))
-            {
-                Log::instance()->add(Log::NOTICE, 'Trying to map non-object value');
-                return false;
-            }
-
-            $fromClass      = get_class($from);
-
-            $isFromEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
-            $isToEntity     = !$isFromEntity;
-
-            $realFrom       = ($isFromEntity) ? $this->getStdObject() : $from->object();
-            $prefix         = ($isToEntity) ? '_' : '';
-
-            // Vegmegy a Model osszes mezojen, es $this mezokhoz rendeli az ertekeket
-            foreach ($realFrom as $key => $value)
-            {
-                $fullKey        = $prefix . $key;
-                $to->{$fullKey} = $value;
+        try {
+            // Mindket paramter valid
+            if ($this->validateObjects($from, $to)) {
+                $this->mapProperties($from, $to);
             }
         }
-        catch (Exception $ex)
-        {
+        catch (Exception $ex) {
             Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            $result = false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Vizsgalja a kapott objektumok tipusat, majd vegmegy az adattagjain es kitolti oket
+     *
+     * @param $from     Forras objektum
+     * @param $to       Cel objektum
+     */
+    protected function mapProperties($from, $to)
+    {
+        $fromClass      = get_class($from);
+
+        // Jeloli, hogy a from vagy a to objektum Entity tipus
+        $isFromEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
+        $isToEntity     = !$isFromEntity;
+
+        // Ha Entity, akkor lekerdezi a stdObject -et (ahol nincsenek "_" prefixek az adattagok elott)
+        // Ha ORM, akkor array -e alakitja
+        $realFrom       = ($isFromEntity) ? $this->getStdObject() : $from->object();
+        $prefix         = ($isToEntity) ? '_' : '';
+
+        // Vegmegy az osszes mezojen, es a $to mezokhoz rendeli az ertekeket
+        foreach ($realFrom as $key => $value) {
+            $this->mapOneProperty($to, $key, $value, $prefix);
+        }
+    }
+
+    /**
+     * Beallit egyetlen adattagot a $to objektumon
+     *
+     * @param $to       Cel objektum
+     * @param $key      Adattag kulcs
+     * @param $value    Ertek
+     * @param $prefix   ADattag prefxe ('_')
+     */
+    protected function mapOneProperty($to, $key, $value, $prefix)
+    {
+        $fullKey        = $prefix . $key;
+        $to->{$fullKey} = $value;
+    }
+
+    /**
+     * Validalja a kapott parametereket. Mindketto objektum kell legyen
+     *
+     * @param mixed $from
+     * @param mixed $to
+     * @return bool
+     */
+    protected function validateObjects($from, $to)
+    {
+        // Csak objektumok lehetnek a parameterek
+        if (!is_object($from) || !is_object($to)) {
+            Log::instance()->add(Log::NOTICE, 'Trying to map non-object value');
+            return false;
         }
 
         return true;
@@ -183,25 +212,52 @@ abstract class Entity
     /**
      * Visszaad egy stdClass -t, ami az Entity addattagjait tartlmazza "ORM-kompatibilis" modon.
      *
-     * Az Entity privat addattagjai "_" jellel vannak prefixalva, pl.: $_name, ezeket kell eltavolitani
+     * Az Entity addattagjai "_" jellel vannak prefixalva, pl.: $_name, ezeket kell eltavolitani.
+     * Igy egy olyan stdClass peldanyt ad vissza ahol name nevu adattag lesz.
      *
      * @return stdClass     Ugyanazokat az adattagokat es ertekeket tartalmazza, mint a $this, csak "_" prefix nelkul
      */
-    protected function getStdObject()
+    protected function mapThisToStdObject()
     {
-        $entityStd          = new stdClass();
-        $disabledProperties = ['_model', '_business'];
+        $entityStd = new stdClass();
 
-        foreach ($this as $key => $value)
-        {
-            if (!in_array($key, $disabledProperties))
-            {
-                $unprefixedName = $this->getUnprefixedPropertyName($key);
-                $entityStd->{$unprefixedName} = $value;
-            }
+        // Vegmegy az osszes adattagon es hozzarendeli egy stdClass -hez
+        foreach ($this as $key => $value) {
+            $this->mapOnePropertyToStdObject($entityStd, $key, $value);
         }
 
         return $entityStd;
+    }
+
+    /**
+     * Ellenorzi es hozzarendeli a kapott stdClass -hez a $key addattagot a $value ertekkel
+     *
+     * @param $entityStd    stdClass peldany, amibe le lesz masolva az Entity
+     * @param $key          Adattag neve
+     * @param $value        Adattag erteke
+     */
+    protected function mapOnePropertyToStdObject($entityStd, $key, $value)
+    {
+        $disabledProperties = ['_model'];
+
+        // Csak akkor, ha megengedett
+        if (!in_array($key, $disabledProperties)) {
+            $this->setStdObjectUnprefixedProperty($entityStd, $key, $value);
+        }
+    }
+
+    /**
+     * Beallitja a kapott stdClass peldany $key adattagjat $value ertekre. Elotte lekeri a $key -hez tartozo
+     * prefix nelkuli nevet. Pl.: _project_id eseten project_id
+     *
+     * @param $entityStd    stdClass peldany, amibe le lesz masolva az Entity
+     * @param $key          Adattag neve
+     * @param $value        Adattag erteke
+     */
+    protected function setStdObjectUnprefixedProperty($entityStd, $key, $value)
+    {
+        $unprefixedName = $this->getUnprefixedPropertyName($key);
+        $entityStd->{$unprefixedName} = $value;
     }
 
     /**
@@ -215,8 +271,7 @@ abstract class Entity
         $unprefixedName = $prefixedName;
 
         // Ha tenlyeg '_' prefixalt
-        if (substr($prefixedName, 0, 1) == '_')
-        {
+        if (substr($prefixedName, 0, 1) == '_') {
             // Levagja az elso karaktert
             $unprefixedName = substr($prefixedName, 1);
         }

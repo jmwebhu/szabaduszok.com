@@ -80,7 +80,7 @@ class EntityTest extends Unittest_TestCase
     /**
      * @covers Entity::getStdObject
      */
-    public function testGetStdObject()
+    public function testMapThisToStdObject()
     {
         $project = new Entity_Project();
         $project->setProjectId(1);
