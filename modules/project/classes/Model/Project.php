@@ -329,7 +329,7 @@ class Model_Project extends ORM
     public function getOrdered($limit, $offset)
     {
     	return AB::select()
-            ->from('projects')
+            ->from(new Model_Project())
             ->where('is_active', '=', 1)
             ->order_by('created_at', 'DESC')
             ->limit($limit)->offset($offset)
@@ -340,14 +340,20 @@ class Model_Project extends ORM
      * Visszaadja az aktiv projekteket created_at szerint rendezve a megadott iranyba
      *
      * @param string $direction     Rendezes iranya
-     * @return array                Aktiv projektek
+     * @param bool $execute         false eseten nem hivja meg az ->execute() -t
+     * @return mixed                Aktiv projektek
      */
-    public function getActivesOrderedByCreated($direction = 'DESC')
+    public function getActivesOrderedByCreated($execute = true, $direction = 'DESC')
     {
-        return AB::select()
-            ->from('projects')
+        $builder = AB::select()
+            ->from(new Model_Project())
             ->where('is_active', '=', 1)
-            ->order_by('created_at', $direction)
-            ->execute()->as_array();
+            ->order_by('created_at', $direction);
+
+        if ($execute) {
+            return $builder->execute()->as_array();
+        }
+
+        return $builder;
     }
 }

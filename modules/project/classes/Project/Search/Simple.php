@@ -17,12 +17,14 @@ class Project_Search_Simple implements Project_Search
         /**
          * @var $projects Array_Builder
          */
-        $projects = AB::select()->from('projects')->where('is_active', '=', 1)->order_by('created_at', 'DESC');
-        if (!$searchTerm)
-        {
+        $projects = $project->getActivesOrderedByCreated(false);
+
+        // Ha nincs keresett kifejezes, akkor minden aktiv projektet visszaad
+        if (!$searchTerm) {
             return $projects->execute()->as_array();
         }
 
+        // Szures keresett kifejezesre
         return $projects->and_where('search_text', 'LIKE', $searchTerm)->execute()->as_array();
     }
 }
