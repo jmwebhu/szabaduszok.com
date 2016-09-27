@@ -17,7 +17,7 @@ class Project_Search_Factory
             $industryIds    = Arr::get($data, 'industries', []);
             $professionIds  = Arr::get($data, 'professions', []);
             $skillIds       = Arr::get($data, 'skills', []);
-            $skillRelation  = Arr::get($data, 'skill_relation', []);
+            $skillRelation  = Arr::get($data, 'skill_relation', 1);
 
             $search = new Project_Search_Complex($industryIds, $professionIds, $skillIds, $skillRelation);
 

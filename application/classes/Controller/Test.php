@@ -3,9 +3,16 @@
 class Controller_Test extends Controller
 {
     public function action_index()
-    {	        
-        $simpleSearch = Project_Search_Factory::getAndSetSearch(['complex' => false]);
-        $res = $simpleSearch->search(['search_term' => 'web'], new Model_Project());
+    {
+        $data = [
+            'industries' => [1,2,3,4,5,6],
+            'complex' => true
+        ];
+
+        $complexSearch = Project_Search_Factory::getAndSetSearch($data);
+        $res = $complexSearch->search();
+        echo Debug::vars($res);
+        exit;
     }	
 
     public function action_clearcache()

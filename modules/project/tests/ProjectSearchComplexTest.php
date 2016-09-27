@@ -264,8 +264,10 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $industries = [1, 3, 4];
 
-        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true, 'industries' => $industries]);
+        $complexSearch->setMatchedProjects([$project1, $project2, $project3]);
+
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [$projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -278,8 +280,10 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $industries = [6];
 
-        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true, ['industries' => $industries]]);
+        $complexSearch->setMatchedProjects([$project1, $project2, $project3]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [$projectIndustry1]);
+
         $ids = [];
 
         foreach ($projects as $project) {
@@ -292,8 +296,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $industries = [7, 1, 8, 6];
 
-        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true, 'industries' => $industries]);
+        $complexSearch->setMatchedProjects([$project1, $project2, $project3]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [$projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
