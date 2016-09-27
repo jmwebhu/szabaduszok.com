@@ -5,10 +5,13 @@
  *
  * Alap Entity osztaly, minden konkret Entity ebbol orokol
  *
- * Az Entity egyfajta Facade -kent mukodik, magaban foglalja az ORM, BO es egyeb szukseges osztalyokat.
- * A kliensek vtole fuggnek
+ * Az Entity egyfajta Facade -kent mukodik, magaban foglalja az ORM es egyeb szukseges osztalyokat.
+ * A kliensek tole fuggnek
  *
- * @author Joo Martin
+ * @author      Joo Martin
+ * @package     Core
+ * @since       2.2
+ * @version     1.0
  */
 
 abstract class Entity

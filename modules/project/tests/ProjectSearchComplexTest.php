@@ -256,9 +256,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchByRelation()
+     * @covers Project_Search_Complex::searchRelationsInProjects()
      */
-    public function testSearchByRelationIndustryOk()
+    public function testSearchRelationsInProjectsOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
@@ -292,7 +292,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $industries = [1, 3, 4];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -306,7 +306,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $industries = [6];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -320,7 +320,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $industries = [7, 1, 8, 6];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -334,9 +334,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchByRelation()
+     * @covers Project_Search_Complex::searchRelationsInProjects()
      */
-    public function testSearchByRelationIndustryNotOk()
+    public function testSearchRelationsInProjectsIndustryNotOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
@@ -370,7 +370,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $industries = [10];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -384,7 +384,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $industries = [7, 11];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -398,9 +398,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchByRelation()
+     * @covers Project_Search_Complex::searchRelationsInProjects()
      */
-    public function testSearchByRelationIndustryNoPostOk()
+    public function testSearchRelationsInProjectsIndustryNoPostOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
@@ -434,7 +434,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $industries = [];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $industries, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -448,9 +448,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchByRelation()
+     * @covers Project_Search_Complex::searchRelationsInProjects()
      */
-    public function testSearchByRelationProfessionOk()
+    public function testSearchRelationsInProjectsProfessionOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
@@ -484,7 +484,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $professions = [1, 3, 4];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -498,7 +498,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $professions = [6];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -512,7 +512,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $professions = [7, 1, 8, 6];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -526,9 +526,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchByRelation()
+     * @covers Project_Search_Complex::searchRelationsInProjects()
      */
-    public function testSearchByRelationProfessionNotOk()
+    public function testSearchRelationsInProjectsProfessionNotOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
@@ -562,7 +562,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $professions = [10];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -576,7 +576,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $professions = [7, 11];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {
@@ -590,9 +590,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group complexSearch
-     * @covers Project_Search_Complex::searchByRelation()
+     * @covers Project_Search_Complex::searchRelationsInProjects()
      */
-    public function testSearchByRelationProfessionNoPostOk()
+    public function testSearchRelationsInProjectsNoPostOk()
     {
         $project1 = new Model_Project();
         $project1->project_id = 1;
@@ -626,7 +626,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $professions = [];
 
         $complexSearch = Project_Search_Factory::getAndSetSearch(['complex' => true]);
-        $projects = $this->invokeMethod($complexSearch, 'searchByRelation', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
+        $projects = $this->invokeMethod($complexSearch, 'searchRelationsInProjects', [[$project1, $project2, $project3], $professions, $projectIndustry1]);
         $ids = [];
 
         foreach ($projects as $project) {

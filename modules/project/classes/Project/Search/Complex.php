@@ -23,17 +23,18 @@ class Project_Search_Complex implements Project_Search
      */
     public function search(array $data, Model_Project $project)
     {
+        // Aktiv projektek
         $projectsActive	= AB::select()->from('projects')->where('is_active', '=', 1)->order_by('created_at', 'DESC')->execute()->as_array();
 
         // Szukites iparagakra
-        $projectsIndustries     = $this->searchByRelation(
+        $projectsIndustries     = $this->searchRelationsInProjects(
             $projectsActive,
             Arr::get($data, 'industries', []),
             new Model_Project_Industry()
         );
 
         // Szukites szakteruletekre
-        $projectsProfessions    = $this->searchByRelation(
+        $projectsProfessions    = $this->searchRelationsInProjects(
             $projectsIndustries,
             Arr::get($data, 'professions', []),
             new Model_Project_Profession()
@@ -50,48 +51,81 @@ class Project_Search_Complex implements Project_Search
     }
 
     /**
-     * Projekt keresese adott tipusu kapcsolat alapjan. Ez lehet Profession, vagy Industry
+     * Keresi a kapott kapcsolatokat a kapott projektekben
      *
-     * @param array $projects           Projektek
-     * @param array $postRelations      POST kapcsolatok azonositoi
-     * @param ORM $relationModel        Keresett kapcsolat ures modelje pl Model_Project_Skill
+     * @param array $projects               Osszes projekt
+     * @param array $searchedRelationIds    Keresett kapcsolat azonositok
+     * @param ORM $relationModel            A keresett kapcsolat ures model -je, pl Model_Project_Skill
      *
-     * @return array                    Talalati lista
+     * @return array                        Azok a projektek, amikben megtalalhato legalabb egy a keresett azonositokbol
      */
-    protected function searchByRelation(array $projects, array $postRelations, ORM $relationModel)
+    protected function searchRelationsInProjects(array $projects, array $searchedRelationIds, ORM $relationModel)
     {
         $result = [];
 
         // Nincs keresendo adat
-        if (empty($postRelations))
-        {
+        if (empty($searchedRelationIds)) {
             return $projects;
         }
 
-        $cacheRelations = $relationModel->getAll();
+        // Osszes projekthez tartozo osszes kapcsolat, pl osszes iparag
+        $allRelationIds = $relationModel->getAll();
 
-        foreach ($projects as $project)
-        {
-            /**
-             * @var $project Model_Project
-             */
+        foreach ($projects as $project) {
+            $found = $this->searchRelationsInOneProject($project, $allRelationIds, $searchedRelationIds);
 
-            // Projekt szakteruletei
-            $projectRelations = Arr::get($cacheRelations, $project->project_id, []);
-
-            // Vegmegy a postban kapott, keresett kapcsolatokon. Ha barmelyik egyezik, beleteszi $result -ba a projektet
-            foreach ($postRelations as $postRelationId)
-            {
-                // Ha a postbol kapott kapcsolat megtalalhato a projekt kapcsolatai kozott
-                if (in_array($postRelationId, $projectRelations))
-                {
-                    $result[] = $project;
-                    break;
-                }
+            if ($found) {
+                $result[] = $project;
             }
         }
 
         return $result;
+    }
+
+    /**
+     * A kapott projektben keresi kapcsolatokat
+     *
+     * @param Model_Project $project        Ebben a projektben keres
+     * @param array $allRelationIds         Cache -bol lekerdezett osszes projekthez tartozo osszes kapcsolat azonosito.
+     *                                      Igy, hogy az egesz tombot atadtjuk, csak egyszer kell lekerdezni, a fuggveny
+     *                                      ben pedig kiszedjuk azokat, amik a $project -re vonatkoznak
+     * @param array $searchedRelationIds    Keresett kapcsolat azonositok
+     *
+     * @return bool                         true, ha a keresett kapcsolatok kozul legalabb az egyik megtalalhato a projektben
+     */
+    protected function searchRelationsInOneProject(Model_Project $project, array $allRelationIds, array $searchedRelationIds)
+    {
+        // Adott projekt kapcsolatai
+        $projectRelationIds = Arr::get($allRelationIds, $project->project_id, []);
+
+        // Vegmegy a postban kapott, keresett kapcsolatokon. Ha barmelyik megtalalhato a projekt kapcsolatai kozt, true
+        foreach ($searchedRelationIds as $searchedRelationId) {
+            $found = $this->searchOneRelationInOneProject($searchedRelationId, $projectRelationIds);
+
+            if ($found) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * A kapott projekt kapcsolatai kozott keresi a kapott kapcsolat azonostitot
+     *
+     * @param $searchedRelationId           Keresett kapcsolat azonosito
+     * @param array $projectRelationIds     Egy projekthez tartozo osszes kapcsolat azonosito
+     *
+     * @return bool                         true, ha a keresett kapcsolat megtalalhato a projekt kapcsolatai kozott
+     */
+    protected function searchOneRelationInOneProject($searchedRelationId, array $projectRelationIds)
+    {
+        // Ha a postbol kapott kapcsolat megtalalhato a projekt kapcsolatai kozott
+        if (in_array($searchedRelationId, $projectRelationIds)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
