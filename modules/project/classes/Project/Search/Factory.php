@@ -22,11 +22,10 @@ class Project_Search_Factory
             $search = new Project_Search_Complex($industryIds, $professionIds, $skillIds, $skillRelation);
 
         } else {    // Egyszeru kereses
-            $search = new Project_Search_Simple();
+            $search = new Project_Search_Simple(Arr::get($data, 'search_term'));
         }
 
         if ($project) {
-            $search->setCurrentProject($project->getModel());
             $project->setSearch($search);
         }
 

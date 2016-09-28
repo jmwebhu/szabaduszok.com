@@ -365,7 +365,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertTrue(in_array(1, $this->_matchedProjects));
         $this->assertFalse(in_array(2, $this->_matchedProjects));
         $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
         $this->assertFalse(in_array(5, $this->_matchedProjects));
 
         $skills = [1, 3];
@@ -378,7 +378,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertTrue(in_array(1, $this->_matchedProjects));
         $this->assertFalse(in_array(2, $this->_matchedProjects));
         $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
         $this->assertTrue(in_array(5, $this->_matchedProjects));
 
         $skills = [1, 3, 2];
@@ -391,7 +391,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertTrue(in_array(1, $this->_matchedProjects));
         $this->assertFalse(in_array(2, $this->_matchedProjects));
         $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
         $this->assertTrue(in_array(5, $this->_matchedProjects));
     }
 
@@ -408,9 +408,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $skills = [12];
         $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 1]);
-        $projects = $this->_projects;
-        unset($projects[3]);
-        $search->setProjects($projects);
+        $search->setProjects($this->_projects);
 
         $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
         $this->setMatchedProjectIdsFromSearch($search);
@@ -423,7 +421,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $skills = [14, 32, 33, 65, 101];
         $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true]);
-        $search->setProjects($projects);
+        $search->setProjects($this->_projects);
 
         $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
         $this->setMatchedProjectIdsFromSearch($search);
@@ -456,7 +454,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertTrue(in_array(1, $this->_matchedProjects));
         $this->assertFalse(in_array(2, $this->_matchedProjects));
         $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
         $this->assertFalse(in_array(5, $this->_matchedProjects));
 
         $skills = [1, 3];
@@ -469,7 +467,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertFalse(in_array(1, $this->_matchedProjects));
         $this->assertFalse(in_array(2, $this->_matchedProjects));
         $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
         $this->assertFalse(in_array(5, $this->_matchedProjects));
 
         $skills = [4, 5];
@@ -482,7 +480,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertFalse(in_array(1, $this->_matchedProjects));
         $this->assertTrue(in_array(2, $this->_matchedProjects));
         $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
         $this->assertFalse(in_array(5, $this->_matchedProjects));
     }
 
@@ -499,9 +497,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $skills = [1, 2, 3, 4];
         $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $projects = $this->_projects;
-        unset($projects[3]);
-        $search->setProjects($projects);
+        $search->setProjects($this->_projects);
 
         $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
         $this->setMatchedProjectIdsFromSearch($search);
@@ -514,7 +510,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $skills = [98];
         $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($projects);
+        $search->setProjects($this->_projects);
 
         $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
         $this->setMatchedProjectIdsFromSearch($search);

@@ -84,7 +84,7 @@ class Project_Search_Complex implements Project_Search
 
     public function search()
     {
-        $this->_projects = $this->_currentProject->getActivesOrderedByCreated();
+        $this->_projects        = $this->_currentProject->getActivesOrderedByCreated();
 
         // Szukites iparagakra
         $this->searchRelationsInProjects(new Model_Project_Industry());
@@ -112,15 +112,25 @@ class Project_Search_Complex implements Project_Search
         $this->_searchedRelationModel   = $relationModel;
         $this->_searchedRelationIds     = $this->getSearchedRelationIdsByType();
 
-        if (empty($this->_searchedRelationIds)) {
+        if ($this->isEmptySearch()) {
             $this->_matchedProjects = $this->_projects;
             return true;
         }
 
-        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
-        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds, Business_Project::getRelationIdField($this->_searchedRelationModel));
+        if (empty($this->_searchedRelationIds)) {
+            return false;
+        }
 
-        foreach ($this->_projects as $project) {
+        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
+        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti(
+            $relationModelsByProjectIds,
+            Business_Project::getRelationIdField($this->_searchedRelationModel));
+
+        // Elso keresesnel a matchedProjects ures lesz, aztan beletesszuk a talalatokat es a tobbi keresnel ezeket szukiti tovabb
+        $projects           = (empty($this->_matchedProjects)) ? $this->_projects : $this->_matchedProjects;
+        $matchedProjects    = [];
+
+        foreach ($projects as $project) {
             $this->_currentProject = $project;
 
             if ($this->_searchedRelationModel instanceof Model_Project_Skill) {
@@ -130,9 +140,11 @@ class Project_Search_Complex implements Project_Search
             }
 
             if ($found) {
-                $this->_matchedProjects[] = $this->_currentProject;
+                $matchedProjects[] = $this->_currentProject;
             }
         }
+
+        $this->_matchedProjects = $matchedProjects;
     }
 
     protected function searchRelationsInOneProject()
@@ -158,10 +170,6 @@ class Project_Search_Complex implements Project_Search
     {
         $projectSkillIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
 
-        if (empty($projectSkillIds)) {
-            return true;
-        }
-
         $difference = array_diff($this->_searchedRelationIds, $projectSkillIds);
         switch ($this->_skillRelation) {
             case self::SKILL_RELATION_OR:
@@ -174,6 +182,17 @@ class Project_Search_Complex implements Project_Search
         }
 
         return $found;
+    }
+
+    protected function isEmptySearch()
+    {
+        return empty($this->_searchedIndustryIds)
+            && empty($this->_searchedProfessionIds) && empty($this->_searchedSkillIds);
+    }
+
+    protected function isSkillSearch()
+    {
+        return !empty($this->_searchedSkillIds);
     }
 
     protected function getSearchedRelationIdsByType()
