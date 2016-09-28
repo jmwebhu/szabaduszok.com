@@ -190,11 +190,6 @@ class Project_Search_Complex implements Project_Search
             && empty($this->_searchedProfessionIds) && empty($this->_searchedSkillIds);
     }
 
-    protected function isSkillSearch()
-    {
-        return !empty($this->_searchedSkillIds);
-    }
-
     protected function getSearchedRelationIdsByType()
     {
         // Egy get_class es switch szebb lenne, de unittest miatt NEM LEHET (Mock_xy osztalyok miatt)
