@@ -300,7 +300,7 @@ class Controller_Project extends Controller_DefaultTemplate
         	}        	
 
         	$entity = new Entity_Project();
-            Project_Search_Factory::getAndSetSearch(Input::post_all(), $entity);
+            $entity->setSearch(Project_Search_Factory::makeSearch(Input::post_all(), $entity));
 
         	$projects = $entity->search(Input::post_all());
         }    
