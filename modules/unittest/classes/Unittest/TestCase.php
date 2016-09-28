@@ -2,7 +2,7 @@
 
 abstract class Unittest_TestCase extends Kohana_Unittest_TestCase 
 {
-   /**
+    /**
     * protected / private metodus hivasa az adott objektumon
     *
     * @param object &$object    Peldanyositott objektum, abbol az osztalybol, ahol a protected / pricvate metodus van
@@ -11,13 +11,36 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
     *
     * @return mixed 			 Metodus visszateresi erteke
     */
-   public function invokeMethod(&$object, $methodName, array $parameters = array())
-   {
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
        $reflection 	= new \ReflectionClass(get_class($object));
        $method 		= $reflection->getMethod($methodName);
 
        $method->setAccessible(true);
 
        return $method->invokeArgs($object, $parameters);
-   }
+    }
+
+    public function assertNotInArray($item, array $array)
+    {
+       $this->assertFalse(in_array($item, $array));
+    }
+
+    public function assertArrayNotSubset(array $subset, array $array)
+    {
+        foreach ($subset as $item) {
+            $this->assertNotInArray($item, $array);
+        }
+    }
+
+    public function getMockAny($class, $method, $return)
+    {
+        $mock  = $this->getMockBuilder($class)->getMock();
+
+        $mock->expects($this->any())
+            ->method($method)
+            ->will($this->returnValue($return));
+
+        return $mock;
+    }
 }
