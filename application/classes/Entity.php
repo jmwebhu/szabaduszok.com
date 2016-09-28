@@ -16,15 +16,18 @@
 
 abstract class Entity
 {
-    /**
-     * Entity -hez tartozo ORM peldany
-     * @var ORM
-     */
     protected $_model;
 
-    /**
-     * Entity constructor.
-     */
+    // Azok az adattagok, amiket nem kell self::map() -nak masolni
+    private static $_disabledPropertiesInMap = ['_model', '_fromObject', '_toObject', '_stdObject'];
+
+    // self::map() altal hasznalt forras es cel objektumok
+    private $_fromObject;
+    private $_toObject;
+
+    // Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
+    private $_stdObject;
+
     public function __construct($id = null)
     {
         $entity         = $this->getEntityName();
@@ -98,11 +101,6 @@ abstract class Entity
         return $result;
     }
 
-    /**
-     * Visszaadja az Entity nevet, pl Entity_Project eseten "Project"
-     *
-     * @return String
-     */
     protected function getEntityName()
     {
         $class = get_class($this);
@@ -111,101 +109,67 @@ abstract class Entity
         return Arr::get($parts, 1, '');
     }
 
-    /**
-     * Hozzarendeli a Model adattagjait az Entity adattagjaihoz
-     *
-     * @uses Entity::map()
-     */
     protected function mapModelToThis()
     {
-        $this->map($this->_model, $this);
+        $this->_fromObject  = $this->_model;
+        $this->_toObject    = $this;
+
+        $this->map();
     }
 
-    /**
-     * Hozzarendeli az Entity adattagjait a Model adattagjaihoz
-     *
-     * @uses Entity::map()
-     */
     protected function mapThisToModel()
     {
-        $this->map($this, $this->_model);
+        $this->_fromObject  = $this;
+        $this->_toObject    = $this->_model;
+
+        $this->map();
     }
 
     /**
-     * A $from objektum adattagjait hozzarendeli a $to objektum adattagjaihoz
-     *
-     * @param $from     Forras objektum
-     * @param $to       Cel objektum
-     *
-     * @return boolean  false, ha valamelyik parameter nem megfelelo.
+     * _fromObject adattagjait masolja _toObject -be
+     * @return bool
      */
-    protected function map($from, $to)
+    protected function map()
     {
         try {
-            // Mindket paramter valid
-            if ($this->validateObjects($from, $to)) {
-                $this->mapProperties($from, $to);
-            }
+            $result = true;
+            $this->mapProperties();
+
         } catch (Exception $ex) {
             Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
             $result = false;
         }
 
-        return true;
+        return $result;
     }
 
-    /**
-     * Vizsgalja a kapott objektumok tipusat, majd vegmegy az adattagjain es kitolti oket
-     *
-     * @param $from     Forras objektum
-     * @param $to       Cel objektum
-     */
-    protected function mapProperties($from, $to)
+    protected function mapProperties()
     {
-        $fromClass      = get_class($from);
+        $this->validateFromAndToObjects();
+
+        $fromClass      = get_class($this->_fromObject);
 
         // Jeloli, hogy a from vagy a to objektum Entity tipus
         $isFromEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
         $isToEntity     = !$isFromEntity;
 
-        // Ha Entity, akkor lekerdezi a stdObject -et (ahol nincsenek "_" prefixek az adattagok elott)
-        // Ha ORM, akkor array -e alakitja
-        $realFrom       = ($isFromEntity) ? $this->mapThisToStdObject() : $from->object();
+        $realFrom       = ($isFromEntity) ? $this->mapThisToStdObject() : $this->_fromObject->object();
         $prefix         = ($isToEntity) ? '_' : '';
 
-        // Vegmegy az osszes mezojen, es a $to mezokhoz rendeli az ertekeket
         foreach ($realFrom as $key => $value) {
-            $this->mapOneProperty($to, $key, $value, $prefix);
+            $this->setProperty($prefix . $key, $value);
         }
     }
 
-    /**
-     * Beallit egyetlen adattagot a $to objektumon
-     *
-     * @param $to       Cel objektum
-     * @param $key      Adattag kulcs
-     * @param $value    Ertek
-     * @param $prefix   ADattag prefxe ('_')
-     */
-    protected function mapOneProperty($to, $key, $value, $prefix)
+    protected function setProperty($key, $value)
     {
-        $fullKey        = $prefix . $key;
-        $to->{$fullKey} = $value;
+        $this->_toObject->{$key} = $value;
     }
 
-    /**
-     * Validalja a kapott parametereket. Mindketto objektum kell legyen
-     *
-     * @param mixed $from
-     * @param mixed $to
-     * @return bool
-     */
-    protected function validateObjects($from, $to)
+    protected function validateFromAndToObjects()
     {
-        // Csak objektumok lehetnek a parameterek
-        if (!is_object($from) || !is_object($to)) {
-            Log::instance()->add(Log::NOTICE, 'Trying to map non-object value');
-            return false;
+        if (!is_object($this->_fromObject) || !is_object($this->_toObject)) {
+            throw new Exception('Trying to map non-object value');
         }
 
         return true;
@@ -240,10 +204,8 @@ abstract class Entity
      */
     protected function mapOnePropertyToStdObject($entityStd, $key, $value)
     {
-        $disabledProperties = ['_model'];
-
         // Csak akkor, ha megengedett
-        if (!in_array($key, $disabledProperties)) {
+        if (!in_array($key, self::$_disabledPropertiesInMap)) {
             $this->setStdObjectUnprefixedProperty($entityStd, $key, $value);
         }
     }
