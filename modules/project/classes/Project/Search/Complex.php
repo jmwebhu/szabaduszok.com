@@ -135,17 +135,13 @@ class Project_Search_Complex implements Project_Search
 
     protected function getSearchedRelationIdsByType()
     {
-        $class = get_class($this->_searchedRelationModel);
-
-        switch ($class) {
-            case Model_Project_Industry::class: default:
-                return $this->_searchedIndustryIds;
-
-            case Model_Project_Profession::class:
-                return $this->_searchedProfessionIds;
-
-            case Model_Project_Skill::class:
-                return $this->_searchedSkillIds;
+        // Egy get_class es switch szebb lenne, de unittest miatt NEM LEHET (Mock_xy osztalyok miatt)
+        if ($this->_searchedRelationModel instanceof Model_Project_Industry) {
+            return $this->_searchedIndustryIds;
+        } elseif ($this->_searchedRelationModel instanceof Model_Project_Profession) {
+            return $this->_searchedProfessionIds;
+        } else {
+            return $this->_searchedSkillIds;
         }
     }
 
