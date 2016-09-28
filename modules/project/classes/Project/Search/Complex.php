@@ -84,7 +84,7 @@ class Project_Search_Complex implements Project_Search
 
     public function search()
     {
-        $this->_projects     = $this->_currentProject->getActivesOrderedByCreated();
+        $this->_projects = $this->_currentProject->getActivesOrderedByCreated();
 
         // Szukites iparagakra
         $this->searchRelationsInProjects(new Model_Project_Industry());
@@ -156,7 +156,7 @@ class Project_Search_Complex implements Project_Search
 
     protected function searchSkillsInOneProject()
     {
-        $projectSkillIds    = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
+        $projectSkillIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
 
         if (empty($projectSkillIds)) {
             return true;
