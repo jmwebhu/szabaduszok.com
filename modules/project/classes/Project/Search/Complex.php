@@ -173,13 +173,6 @@ class Project_Search_Complex implements Project_Search
                 break;
         }
 
-        if ($this->_currentProject->project_id == 1) {
-            var_dump('FIRST');
-            var_dump($this->_searchedRelationIds);
-            var_dump($projectSkillIds);
-            var_dump($found);
-        }
-
         return $found;
     }
 

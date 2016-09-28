@@ -398,6 +398,46 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     /**
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
+    public function testSearchRelationsInProjectsSkillOrNotOk()
+    {
+        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+
+        $projectSkillMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectSkills));
+
+        $skills = [12];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 1]);
+        $projects = $this->_projects;
+        unset($projects[3]);
+        $search->setProjects($projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertFalse(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertFalse(in_array(3, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+
+        $skills = [14, 32, 33, 65, 101];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true]);
+        $search->setProjects($projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertFalse(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertFalse(in_array(3, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+    }
+
+    /**
+     * @covers Project_Search_Complex::searchRelationsInProjects()
+     */
     public function testSearchRelationsInProjectsSkillAndOk()
     {
         $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
@@ -444,23 +484,77 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertFalse(in_array(3, $this->_matchedProjects));
         $this->assertTrue(in_array(4, $this->_matchedProjects));
         $this->assertFalse(in_array(5, $this->_matchedProjects));
+    }
 
-        /*$this->_projectSkills = [
-            1 => [
-                $this->_skills[0], $this->_skills[1], $this->_skills[3],
-            ],
-            2 => [
-                $this->_skills[3], $this->_skills[4]
-            ],
-            3 => [
-                $this->_skills[0],
-            ],
-            4 => [
+    /**
+     * @covers Project_Search_Complex::searchRelationsInProjects()
+     */
+    public function testSearchRelationsInProjectsSkillAndNotOk()
+    {
+        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
 
-            ],
-            5 => [
-                $this->_skills[2], $this->_skills[3],
-            ]
-        ];*/
+        $projectSkillMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectSkills));
+
+        $skills = [1, 2, 3, 4];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
+        $projects = $this->_projects;
+        unset($projects[3]);
+        $search->setProjects($projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertFalse(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertFalse(in_array(3, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+
+        $skills = [98];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
+        $search->setProjects($projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertFalse(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertFalse(in_array(3, $this->_matchedProjects));
+        $this->assertFalse(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+    }
+
+    /**
+     * @covers Project_Search_Complex::searchRelationsInProjects()
+     */
+    public function testSearchRelationsInProjectsSkillAndNoPostOk()
+    {
+        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+
+        $projectSkillMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectSkills));
+
+        $skills = [];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertTrue(in_array(1, $this->_matchedProjects));
+        $this->assertTrue(in_array(2, $this->_matchedProjects));
+        $this->assertTrue(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertTrue(in_array(5, $this->_matchedProjects));
+    }
+
+    public function assertPostConditions()
+    {
+        // Minden teszt utan ellenorzi, hogy a talalti lista egyedi projekteket tartalmaz
+        $unique = array_unique($this->_matchedProjects);
+        $this->assertEquals($unique, $this->_matchedProjects);
     }
 }
