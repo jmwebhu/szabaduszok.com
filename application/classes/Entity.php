@@ -22,18 +22,19 @@ abstract class Entity
     private static $_disabledPropertiesInMap = ['_model', '_fromObject', '_toObject', '_stdObject'];
 
     // self::map() altal hasznalt forras es cel objektumok
-    private $_fromObject;
-    private $_toObject;
+    private $_destinationObject = null;
+    private $_targetObject      = null;
 
     // Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
     private $_stdObject;
 
     public function __construct($id = null)
     {
-        $entity         = $this->getEntityName();
-        $modelClass     = 'Model_' . $entity;
+        $entity             = $this->getEntityName();
+        $modelClass         = 'Model_' . $entity;
 
-        $this->_model   = new $modelClass($id);
+        $this->_model       = new $modelClass($id);
+        $this->_stdObject   = new stdClass();
     }
 
     /**
@@ -111,22 +112,22 @@ abstract class Entity
 
     protected function mapModelToThis()
     {
-        $this->_fromObject  = $this->_model;
-        $this->_toObject    = $this;
+        $this->_destinationObject   = $this->_model;
+        $this->_targetObject        = $this;
 
         $this->map();
     }
 
     protected function mapThisToModel()
     {
-        $this->_fromObject  = $this;
-        $this->_toObject    = $this->_model;
+        $this->_destinationObject   = $this;
+        $this->_targetObject        = $this->_model;
 
         $this->map();
     }
 
     /**
-     * _fromObject adattagjait masolja _toObject -be
+     * _destinationObject adattagjait masolja _targetObject -be
      * @return bool
      */
     protected function map()
@@ -145,110 +146,75 @@ abstract class Entity
 
     protected function mapProperties()
     {
-        $this->validateFromAndToObjects();
+        $this->validateObjects();
 
-        $fromClass      = get_class($this->_fromObject);
+        $destinationClass       = get_class($this->_destinationObject);
 
-        // Jeloli, hogy a from vagy a to objektum Entity tipus
-        $isFromEntity   = (stripos($fromClass, 'Entity') === false) ? false : true;
-        $isToEntity     = !$isFromEntity;
+        // Jeloli, hogy a destination vagy a target objektum Entity tipus
+        $isDestinationEntity    = (stripos($destinationClass, 'Entity') === false) ? false : true;
+        $isTargetEntity         = !$isDestinationEntity;
 
-        $realFrom       = ($isFromEntity) ? $this->mapThisToStdObject() : $this->_fromObject->object();
-        $prefix         = ($isToEntity) ? '_' : '';
+        /**
+         * @todo mapThis most nem ad vissza semmit, helyette $this->_stdObject -ben tarolja
+         */
 
-        foreach ($realFrom as $key => $value) {
-            $this->setProperty($prefix . $key, $value);
+        $realDestination        = ($isDestinationEntity) ? $this->mapThisToStdObject() : $this->_destinationObject->object();
+        $prefix                 = ($isTargetEntity) ? '_' : '';
+
+        foreach ($realDestination as $key => $value) {
+            $this->setPropertyInTarget($prefix . $key, $value);
         }
     }
 
-    protected function setProperty($key, $value)
+    protected function setPropertyInTarget($key, $value)
     {
-        $this->_toObject->{$key} = $value;
+        $this->_targetObject->{$key} = $value;
     }
 
-    protected function validateFromAndToObjects()
+    protected function validateObjects()
     {
-        if (!is_object($this->_fromObject) || !is_object($this->_toObject)) {
+        if (!is_object($this->_destinationObject) || !is_object($this->_targetObject)) {
             throw new Exception('Trying to map non-object value');
         }
 
         return true;
     }
 
-    /**
-     * Visszaad egy stdClass -t, ami az Entity addattagjait tartlmazza "ORM-kompatibilis" modon.
-     *
-     * Az Entity addattagjai "_" jellel vannak prefixalva, pl.: $_name, ezeket kell eltavolitani.
-     * Igy egy olyan stdClass peldanyt ad vissza ahol name nevu adattag lesz.
-     *
-     * @return stdClass     Ugyanazokat az adattagokat es ertekeket tartalmazza, mint a $this, csak "_" prefix nelkul
-     */
     protected function mapThisToStdObject()
     {
-        $entityStd = new stdClass();
-
-        // Vegmegy az osszes adattagon es hozzarendeli egy stdClass -hez
         foreach ($this as $key => $value) {
-            $this->mapOnePropertyToStdObject($entityStd, $key, $value);
+            $this->mapOnePropertyToStdObject($key, $value);
         }
 
-        return $entityStd;
+        return $this->_stdObject;
     }
 
-    /**
-     * Ellenorzi es hozzarendeli a kapott stdClass -hez a $key addattagot a $value ertekkel
-     *
-     * @param $entityStd    stdClass peldany, amibe le lesz masolva az Entity
-     * @param $key          Adattag neve
-     * @param $value        Adattag erteke
-     */
-    protected function mapOnePropertyToStdObject($entityStd, $key, $value)
+    protected function mapOnePropertyToStdObject($key, $value)
     {
-        // Csak akkor, ha megengedett
         if (!in_array($key, self::$_disabledPropertiesInMap)) {
-            $this->setStdObjectUnprefixedProperty($entityStd, $key, $value);
+            $this->setStdObjectUnprefixedProperty($key, $value);
         }
     }
 
-    /**
-     * Beallitja a kapott stdClass peldany $key adattagjat $value ertekre. Elotte lekeri a $key -hez tartozo
-     * prefix nelkuli nevet. Pl.: _project_id eseten project_id
-     *
-     * @param $entityStd    stdClass peldany, amibe le lesz masolva az Entity
-     * @param $key          Adattag neve
-     * @param $value        Adattag erteke
-     */
-    protected function setStdObjectUnprefixedProperty($entityStd, $key, $value)
+    protected function setStdObjectUnprefixedProperty($key, $value)
     {
-        $unprefixedName                 = $this->getUnprefixedPropertyName($key);
-        $entityStd->{$unprefixedName}   = $value;
+        $unprefixedKey                         = $this->getUnprefixedPropertyName($key);
+        $this->_stdObject->{$unprefixedKey}    = $value;
     }
 
-    /**
-     * Visszaadja a "_" jellel prefixalt adattag prefix nelkuli nevet
-     *
-     * @param $prefixedName
-     * @return string
-     */
     protected function getUnprefixedPropertyName($prefixedName)
     {
         $unprefixedName = $prefixedName;
 
-        // Ha tenlyeg '_' prefixalt
         if (substr($prefixedName, 0, 1) == '_') {
-            // Levagja az elso karaktert
             $unprefixedName = substr($prefixedName, 1);
         }
 
         return $unprefixedName;
     }
 
-    /**
-     * Beallitja az elsodleges kulcs erteket Model alapjan
-     */
     protected function setPrimaryKeyFromModel()
     {
-        // Elsodleges kulcs ertekenek betoltese
         $primaryKey         = $this->_model->primary_key();
         $prefixed           = '_' . $primaryKey;
         $this->{$prefixed}  = $this->_model->pk();
