@@ -13,9 +13,6 @@
 
 class Project_Search_Complex implements Project_Search
 {
-    const SKILL_RELATION_OR         = 1;
-    const SKILL_RELATION_AND        = 2;
-
     private $_searchedIndustryIds   = [];
     private $_searchedProfessionIds = [];
     private $_searchedSkillIds      = [];

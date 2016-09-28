@@ -2,6 +2,9 @@
 
 class Project_Search_Relation_Skill extends Project_Search_Relation
 {
+    const SKILL_RELATION_OR         = 1;
+    const SKILL_RELATION_AND        = 2;
+
     protected $_skillRelation;
 
     /**
@@ -20,11 +23,11 @@ class Project_Search_Relation_Skill extends Project_Search_Relation
 
         $difference = array_diff($this->_searchedRelationIds, $projectSkillIds);
         switch ($this->_skillRelation) {
-            case Project_Search_Complex::SKILL_RELATION_OR:
+            case self::SKILL_RELATION_OR:
                 $found = count($difference) != count($this->_searchedRelationIds);
                 break;
 
-            case Project_Search_Complex::SKILL_RELATION_AND:
+            case self::SKILL_RELATION_AND:
                 $found = empty($difference);
                 break;
         }
