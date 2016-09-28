@@ -11,90 +11,89 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     private $_projectIndustries = [];
     private $_projectProfessions = [];
+    private $_projectSkills = [];
 
     public function setUp()
     {
-        $project1 = new Model_Project();
-        $project1->project_id = 1;
+        for ($i = 1; $i < 6; $i++) {
+            $project = new Model_Project();
+            $project->project_id = $i;
 
-        $project2 = new Model_Project();
-        $project2->project_id = 2;
+            $this->_projects[] = $project;
+        }
 
-        $project3 = new Model_Project();
-        $project3->project_id = 3;
+        for ($i = 1; $i < 4; $i++) {
+            $industry = new Model_Industry();
+            $industry->industry_id = $i;
 
-        $project4 = new Model_Project();
-        $project4->project_id = 4;
+            $this->_industries[] = $industry;
+        }
 
-        $project5 = new Model_Project();
-        $project5->project_id = 5;
+        for ($i = 1; $i < 5; $i++) {
+            $profession = new Model_Profession();
+            $profession->profession_id = $i;
 
-        $industry1 = new Model_Industry();
-        $industry1->industry_id = 1;
+            $this->_professions[] = $profession;
+        }
 
-        $industry2 = new Model_Industry();
-        $industry2->industry_id = 2;
+        for ($i = 1; $i < 6; $i++) {
+            $skill = new Model_Skill();
+            $skill->skill_id = $i;
 
-        $industry3 = new Model_Industry();
-        $industry3->industry_id = 3;
-
-        $profession1 = new Model_Profession();
-        $profession1->profession_id = 1;
-
-        $profession2 = new Model_Profession();
-        $profession2->profession_id = 2;
-
-        $profession3 = new Model_Profession();
-        $profession3->profession_id = 3;
-
-        $profession4 = new Model_Profession();
-        $profession4->profession_id = 4;
-
-        $this->_projects = [
-            $project1, $project2, $project3, $project4, $project5
-        ];
-
-        $this->_industries = [
-            $industry1, $industry2, $industry3
-        ];
-
-        $this->_professions = [
-            $profession1, $profession2, $profession3, $profession4
-        ];
+            $this->_skills[] = $skill;
+        }
 
         $this->_projectIndustries = [
             1 => [
-                $industry1, $industry2
+                $this->_industries[0], $this->_industries[1]
             ],
             2 => [
-                $industry2
+                $this->_industries[1]
             ],
             3 => [
-                $industry1
+                $this->_industries[0]
             ],
             4 => [
-                $industry2, $industry3
+                $this->_industries[1], $this->_industries[2]
             ],
             5 => [
-                $industry1, $industry2, $industry3
+                $this->_industries[0], $this->_industries[1], $this->_industries[2]
             ]
         ];
 
         $this->_projectProfessions = [
             1 => [
-                $profession1, $profession2, $profession3, $profession4
+                $this->_professions[0], $this->_professions[1], $this->_professions[2], $this->_professions[3]
             ],
             2 => [
-                $profession2
+                $this->_professions[1]
             ],
             3 => [
-                $profession1, $profession4
+                $this->_professions[0], $this->_professions[3]
             ],
             4 => [
-                $profession2, $profession3
+                $this->_professions[1], $this->_professions[2]
             ],
             5 => [
-                $profession1, $profession3, $profession4
+                $this->_professions[0], $this->_professions[2], $this->_professions[3]
+            ]
+        ];
+
+        $this->_projectSkills = [
+            1 => [
+                $this->_skills[0], $this->_skills[1], $this->_skills[3],
+            ],
+            2 => [
+                $this->_skills[3], $this->_skills[4]
+            ],
+            3 => [
+                $this->_skills[0],
+            ],
+            4 => [
+
+            ],
+            5 => [
+                $this->_skills[2], $this->_skills[3],
             ]
         ];
 
@@ -103,12 +102,15 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     public function setMatchedProjectIdsFromSearch(Project_Search_Complex $search)
     {
+        $this->_matchedProjects = [];
         $projects = $search->getMatchedProjects();
 
         foreach ($projects as $project) {
             $this->_matchedProjects[] = $project->project_id;
         }
     }
+
+    // -------- Iparagak --------
 
     /**
      * @covers Project_Search_Complex::searchRelationsInProjects()
@@ -338,5 +340,127 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->assertTrue(in_array(3, $this->_matchedProjects));
         $this->assertTrue(in_array(4, $this->_matchedProjects));
         $this->assertTrue(in_array(5, $this->_matchedProjects));
+    }
+
+    // ------- Kepessegek ---------
+
+    /**
+     * @covers Project_Search_Complex::searchRelationsInProjects()
+     */
+    public function testSearchRelationsInProjectsSkillOrOk()
+    {
+        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+
+        $projectSkillMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectSkills));
+
+        $skills = [1];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 1]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertTrue(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertTrue(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+
+        $skills = [1, 3];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertTrue(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertTrue(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertTrue(in_array(5, $this->_matchedProjects));
+
+        $skills = [1, 3, 2];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertTrue(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertTrue(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertTrue(in_array(5, $this->_matchedProjects));
+    }
+
+    /**
+     * @covers Project_Search_Complex::searchRelationsInProjects()
+     */
+    public function testSearchRelationsInProjectsSkillAndOk()
+    {
+        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+
+        $projectSkillMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectSkills));
+
+        $skills = [1];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertTrue(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertTrue(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+
+        $skills = [1, 3];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertFalse(in_array(1, $this->_matchedProjects));
+        $this->assertFalse(in_array(2, $this->_matchedProjects));
+        $this->assertFalse(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+
+        $skills = [4, 5];
+        $search = Project_Search_Factory::getAndSetSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
+        $search->setProjects($this->_projects);
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+
+        $this->assertFalse(in_array(1, $this->_matchedProjects));
+        $this->assertTrue(in_array(2, $this->_matchedProjects));
+        $this->assertFalse(in_array(3, $this->_matchedProjects));
+        $this->assertTrue(in_array(4, $this->_matchedProjects));
+        $this->assertFalse(in_array(5, $this->_matchedProjects));
+
+        /*$this->_projectSkills = [
+            1 => [
+                $this->_skills[0], $this->_skills[1], $this->_skills[3],
+            ],
+            2 => [
+                $this->_skills[3], $this->_skills[4]
+            ],
+            3 => [
+                $this->_skills[0],
+            ],
+            4 => [
+
+            ],
+            5 => [
+                $this->_skills[2], $this->_skills[3],
+            ]
+        ];*/
     }
 }

@@ -35,6 +35,7 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	{
             if (Kohana::$environment == Kohana::PRODUCTION)
             {
+
                 throw new Exception('PRODUCTION');
                 exit;
             }                
@@ -52,6 +53,10 @@ abstract class Kohana_Unittest_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	public function tearDown()
 	{
+	    if ($this->_helpers == null) {
+            $this->_helpers = new Unittest_Helpers;
+        }
+
 		$this->_helpers->restore_environment();
 	}
 

@@ -72,6 +72,16 @@ class Project_Search_Complex implements Project_Search
         $this->_projects = $projects;
     }
 
+    /**
+     * @param Model_Project $currentProject
+     */
+    public function setCurrentProject($currentProject)
+    {
+        if ($this->_currentProject == null) {
+            $this->_currentProject = $currentProject;
+        }
+    }
+
     public function search()
     {
         $this->_projects     = $this->_currentProject->getActivesOrderedByCreated();
@@ -82,7 +92,8 @@ class Project_Search_Complex implements Project_Search
         // Szukites szakteruletekre
         $this->searchRelationsInProjects(new Model_Project_Profession());
 
-        $this->searchSkillsInProjects(new Model_Project_Skill());
+        // Szukites kepessegekre
+        $this->searchRelationsInProjects(new Model_Project_Skill());
 
         return $this->_matchedProjects;
     }
@@ -107,11 +118,20 @@ class Project_Search_Complex implements Project_Search
         }
 
         $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
-        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds, Business_Project::getRelationIdField($relationModel));
+        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds, Business_Project::getRelationIdField($this->_searchedRelationModel));
 
         foreach ($this->_projects as $project) {
             $this->_currentProject = $project;
-            $this->searchRelationsInOneProject();
+
+            if ($this->_searchedRelationModel instanceof Model_Project_Skill) {
+                $found = $this->searchSkillsInOneProject();
+            } else {
+                $found = $this->searchRelationsInOneProject();
+            }
+
+            if ($found) {
+                $this->_matchedProjects[] = $this->_currentProject;
+            }
         }
     }
 
@@ -121,16 +141,46 @@ class Project_Search_Complex implements Project_Search
             $found = $this->searchOneRelationInOneProject($searchedRelationId);
 
             if ($found) {
-                $this->_matchedProjects[] = $this->_currentProject;
+                return true;
             }
         }
+
+        return false;
     }
 
     protected function searchOneRelationInOneProject($searchedRelationId)
     {
         $projectRelationIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
-
         return in_array($searchedRelationId, $projectRelationIds);
+    }
+
+    protected function searchSkillsInOneProject()
+    {
+        $projectSkillIds    = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
+
+        if (empty($projectSkillIds)) {
+            return true;
+        }
+
+        $difference = array_diff($this->_searchedRelationIds, $projectSkillIds);
+        switch ($this->_skillRelation) {
+            case self::SKILL_RELATION_OR:
+                $found = count($difference) != count($this->_searchedRelationIds);
+                break;
+
+            case self::SKILL_RELATION_AND:
+                $found = empty($difference);
+                break;
+        }
+
+        if ($this->_currentProject->project_id == 1) {
+            var_dump('FIRST');
+            var_dump($this->_searchedRelationIds);
+            var_dump($projectSkillIds);
+            var_dump($found);
+        }
+
+        return $found;
     }
 
     protected function getSearchedRelationIdsByType()
@@ -143,72 +193,5 @@ class Project_Search_Complex implements Project_Search
         } else {
             return $this->_searchedSkillIds;
         }
-    }
-
-    // Ugyanaz
-    protected function searchSkillsInProjects(Model_Project_Skill $projectSkill)
-    {
-        if (empty($this->_searchedSkillIds)) {
-            return $this->_projects;
-        }
-
-        $result                         = [];
-        $this->_searchedRelationModel   = $projectSkill;
-
-        foreach ($this->_projects as $project) {
-            $this->_currentProject = $project;
-            $found = $this->searchSkillsInOneProject();
-
-            if ($found) {
-                $result[] = $project;
-            }
-        }
-
-        return $result;
-    }
-
-    // Kulonbsegek: empty vizsgalat, mashol break helyett return van
-    protected function searchSkillsInOneProject()
-    {
-        // Osszes projekthez tartozo osszes kepesseg
-        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
-        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds);
-
-        $found                      = ($this->_skillRelation == self::SKILL_RELATION_OR) ? false : true;
-
-        if (empty($projectSkillIds)) {
-            return true;
-        }
-
-        // Vegmegy a postban kapott, keresett kepessegeken
-        foreach ($this->_searchedRelationIds as $searchedSkillId) {
-            $found = $this->searchOneSkillInOneProjectByRelation($searchedSkillId);
-
-            if ($found) {
-                break;
-            }
-        }
-
-        return $found;
-    }
-
-    // Kulonbsegek: mashol siman visszater az in_array ertekevel
-    protected function searchOneSkillInOneProjectByRelation($searchedSkillId)
-    {
-        $result = false;
-        $projectSkillIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
-        $found = in_array($searchedSkillId, $projectSkillIds);
-
-        // Vagy eseten, ha legalabb egy talalt volt, akkor leallitja a keresest
-        if ($this->_skillRelation == self::SKILL_RELATION_OR && $found) {
-            $result = true;
-        }
-
-        // Es eseten, ha legalabb az egyik kepesseg nem talalhato, akkor leallitja a keresest
-        if ($this->_skillRelation == self::SKILL_RELATION_AND && !$found) {
-            $result = true;
-        }
-
-        return $result;
     }
 }

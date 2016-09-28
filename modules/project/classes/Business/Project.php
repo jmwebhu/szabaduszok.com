@@ -8,6 +8,8 @@ class Business_Project
             return 'industry_id';
         } elseif ($relation instanceof Model_Project_Profession) {
             return 'profession_id';
+        } elseif ($relation instanceof Model_Project_Skill) {
+            return 'skill_id';
         }
     }
 }

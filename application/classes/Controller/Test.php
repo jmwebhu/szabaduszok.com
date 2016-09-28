@@ -4,8 +4,11 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $model = new Model_Project_Industry();
-        echo Debug::vars($model->primary_key());
+        $searchedIds = [1, 3];
+        $projectSkillIds = [3, 4, 5, 1];
+
+        $diff = array_diff($searchedIds, $projectSkillIds);
+        echo Debug::vars('dif: ', $diff);
 
         /*$project1 = new Model_Project();
         $project1->project_id = 1;
@@ -23,7 +26,7 @@ class Controller_Test extends Controller
         $project5->project_id = 5;
 
         $data = [
-            'industries' => [1],
+            'skills' => [1, 2, 3, 4, 5, 6, 7],
             'complex' => true
         ];
 
@@ -37,10 +40,10 @@ class Controller_Test extends Controller
 
         $method->setAccessible(true);
 
-        $method->invokeArgs($search, [new Model_Project_Industry()]);
+        $method->invokeArgs($search, [new Model_Project_Skill()]);
 
-        $res = $search->getMatchedProjects();
-        echo Debug::vars($res);*/
+        $res = $search->getMatchedProjects();*/
+        //echo Debug::vars($res);
     }	
 
     public function action_clearcache()
