@@ -7,7 +7,7 @@ class Business
      */
     private $_model;
 
-    public static function getIdsFromModelsMulti(array $models)
+    public static function getIdsFromModelsMulti(array $models, $primaryKey = null)
     {
         $ids = [];
         foreach ($models as $i => $item) {
@@ -16,16 +16,20 @@ class Business
             }
 
             foreach ($item as $model) {
-                $ids[$i][] = self::checkAndGetIdFromModel($model);
+                $ids[$i][] = self::checkAndGetIdFromModel($model, $primaryKey);
             }
         }
 
         return $ids;
     }
 
-    public static function checkAndGetIdFromModel($model)
+    public static function checkAndGetIdFromModel($model, $primaryKey = null)
     {
-        if ($model instanceof ORM && $model->loaded()) {
+        if ($model instanceof ORM) {
+            if ($primaryKey) {
+                return $model->{$primaryKey};
+            }
+
             return $model->pk();
         }
     }

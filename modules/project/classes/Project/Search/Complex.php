@@ -35,6 +35,7 @@ class Project_Search_Complex implements Project_Search
     private $_skillRelation;
     private $_currentProject;
 
+    private $_projects          = [];
     private $_matchedProjects   = [];
 
     /**
@@ -56,86 +57,6 @@ class Project_Search_Complex implements Project_Search
     }
 
     /**
-     * @return Model_Project
-     */
-    public function getCurrentProject()
-    {
-        return $this->_currentProject;
-    }
-
-    /**
-     * @param Model_Project $currentProject
-     */
-    public function setCurrentProject($currentProject)
-    {
-        $this->_currentProject = $currentProject;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSearchedIndustryIds()
-    {
-        return $this->_searchedIndustryIds;
-    }
-
-    /**
-     * @param array $searchedIndustryIds
-     */
-    public function setSearchedIndustryIds($searchedIndustryIds)
-    {
-        $this->_searchedIndustryIds = $searchedIndustryIds;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSearchedProfessionIds()
-    {
-        return $this->_searchedProfessionIds;
-    }
-
-    /**
-     * @param array $searchedProfessionIds
-     */
-    public function setSearchedProfessionIds($searchedProfessionIds)
-    {
-        $this->_searchedProfessionIds = $searchedProfessionIds;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSearchedSkillIds()
-    {
-        return $this->_searchedSkillIds;
-    }
-
-    /**
-     * @param array $searchedSkillIds
-     */
-    public function setSearchedSkillIds($searchedSkillIds)
-    {
-        $this->_searchedSkillIds = $searchedSkillIds;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSkillRelation()
-    {
-        return $this->_skillRelation;
-    }
-
-    /**
-     * @param int $searchSkillRelation
-     */
-    public function setSkillRelation($searchSkillRelation)
-    {
-        $this->_skillRelation = $searchSkillRelation;
-    }
-
-    /**
      * @return array
      */
     public function getMatchedProjects()
@@ -144,57 +65,24 @@ class Project_Search_Complex implements Project_Search
     }
 
     /**
-     * @param array $matchedProjects
+     * @param array $projects
      */
-    public function setMatchedProjects($matchedProjects)
+    public function setProjects($projects)
     {
-        $this->_matchedProjects = $matchedProjects;
-    }
-
-    /**
-     * @return ORM
-     */
-    public function getSearchedRelationModel()
-    {
-        return $this->_searchedRelationModel;
-    }
-
-    /**
-     * @param ORM $searchedRelationModel
-     */
-    public function setSearchedRelationModel($searchedRelationModel)
-    {
-        $this->_searchedRelationModel = $searchedRelationModel;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRelationIdsByProjectIds()
-    {
-        return $this->_relationIdsByProjectIds;
-    }
-
-    /**
-     * @param array $allRelationIds
-     */
-    public function setRelationIdsByProjectIds($allRelationIds)
-    {
-        $this->_relationIdsByProjectIds = $allRelationIds;
+        $this->_projects = $projects;
     }
 
     public function search()
     {
-        $this->_matchedProjects     = $this->_currentProject->getActivesOrderedByCreated();
+        $this->_projects     = $this->_currentProject->getActivesOrderedByCreated();
 
         // Szukites iparagakra
-        $this->_matchedProjects     = $this->searchRelationsInProjects(new Model_Project_Industry());
+        $this->searchRelationsInProjects(new Model_Project_Industry());
 
         // Szukites szakteruletekre
-        $this->_matchedProjects     = $this->searchRelationsInProjects(new Model_Project_Profession());
+        $this->searchRelationsInProjects(new Model_Project_Profession());
 
-        // Szukites kepessegekre
-        //$this->_matchedProjects   = $this->searchSkillsInProjects(new Model_Project_Skill());
+        $this->searchSkillsInProjects(new Model_Project_Skill());
 
         return $this->_matchedProjects;
     }
@@ -206,55 +94,43 @@ class Project_Search_Complex implements Project_Search
      *                              unittest dependency injection miatt van ra szukseg, egyebkent eleg lenne a $this -ben
      *                              tarolt peldany
      *
-     * @return array                Azok a projektek, amikben megtalalhato legalabb egy, a keresett azonositokbol
+     * @return bool
      */
     protected function searchRelationsInProjects(ORM $relationModel)
     {
-        $result                         = [];
         $this->_searchedRelationModel   = $relationModel;
         $this->_searchedRelationIds     = $this->getSearchedRelationIdsByType();
 
         if (empty($this->_searchedRelationIds)) {
-            return $this->_matchedProjects;
+            $this->_matchedProjects = $this->_projects;
+            return true;
         }
 
-        foreach ($this->_matchedProjects as $project) {
+        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
+        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds, Business_Project::getRelationIdField($relationModel));
+
+        foreach ($this->_projects as $project) {
             $this->_currentProject = $project;
-            $found = $this->searchRelationsInOneProject();
-
-            if ($found) {
-                $result[] = $project;
-            }
+            $this->searchRelationsInOneProject();
         }
-
-        return $result;
     }
 
     protected function searchRelationsInOneProject()
     {
-        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
-        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds);
-
         foreach ($this->_searchedRelationIds as $searchedRelationId) {
             $found = $this->searchOneRelationInOneProject($searchedRelationId);
 
             if ($found) {
-                return true;
+                $this->_matchedProjects[] = $this->_currentProject;
             }
         }
-
-        return false;
     }
 
     protected function searchOneRelationInOneProject($searchedRelationId)
     {
-        $projectRelationIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->pk(), []);
+        $projectRelationIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
 
-        if (in_array($searchedRelationId, $projectRelationIds)) {
-            return true;
-        }
-
-        return false;
+        return in_array($searchedRelationId, $projectRelationIds);
     }
 
     protected function getSearchedRelationIdsByType()
@@ -267,32 +143,25 @@ class Project_Search_Complex implements Project_Search
 
             case Model_Project_Profession::class:
                 return $this->_searchedProfessionIds;
+
+            case Model_Project_Skill::class:
+                return $this->_searchedSkillIds;
         }
     }
 
-    /**
-     * A kapott projekteket szukiti a kapott kepessegek alapjan.
-     * skill_relation -tol fugg, hogy VAGY / ES kapcsolat van a keresett kepessegek kozott
-     *
-     * @param array $projects			Projektek (alapesetben a szakteruletekre szukitett projektek)
-     * @param array $searchedSkillIds			POST kepessegek
-     * @param int 	$skillRelation		Keresett kepessegek kapcsolata (ES / VAGY)
-     *
-     * @return array
-     */
-    protected function searchSkillsInProjects(array $projects, array $searchedSkillIds, $skillRelation, Model_Project_Skill $projectSkill)
+    // Ugyanaz
+    protected function searchSkillsInProjects(Model_Project_Skill $projectSkill)
     {
-        if (empty($searchedSkillIds)) {
-            return $projects;
+        if (empty($this->_searchedSkillIds)) {
+            return $this->_projects;
         }
 
-        $result = [];
+        $result                         = [];
+        $this->_searchedRelationModel   = $projectSkill;
 
-        foreach ($projects as $project) {
-            /**
-             * @var $project Model_Project
-             */
-            $found = $this->searchSkillsInOneProject($project, $searchedSkillIds, $skillRelation, $projectSkill);
+        foreach ($this->_projects as $project) {
+            $this->_currentProject = $project;
+            $found = $this->searchSkillsInOneProject();
 
             if ($found) {
                 $result[] = $project;
@@ -302,45 +171,48 @@ class Project_Search_Complex implements Project_Search
         return $result;
     }
 
-    /**
-     * Visszaadja, hogy a kapott projektben megtalalhatok -e a kapott kepessegek
-     *
-     * @param Model_Project $project		        Projekt
-     * @param array $searchedSkillIds		                Keresett kepessegek
-     * @param Model_Project_Skill $projectSkill     Ures model
-     * @param int $skillRelation                         ES / VAGY kapcsolat
-     *
-     * @return bool
-     */
-    protected function searchSkillsInOneProject(Model_Project $project, array $searchedSkillIds, $skillRelation, Model_Project_Skill $projectSkill)
+    // Kulonbsegek: empty vizsgalat, mashol break helyett return van
+    protected function searchSkillsInOneProject()
     {
         // Osszes projekthez tartozo osszes kepesseg
-        $allRelationIds     = $projectSkill->getAll();
+        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
+        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti($relationModelsByProjectIds);
 
-        // Projekt kepessegei
-        $projectSkillIds    = Arr::get($allRelationIds, $project->project_id, []);
-        $found              = ($skillRelation == self::SKILL_RELATION_OR) ? false : true;
+        $found                      = ($this->_skillRelation == self::SKILL_RELATION_OR) ? false : true;
 
-        // Ha nincs a projekthez kepesseg
         if (empty($projectSkillIds)) {
             return true;
         }
 
         // Vegmegy a postban kapott, keresett kepessegeken
-        foreach ($searchedSkillIds as $searchedSkillId) {
-            $found = in_array($searchedSkillId, $projectSkillIds);
+        foreach ($this->_searchedRelationIds as $searchedSkillId) {
+            $found = $this->searchOneSkillInOneProjectByRelation($searchedSkillId);
 
-            // Vagy eseten, ha legalabb egy talalt volt, akkor leallitja a keresest
-            if ($skillRelation == self::SKILL_RELATION_OR && $found) {
-                break;
-            }
-
-            // Es eseten, ha legalabb az egyik kepesseg nem talalhato, akkor leallitja a keresest
-            if ($skillRelation == self::SKILL_RELATION_AND && !$found) {
+            if ($found) {
                 break;
             }
         }
 
         return $found;
+    }
+
+    // Kulonbsegek: mashol siman visszater az in_array ertekevel
+    protected function searchOneSkillInOneProjectByRelation($searchedSkillId)
+    {
+        $result = false;
+        $projectSkillIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
+        $found = in_array($searchedSkillId, $projectSkillIds);
+
+        // Vagy eseten, ha legalabb egy talalt volt, akkor leallitja a keresest
+        if ($this->_skillRelation == self::SKILL_RELATION_OR && $found) {
+            $result = true;
+        }
+
+        // Es eseten, ha legalabb az egyik kepesseg nem talalhato, akkor leallitja a keresest
+        if ($this->_skillRelation == self::SKILL_RELATION_AND && !$found) {
+            $result = true;
+        }
+
+        return $result;
     }
 }
