@@ -8,7 +8,7 @@
  *
  * @author  Joo Martin
  * @since   2.2
- * @version 1.0
+ * @version 1.1
  */
 
 class Project_Search_Complex implements Project_Search
@@ -162,6 +162,10 @@ class Project_Search_Complex implements Project_Search
         if (empty($this->_searchedRelationIds)) {
             return false;
         }
+
+        /**
+         * @todo AB hasznalata ha az IN operator stabil
+         */
 
         $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
         $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti(

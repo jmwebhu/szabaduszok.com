@@ -1,9 +1,21 @@
 <?php
 
+/**
+ * Class Project_Search_Relation
+ *
+ * Projekt relaciok keresesere szolgalo Strategy alaposztaly.
+ * A konkret peldanyok ebbol orokolnek, vannak akik nem irjak felul az alapertelmezett viselkedest,
+ * ezert van interface helyett abstract osztaly, megvalositott metodusokkal.
+ *
+ * @author Joo Martin
+ * @since 2.2
+ * @version 1.0
+ */
+
 abstract class Project_Search_Relation
 {
     protected $_project;
-    protected $_searchedRelationIds = [];
+    protected $_searchedRelationIds     = [];
     protected $_relationIdsByProjectIds = [];
 
     /**
@@ -14,8 +26,8 @@ abstract class Project_Search_Relation
      */
     public function __construct($_project, array $_searchedRelationIds, array $_relationIdsByProjectIds)
     {
-        $this->_project = $_project;
-        $this->_searchedRelationIds = $_searchedRelationIds;
+        $this->_project                 = $_project;
+        $this->_searchedRelationIds     = $_searchedRelationIds;
         $this->_relationIdsByProjectIds = $_relationIdsByProjectIds;
     }
 
