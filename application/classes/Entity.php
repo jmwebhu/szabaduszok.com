@@ -19,7 +19,7 @@ abstract class Entity
     protected $_model;
 
     // Azok az adattagok, amiket nem kell self::map() -nak masolni
-    private static $_disabledPropertiesInMap = ['_model', '_fromObject', '_toObject', '_stdObject'];
+    private static $_disabledPropertiesInMap = ['_model', '_destinationObject', '_targetObject', '_stdObject'];
 
     // self::map() altal hasznalt forras es cel objektumok
     private $_destinationObject = null;
