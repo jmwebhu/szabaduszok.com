@@ -39,6 +39,11 @@ class Project_Search_Complex implements Project_Search
     private $_matchedProjects   = [];
 
     /**
+     * @var Project_Search_Relation
+     */
+    private $_searchRelation;
+
+    /**
      * @var array Az osszes projekt osszes kapcsolat azonositoja. Ebbol szedjuk ki az adott projekt azonositoit.
      * Ez a tomb cache -bol lekerdezheto, ezért hasznalja ezt.
      * Minden index egy projekt azonosito, minden elem egy tomb, ami tartalmazza a kapcsolatok azonositoit
@@ -57,6 +62,14 @@ class Project_Search_Complex implements Project_Search
     }
 
     /**
+     * @param array $projects
+     */
+    public function setProjects($projects)
+    {
+        $this->_projects = $projects;
+    }
+
+    /**
      * @return array
      */
     public function getMatchedProjects()
@@ -65,11 +78,43 @@ class Project_Search_Complex implements Project_Search
     }
 
     /**
-     * @param array $projects
+     * @return ORM
      */
-    public function setProjects($projects)
+    public function getSearchedRelationModel()
     {
-        $this->_projects = $projects;
+        return $this->_searchedRelationModel;
+    }
+
+    /**
+     * @return Model_Project
+     */
+    public function getCurrentProject()
+    {
+        return $this->_currentProject;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchedRelationIds()
+    {
+        return $this->_searchedRelationIds;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelationIdsByProjectIds()
+    {
+        return $this->_relationIdsByProjectIds;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSkillRelation()
+    {
+        return $this->_skillRelation;
     }
 
     /**
@@ -133,11 +178,8 @@ class Project_Search_Complex implements Project_Search
         foreach ($projects as $project) {
             $this->_currentProject = $project;
 
-            if ($this->_searchedRelationModel instanceof Model_Project_Skill) {
-                $found = $this->searchSkillsInOneProject();
-            } else {
-                $found = $this->searchRelationsInOneProject();
-            }
+            $this->_searchRelation  = Project_Search_Relation_Factory::makeSearch($this);
+            $found                  = $this->_searchRelation->searchRelationsInOneProject();
 
             if ($found) {
                 $matchedProjects[] = $this->_currentProject;
@@ -145,43 +187,6 @@ class Project_Search_Complex implements Project_Search
         }
 
         $this->_matchedProjects = $matchedProjects;
-    }
-
-    protected function searchRelationsInOneProject()
-    {
-        foreach ($this->_searchedRelationIds as $searchedRelationId) {
-            $found = $this->searchOneRelationInOneProject($searchedRelationId);
-
-            if ($found) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected function searchOneRelationInOneProject($searchedRelationId)
-    {
-        $projectRelationIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
-        return in_array($searchedRelationId, $projectRelationIds);
-    }
-
-    protected function searchSkillsInOneProject()
-    {
-        $projectSkillIds = Arr::get($this->_relationIdsByProjectIds, $this->_currentProject->project_id, []);
-
-        $difference = array_diff($this->_searchedRelationIds, $projectSkillIds);
-        switch ($this->_skillRelation) {
-            case self::SKILL_RELATION_OR:
-                $found = count($difference) != count($this->_searchedRelationIds);
-                break;
-
-            case self::SKILL_RELATION_AND:
-                $found = empty($difference);
-                break;
-        }
-
-        return $found;
     }
 
     protected function isEmptySearch()
@@ -197,7 +202,7 @@ class Project_Search_Complex implements Project_Search
             return $this->_searchedIndustryIds;
         } elseif ($this->_searchedRelationModel instanceof Model_Project_Profession) {
             return $this->_searchedProfessionIds;
-        } else {
+        } elseif ($this->_searchedRelationModel instanceof Model_Project_Skill) {
             return $this->_searchedSkillIds;
         }
     }
