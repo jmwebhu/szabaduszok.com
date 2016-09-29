@@ -42,4 +42,19 @@ class Business_Project extends Business
 
         return $sb->get();
     }
+
+    /**
+     * A projekthez tartozo osszes kapcsolat (iparagak, stb) nevet osszefuzi egy stringbe
+     */
+    public function getRelationString($name)
+    {
+        $items  = $this->_model->{$name}->find_all();
+        $result = '';
+
+        foreach ($items as $i => $item) {
+            $result .= ($i == count($items) - 1) ? $item->name : ($item->name . ', ');
+        }
+
+        return $result;
+    }
 }

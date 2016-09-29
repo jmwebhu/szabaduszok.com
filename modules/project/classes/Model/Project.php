@@ -45,27 +45,17 @@ class Model_Project extends ORM
     	'updated_at'        => ['type' => 'datetime', 'null' => true],
     ];
 
-    /**
-     * @var string $_table_name ORM -hez tartozo tabla neve
-     */
-    protected $_table_name = 'projects';
-
-    /**
-     * @var string $_primary_key Elsodleges kulcs a tablaban
-     */
+    protected $_table_name  = 'projects';
     protected $_primary_key = 'project_id';
 
-    /**
-     * @var array $_belongs_to N - 1 es 1 - 1 kapcsolatokat definialja
-     */
-    protected $_belongs_to = [
+    protected $_belongs_to  = [
         'user'          => [
             'model'         => 'User',
             'foreign_key'   => 'user_id'
         ]
     ];
     
-    protected $_has_many = [
+    protected $_has_many    = [
     	'industries'    => [
     		'model'     	=> 'Industry',
     		'through'		=> 'projects_industries',
@@ -184,11 +174,7 @@ class Model_Project extends ORM
     }       
    
     /**
-     * Visszaadja a menteni kivant projekthez a searchText -et
-     * A searchText a projekt adatibol osszefuzott egyetlen ertek, amiben a felhasznalok keresni tudnak
-     * 
-     * @param array $data   POST adatok
-     * @return string       searchText
+     * @todo Business_Project::getSearchText() csere
      */
     public function getSearchText()
     {        
@@ -241,9 +227,7 @@ class Model_Project extends ORM
      */
     public function getCount()
     {
-    	$projects = $this->getAll();
-    	
-    	return AB::select()->from($projects)->where('is_active', '=', 1)->execute()->count();    	
+    	return AB::select()->from(new Model_Project())->where('is_active', '=', 1)->execute()->count();
     }
     
     /**
