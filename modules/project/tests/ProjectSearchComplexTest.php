@@ -2,6 +2,10 @@
 
 class ProjectSearchComplexTest extends Unittest_TestCase
 {
+    const TYPE_INDUSTRY     = 1;
+    const TYPE_PROFESSION   = 2;
+    const TYPE_SKILLS       = 3;
+
     private $_projects              = [];
     private $_matchedProjects       = [];
 
@@ -17,148 +21,9 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     private $_searchedProfessions   = [];
     private $_searchedSkills        = [];
 
-    public function setUp()
-    {
-        for ($i = 1; $i < 6; $i++) {
-            $project = new Model_Project();
-            $project->project_id = $i;
+    private $_searchType;
 
-            $this->_projects[] = $project;
-        }
-
-        for ($i = 1; $i < 4; $i++) {
-            $industry = new Model_Industry();
-            $industry->industry_id = $i;
-
-            $this->_industries[] = $industry;
-        }
-
-        for ($i = 1; $i < 5; $i++) {
-            $profession = new Model_Profession();
-            $profession->profession_id = $i;
-
-            $this->_professions[] = $profession;
-        }
-
-        for ($i = 1; $i < 6; $i++) {
-            $skill = new Model_Skill();
-            $skill->skill_id = $i;
-
-            $this->_skills[] = $skill;
-        }
-
-        $this->_projectIndustries = [
-            1 => [
-                $this->_industries[0], $this->_industries[1]
-            ],
-            2 => [
-                $this->_industries[1]
-            ],
-            3 => [
-                $this->_industries[0]
-            ],
-            4 => [
-                $this->_industries[1], $this->_industries[2]
-            ],
-            5 => [
-                $this->_industries[0], $this->_industries[1], $this->_industries[2]
-            ]
-        ];
-
-        $this->_projectProfessions = [
-            1 => [
-                $this->_professions[0], $this->_professions[1], $this->_professions[2], $this->_professions[3]
-            ],
-            2 => [
-                $this->_professions[1]
-            ],
-            3 => [
-                $this->_professions[0], $this->_professions[3]
-            ],
-            4 => [
-                $this->_professions[1], $this->_professions[2]
-            ],
-            5 => [
-                $this->_professions[0], $this->_professions[2], $this->_professions[3]
-            ]
-        ];
-
-        $this->_projectSkills = [
-            1 => [
-                $this->_skills[0], $this->_skills[1], $this->_skills[3],
-            ],
-            2 => [
-                $this->_skills[3], $this->_skills[4]
-            ],
-            3 => [
-                $this->_skills[0],
-            ],
-            4 => [
-
-            ],
-            5 => [
-                $this->_skills[2], $this->_skills[3],
-            ]
-        ];
-
-        parent::setUp();
-    }
-
-    protected function setMatchedProjectIdsFromSearch(Project_Search_Complex $search)
-    {
-        $this->_matchedProjects = [];
-        $projects = $search->getMatchedProjects();
-
-        foreach ($projects as $project) {
-            $this->_matchedProjects[] = $project->project_id;
-        }
-    }
-
-    protected function getSearch($relationName, $relationValue, $projects = null)
-    {
-        $data = [
-            $relationName => $relationValue,
-            'complex' => true
-        ];
-
-        $search = Project_Search_Factory::makeSearch($data);
-
-        if (!$projects) {
-            $projects = $this->_projects;
-        }
-
-        $search->setProjects($projects);
-
-        return $search;
-    }
-
-    protected function givenIndustries(array $industries)
-    {
-        $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
-        $this->_searchedIndustries = $industries;
-    }
-
-    protected function whenSearch()
-    {
-        $search = $this->getSearch('industries', $this->_searchedIndustries);
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$this->_mock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-    }
-
-    protected function thenMatchesShouldContain(array $array)
-    {
-        $this->assertArraySubset($array, $this->_matchedProjects);
-    }
-
-    protected function thenMatchesShouldNotContain(array $array)
-    {
-        $this->assertArrayNotSubset($array, $this->_matchedProjects);
-    }
-
-    protected function thenMatchesShouldEmpty()
-    {
-        $this->assertEmpty($this->_matchedProjects);
-    }
+    private $_skillRelation         = 1;
 
     // -------- Iparagak --------
 
@@ -209,15 +74,10 @@ class ProjectSearchComplexTest extends Unittest_TestCase
      */
     public function testSearchRelationsInProjectsIndustryNoPostOk()
     {
-        $projectIndustryMock = $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $this->givenIndustries([]);
+        $this->whenSearch();
 
-        $industries = [];
-        $search = $this->getSearch('industries', $industries);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectIndustryMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertArraySubset([1, 2, 3, 4, 5], $this->_matchedProjects);
+        $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
     }
 
     // --------- Szakteruletek --------
@@ -228,301 +88,159 @@ class ProjectSearchComplexTest extends Unittest_TestCase
      */
     public function testSearchRelationsInProjectsProfessionOk()
     {
-        $projectProfessionMock = $this->setMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
+        $this->givenProfessions([1]);
+        $this->whenSearch();
 
-        $professions = [1];
-        $search = $this->getSearch('professions', $professions);
+        $this->thenMatchesShouldContain([1, 3, 5]);
+        $this->thenMatchesShouldNotContain([2, 4]);
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectProfessionMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->givenProfessions([1, 3]);
+        $this->whenSearch();
 
-        $this->assertArraySubset([1, 3, 5], $this->_matchedProjects);
-        $this->assertArrayNotSubset([2, 4], $this->_matchedProjects);
+        $this->thenMatchesShouldContain([1, 3, 4, 5]);
+        $this->thenMatchesShouldNotContain([2]);
 
-        $professions = [1, 3];
-        $search = $this->getSearch('professions', $professions);
+        $this->givenProfessions([1, 3, 2]);
+        $this->whenSearch();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectProfessionMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertArraySubset([1, 3, 4, 5], $this->_matchedProjects);
-        $this->assertArrayNotSubset([2], $this->_matchedProjects);
-
-        $professions = [1, 3, 2];
-        $search = $this->getSearch('professions', $professions);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectProfessionMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertArraySubset([1, 2, 3, 4, 5], $this->_matchedProjects);
+        $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
+        $this->thenMatchesShouldNotContain([]);
     }
 
     /**
+     * @group profession
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsProfessionNotOk()
     {
-        $projectProfessionMock  = $this->getMockBuilder('\Model_Project_Profession')->getMock();
+        $this->givenProfessions([6]);
+        $this->whenSearch();
 
-        $projectProfessionMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectProfessions));
+        $this->thenMatchesShouldEmpty();
 
-        $professions = [6];
-        $search = Project_Search_Factory::makeSearch(['professions' => $professions, 'complex' => true]);
-        $search->setProjects($this->_projects);
+        $this->givenProfessions([7, 10]);
+        $this->whenSearch();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectProfessionMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
-
-        $professions = [7, 10];
-        $search = Project_Search_Factory::makeSearch(['professions' => $professions, 'complex' => true]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectProfessionMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldEmpty();
     }
 
     /**
+     * @group profession
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsProfessionNoPostOk()
     {
-        $projectProfessionMock  = $this->getMockBuilder('\Model_Project_Industry')->getMock();
+        $this->givenProfessions([]);
+        $this->whenSearch().
 
-        $projectProfessionMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectIndustries));
-
-        $professions = [];
-        $search = Project_Search_Factory::makeSearch(['professions' => $professions, 'complex' => true]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectProfessionMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertTrue(in_array(1, $this->_matchedProjects));
-        $this->assertTrue(in_array(2, $this->_matchedProjects));
-        $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
-        $this->assertTrue(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
     }
 
     // ------- Kepessegek ---------
 
     /**
+     * @group skill
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillOrOk()
     {
-        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $this->orBefore();
 
-        $projectSkillMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectSkills));
+        $this->givenSkills([1]);
+        $this->whenSearch();
 
-        $skills = [1];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 1]);
-        $search->setProjects($this->_projects);
+        $this->thenMatchesShouldContain([1, 3]);
+        $this->thenMatchesShouldNotContain([2, 4, 5]);
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->givenSkills([1, 3]);
+        $this->whenSearch();
 
-        $this->assertTrue(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldContain([1, 3, 5]);
+        $this->thenMatchesShouldNotContain([2, 4]);
 
-        $skills = [1, 3];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true]);
-        $search->setProjects($this->_projects);
+        $this->givenSkills([1, 3, 2]);
+        $this->whenSearch();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertTrue(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertTrue(in_array(5, $this->_matchedProjects));
-
-        $skills = [1, 3, 2];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertTrue(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertTrue(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldContain([1, 3, 5]);
+        $this->thenMatchesShouldNotContain([2, 4]);
     }
 
     /**
+     * @group skill
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillOrNotOk()
     {
-        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $this->orBefore();
 
-        $projectSkillMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectSkills));
+        $this->givenSkills([12]);
+        $this->whenSearch();
 
-        $skills = [12];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 1]);
-        $search->setProjects($this->_projects);
+        $this->thenMatchesShouldEmpty();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->givenSkills([14, 32, 33, 65, 101]);
+        $this->whenSearch();
 
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
-
-        $skills = [14, 32, 33, 65, 101];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldEmpty();
     }
 
     /**
+     * @group skill
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillAndOk()
     {
-        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $this->andBefore();
 
-        $projectSkillMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectSkills));
+        $this->givenSkills([1]);
+        $this->whenSearch();
 
-        $skills = [1];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($this->_projects);
+        $this->thenMatchesShouldContain([1, 3]);
+        $this->thenMatchesShouldNotContain([2, 4, 5]);
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->givenSkills([1, 3]);
+        $this->whenSearch();
 
-        $this->assertTrue(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldEmpty();
 
-        $skills = [1, 3];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($this->_projects);
+        $this->givenSkills([4, 5]);
+        $this->whenSearch();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
-
-        $skills = [4, 5];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertTrue(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldContain([2]);
+        $this->thenMatchesShouldNotContain([1, 3, 4, 5]);
     }
 
     /**
+     * @group skill
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillAndNotOk()
     {
-        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $this->andBefore();
 
-        $projectSkillMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectSkills));
+        $this->givenSkills([1, 2, 3, 4]);
+        $this->whenSearch();
 
-        $skills = [1, 2, 3, 4];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($this->_projects);
+        $this->thenMatchesShouldEmpty();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->givenSkills([98]);
+        $this->whenSearch();
 
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
-
-        $skills = [98];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertFalse(in_array(1, $this->_matchedProjects));
-        $this->assertFalse(in_array(2, $this->_matchedProjects));
-        $this->assertFalse(in_array(3, $this->_matchedProjects));
-        $this->assertFalse(in_array(4, $this->_matchedProjects));
-        $this->assertFalse(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldEmpty();
     }
 
     /**
+     * @group skill
      * @covers Project_Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillAndNoPostOk()
     {
-        $projectSkillMock  = $this->getMockBuilder('\Model_Project_Skill')->getMock();
+        $this->andBefore();
 
-        $projectSkillMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_projectSkills));
+        $this->givenSkills([]);
+        $this->whenSearch();
 
-        $skills = [];
-        $search = Project_Search_Factory::makeSearch(['skills' => $skills, 'complex' => true, 'skill_relation' => 2]);
-        $search->setProjects($this->_projects);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectSkillMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertTrue(in_array(1, $this->_matchedProjects));
-        $this->assertTrue(in_array(2, $this->_matchedProjects));
-        $this->assertTrue(in_array(3, $this->_matchedProjects));
-        $this->assertTrue(in_array(4, $this->_matchedProjects));
-        $this->assertTrue(in_array(5, $this->_matchedProjects));
+        $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
     }
 
     public function assertPostConditions()
@@ -530,5 +248,226 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         // Minden teszt utan ellenorzi, hogy a talalti lista egyedi projekteket tartalmaz
         $unique = array_unique($this->_matchedProjects);
         $this->assertEquals($unique, $this->_matchedProjects);
+    }
+
+    protected function givenIndustries(array $industries)
+    {
+        $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $this->_searchedIndustries  = $industries;
+        $this->_searchType          = self::TYPE_INDUSTRY;
+    }
+
+    protected function givenProfessions(array $professions)
+    {
+        $this->setMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
+        $this->_searchedProfessions = $professions;
+        $this->_searchType          = self::TYPE_PROFESSION;
+    }
+
+    protected function givenSkills(array $skills)
+    {
+        $this->setMockAny('\Model_Project_Skill', 'getAll', $this->_projectSkills);
+        $this->_searchedSkills      = $skills;
+        $this->_searchType          = self::TYPE_SKILLS;
+    }
+
+    protected function whenSearch()
+    {
+        switch ($this->_searchType) {
+            case self::TYPE_INDUSTRY:
+                $search = $this->getSearch('industries', $this->_searchedIndustries);
+                break;
+
+            case self::TYPE_PROFESSION:
+                $search = $this->getSearch('professions', $this->_searchedProfessions);
+                break;
+
+            case self::TYPE_SKILLS:
+                $search = $this->getSearch('skills', $this->_searchedSkills);
+                break;
+        }
+
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$this->_mock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+    }
+
+    protected function thenMatchesShouldContain(array $array)
+    {
+        $this->assertArraySubset($array, $this->_matchedProjects);
+    }
+
+    protected function thenMatchesShouldNotContain(array $array)
+    {
+        $this->assertArrayNotSubset($array, $this->_matchedProjects);
+    }
+
+    protected function thenMatchesShouldEmpty()
+    {
+        $this->assertEmpty($this->_matchedProjects);
+    }
+
+    protected function andBefore()
+    {
+        $this->_skillRelation = Project_Search_Relation_Skill::SKILL_RELATION_AND;
+    }
+
+    protected function orBefore()
+    {
+        $this->_skillRelation = Project_Search_Relation_Skill::SKILL_RELATION_OR;
+    }
+
+    protected function getSearch($relationName, $relationValue, $projects = null)
+    {
+        $data = [
+            $relationName       => $relationValue,
+            'complex'           => true,
+            'skill_relation'    => $this->_skillRelation
+        ];
+
+        $search = Project_Search_Factory::makeSearch($data);
+
+        if (!$projects) {
+            $projects = $this->_projects;
+        }
+
+        $search->setProjects($projects);
+
+        return $search;
+    }
+
+    protected function setMatchedProjectIdsFromSearch(Project_Search_Complex $search)
+    {
+        $this->_matchedProjects = [];
+        $projects = $search->getMatchedProjects();
+
+        foreach ($projects as $project) {
+            $this->_matchedProjects[] = $project->project_id;
+        }
+    }
+
+    public function setUp()
+    {
+        $this->setUpEntities();
+        $this->setUpRelations();
+
+        parent::setUp();
+    }
+
+    protected function setUpEntities()
+    {
+        $this->setUpProjects(5);
+        $this->setUpIndustries(3);
+        $this->setUpProfessions(4);
+        $this->setUpSkills(5);
+    }
+
+    protected function setUpProjects($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $project = new Model_Project();
+            $project->project_id = $i;
+
+            $this->_projects[] = $project;
+        }
+    }
+
+    protected function setUpIndustries($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $industry = new Model_Industry();
+            $industry->industry_id = $i;
+
+            $this->_industries[] = $industry;
+        }
+    }
+
+    protected function setUpProfessions($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $profession = new Model_Profession();
+            $profession->profession_id = $i;
+
+            $this->_professions[] = $profession;
+        }
+    }
+
+    protected function setUpSkills($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $skill = new Model_Skill();
+            $skill->skill_id = $i;
+
+            $this->_skills[] = $skill;
+        }
+    }
+
+    protected function setUpRelations()
+    {
+        $this->setUpProjectIndustries();
+        $this->setUpProjectProfessions();
+        $this->setUpProjectSkills();
+    }
+
+    protected function setUpProjectIndustries()
+    {
+        $this->_projectIndustries = [
+            1 => [
+                $this->_industries[0], $this->_industries[1]
+            ],
+            2 => [
+                $this->_industries[1]
+            ],
+            3 => [
+                $this->_industries[0]
+            ],
+            4 => [
+                $this->_industries[1], $this->_industries[2]
+            ],
+            5 => [
+                $this->_industries[0], $this->_industries[1], $this->_industries[2]
+            ]
+        ];
+    }
+
+    protected function setUpProjectProfessions()
+    {
+        $this->_projectProfessions = [
+            1 => [
+                $this->_professions[0], $this->_professions[1], $this->_professions[2], $this->_professions[3]
+            ],
+            2 => [
+                $this->_professions[1]
+            ],
+            3 => [
+                $this->_professions[0], $this->_professions[3]
+            ],
+            4 => [
+                $this->_professions[1], $this->_professions[2]
+            ],
+            5 => [
+                $this->_professions[0], $this->_professions[2], $this->_professions[3]
+            ]
+        ];
+    }
+
+    protected function setUpProjectSkills()
+    {
+        $this->_projectSkills = [
+            1 => [
+                $this->_skills[0], $this->_skills[1], $this->_skills[3],
+            ],
+            2 => [
+                $this->_skills[3], $this->_skills[4]
+            ],
+            3 => [
+                $this->_skills[0],
+            ],
+            4 => [
+
+            ],
+            5 => [
+                $this->_skills[2], $this->_skills[3],
+            ]
+        ];
     }
 }
