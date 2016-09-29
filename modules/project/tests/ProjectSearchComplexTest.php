@@ -2,16 +2,20 @@
 
 class ProjectSearchComplexTest extends Unittest_TestCase
 {
-    private $_projects      = [];
-    private $_matchedProjects = [];
+    private $_projects              = [];
+    private $_matchedProjects       = [];
 
-    private $_industries    = [];
-    private $_professions   = [];
-    private $_skills        = [];
+    private $_industries            = [];
+    private $_professions           = [];
+    private $_skills                = [];
 
-    private $_projectIndustries = [];
-    private $_projectProfessions = [];
-    private $_projectSkills = [];
+    private $_projectIndustries     = [];
+    private $_projectProfessions    = [];
+    private $_projectSkills         = [];
+
+    private $_searchedIndustries    = [];
+    private $_searchedProfessions   = [];
+    private $_searchedSkills        = [];
 
     public function setUp()
     {
@@ -128,6 +132,34 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         return $search;
     }
 
+    protected function givenIndustries(array $industries)
+    {
+        $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $this->_searchedIndustries = $industries;
+    }
+
+    protected function whenSearch()
+    {
+        $search = $this->getSearch('industries', $this->_searchedIndustries);
+        $this->invokeMethod($search, 'searchRelationsInProjects', [$this->_mock]);
+        $this->setMatchedProjectIdsFromSearch($search);
+    }
+
+    protected function thenMatchesShouldContain(array $array)
+    {
+        $this->assertArraySubset($array, $this->_matchedProjects);
+    }
+
+    protected function thenMatchesShouldNotContain(array $array)
+    {
+        $this->assertArrayNotSubset($array, $this->_matchedProjects);
+    }
+
+    protected function thenMatchesShouldEmpty()
+    {
+        $this->assertEmpty($this->_matchedProjects);
+    }
+
     // -------- Iparagak --------
 
     /**
@@ -136,30 +168,22 @@ class ProjectSearchComplexTest extends Unittest_TestCase
      */
     public function testSearchRelationsInProjectsIndustryOk()
     {
-        $projectIndustryMock = $this->getMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $this->givenIndustries([1]);
+        $this->whenSearch();
 
-        $industries = [1];
-        $search = $this->getSearch('industries', $industries);
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectIndustryMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->thenMatchesShouldContain([1, 3, 5]);
+        $this->thenMatchesShouldNotContain([2, 4]);
 
-        $this->assertArraySubset([1, 3, 5], $this->_matchedProjects);
-        $this->assertArrayNotSubset([2, 4], $this->_matchedProjects);
+        $this->givenIndustries([1, 3]);
+        $this->whenSearch();
 
-        $industries = [1, 3];
-        $search = $this->getSearch('industries', $industries);
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectIndustryMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->thenMatchesShouldContain([1, 3, 4, 5]);
+        $this->thenMatchesShouldNotContain([2]);
 
-        $this->assertArraySubset([1, 3, 4, 5], $this->_matchedProjects);
-        $this->assertArrayNotSubset([2], $this->_matchedProjects);
+        $this->givenIndustries([1, 3, 2]);
+        $this->whenSearch();
 
-        $industries = [1, 3, 2];
-        $search = $this->getSearch('industries', $industries);
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectIndustryMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertArraySubset([1, 2, 3, 4, 5], $this->_matchedProjects);
+        $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
     }
 
     /**
@@ -168,23 +192,15 @@ class ProjectSearchComplexTest extends Unittest_TestCase
      */
     public function testSearchRelationsInProjectsIndustryNotOk()
     {
-        $projectIndustryMock = $this->getMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $this->givenIndustries([4]);
+        $this->whenSearch();
 
-        $industries = [4];
-        $search = $this->getSearch('industries', $industries);
+        $this->thenMatchesShouldEmpty();
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectIndustryMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
+        $this->givenIndustries([4, 11]);
+        $this->whenSearch();
 
-        $this->assertEmpty($this->_matchedProjects);
-
-        $industries = [4, 11];
-        $search = $this->getSearch('industries', $industries);
-
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$projectIndustryMock]);
-        $this->setMatchedProjectIdsFromSearch($search);
-
-        $this->assertEmpty($this->_matchedProjects);
+        $this->thenMatchesShouldEmpty();
     }
 
     /**
@@ -193,7 +209,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
      */
     public function testSearchRelationsInProjectsIndustryNoPostOk()
     {
-        $projectIndustryMock = $this->getMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $projectIndustryMock = $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
 
         $industries = [];
         $search = $this->getSearch('industries', $industries);
@@ -212,7 +228,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
      */
     public function testSearchRelationsInProjectsProfessionOk()
     {
-        $projectProfessionMock = $this->getMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
+        $projectProfessionMock = $this->setMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
 
         $professions = [1];
         $search = $this->getSearch('professions', $professions);

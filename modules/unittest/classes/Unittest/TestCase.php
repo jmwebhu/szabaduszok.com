@@ -2,6 +2,8 @@
 
 abstract class Unittest_TestCase extends Kohana_Unittest_TestCase 
 {
+    protected $_mock = null;
+
     /**
     * protected / private metodus hivasa az adott objektumon
     *
@@ -33,7 +35,7 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
         }
     }
 
-    public function getMockAny($class, $method, $return)
+    public function setMockAny($class, $method, $return)
     {
         $mock  = $this->getMockBuilder($class)->getMock();
 
@@ -41,6 +43,6 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
             ->method($method)
             ->will($this->returnValue($return));
 
-        return $mock;
+        $this->_mock = $mock;
     }
 }
