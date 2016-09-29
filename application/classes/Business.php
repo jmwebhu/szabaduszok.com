@@ -5,7 +5,16 @@ class Business
     /**
      * @var ORM
      */
-    private $_model;
+    protected $_model;
+
+    /**
+     * Business constructor.
+     * @param ORM $model
+     */
+    public function __construct(ORM $model)
+    {
+        $this->_model = $model;
+    }
 
     public static function getIdsFromModelsSingle(array $models, $primaryKey = null)
     {

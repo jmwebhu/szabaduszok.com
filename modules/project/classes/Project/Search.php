@@ -1,14 +1,16 @@
 <?php
 
+/**
+ * Interface Project_Search
+ *
+ * Keresesre szolgalo Strategy interface, az impletmentaciok tartalmazzak az osszetett es az egyszeru keresest
+ *
+ * @author Joo Martin
+ * @version 1.0
+ * @since 2.2
+ */
+
 interface Project_Search
 {
-    /**
-     * Kereses
-     *
-     * @param array $data               Keresett adatok
-     * @param Model_Project $project    Ures project
-     *
-     * @return array                    Talalatok
-     */
     public function search();
 }

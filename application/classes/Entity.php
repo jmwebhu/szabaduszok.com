@@ -16,10 +16,11 @@
 
 abstract class Entity
 {
-    protected $_model;
-
     // Azok az adattagok, amiket nem kell self::map() -nak masolni
-    private static $_disabledPropertiesInMap = ['_model', '_destinationObject', '_targetObject', '_stdObject'];
+    private static $_disabledPropertiesInMap = ['_model', '_business', '_destinationObject', '_targetObject', '_stdObject'];
+
+    protected $_model;
+    protected $_business;
 
     // self::map() altal hasznalt forras es cel objektumok
     private $_destinationObject = null;
@@ -32,8 +33,10 @@ abstract class Entity
     {
         $entity             = $this->getEntityName();
         $modelClass         = 'Model_' . $entity;
+        $businessClass      = 'Business_' . $entity;
 
         $this->_model       = new $modelClass($id);
+        $this->_business    = new $businessClass($this->_model);
         $this->_stdObject   = new stdClass();
     }
 
