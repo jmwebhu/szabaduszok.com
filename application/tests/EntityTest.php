@@ -3,40 +3,23 @@
 class EntityTest extends Unittest_TestCase
 {
     /**
-     * @covers Entity::mapModelToThis()
+     * @var Entity_Project
      */
-    public function testMapModelToThis()
+    private $_entity;
+
+    /**
+     * @var Model_Project
+     */
+    private $_model;
+
+    /**
+     * @covers Entity::setModel()
+     */
+    public function testSetModel()
     {
-        $projectModel = new Model_Project();
-        $projectModel->project_id = 1;
-        $projectModel->name = 'Teszt';
-        $projectModel->short_description = 'Rövid leírás';
-        $projectModel->long_description = 'Hosszú leírás';
-        $projectModel->email = 'joomartin@jmweb.hu';
-        $projectModel->phonenumber = '06301923380';
-        $projectModel->search_text = 'Teszt kereső szöveg';
-        $projectModel->expiration_date = '2016-12-12';
-        $projectModel->salary_type = 1;
-        $projectModel->salary_low = 2000;
-        $projectModel->salary_high = 2500;
-        $projectModel->slug = 'teszt';
-
-        $project = new Entity_Project();
-        $project->setModel($projectModel);
-
-        $this->assertEquals(1, $project->getProjectId());
-        $this->assertEquals('Teszt', $project->getName());
-        $this->assertEquals('Rövid leírás', $project->getShortDescription());
-        $this->assertEquals('Hosszú leírás', $project->getLongDescription());
-        $this->assertEquals('joomartin@jmweb.hu', $project->getEmail());
-        $this->assertEquals('Teszt kereső szöveg', $project->getSearchText());
-        $this->assertEquals('2016-12-12', $project->getExpirationDate());
-        $this->assertEquals(1, $project->getSalaryType());
-        $this->assertEquals(2000, $project->getSalaryLow());
-        $this->assertEquals(2500, $project->getSalaryHigh());
-        $this->assertEquals('teszt', $project->getSlug());
-        $this->assertNull($project->getIsActive());
-        $this->assertNull($project->getIsPaid());
+        $this->givenTestModelWithId(1);
+        $this->_entity->setModel($this->_model);
+        $this->thenEntityShouldEqualsTo();
     }
 
     /**
@@ -44,74 +27,23 @@ class EntityTest extends Unittest_TestCase
      */
     public function testMapThisToModel()
     {
-        $project = new Entity_Project();
-        $project->setProjectId(1);
-        $project->setName('Teszt');
-        $project->setShortDescription('Rövid leírás');
-        $project->setLongDescription('Hosszú leírás');
-        $project->setEmail('joomartin@jmweb.hu');
-        $project->setPhonenumber('06301923380');
-        $project->setSearchText('Teszt kereső szöveg');
-        $project->setExpirationDate('2016-12-12');
-        $project->setSalaryType(1);
-        $project->setSalaryLow(2000);
-        $project->setSalaryHigh(2500);
-        $project->setSlug('teszt');
+        $this->givenTestEntityWithId(1);
 
-        $this->invokeMethod($project, 'mapThisToModel');
+        $this->invokeMethod($this->_entity, 'mapThisToModel');
+        $this->_model = $this->_entity->getModel();
 
-        $model = $project->getModel();
-
-        $this->assertEquals(1, $model->project_id);
-        $this->assertEquals('Teszt', $model->name);
-        $this->assertEquals('Rövid leírás', $model->short_description);
-        $this->assertEquals('Hosszú leírás', $model->long_description);
-        $this->assertEquals('06301923380', $model->phonenumber);
-        $this->assertEquals('Teszt kereső szöveg', $model->search_text);
-        $this->assertEquals('2016-12-12', $model->expiration_date);
-        $this->assertEquals(1, $model->salary_type);
-        $this->assertEquals(2000, $model->salary_low);
-        $this->assertEquals(2500, $model->salary_high);
-        $this->assertEquals('teszt', $model->slug);
-        $this->assertNull($model->is_active);
-        $this->assertNull($model->is_paid);
+        $this->thenEntityShouldEqualsTo();
     }
 
     /**
-     * @covers Entity::getStdObject
+     * @covers Entity::mapThisToStdObject
      */
     public function testMapThisToStdObject()
     {
-        $project = new Entity_Project();
-        $project->setProjectId(1);
-        $project->setName('Teszt');
-        $project->setShortDescription('Rövid leírás');
-        $project->setLongDescription('Hosszú leírás');
-        $project->setEmail('joomartin@jmweb.hu');
-        $project->setPhonenumber('06301923380');
-        $project->setSearchText('Teszt kereső szöveg');
-        $project->setExpirationDate('2016-12-12');
-        $project->setSalaryType(1);
-        $project->setSalaryLow(2000);
-        $project->setSalaryHigh(2500);
-        $project->setSlug('teszt');
+        $this->givenTestEntityWithId(1);
 
-        $obj = $this->invokeMethod($project, 'mapThisToStdObject');
-
-        $this->assertEquals(1, $obj->project_id);
-        $this->assertEquals('Teszt', $obj->name);
-        $this->assertEquals('Rövid leírás', $obj->short_description);
-        $this->assertEquals('Hosszú leírás', $obj->long_description);
-        $this->assertEquals('joomartin@jmweb.hu', $obj->email);
-        $this->assertEquals('06301923380', $obj->phonenumber);
-        $this->assertEquals('Teszt kereső szöveg', $obj->search_text);
-        $this->assertEquals('2016-12-12', $obj->expiration_date);
-        $this->assertEquals(1, $obj->salary_type);
-        $this->assertEquals(2000, $obj->salary_low);
-        $this->assertEquals(2500, $obj->salary_high);
-        $this->assertEquals('teszt', $obj->slug);
-        $this->assertNull($obj->is_active);
-        $this->assertNull($obj->is_paid);
+        $stdObject = $this->invokeMethod($this->_entity, 'mapThisToStdObject');
+        $this->thenEntityShouldEqualsTo($stdObject);
     }
 
     /**
@@ -126,5 +58,72 @@ class EntityTest extends Unittest_TestCase
 
         $this->assertEquals('project_id', $id);
         $this->assertEquals('name', $name);
+    }
+
+    protected function givenTestEntityWithId($id)
+    {
+        $entity = new Entity_Project();
+        $entity->setProjectId($id);
+        $entity->setName('Teszt');
+        $entity->setShortDescription('Rövid leírás');
+        $entity->setLongDescription('Hosszú leírás');
+        $entity->setEmail('joomartin@jmweb.hu');
+        $entity->setPhonenumber('06301923380');
+        $entity->setSearchText('Teszt kereső szöveg');
+        $entity->setExpirationDate('2016-12-12');
+        $entity->setSalaryType(1);
+        $entity->setSalaryLow(2000);
+        $entity->setSalaryHigh(2500);
+        $entity->setSlug('teszt');
+
+        $this->_entity = $entity;
+    }
+
+    protected function givenTestModelWithId($id)
+    {
+        $model = new Model_Project();
+        $model->project_id = $id;
+        $model->name = 'Teszt';
+        $model->short_description = 'Rövid leírás';
+        $model->long_description = 'Hosszú leírás';
+        $model->email = 'joomartin@jmweb.hu';
+        $model->phonenumber = '06301923380';
+        $model->search_text = 'Teszt kereső szöveg';
+        $model->expiration_date = '2016-12-12';
+        $model->salary_type = 1;
+        $model->salary_low = 2000;
+        $model->salary_high = 2500;
+        $model->slug = 'teszt';
+
+        $this->_model = $model;
+    }
+
+    protected function thenEntityShouldEqualsTo($object = null)
+    {
+        if (!$object) {
+            $object = $this->_model;
+        }
+
+        $this->assertEquals($object->project_id, $this->_entity->getProjectId());
+        $this->assertEquals($object->name, $this->_entity->getName());
+        $this->assertEquals($object->short_description, $this->_entity->getShortDescription());
+        $this->assertEquals($object->long_description, $this->_entity->getLongDescription());
+        $this->assertEquals($object->email, $this->_entity->getEmail());
+        $this->assertEquals($object->search_text, $this->_entity->getSearchText());
+        $this->assertEquals($object->expiration_date, $this->_entity->getExpirationDate());
+        $this->assertEquals($object->salary_type, $this->_entity->getSalaryType());
+        $this->assertEquals($object->salary_low, $this->_entity->getSalaryLow());
+        $this->assertEquals($object->salary_high, $this->_entity->getSalaryHigh());
+        $this->assertEquals($object->slug, $this->_entity->getSlug());
+
+        $this->assertNull($this->_entity->getIsActive());
+        $this->assertNull($this->_entity->getIsPaid());
+    }
+
+    public function setUp()
+    {
+        $this->_entity = new Entity_Project();
+        $this->_model = new Model_Project();
+        parent::setUp();
     }
 }
