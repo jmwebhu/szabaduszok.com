@@ -43,18 +43,17 @@ class Business_Project extends Business
         return $sb->get();
     }
 
-    /**
-     * A projekthez tartozo osszes kapcsolat (iparagak, stb) nevet osszefuzi egy stringbe
-     */
-    public function getRelationString($name)
+    public function getShortDescriptionShortenedBy($maxChars = 100)
     {
-        $items  = $this->_model->{$name}->find_all();
-        $result = '';
+        return (strlen($this->_model->short_description) > $maxChars)
+            ? mb_substr($this->_model->short_description, 0, $maxChars) . '...'
+            : $this->_model->short_description;
+    }
 
-        foreach ($items as $i => $item) {
-            $result .= ($i == count($items) - 1) ? $item->name : ($item->name . ', ');
-        }
-
-        return $result;
+    public function getNameShortenedBy($maxChars = 70)
+    {
+        return (strlen($this->_model->name) > $maxChars)
+            ? mb_substr($this->_model->name, 0, $maxChars) . '...'
+            : $this->_model->name;
     }
 }

@@ -165,13 +165,9 @@ abstract class Entity
         $prefix                 = ($isTargetEntity) ? '_' : '';
 
         foreach ($realDestination as $key => $value) {
-            $this->setPropertyInTarget($prefix . $key, $value);
+            $fullKey = $prefix . $key;
+            $this->_targetObject->{$fullKey} = $value;
         }
-    }
-
-    protected function setPropertyInTarget($key, $value)
-    {
-        $this->_targetObject->{$key} = $value;
     }
 
     protected function validateObjects()

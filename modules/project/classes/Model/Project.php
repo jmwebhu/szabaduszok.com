@@ -79,7 +79,13 @@ class Model_Project extends ORM
             'foreign_key'   => 'project_id',
         ]      	
     ];
-    
+
+    public function baseSelect()
+    {
+        $base = parent::baseSelect();
+        return $base->where('is_active', '=', 1);
+    }
+
     public function short_description()
     {
     	return (strlen($this->short_description) > 100) ? mb_substr($this->short_description, 0, 100) . '...' : $this->short_description;
@@ -212,8 +218,7 @@ class Model_Project extends ORM
     	$items = $this->{$name}->find_all();
     	$result = '';
     
-    	foreach ($items as $i => $item)
-    	{
+    	foreach ($items as $i => $item) {
     		$result .= ($i == count($items) - 1) ? $item->name : ($item->name . ', ');
     	}
     
@@ -316,9 +321,7 @@ class Model_Project extends ORM
      */
     public function getOrdered($limit, $offset)
     {
-    	return AB::select()
-            ->from(new Model_Project())
-            ->where('is_active', '=', 1)
+    	return $this->baseSelect()
             ->order_by('created_at', 'DESC')
             ->limit($limit)->offset($offset)
             ->execute()->as_array();
@@ -333,9 +336,7 @@ class Model_Project extends ORM
      */
     public function getActivesOrderedByCreated($execute = true, $direction = 'DESC')
     {
-        $builder = AB::select()
-            ->from(new Model_Project())
-            ->where('is_active', '=', 1)
+        $builder = $this->baseSelect()
             ->order_by('created_at', $direction);
 
         if ($execute) {

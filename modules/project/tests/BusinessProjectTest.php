@@ -13,6 +13,7 @@ class BusinessProjectTest extends Unittest_TestCase
     public function testGetSearchTestWithoutRelations()
     {
         $this->givenModelWithTestData();
+
         $business = new Business_Project($this->_model);
         $actual = $business->getSearchText();
 
@@ -32,6 +33,68 @@ class BusinessProjectTest extends Unittest_TestCase
         $actual = $business->getSearchText();
 
         $expected = 'Folyamatos webfejlesztések Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, folyamatos web fejlesztések elvégzésére. Először kisebb otthonról végezhető munkák lennének, és ha együtt tudunk működni, akkor több weboldalam fejlesztésében részt vehetsz. Diáknak, kezdő programozónak is nyitott az állás. Elvárások: HTML CSS referencia munkák angol tudás határidők betartása Előnyt jelent: kereső marketing tudás (SEO) fizetési módok webshopba integrálás ismerete kreativitás, és önképzés (nem baj ha kezdő vagy, de a felmerülő feladatokat képes legyél önállóan megoldani) Projektek amikben részt vehetsz: parajdisokincsek.hu webfejlesztés semmiszor.hu webfejlesztés http://semmiszor.hu/stilettodress/ webfejlesztés Jelentkezés: Fényképes önéletrajzodat, és motivációs leveledet várom, a szkladanyi.attila@parajdisokincsek.hu email címre. A motivációs levélben kitérhetsz a fenti 3 oldallal kapcsolatban milyen fejlesztési, egyéb ötleteid lennének. joomartin@jmweb.hu 06301923380 ' . date('Y-m-d') . ' industries professions skills ';
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Business_Project::getShortDescriptionShortenedBy()
+     */
+    public function testGetShortDescriptionShortenedByTooLong()
+    {
+        $this->givenModelWithTestData();
+
+        $business = new Business_Project($this->_model);
+        $actual = $business->getShortDescriptionShortenedBy();
+
+        $expected = 'Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, folyamatos web fejlesztések e...';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Business_Project::getShortDescriptionShortenedBy()
+     */
+    public function testGetShortDescriptionShortenedByNormalLong()
+    {
+        $this->givenModelWithTestData();
+        $this->_model->short_description = 'Lelkes, megbízható webprogramozót keresek';
+
+        $business = new Business_Project($this->_model);
+        $actual = $business->getShortDescriptionShortenedBy();
+
+        $expected = 'Lelkes, megbízható webprogramozót keresek';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Business_Project::getNameShortenedBy()
+     */
+    public function testGetNameShortenedByTooLong()
+    {
+        $this->givenModelWithTestData();
+        $this->_model->name = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfejlesztések';
+
+        $business = new Business_Project($this->_model);
+        $actual = $business->getNameShortenedBy();
+
+        $expected = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfe...';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Business_Project::getNameShortenedBy()
+     */
+    public function testGetNameShortenedByNormalLong()
+    {
+        $this->givenModelWithTestData();
+
+        $business = new Business_Project($this->_model);
+        $actual = $business->getNameShortenedBy();
+
+        $expected = 'Folyamatos webfejlesztések';
+
         $this->assertEquals($expected, $actual);
     }
 

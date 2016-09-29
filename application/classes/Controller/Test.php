@@ -4,10 +4,11 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $i = 1;
-        $project = new Model_Project();
 
-        echo Debug::vars(gettype($i), gettype($project));
+        $model = new Model_Project();
+        $projects = $model->getOrdered(10, 0);
+
+        echo Debug::vars($projects);
     }	
 
     public function action_clearcache()
