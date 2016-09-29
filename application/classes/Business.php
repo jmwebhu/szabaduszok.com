@@ -43,7 +43,7 @@ class Business
     protected static function checkModel($model)
     {
         if (!$model instanceof ORM) {
-            throw new Exception('Instead of ORM, ' . get_class($model) . ' was given');
+            throw new Exception('Instead of ORM, ' . Variable::getTypeOf($model) . ' was given');
         }
 
         return true;
@@ -63,7 +63,7 @@ class Business
         $object = $model->object();
 
         if (!Arr::get($object, $primaryKey)) {
-            throw new Exception('Trying to get non-existing property ' . $primaryKey . ' in class ' . get_class($model));
+            throw new Exception('Trying to get non-existing property ' . $primaryKey . ' in class ' . Variable::getTypeOf($model));
         }
 
         return true;
