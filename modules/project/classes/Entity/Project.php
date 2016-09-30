@@ -389,4 +389,14 @@ class Entity_Project extends Entity
     {
         $this->_model->getSearchTextFromFields();
     }
+
+    public function getOrderedAndLimited($limit, $offset)
+    {
+        return $this->_model->getOrderedAndLimited($limit, $offset);
+    }
+
+    public function getCount()
+    {
+        return $this->_model->getCount();
+    }
 }

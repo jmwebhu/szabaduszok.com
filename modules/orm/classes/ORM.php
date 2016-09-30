@@ -128,4 +128,15 @@ class ORM extends Kohana_ORM
     {
         return AB::select()->from($this);
     }
+
+    public function getModelsByIds(array $ids)
+    {
+        $models = [];
+
+        foreach ($ids as $id) {
+            $models[] = $this->getById($id);
+        }
+
+        return $models;
+    }
 }
