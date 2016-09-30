@@ -1,153 +1,219 @@
 <?php
 
 class ProjectTest extends Unittest_TestCase
-{        
-        public function tearDown() {
-            DB::delete('industries')->where('name', 'IN', ['industry100', 'industry200'])->execute();
-            DB::delete('professions')->where('name', 'IN', ['profession100', 'profession200', 'profession300'])->execute();
-            DB::delete('skills')->where('name', 'IN', ['skill100', 'skill200', 'skill300'])->execute();
-        
-            parent::tearDown();
-        }
-    
-    public function testAddRelations()
+{
+    private $_projects              = [];
+
+    private $_industries            = [];
+    private $_professions           = [];
+    private $_skills                = [];
+
+    private $_projectIndustries     = [];
+    private $_projectProfessions    = [];
+    private $_projectSkills         = [];
+
+    /**
+     * @covers Model_Project::getRelation()
+     */
+    public function testGetRelationIndustriesOk()
     {
-        $industry = new Model_Industry();
-        $industry->name    = 'industry100';
+        $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $project = $this->_projects[0];
 
-        $industry->save();
-        $industry->saveSlug();
+        $industries = $this->invokeMethod($project, 'getRelation', [$this->_mock]);
 
-        $industry2 = new Model_Industry();
-        $industry2->name    = 'industry200';
+        $this->assertSameRelations($this->_projectIndustries[1], $industries);
+    }
 
-        $industry2->save();
-        $industry2->saveSlug();
+    /**
+     * @covers Model_Project::getRelation()
+     */
+    public function testGetRelationIndustriesEmpty()
+    {
+        $this->setMockAny('\Model_Project_Industry', 'getAll', []);
+        $project = $this->_projects[0];
 
-        $profession = new Model_Profession();
-        $profession->name    = 'profession100';
+        $industries = $this->invokeMethod($project, 'getRelation', [$this->_mock]);
 
-        $profession->save();
-        $profession->saveSlug();
+        $this->assertEmpty($industries);
+    }
 
-        $profession2 = new Model_Profession();
-        $profession2->name    = 'profession200';
+    /**
+     * @covers Model_Project::getRelation()
+     */
+    public function testGetRelationProfessionsOk()
+    {
+        $this->setMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
+        $project = $this->_projects[1];
 
-        $profession2->save();
-        $profession2->saveSlug();
+        $professions = $this->invokeMethod($project, 'getRelation', [$this->_mock]);
 
-        $skill = new Model_Skill();
-        $skill->name    = 'skill100';
+        $this->assertSameRelations($this->_projectProfessions[2], $professions);
+    }
 
-        $skill->save();
-        $skill->saveSlug();
+    /**
+     * @covers Model_Project::getRelation()
+     */
+    public function testGetRelationProfessionsEmpty()
+    {
+        $this->setMockAny('\Model_Project_Profession', 'getAll', []);
+        $project = $this->_projects[1];
 
-        $skill2 = new Model_Skill();
-        $skill2->name    = 'skill200';
+        $industries = $this->invokeMethod($project, 'getRelation', [$this->_mock]);
 
-        $skill2->save();
-        $skill2->saveSlug();
-        
-        $data = [
-            'industries'    => [$industry->pk(), $industry2->pk()],
-            'professions'   => [$profession->pk(), 'profession300', $profession2->pk()],
-            'skills'        => [$skill->pk(), $skill2->pk(), 'skill300']
-        ]; 
-        
-        $user = new Model_User();
-        $user->lastname                    = 'User';
-        $user->firstname                   = '100';
-        $user->email                       = 'user' . time() . '@szabaduszok.com';
-        $user->password                    = 'asdf123';
-        $user->type                        = 2;               
+        $this->assertEmpty($industries);
+    }
 
-        $user->save();                      
-        
-        $project = new Model_Project();
-        $project->project_id = 999;
-        
-        $this->invokeMethod($project, 'addRelations', [$data]);        
-        
-        $industryIds = [];
-        $professionIds = [];
-        $skillIds = [];
-        
-        foreach ($project->industries->find_all() as $industryTemp)
-        {
-            $industryIds[] = $industryTemp->pk();
+    /**
+     * @covers Model_Project::getRelation()
+     */
+    public function testGetRelationSkillsOk()
+    {
+        $this->setMockAny('\Model_Project_Skill', 'getAll', $this->_projectSkills);
+        $project = $this->_projects[0];
+
+        $skills = $this->invokeMethod($project, 'getRelation', [$this->_mock]);
+
+        $this->assertSameRelations($this->_projectSkills[1], $skills);
+    }
+
+    /**
+     * @covers Model_Project::getRelation()
+     */
+    public function testGetRelationSkillsEmpty()
+    {
+        $this->setMockAny('\Model_Project_Skill', 'getAll', []);
+        $project = $this->_projects[1];
+
+        $skills = $this->invokeMethod($project, 'getRelation', [$this->_mock]);
+
+        $this->assertEmpty($skills);
+    }
+
+    protected function assertSameRelations($expected, $actual)
+    {
+        foreach ($expected as $i => $industry) {
+            $this->assertEquals($industry, $actual[$i]);
         }
-        
-        foreach ($project->professions->find_all() as $professionTemp)
-        {
-            $professionIds[] = $professionTemp->pk();
+    }
+
+    public function setUp()
+    {
+        $this->setUpProjects(5);
+        $this->setUpIndustries(3);
+        $this->setUpProfessions(4);
+        $this->setUpSkills(5);
+
+        $this->setUpRelations();
+    }
+
+    protected function setUpProjects($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $project = new Model_Project();
+            $project->project_id = $i;
+
+            $this->_projects[] = $project;
         }
-        
-        foreach ($project->skills->find_all() as $skillTemp)
-        {
-            $skillIds[] = $skillTemp->pk();
+    }
+
+    protected function setUpIndustries($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $industry = new Model_Industry();
+            $industry->industry_id = $i;
+
+            $this->_industries[] = $industry;
         }
-        
-        $idData = [
-            'industries'    => [],
-            'professions'   => [],
-            'skills'        => [],
+    }
+
+    protected function setUpProfessions($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $profession = new Model_Profession();
+            $profession->profession_id = $i;
+
+            $this->_professions[] = $profession;
+        }
+    }
+
+    protected function setUpSkills($max)
+    {
+        for ($i = 1; $i <= $max; $i++) {
+            $skill = new Model_Skill();
+            $skill->skill_id = $i;
+
+            $this->_skills[] = $skill;
+        }
+    }
+
+    protected function setUpRelations()
+    {
+        $this->setUpProjectIndustries();
+        $this->setUpProjectProfessions();
+        $this->setUpProjectSkills();
+    }
+
+    protected function setUpProjectIndustries()
+    {
+        $this->_projectIndustries = [
+            1 => [
+                $this->_industries[0], $this->_industries[1]
+            ],
+            2 => [
+                $this->_industries[1]
+            ],
+            3 => [
+                $this->_industries[0]
+            ],
+            4 => [
+                $this->_industries[1], $this->_industries[2]
+            ],
+            5 => [
+                $this->_industries[0], $this->_industries[1], $this->_industries[2]
+            ]
         ];
-        
-        foreach ($data['industries'] as $value)
-        {
-            $id = $value;
-            if (!Text::isId($id))
-            {
-                $temp = new Model_Industry();
-                $temp = $temp->where('name', '=', $value)->limit(1)->find();
-                
-                $id = $temp->pk();
-            }
-            
-            $idData['industries'][] = $id;
-        }
-        
-        foreach ($data['professions'] as $value)
-        {
-            $id = $value;
-            if (!Text::isId($id))
-            {
-                $temp = new Model_Profession();
-                $temp = $temp->where('name', '=', $value)->limit(1)->find();
-                
-                $id = $temp->pk();
-            }
-            
-            $idData['professions'][] = $id;
-        }
-        
-        foreach ($data['skills'] as $value)
-        {
-            $id = $value;
-            if (!Text::isId($id))
-            {
-                $temp = new Model_Skill();
-                $temp = $temp->where('name', '=', $value)->limit(1)->find();
-                
-                $id = $temp->pk();
-            }
-            
-            $idData['skills'][] = $id;
-        }
-        
-        foreach ($idData['industries'] as $id)
-        {
-            $this->assertTrue(in_array($id, $industryIds));
-        }
-        
-        foreach ($idData['professions'] as $id)
-        {
-            $this->assertTrue(in_array($id, $professionIds));
-        }
-        
-        foreach ($idData['skills'] as $id)
-        {
-            $this->assertTrue(in_array($id, $skillIds));
-        }                           
+    }
+
+    protected function setUpProjectProfessions()
+    {
+        $this->_projectProfessions = [
+            1 => [
+                $this->_professions[0], $this->_professions[1], $this->_professions[2], $this->_professions[3]
+            ],
+            2 => [
+                $this->_professions[1]
+            ],
+            3 => [
+                $this->_professions[0], $this->_professions[3]
+            ],
+            4 => [
+                $this->_professions[1], $this->_professions[2]
+            ],
+            5 => [
+                $this->_professions[0], $this->_professions[2], $this->_professions[3]
+            ]
+        ];
+    }
+
+    protected function setUpProjectSkills()
+    {
+        $this->_projectSkills = [
+            1 => [
+                $this->_skills[0], $this->_skills[1], $this->_skills[3],
+            ],
+            2 => [
+                $this->_skills[3], $this->_skills[4]
+            ],
+            3 => [
+                $this->_skills[0],
+            ],
+            4 => [
+
+            ],
+            5 => [
+                $this->_skills[2], $this->_skills[3],
+            ]
+        ];
     }
 }

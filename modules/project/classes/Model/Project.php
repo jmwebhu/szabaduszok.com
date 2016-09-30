@@ -268,32 +268,16 @@ class Model_Project extends ORM
         }
 
     	return [
-    		'industries'	=> $this->getOneRelation(new Model_Project_Industry()),
-    		'professions'	=> $this->getOneRelation(new Model_Project_Profession()),
-    		'skills'		=> $this->getOneRelation(new Model_Project_Skill())
+    		'industries'	=> $this->getRelation(new Model_Project_Industry()),
+    		'professions'	=> $this->getRelation(new Model_Project_Profession()),
+    		'skills'		=> $this->getRelation(new Model_Project_Skill())
     	];
     }
 
-    protected function getOneRelation(ORM $relationModel)
+    protected function getRelation(ORM $relationModel)
     {
-        //echo Debug::vars($this->pk());
         $relations          = $relationModel->getAll();
-        //echo Debug::vars($relations);
-        //exit;
-        $projectRelations   = Arr::get($relations, $this->pk(), []);
-
-        return $projectRelations;
-    }
-
-    /**
-     * @todo TOROLHETO
-     */
-    protected function cacheOneRelation($relationName)
-    {
-        $projectRelations           = $this->{$relationName}->find_all();
-        $relations[$this->pk()]     = $projectRelations;
-
-        Cache::instance()->set('projects_industries', $relations);
+        $projectRelations   = Arr::get($relations, $this->project_id, []);
 
         return $projectRelations;
     }
