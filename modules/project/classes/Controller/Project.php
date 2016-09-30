@@ -8,6 +8,7 @@ class Controller_Project extends Controller_DefaultTemplate
     private $_project;
     private $_matchedProjects  = [];
     private $_pagerData = [];
+    private $_needPager = false;
 
     public function __construct(Request $request, Response $response)
     {
@@ -264,6 +265,23 @@ class Controller_Project extends Controller_DefaultTemplate
     	}
     }
 
+    public function action_list()
+    {
+        try {
+            $this->setPagerData();
+
+            if ($this->request->method() == Request::POST) {
+                $this->handleListPostRequest();
+            } else {
+                $this->handleListGetRequest();
+            }
+
+            $this->setContextToList();
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+        }
+    }
+
     protected function setPagerData()
     {
         $limit 			= Kohana::$config->load('projects')->get('pagerLimit');
@@ -276,6 +294,46 @@ class Controller_Project extends Controller_DefaultTemplate
         ];
     }
 
+    protected function handleListPostRequest()
+    {
+        $this->_needPager = false;
+
+        if (Input::post('complex')) {
+            $this->handleComplexSearch();
+        } else {
+            $this->setContextToSimpleSearch();
+        }
+
+        $this->_project->setSearch(Project_Search_Factory::makeSearch(Input::post_all()));
+        $this->_matchedProjects = $this->_project->search(Input::post_all());
+    }
+
+    protected function handleComplexSearch()
+    {
+        $postProfessionIds  = Input::post('professions', []);
+        $postSkillIds       = Input::post('skills', []);
+
+        $profession	        = new Model_Profession();
+        $skill 		        = new Model_Skill();
+
+        $postProfessions	= $profession->getModelsByIds($postProfessionIds);
+        $postSkills 		= $skill->getModelsByIds($postSkillIds);
+
+        $this->setContextToComplexSearch($postProfessions, $postSkills);
+    }
+
+    protected function setContextToSimpleSearch()
+    {
+        $this->context->searchTerm			= Input::post('search_term');
+        $this->context->current				= 'simple';
+    }
+
+    protected function handleListGetRequest()
+    {
+        $this->_needPager       = true;
+        $this->_matchedProjects = $this->_project->getOrderedAndLimited($this->_pagerData['limit'], $this->_pagerData['offset']);
+    }
+
     protected function setContextToComplexSearch(array $postProfessions, array $postSkills)
     {
         $this->context->postIndustries 		= Input::post('industries');
@@ -283,12 +341,6 @@ class Controller_Project extends Controller_DefaultTemplate
         $this->context->postSkills 			= $postSkills;
         $this->context->postSkillRelation	= Input::post('skill_relation', 1);
         $this->context->current				= 'complex';
-    }
-
-    protected function setContextToSimpleSearch()
-    {
-        $this->context->searchTerm			= Input::post('search_term');
-        $this->context->current				= 'simple';
     }
 
     protected function setContextToList()
@@ -318,42 +370,9 @@ class Controller_Project extends Controller_DefaultTemplate
         $this->context->title 		= 'Szabadúszó projektek, munkák';
 
         $this->context->projects	= $this->_matchedProjects;
+        $this->context->needPager   = $this->_needPager;
 
         $this->setContextToPager();
-    }
-
-    protected function handleComplexSearch()
-    {
-        $postProfessionIds  = Input::post('professions', []);
-        $postSkillIds       = Input::post('skills', []);
-
-        $profession	        = new Model_Profession();
-        $skill 		        = new Model_Skill();
-
-        $postProfessions	= $profession->getModelsByIds($postProfessionIds);
-        $postSkills 		= $skill->getModelsByIds($postSkillIds);
-
-        $this->setContextToComplexSearch($postProfessions, $postSkills);
-    }
-
-    protected function handleListPostRequest()
-    {
-        $this->context->needPager = false;
-
-        if (Input::post('complex')) {
-            $this->handleComplexSearch();
-        } else {
-            $this->setContextToSimpleSearch();
-        }
-
-        $this->_project->setSearch(Project_Search_Factory::makeSearch(Input::post_all()));
-        $this->_matchedProjects = $this->_project->search(Input::post_all());
-    }
-
-    protected function handleListGetRequest()
-    {
-        $this->context->needPager 	= true;
-        $this->_matchedProjects	    = $this->_project->getOrderedAndLimited($this->_pagerData['limit'], $this->_pagerData['offset']);
     }
 
     protected function setContextToPager()
@@ -398,19 +417,6 @@ class Controller_Project extends Controller_DefaultTemplate
 
         $this->context->nextPage = $nextPage;
         $this->context->prevPage = $prevPage;
-    }
-
-    public function action_list()
-    {
-        $this->setPagerData();
-
-        if ($this->request->method() == Request::POST) {
-            $this->handleListPostRequest();
-        } else {
-            $this->handleListGetRequest();
-        }                
-
-        $this->setContextToList();
     }
 
     public function action_ajax()
