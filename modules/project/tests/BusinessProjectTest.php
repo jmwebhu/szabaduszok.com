@@ -37,14 +37,14 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getShortDescriptionShortenedBy()
+     * @covers Business_Project::getShortDescriptionCutOffAt()
      */
-    public function testGetShortDescriptionShortenedByTooLong()
+    public function testGetShortDescriptionCutOffAtTooLong()
     {
         $this->givenModelWithTestData();
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getShortDescriptionShortenedBy();
+        $actual = $business->getShortDescriptionCutOffAt();
 
         $expected = 'Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, folyamatos web fejlesztések e...';
 
@@ -52,15 +52,15 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getShortDescriptionShortenedBy()
+     * @covers Business_Project::getShortDescriptionCutOffAt()
      */
-    public function testGetShortDescriptionShortenedByNormalLong()
+    public function testGetShortDescriptionCutOffAtStandardLength()
     {
         $this->givenModelWithTestData();
         $this->_model->short_description = 'Lelkes, megbízható webprogramozót keresek';
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getShortDescriptionShortenedBy();
+        $actual = $business->getShortDescriptionCutOffAt();
 
         $expected = 'Lelkes, megbízható webprogramozót keresek';
 
@@ -68,15 +68,30 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getNameShortenedBy()
+     * @covers Business_Project::getShortDescriptionCutOffAt()
      */
-    public function testGetNameShortenedByTooLong()
+    public function testGetShortDescriptionCutOffAtUnique()
+    {
+        $this->givenModelWithTestData();
+
+        $business = new Business_Project($this->_model);
+        $actual = $business->getShortDescriptionCutOffAt(20);
+
+        $expected = 'Lelkes, megbízható, ...';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Business_Project::getNameCutOffAt()
+     */
+    public function testGetNameCutOffAtTooLong()
     {
         $this->givenModelWithTestData();
         $this->_model->name = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfejlesztések';
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getNameShortenedBy();
+        $actual = $business->getNameCutOffAt();
 
         $expected = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfe...';
 
@@ -86,14 +101,30 @@ class BusinessProjectTest extends Unittest_TestCase
     /**
      * @covers Business_Project::getNameShortenedBy()
      */
-    public function testGetNameShortenedByNormalLong()
+    public function testGetNameCutOffAtNormalLong()
     {
         $this->givenModelWithTestData();
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getNameShortenedBy();
+        $actual = $business->getNameCutOffAt();
 
         $expected = 'Folyamatos webfejlesztések';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @covers Business_Project::getNameCutOffAt()
+     */
+    public function testGetNameCutOffAtUniqe()
+    {
+        $this->givenModelWithTestData();
+        $this->_model->name = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfejlesztések';
+
+        $business = new Business_Project($this->_model);
+        $actual = $business->getNameCutOffAt(20);
+
+        $expected = 'Folyamatos webfejles...';
 
         $this->assertEquals($expected, $actual);
     }

@@ -4,11 +4,9 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
+        $entity = new Entity_Project(46);
 
-        $model = new Model_Project();
-        $projects = $model->getOrdered(10, 0);
-
-        echo Debug::vars($projects);
+        echo Debug::vars($entity->getNameCutOffAt());
     }	
 
     public function action_clearcache()

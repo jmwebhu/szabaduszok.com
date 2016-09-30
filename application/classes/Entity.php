@@ -49,6 +49,14 @@ abstract class Entity
     }
 
     /**
+     * @return Business
+     */
+    public function getBusiness()
+    {
+        return $this->_business;
+    }
+
+    /**
      * @param ORM $model
      */
     public function setModel(ORM $model)

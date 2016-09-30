@@ -364,14 +364,18 @@ class Entity_Project extends Entity
         $this->_search = $search;
     }
 
-    /**
-     * Kereses. Delegal a tartalmazott Project_Search Strategy -nek
-     *
-     * @param array $data       Keresei feltetelek
-     * @return array            Talalatok
-     */
     public function search(array $data)
     {
         return $this->_search->search($data, new Model_Project());
+    }
+
+    public function getShortDescriptionCutOffAt($maxChar = null)
+    {
+        $this->_business->getShortDescriptionCutOffAt($maxChar);
+    }
+
+    public function getNameCutOffAt($maxChar = null)
+    {
+        $this->_business->getNameCutOffAt($maxChar);
     }
 }

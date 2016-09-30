@@ -43,14 +43,14 @@ class Business_Project extends Business
         return $sb->get();
     }
 
-    public function getShortDescriptionShortenedBy($maxChars = 100)
+    public function getShortDescriptionCutOffAt($maxChars = 100)
     {
         return (strlen($this->_model->short_description) > $maxChars)
             ? mb_substr($this->_model->short_description, 0, $maxChars) . '...'
             : $this->_model->short_description;
     }
 
-    public function getNameShortenedBy($maxChars = 70)
+    public function getNameCutOffAt($maxChars = 70)
     {
         return (strlen($this->_model->name) > $maxChars)
             ? mb_substr($this->_model->name, 0, $maxChars) . '...'

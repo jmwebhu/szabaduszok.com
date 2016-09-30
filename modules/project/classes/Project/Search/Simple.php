@@ -20,7 +20,7 @@ class Project_Search_Simple implements Project_Search
         /**
          * @var $projects Array_Builder
          */
-        $projects = $this->_project->getActivesOrderedByCreated(false);
+        $projects = $this->_project->getOrderedByCreated(false);
 
         if (!$this->_searchTerm) {
             return $projects->execute()->as_array();

@@ -48,4 +48,9 @@ class Model_Project_Notification extends ORM
 		'updated_at'				=> ['type' => 'datetime', 'null' => true],
 		'created_at'				=> ['type' => 'datetime', 'null' => true]
 	];
+
+    public static function deleteAllByProject(Model_Project $project)
+    {
+        DB::delete('projects_notifications')->where('project_id', '=', $project->project_id)->execute();
+    }
 }

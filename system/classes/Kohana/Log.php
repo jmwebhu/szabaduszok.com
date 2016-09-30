@@ -177,6 +177,11 @@ class Kohana_Log {
 		return $this;
 	}
 
+	public function addException(Exception $ex)
+    {
+        $this->add(self::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+    }
+
 	/**
 	 * Write and clear all of the messages.
 	 *

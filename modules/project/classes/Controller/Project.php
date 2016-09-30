@@ -66,11 +66,9 @@ class Controller_Project extends Controller_DefaultTemplate
 			if ($this->request->method() == Request::POST)
 			{
 				Model_Database::trans_end([!Arr::get($result, 'error')]);
-					
-				// Sikeres regisztracio eseten
+
 				if (!Arr::get($result, 'error'))
 				{
-					// Atiranyitas kezdooldalra
 					header('Location: ' . Route::url('projectProfile', ['slug' => $project->slug]), true, 302);
 					die();
 				}
@@ -192,6 +190,8 @@ class Controller_Project extends Controller_DefaultTemplate
     			
     		if (!$slug)
     		{
+    		    echo Debug::vars('193');
+                exit;
     			throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen projekt');
     		}
     			    		    		
@@ -201,11 +201,10 @@ class Controller_Project extends Controller_DefaultTemplate
     		/**
     		 * @var $project Model_Project
     		 */
-    		$project = $project->getByColumn('slug', $slug);
+    		$project = $project->getBySlug($slug);
     		$project->with('user');
     			
-    		if (!$project->loaded() || !$project->is_active)
-    		{
+    		if (!$project->loaded() || !$project->is_active) {
     			throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen projekt');
     		}
     		
@@ -307,7 +306,7 @@ class Controller_Project extends Controller_DefaultTemplate
         else
         {        	        	
         	$this->context->needPager 	= true;
-        	$projects					= $project->getOrdered($limit, $offset);        	
+        	$projects					= $project->getOrderedAndLimited($limit, $offset);
         }                
                     
         $user		= new Model_User();

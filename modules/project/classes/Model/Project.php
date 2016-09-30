@@ -86,11 +86,17 @@ class Model_Project extends ORM
         return $base->where('is_active', '=', 1);
     }
 
+    /**
+     * @todo Business_Project::getShortDescriptionCutOffAt() csere
+     */
     public function short_description()
     {
     	return (strlen($this->short_description) > 100) ? mb_substr($this->short_description, 0, 100) . '...' : $this->short_description;
     }
-    
+
+    /**
+     * @todo Business_Project::getNameCutOffAt() csere
+     */
     public function name()
     {
     	return (strlen($this->name) > 70) ? mb_substr($this->name, 0, 70) . '...' : $this->name;
@@ -104,63 +110,71 @@ class Model_Project extends ORM
      */
     public function submit(array $post)
     {    	           
-        $id = Arr::get($post, 'project_id');        
-        
-        if (!$id)
-        {        	
-        	unset($post['project_id']);
+        $id = Arr::get($post, 'project_id');
+
+        if (!$id) {
+            unset($post['project_id']);
             $post['expiration_date'] = date('Y-m-d', strtotime('+1 month'));
-        }                               
+        }
 
-        $user = Auth::instance()->get_user();
-        $post['user_id'] = $user->user_id;        
-
-        $post['is_paid'] = 1;
-        $post['is_active'] = 1;
+        $user               = Auth::instance()->get_user();
+        $post['user_id']    = $user->user_id;
+        $post['is_paid']    = 1;
+        $post['is_active']  = 1;
                 
         $submit = parent::submit($post);
         
-        if (Arr::get($submit, 'error'))
-        {
+        if (Arr::get($submit, 'error')) {
         	throw new Exception(Arr::get($submit, 'messages'));
         }
-        
-        // Egyedi slug keszitese
+
         $this->saveSlug();
-        
-        // Kapcsolatok mentese
         $this->addRelations($post);                      
         
         $this->search_text = $this->getSearchText();
         $this->save();
-        
-        $project = new Model_Project($this->project_id);
-        
-        // Cache
-        $project->cacheToCollection();
-        
-        if (!$id)
-        {
-            // Ertesitesek letrehozasa
-            $user = new Model_User();
-            $user->addToProjectNotification($project);                
-        }                   
 
-        return $project;
-    } 
+        $this->cacheToCollection();
+        
+        if (!$id) {
+            $user = new Model_User();
+            $user->addToProjectNotification($this);
+        }
+
+        return $this;
+    }
     
     public function del()
     {
-    	$this->is_active = 0;
-    	$this->save();
+        try {
+            $error = false;
+            Model_Database::trans_start();
+
+            $this->inactivate();
+
+        } catch (Exception $ex) {
+            $error = true;
+            Log::instance()->addException($ex);
+
+        } finally {
+            Model_Database::trans_end([!$error]);
+        }
     	
-        // Torles cache -bol
-    	AB::delete($this->_table_name, $this->pk())->execute();    	        
-        
-        // Projekt ertesitok torlese
-        DB::delete('projects_notifications')->where('project_id', '=', $this->pk())->execute();
-    	
-    	return ['error' => false];
+    	return ['error' => $error];
+    }
+
+    protected function inactivate()
+    {
+        $this->is_active = 0;
+        $this->save();
+
+        $this->clearCache();
+        Model_Project_Notification::deleteAllByProject($this);
+    }
+
+    protected function clearCache()
+    {
+        AB::delete($this->_table_name, $this->pk())->execute();
     }
     
     /**
@@ -232,7 +246,7 @@ class Model_Project extends ORM
      */
     public function getCount()
     {
-    	return AB::select()->from(new Model_Project())->where('is_active', '=', 1)->execute()->count();
+    	return $this->baseSelect()->execute()->count();
     }
     
     /**
@@ -312,32 +326,22 @@ class Model_Project extends ORM
     		'skills'		=> Arr::get($skills, $this->project_id)
     	];
     }
-    
-    /**
-     * Visszaadja a az aktiv projekteket datum szerint novekvo sorrendben
-     * Cache -bol dolgozik
-     * 
-     * @return array 	Projektek ORM
-     */
-    public function getOrdered($limit, $offset)
+
+    protected function orderBy($field, $direction = 'DESC')
     {
-    	return $this->baseSelect()
-            ->order_by('created_at', 'DESC')
+        return $this->baseSelect()->order_by($field, $direction);
+    }
+
+    public function getOrderedAndLimited($limit, $offset)
+    {
+    	return $this->orderBy('created_at')
             ->limit($limit)->offset($offset)
             ->execute()->as_array();
     }
 
-    /**
-     * Visszaadja az aktiv projekteket created_at szerint rendezve a megadott iranyba
-     *
-     * @param string $direction     Rendezes iranya
-     * @param bool $execute         false eseten nem hivja meg az ->execute() -t
-     * @return mixed                Aktiv projektek
-     */
-    public function getActivesOrderedByCreated($execute = true, $direction = 'DESC')
+    public function getOrderedByCreated($execute = true, $direction = 'DESC')
     {
-        $builder = $this->baseSelect()
-            ->order_by('created_at', $direction);
+        $builder = $this->orderBy('created_at', $direction);
 
         if ($execute) {
             return $builder->execute()->as_array();

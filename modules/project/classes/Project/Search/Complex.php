@@ -126,7 +126,7 @@ class Project_Search_Complex implements Project_Search
 
     public function search()
     {
-        $this->_projects = $this->_currentProject->getActivesOrderedByCreated();
+        $this->_projects = $this->_currentProject->getOrderedByCreated();
 
         // Szukites iparagakra
         $this->searchRelationsInProjects(new Model_Project_Industry());
