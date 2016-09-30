@@ -6,23 +6,36 @@ class Controller_Project extends Controller_DefaultTemplate
      * @var Entity_Project
      */
     private $_project;
-    private $_matchedProjects  = [];
-    private $_pagerData = [];
-    private $_needPager = false;
+    private $_matchedProjects   = [];
+    private $_pagerData         = [];
+    private $_needPager         = false;
+
+    private $_jsonResponse;
 
     public function __construct(Request $request, Response $response)
     {
         $this->_project = new Entity_Project();
-
         parent::__construct($request, $response);
     }
 
+    public function action_list()
+    {
+        try {
+            $this->setPagerData();
 
-    /**
-     * Projekt inditasa
-     * 'Uj projektet inditok' gomb megnyomasakor jelenik meg az oldal
-     */
-    function action_create()
+            if ($this->request->method() == Request::POST) {
+                $this->handleListPostRequest();
+            } else {
+                $this->handleListGetRequest();
+            }
+
+            $this->setContextToList();
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+        }
+    }
+
+    public function action_create()
     {
     	try 
 		{					
@@ -96,7 +109,7 @@ class Controller_Project extends Controller_DefaultTemplate
      * Projekt modositasa
      * 'Modositom' gomb megnyomasakor jelenik meg az oldal
      */
-    function action_update()
+    public function action_update()
     {
     	try 
 		{
@@ -197,7 +210,7 @@ class Controller_Project extends Controller_DefaultTemplate
 		}
     }
 
-    function action_profile()
+    public function action_profile()
     {    	
     	try
     	{    	    		
@@ -265,21 +278,51 @@ class Controller_Project extends Controller_DefaultTemplate
     	}
     }
 
-    public function action_list()
+    public function action_ajax()
     {
         try {
-            $this->setPagerData();
+            Model_Database::trans_start();
+            $result = ['error' => false];
 
-            if ($this->request->method() == Request::POST) {
-                $this->handleListPostRequest();
-            } else {
-                $this->handleListGetRequest();
+            if (!$this->request->is_ajax()) {
+                throw new HTTP_Exception_400('Only Ajax');
             }
 
-            $this->setContextToList();
+            $this->auto_render = false;
+
+            switch ($this->request->param('actiontarget')) {
+                case 'del':
+                    $project = new Model_Project(Input::post('id'));
+                    $this->_jsonResponse = json_encode($project->del());
+
+                    break;
+
+                case 'professionAutocomplete':
+                    $profession = new Model_Profession();
+                    $this->_jsonResponse = json_encode($profession->relationAutocomplete(Input::get('term')));
+
+                    break;
+
+                case 'skillAutocomplete':
+                    $skill = new Model_Skill();
+                    $this->_jsonResponse = json_encode($skill->relationAutocomplete(Input::get('term')));
+
+                    break;
+
+                default:
+                    throw new HTTP_Exception_400('Action target not found');
+            }
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
+
+            $result = ['error' => true];
+            $this->_jsonResponse = json_encode($result);
+            $this->response->status(500);
+        } finally {
+            Model_Database::trans_end([!Arr::get($result, 'error')]);
         }
+
+        $this->response->body($this->_jsonResponse);
     }
 
     protected function setPagerData()
@@ -418,60 +461,4 @@ class Controller_Project extends Controller_DefaultTemplate
         $this->context->nextPage = $nextPage;
         $this->context->prevPage = $prevPage;
     }
-
-    public function action_ajax()
-	{       
-    	try
-    	{
-    		Model_Database::trans_start();
-    		$result = ['error' => false];
-    		
-	    	if (!$this->request->is_ajax())
-	    	{
-	    		throw new HTTP_Exception_400('Only Ajax');
-	    	}
-	    	
-	    	$this->auto_render = false;
-			
-	        switch ($this->request->param('actiontarget'))
-	        {
-	        	case 'del':
-					$project = new Model_Project(Input::post('id'));
-					$json = json_encode($project->del());
-
-					break;
-	                
-	            case 'professionAutocomplete':
-	            	$profession = new Model_Profession();              	
-	            	$json = json_encode($profession->relationAutocomplete(Input::get('term')));
-	            	            	
-	            	break;
-	            	
-	            case 'skillAutocomplete':
-					$skill = new Model_Skill();
-					$json = json_encode($skill->relationAutocomplete(Input::get('term')));
-
-					break;
-	                
-	            default:
-	            	throw new HTTP_Exception_400('Action target not found');
-			}
-		}
-		catch (Exception $ex)		// Altalanos hiba
-		{
-			// Logbejegyzest keszit
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
-		
-			$result = ['error' => true];
-			$json = json_encode($result);
-			$this->response->status(500);
-		}
-		finally
-		{
-			Model_Database::trans_end([!Arr::get($result, 'error')]);
-		}
-		
-		$this->response->body($json);
-	}
 }
