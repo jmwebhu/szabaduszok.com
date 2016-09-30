@@ -37,6 +37,7 @@ class Model_Project_Industry extends ORM
             if (!isset($collection[$model->project_id])) {
                 $collection[$model->project_id] = [];
             }
+
             $collection[$model->project_id][] = $model->industry;
         }
 
@@ -50,8 +51,7 @@ class Model_Project_Industry extends ORM
         $cache = Cache::instance();
         $collection = $cache->get($this->_table_name);
 
-        if (!$collection)
-        {
+        if (!$collection) {
             $orm = ORM::factory($this->_object_name);
             $collection = $orm->cacheAll();
         }

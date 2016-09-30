@@ -624,7 +624,10 @@ class Controller_User extends Controller_DefaultTemplate
 			 
 			foreach ($projects as $pr)
 			{
-				$relations[$pr->project_id]	= $pr->getAndCacheRelations();
+                /**
+                 * @var $pr Model_Project
+                 */
+				$relations[$pr->project_id]	= $pr->getRelations();
 				$salaries[$pr->project_id]	= Viewhelper_Project::getSalary($pr);
 				$users[$pr->project_id]		= $user;
 			}

@@ -378,4 +378,15 @@ class Entity_Project extends Entity
     {
         $this->_business->getNameCutOffAt($maxChar);
     }
+
+    public function del()
+    {
+        $this->_model->del();
+        $this->mapModelToThis();
+    }
+
+    public function getSearchTextFromFields()
+    {
+        $this->_model->getSearchTextFromFields();
+    }
 }

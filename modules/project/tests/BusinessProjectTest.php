@@ -8,14 +8,14 @@ class BusinessProjectTest extends Unittest_TestCase
     private $_model;
 
     /**
-     * @covers Business_Project::getSearchText()
+     * @covers Business_Project::getSearchTextFromFields()
      */
-    public function testGetSearchTestWithoutRelations()
+    public function testGetSearchTextFromFieldstWithoutRelations()
     {
         $this->givenModelWithTestData();
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getSearchText();
+        $actual = $business->getSearchTextFromFields();
 
         $expected = 'Folyamatos webfejlesztések Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, folyamatos web fejlesztések elvégzésére. Először kisebb otthonról végezhető munkák lennének, és ha együtt tudunk működni, akkor több weboldalam fejlesztésében részt vehetsz. Diáknak, kezdő programozónak is nyitott az állás. Elvárások: HTML CSS referencia munkák angol tudás határidők betartása Előnyt jelent: kereső marketing tudás (SEO) fizetési módok webshopba integrálás ismerete kreativitás, és önképzés (nem baj ha kezdő vagy, de a felmerülő feladatokat képes legyél önállóan megoldani) Projektek amikben részt vehetsz: parajdisokincsek.hu webfejlesztés semmiszor.hu webfejlesztés http://semmiszor.hu/stilettodress/ webfejlesztés Jelentkezés: Fényképes önéletrajzodat, és motivációs leveledet várom, a szkladanyi.attila@parajdisokincsek.hu email címre. A motivációs levélben kitérhetsz a fenti 3 oldallal kapcsolatban milyen fejlesztési, egyéb ötleteid lennének. joomartin@jmweb.hu 06301923380 ' . date('Y-m-d') . '    ';
 
@@ -23,14 +23,14 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getSearchText()
+     * @covers Business_Project::getSearchTextFromFields()
      */
-    public function testGetSearchTestWithRelations()
+    public function testGetSearchTextFromFieldsWithRelations()
     {
         $this->givenMockWithTestData();
 
         $business = new Business_Project($this->_mock);
-        $actual = $business->getSearchText();
+        $actual = $business->getSearchTextFromFields();
 
         $expected = 'Folyamatos webfejlesztések Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, folyamatos web fejlesztések elvégzésére. Először kisebb otthonról végezhető munkák lennének, és ha együtt tudunk működni, akkor több weboldalam fejlesztésében részt vehetsz. Diáknak, kezdő programozónak is nyitott az állás. Elvárások: HTML CSS referencia munkák angol tudás határidők betartása Előnyt jelent: kereső marketing tudás (SEO) fizetési módok webshopba integrálás ismerete kreativitás, és önképzés (nem baj ha kezdő vagy, de a felmerülő feladatokat képes legyél önállóan megoldani) Projektek amikben részt vehetsz: parajdisokincsek.hu webfejlesztés semmiszor.hu webfejlesztés http://semmiszor.hu/stilettodress/ webfejlesztés Jelentkezés: Fényképes önéletrajzodat, és motivációs leveledet várom, a szkladanyi.attila@parajdisokincsek.hu email címre. A motivációs levélben kitérhetsz a fenti 3 oldallal kapcsolatban milyen fejlesztési, egyéb ötleteid lennének. joomartin@jmweb.hu 06301923380 ' . date('Y-m-d') . ' industries professions skills ';
         $this->assertEquals($expected, $actual);

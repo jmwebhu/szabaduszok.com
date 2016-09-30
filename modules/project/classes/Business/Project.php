@@ -13,7 +13,7 @@ class Business_Project extends Business
         }
     }
 
-    public function getSearchText()
+    public function getSearchTextFromFields()
     {
         $sb = SB::create($this->_model->name)->append(' ')
             ->append($this->_model->short_description)->append(' ')

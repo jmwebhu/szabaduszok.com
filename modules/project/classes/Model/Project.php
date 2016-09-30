@@ -14,7 +14,10 @@
  */
 
 class Model_Project extends ORM
-{	
+{
+    protected $_table_name  = 'projects';
+    protected $_primary_key = 'project_id';
+
 	protected $_created_column = [
 		'column' => 'created_at',
 		'format' => 'Y-m-d H:i'
@@ -26,27 +29,24 @@ class Model_Project extends ORM
 	];
     
     protected $_table_columns = [
-    	'project_id'        => ['type' => 'int', 'key' => 'PRI'],
-    	'user_id'           => ['type' => 'int', 'null' => true],
-        'name'              => ['type' => 'string', 'null' => true],
-    	'short_description' => ['type' => 'string', 'null' => true],
-    	'long_description'  => ['type' => 'string', 'null' => true],
-        'email'             => ['type' => 'string', 'null' => true],
-        'phonenumber'       => ['type' => 'string', 'null' => true],
-    	'is_active'         => ['type' => 'int', 'null' => true],
-    	'is_paid'           => ['type' => 'int', 'null' => true],
-        'search_text'       => ['type' => 'string', 'null' => true],
-    	'expiration_date'   => ['type' => 'datetime', 'null' => true],
-    	'salary_type'       => ['type' => 'int', 'null' => true],
-        'salary_low'        => ['type' => 'int', 'null' => true],
-        'salary_high'       => ['type' => 'int', 'null' => true],
-    	'slug'              => ['type' => 'string', 'null' => true],
-    	'created_at'        => ['type' => 'datetime', 'null' => true],
-    	'updated_at'        => ['type' => 'datetime', 'null' => true],
+    	'project_id'        => ['type' => 'int',        'key' => 'PRI'],
+    	'user_id'           => ['type' => 'int',        'null' => true],
+        'name'              => ['type' => 'string',     'null' => true],
+    	'short_description' => ['type' => 'string',     'null' => true],
+    	'long_description'  => ['type' => 'string',     'null' => true],
+        'email'             => ['type' => 'string',     'null' => true],
+        'phonenumber'       => ['type' => 'string',     'null' => true],
+    	'is_active'         => ['type' => 'int',        'null' => true],
+    	'is_paid'           => ['type' => 'int',        'null' => true],
+        'search_text'       => ['type' => 'string',     'null' => true],
+    	'expiration_date'   => ['type' => 'datetime',   'null' => true],
+    	'salary_type'       => ['type' => 'int',        'null' => true],
+        'salary_low'        => ['type' => 'int',        'null' => true],
+        'salary_high'       => ['type' => 'int',        'null' => true],
+    	'slug'              => ['type' => 'string',     'null' => true],
+    	'created_at'        => ['type' => 'datetime',   'null' => true],
+    	'updated_at'        => ['type' => 'datetime',   'null' => true]
     ];
-
-    protected $_table_name  = 'projects';
-    protected $_primary_key = 'project_id';
 
     protected $_belongs_to  = [
         'user'          => [
@@ -102,12 +102,6 @@ class Model_Project extends ORM
     	return (strlen($this->name) > 70) ? mb_substr($this->name, 0, 70) . '...' : $this->name;
     }
 
-    /**
-     * Elmenti a projektet a kapott POST adatok alapjan
-     * 
-     * @param array $post   POST adatok
-     * @return array        Eredmeny
-     */
     public function submit(array $post)
     {    	           
         $id = Arr::get($post, 'project_id');
@@ -129,7 +123,7 @@ class Model_Project extends ORM
         }
 
         $this->saveSlug();
-        $this->addRelations($post);                      
+        $this->addRelations($post);
         
         $this->search_text = $this->getSearchText();
         $this->save();
@@ -176,12 +170,7 @@ class Model_Project extends ORM
     {
         AB::delete($this->_table_name, $this->pk())->execute();
     }
-    
-    /**
-     * Hozzaadja a projekthez az osszes kapcsolatot
-     * 
-     * @param array $post   _POST adatok
-     */
+
     protected function addRelations(array $post)
     {
     	$this->removeAll('projects_industries', 'project_id');
@@ -194,7 +183,7 @@ class Model_Project extends ORM
     }       
    
     /**
-     * @todo Business_Project::getSearchText() csere
+     * @todo Business_Project::getSearchTextFromFields() csere
      */
     public function getSearchText()
     {        
@@ -221,22 +210,22 @@ class Model_Project extends ORM
     }
     
     /**
-     * Visszaadja a kapott kapcsolatokbol alkotott stringet.
-     * A projekthez tartozo osszes entitas (iparagak, stb) nevet osszefuzi egy stringbe
-     *
-     * @param string $name		Kapcsolat neve
-     * @return string			Eredmeny
+     * A projekthez tartozo osszes kapcsolat (iparagak, szakterulat, kepesseg) nevet osszefuzi egy stringbe
      */
-    public function getRelationString($name)
+    public function getRelationString($relationName)
     {
-    	$items = $this->{$name}->find_all();
-    	$result = '';
+    	$items = $this->{$relationName}->find_all();
+        $sb = SB::create();
     
     	foreach ($items as $i => $item) {
-    		$result .= ($i == count($items) - 1) ? $item->name : ($item->name . ', ');
+            $sb->append($item->name);
+
+            if ($i == count($items) - 1) {
+                $sb->append(', ');
+            }
     	}
     
-    	return $result;
+    	return $sb->get();
     }    
 
     /**
@@ -248,93 +237,10 @@ class Model_Project extends ORM
     {
     	return $this->baseSelect()->execute()->count();
     }
-    
-    /**
-     * Visszaadja az osszes projekt kapcsolatot (iparagak, szakteruletek, kepessegek), es eltarolja cache -ben
-     * Ha az adott kapcsolat megtalalhato cache -ben, akkor onnan adja vissza, ha nem, akkor lekerdezi db -bol
-     * 
-     * @return array	Kapcsolatok
-     */
-    public function getAndCacheRelations()
-    {
-        if (!$this->loaded()) {
-            return false;
-        }
-
-    	$cache 				= Cache::instance();
-    	
-    	$projectIndustry 	= new Model_Project_Industry();
-    	$projectProfession	= new Model_Project_Profession();
-    	$projectSkill 		= new Model_Project_Skill();
-    	
-    	// Kapcsolatok kiszedese cache -bol.
-    	$industries 		= $projectIndustry->getAll();    	
-    	$professions		= $projectProfession->getAll();    	
-    	$skills 			= $projectSkill->getAll();
-
-    	// Nincsenek iparagak cache -ben a projekthez
-    	if (!isset($industries[$this->project_id]))
-    	{
-    		// Lekerdezi db -bol es osszegyujti a cache -nek megfelelo formatumban
-    		$industriesAll 		= $this->industries->find_all();
-    		$resultIndustries	= [];
-    	
-    		foreach ($industriesAll as $industry)
-    		{
-    			$resultIndustries[] = $industry;
-    		}
-
-    		$industries[$this->project_id] = $resultIndustries;
-    		$cache->set('projects_industries', $industries);
-    	}
-    	
-    	// Nincsenek szakteruletek cache -ben a projekthez
-    	if (!isset($professions[$this->project_id]))
-    	{
-    		$professionsAll = $this->professions->find_all();
-    		$resultProfessions = [];
-    		
-    		// Lekerdezi db -bol es osszegyujti a cache -nek megfelelo formatumban
-    		foreach ($professionsAll as $profession)
-    		{
-    			$resultProfessions[] = $profession;
-    		}
-    		
-    		$professions[$this->project_id] = $resultProfessions;
-    		$cache->set('projects_professions', $professions);
-    	}
-    	
-    	// Nincsenek kepessegek cache -ben a projekthez
-    	if (!isset($skills[$this->project_id]))
-    	{
-    		// Lekerdezi db -bol es osszegyujti a cache -nek megfelelo formatumban
-    		$skillsAll = $this->skills->find_all();
-    		$resultSkills = [];
-    		
-    		foreach ($skillsAll as $skill)
-    		{
-    			$resultSkills[] = $skill;
-    		}
-    		
-    		$skills[$this->project_id] = $resultSkills;
-    		$cache->set('projects_skills', $skills);
-    	}
-
-    	return [
-    		'industries'	=> Arr::get($industries, $this->project_id),
-    		'professions'	=> Arr::get($professions, $this->project_id),
-    		'skills'		=> Arr::get($skills, $this->project_id)
-    	];
-    }
-
-    protected function orderBy($field, $direction = 'DESC')
-    {
-        return $this->baseSelect()->order_by($field, $direction);
-    }
 
     public function getOrderedAndLimited($limit, $offset)
     {
-    	return $this->orderBy('created_at')
+        return $this->orderBy('created_at')
             ->limit($limit)->offset($offset)
             ->execute()->as_array();
     }
@@ -348,5 +254,47 @@ class Model_Project extends ORM
         }
 
         return $builder;
+    }
+
+    protected function orderBy($field, $direction = 'ASC')
+    {
+        return $this->baseSelect()->order_by($field, $direction);
+    }
+
+    public function getRelations()
+    {
+        if (!$this->loaded()) {
+            return [];
+        }
+
+    	return [
+    		'industries'	=> $this->getOneRelation(new Model_Project_Industry()),
+    		'professions'	=> $this->getOneRelation(new Model_Project_Profession()),
+    		'skills'		=> $this->getOneRelation(new Model_Project_Skill())
+    	];
+    }
+
+    protected function getOneRelation(ORM $relationModel)
+    {
+        //echo Debug::vars($this->pk());
+        $relations          = $relationModel->getAll();
+        //echo Debug::vars($relations);
+        //exit;
+        $projectRelations   = Arr::get($relations, $this->pk(), []);
+
+        return $projectRelations;
+    }
+
+    /**
+     * @todo TOROLHETO
+     */
+    protected function cacheOneRelation($relationName)
+    {
+        $projectRelations           = $this->{$relationName}->find_all();
+        $relations[$this->pk()]     = $projectRelations;
+
+        Cache::instance()->set('projects_industries', $relations);
+
+        return $projectRelations;
     }
 }

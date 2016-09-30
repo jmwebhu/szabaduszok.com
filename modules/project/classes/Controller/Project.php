@@ -225,7 +225,7 @@ class Controller_Project extends Controller_DefaultTemplate
     		$this->context->canDelete = (int) $authorization->canDelete();
     		$this->context->salary = Viewhelper_Project::getSalary($project);
     		
-    		$relations = $project->getAndCacheRelations();    
+    		$relations = $project->getRelations();
     		
     		$this->context->industries = Arr::get($relations, 'industries');
     		$this->context->professions = Arr::get($relations, 'professions');
@@ -322,7 +322,10 @@ class Controller_Project extends Controller_DefaultTemplate
          
         foreach ($projects as $pr)
         {
-        	$relations[$pr->project_id]	= $pr->getAndCacheRelations();
+            /**
+             * @var $pr Model_Project
+             */
+        	$relations[$pr->project_id]	= $pr->getRelations();
         	$salaries[$pr->project_id]	= Viewhelper_Project::getSalary($pr);
         	$users[$pr->project_id]		= Arr::get($cacheUsers, $pr->user_id);
         }
