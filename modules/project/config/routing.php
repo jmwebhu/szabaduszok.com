@@ -20,8 +20,8 @@ Route::set('projectProfile', 'szabaduszo-projekt/<slug>')
     
 Route::set('projectList', 'szabaduszo-projektek(/<page>)')
     ->defaults([
-    	'controller'    => 'Project',
-   		'action'        => 'list'
+    	'controller'    => 'Project_List',
+   		'action'        => 'index'
     ]);
 
 Route::set('projectAjax', 'project/ajax/<actiontarget>(/<maintarget>)')

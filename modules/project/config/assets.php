@@ -30,7 +30,8 @@ AssetManager::instance()
         ->addAction('profile')
             ->addJs(['barrating', 'profile'])
             ->addCss(['font-awesome-stars'])
-            
-        ->addAction('list')
-        	->addJs(['list'])
+
+    ->addController('project_list')
+        ->addAction('index')
+            ->addJs(['list'])
 ;
