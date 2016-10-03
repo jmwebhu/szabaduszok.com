@@ -20,6 +20,7 @@ class Controller_Project_Create extends Controller_DefaultTemplate
 
     public function __construct(Request $request, Response $response)
     {
+        $this->_project         = new Entity_Project();
         $this->_authorization   = new Authorization_Project();
         $this->_user            = Auth::instance()->get_user();
 
@@ -81,8 +82,6 @@ class Controller_Project_Create extends Controller_DefaultTemplate
     protected function handlePostRequest()
     {
         Model_Database::trans_start();
-
-        $this->_project = new Entity_Project();
         $this->_project->submit(Input::post_all());
     }
 }

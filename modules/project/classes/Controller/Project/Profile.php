@@ -15,6 +15,7 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
     public function __construct(Request $request, Response $response)
     {
         $this->_project = new Entity_Project();
+        $this->_project = $this->_project->getBySlug($request->param('slug'));
         $this->_user    = new Model_User();
 
         parent::__construct($request, $response);
@@ -23,18 +24,7 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
     public function action_index()
     {
         try {
-            $slug = $this->request->param('slug');
-
-            if (!$slug) {
-                throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen projekt');
-            }
-
-            $this->_project = $this->_project->getBySlug($slug);
-
-            if (!$this->_project->isVisible()) {
-                throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen projekt');
-            }
-
+            $this->throwExceptionIfNotVisible();
             $this->setContext();
 
         } catch (HTTP_Exception_404 $exnf) {
@@ -44,6 +34,13 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
         } catch (Exception $ex) {
             $this->context->error = __('defaultErrorMessage');
             Log::instance()->addException($ex);
+        }
+    }
+
+    protected function throwExceptionIfNotVisible()
+    {
+        if (!$this->_project->isVisible()) {
+            throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen projekt');
         }
     }
 
