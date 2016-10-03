@@ -38,6 +38,10 @@ abstract class Entity
         $this->_model       = new $modelClass($id);
         $this->_business    = new $businessClass($this->_model);
         $this->_stdObject   = new stdClass();
+
+        if ($id) {
+            $this->mapModelToThis();
+        }
     }
 
     /**

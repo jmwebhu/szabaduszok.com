@@ -369,14 +369,14 @@ class Entity_Project extends Entity
         return $this->_search->search($data, new Model_Project());
     }
 
-    public function getShortDescriptionCutOffAt($maxChar = null)
+    public function getShortDescriptionCutOffAt($maxChar = 100)
     {
-        $this->_business->getShortDescriptionCutOffAt($maxChar);
+        return $this->_business->getShortDescriptionCutOffAt($maxChar);
     }
 
-    public function getNameCutOffAt($maxChar = null)
+    public function getNameCutOffAt($maxChar = 70)
     {
-        $this->_business->getNameCutOffAt($maxChar);
+        return $this->_business->getNameCutOffAt($maxChar);
     }
 
     public function inactivate()
@@ -387,7 +387,7 @@ class Entity_Project extends Entity
 
     public function getSearchTextFromFields()
     {
-        $this->_model->getSearchTextFromFields();
+        return $this->_model->getSearchTextFromFields();
     }
 
     public function getOrderedAndLimited($limit, $offset)
@@ -403,5 +403,15 @@ class Entity_Project extends Entity
     public function isVisible()
     {
         return ($this->_model->loaded() && $this->_model->is_active);
+    }
+
+    public function getEntitesFromModels(array $models)
+    {
+        $entities = [];
+        foreach ($models as $model) {
+            $entities[] = new Entity_Project($model->project_id);
+        }
+
+        return $entities;
     }
 }

@@ -31,6 +31,7 @@ class Controller_Project_List extends Controller_Project
             }
 
             $this->setContext();
+
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
         }
@@ -122,7 +123,7 @@ class Controller_Project_List extends Controller_Project
         $this->context->industries	= $industry->getAll();
         $this->context->title 		= 'Szabadúszó projektek, munkák';
 
-        $this->context->projects	= $this->_matchedProjects;
+        $this->context->projects	= $this->_project->getEntitesFromModels($this->_matchedProjects);
         $this->context->needPager   = $this->_needPager;
 
         $this->setContextPager();

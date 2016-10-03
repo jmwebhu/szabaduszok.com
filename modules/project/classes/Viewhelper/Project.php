@@ -44,8 +44,6 @@ class Viewhelper_Project
 	
 	public static function getSalary(Entity_Project $project)
 	{
-		$salary = 0;		
-		
 		if ($project->getSalaryLow() == $project->getSalaryHigh() || !$project->getSalaryHigh()) {
 			$salary = number_format($project->getSalaryLow(), 0, '.', ' ');
 		} else {

@@ -3,6 +3,8 @@
 /**
  * EZ A TESZT ELES ADATBAZIST HASZNAL MOCK HELYETT
  * setUp -kor truncate -el minden hasznalt tablat
+ *
+ * @todo REFACT
  */
 
 class ProjectSubmitTest extends PHPUnit_Framework_TestCase

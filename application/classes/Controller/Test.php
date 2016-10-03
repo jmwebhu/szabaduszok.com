@@ -4,8 +4,13 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $authorization = new Authorization_Project();
-        $authorization->canCreate();
+
+        $entity = new Entity_Project(89);
+        $business = $entity->getBusiness();
+
+        echo Debug::vars($entity->getNameCutOffAt());
+        echo Debug::vars($business->getNameCutOffAt());
+        exit;
     }	
 
     public function action_clearcache()

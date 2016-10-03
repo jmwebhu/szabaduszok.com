@@ -192,7 +192,12 @@ class Model_Project extends ORM implements Subject
         $this->addRelation($post, new Model_Project_Profession(), new Model_Profession());
         $this->addRelation($post, new Model_Project_Skill(), new Model_Skill());
     }       
-   
+
+    public function getSearchTextFromFields()
+    {
+        return $this->getSearchText();
+    }
+
     /**
      * @todo Business_Project::getSearchTextFromFields() csere
      */

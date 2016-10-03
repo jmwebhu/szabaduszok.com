@@ -36,8 +36,8 @@ class PagerTest extends Unittest_TestCase
     }
 
     /**
- * @covers Controller_Project_List::setContextPager()
- */
+     * @covers Controller_Project_List::setContextPager()
+     */
     public function testPagerTwoPage()
     {
         $this->setMockAny('Entity_Project', 'getCount', 13);
