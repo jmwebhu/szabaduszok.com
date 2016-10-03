@@ -68,7 +68,7 @@ class Controller_Project_Update extends Controller_Project
     protected function setContext()
     {
         $this->context->pageTitle   = $this->context->title = Viewhelper_Project::getPageTitle('edit') . $this->_project->getName();
-        $this->context->project     = $this->_project->getModel();
+        $this->context->project     = $this->_project;
 
         $this->context->email       = Viewhelper_Project::getEmail($this->_user, 'edit', $this->_project);
         $this->context->phonenumber = Viewhelper_Project::getPhonenumber($this->_user, 'edit', $this->_project);
@@ -86,9 +86,9 @@ class Controller_Project_Update extends Controller_Project
         $profession = new Model_Profession();
         $skill      = new Model_Skill();
 
-        $this->context->industries = $industry->getAll();
+        $this->context->industries  = $industry->getAll();
         $this->context->professions = $profession->getAll();
-        $this->context->skills = $skill->getAll();
+        $this->context->skills      = $skill->getAll();
     }
 
     protected function handlePostRequest()

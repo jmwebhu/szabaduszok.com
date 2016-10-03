@@ -125,6 +125,11 @@ abstract class Entity
         return $this;
     }
 
+    public function getRelation($name)
+    {
+        return $this->_model->{$name}->find_all();
+    }
+
     protected function getEntityName()
     {
         $class = get_class($this);
