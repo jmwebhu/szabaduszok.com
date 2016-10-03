@@ -26,6 +26,6 @@ Route::set('projectList', 'szabaduszo-projektek(/<page>)')
 
 Route::set('projectAjax', 'project/ajax/<actiontarget>(/<maintarget>)')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'ajax'
+        'controller'    => 'Project_Ajax',
+        'action'        => 'index'
     ]);
