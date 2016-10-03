@@ -1,18 +1,13 @@
 <?php
 
-class Controller_Project_List extends Controller_DefaultTemplate
+class Controller_Project_List extends Controller_Project 
 {
-    /**
-     * @var Entity_Project
-     */
-    private $_project;
     private $_matchedProjects   = [];
     private $_pagerData         = [];
     private $_needPager         = false;
 
     public function __construct(Request $request, Response $response)
     {
-        $this->_project = new Entity_Project();
         parent::__construct($request, $response);
     }
 
@@ -104,8 +99,7 @@ class Controller_Project_List extends Controller_DefaultTemplate
         $users 			= [];
         $cacheUsers		= $user->getAll();
 
-        foreach ($this->_matchedProjects as $project)
-        {
+        foreach ($this->_matchedProjects as $project) {
             /**
              * @var $project Model_Project
              */
@@ -123,10 +117,10 @@ class Controller_Project_List extends Controller_DefaultTemplate
         $this->context->projects	= $this->_matchedProjects;
         $this->context->needPager   = $this->_needPager;
 
-        $this->setContextToPager();
+        $this->setContextPager();
     }
 
-    protected function setContextToPager()
+    protected function setContextPager()
     {
         /**
          * @var $pagesCountFloat				Lapok szama tizedes szamban. Projektek szama / limit. Pl.: 33 / 10 = 3.3

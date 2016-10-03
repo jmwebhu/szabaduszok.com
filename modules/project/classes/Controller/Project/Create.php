@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Project_Create extends Controller_DefaultTemplate
+class Controller_Project_Create extends Controller_Project
 {
     /**
      * @var Authorization_Project
@@ -12,19 +12,12 @@ class Controller_Project_Create extends Controller_DefaultTemplate
      */
     private $_user;
 
-    /**
-     * @var Entity_Project
-     */
-    private $_project;
-    private $_error = false;
-
     public function __construct(Request $request, Response $response)
     {
-        $this->_project         = new Entity_Project();
+        parent::__construct($request, $response);
+
         $this->_authorization   = new Authorization_Project();
         $this->_user            = Auth::instance()->get_user();
-
-        parent::__construct($request, $response);
     }
 
     public function action_index()
@@ -56,14 +49,7 @@ class Controller_Project_Create extends Controller_DefaultTemplate
             $this->_error = true;
 
         } finally {
-            if ($this->request->method() == Request::POST) {
-                Model_Database::trans_end([!$this->_error]);
-
-                if (!$this->_error) {
-                    header('Location: ' . Route::url('projectProfile', ['slug' => $this->_project->getSlug()]), true, 302);
-                    die();
-                }
-            }
+            $this->defaultFinally();
         }
     }
 

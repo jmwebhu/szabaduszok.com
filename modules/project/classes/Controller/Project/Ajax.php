@@ -1,18 +1,18 @@
 <?php
 
-class Controller_Project_Ajax extends Controller_DefaultTemplate
+class Controller_Project_Ajax extends Controller_Project
 {
     private $_jsonResponse;
-    private $_error = false;
 
     public function __construct(Request $request, Response $response)
     {
+        parent::__construct($request, $response);
+
         if (!$request->is_ajax()) {
             throw new HTTP_Exception_400('Only Ajax');
         }
 
         $this->auto_render = false;
-        parent::__construct($request, $response);
     }
 
     public function action_index()
