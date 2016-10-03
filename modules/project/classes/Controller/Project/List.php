@@ -1,6 +1,6 @@
 <?php
 
-class Controller_Project_List extends Controller_Project 
+class Controller_Project_List extends Controller_Project
 {
     private $_matchedProjects   = [];
     private $_pagerData         = [];
