@@ -22,12 +22,12 @@ class Controller_Project_List extends Controller_DefaultTemplate
             $this->setPagerData();
 
             if ($this->request->method() == Request::POST) {
-                $this->handleListPostRequest();
+                $this->handlePostRequest();
             } else {
-                $this->handleListGetRequest();
+                $this->handleGetRequest();
             }
 
-            $this->setContextToList();
+            $this->setContext();
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
         }
@@ -45,7 +45,7 @@ class Controller_Project_List extends Controller_DefaultTemplate
         ];
     }
 
-    protected function handleListPostRequest()
+    protected function handlePostRequest()
     {
         $this->_needPager = false;
 
@@ -79,7 +79,7 @@ class Controller_Project_List extends Controller_DefaultTemplate
         $this->context->current				= 'simple';
     }
 
-    protected function handleListGetRequest()
+    protected function handleGetRequest()
     {
         $this->_needPager       = true;
         $this->_matchedProjects = $this->_project->getOrderedAndLimited($this->_pagerData['limit'], $this->_pagerData['offset']);
@@ -94,7 +94,7 @@ class Controller_Project_List extends Controller_DefaultTemplate
         $this->context->current				= 'complex';
     }
 
-    protected function setContextToList()
+    protected function setContext()
     {
         $user		= new Model_User();
         $industry	= new Model_Industry();

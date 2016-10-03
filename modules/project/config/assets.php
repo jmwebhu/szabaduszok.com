@@ -19,10 +19,6 @@ AssetCollection::instance()
 AssetManager::instance()
     ->addController('project')
         
-        ->addAction('create')
-            ->addJs(['wysihtml5', 'create'])
-            ->addCss(['wysihtml5'])
-        
         ->addAction('update')
             ->addJs(['wysihtml5', 'create'])
             ->addCss(['wysihtml5'])
@@ -34,4 +30,9 @@ AssetManager::instance()
     ->addController('project_list')
         ->addAction('index')
             ->addJs(['list'])
+
+    ->addController('project_create')
+        ->addAction('index')
+            ->addJs(['wysihtml5', 'create'])
+            ->addCss(['wysihtml5'])
 ;

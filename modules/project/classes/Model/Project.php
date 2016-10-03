@@ -267,7 +267,7 @@ class Model_Project extends ORM implements Subject
         return $builder;
     }
 
-    protected function orderBy($field, $direction = 'ASC')
+    protected function orderBy($field, $direction = 'DESC')
     {
         return $this->baseSelect()->order_by($field, $direction);
     }

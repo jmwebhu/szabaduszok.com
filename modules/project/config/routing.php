@@ -2,8 +2,8 @@
 
 Route::set('projectCreate', 'uj-szabaduszo-projekt')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'create'
+        'controller'    => 'Project_Create',
+        'action'        => 'index'
     ]);
 
 Route::set('projectUpdate', 'szabaduszo-projekt-szerkesztes/<slug>')
