@@ -8,6 +8,14 @@ abstract class Controller_Project extends Controller_DefaultTemplate
     protected $_project;
     protected $_error = false;
 
+    /**
+     * @param Entity_Project $project
+     */
+    public function setProject(Entity_Project $project)
+    {
+        $this->_project = $project;
+    }
+
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);

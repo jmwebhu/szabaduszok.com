@@ -30,7 +30,7 @@ class Authorization_Project extends Authorization
 
 	public function canDelete()
 	{
-		$this->canEdit();
+		return $this->canEdit();
 	}
 
 	public function hasCancel()

@@ -126,7 +126,17 @@ abstract class Entity
         $class = get_class($this);
         $parts = explode('_', $class);
 
-        return Arr::get($parts, 1, '');
+        switch (count($parts)) {
+            case 2: default:
+                $name = Arr::get($parts, 1, '');
+                break;
+
+            case 4:     // Mock_Entity_Project_d0f10a18
+                $name = Arr::get($parts, 2, '');
+                break;
+        }
+
+        return $name;
     }
 
     protected function mapModelToThis()

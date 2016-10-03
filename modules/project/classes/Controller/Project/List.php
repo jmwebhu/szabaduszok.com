@@ -6,6 +6,14 @@ class Controller_Project_List extends Controller_Project
     private $_pagerData         = [];
     private $_needPager         = false;
 
+    /**
+     * @param array $pagerData
+     */
+    public function setPagerData($pagerData)
+    {
+        $this->_pagerData = $pagerData;
+    }
+
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
@@ -14,7 +22,7 @@ class Controller_Project_List extends Controller_Project
     public function action_index()
     {
         try {
-            $this->setPagerData();
+            $this->setPagerDataByRequest();
 
             if ($this->request->method() == Request::POST) {
                 $this->handlePostRequest();
@@ -28,7 +36,7 @@ class Controller_Project_List extends Controller_Project
         }
     }
 
-    protected function setPagerData()
+    protected function setPagerDataByRequest()
     {
         $limit 			= Kohana::$config->load('projects')->get('pagerLimit');
         $currentPage 	= $this->request->param('page') ? $this->request->param('page') : 1;
