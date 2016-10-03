@@ -97,10 +97,7 @@ class Model_Project extends ORM implements Subject
             $post['expiration_date'] = date('Y-m-d', strtotime('+1 month'));
         }
 
-        $user               = Auth::instance()->get_user();
-        $post['user_id']    = $user->user_id;
-        $post['is_paid']    = 1;
-        $post['is_active']  = 1;
+        $post = $this->setDefaultProperties($post);
                 
         $submit = parent::submit($post);
         
@@ -149,6 +146,18 @@ class Model_Project extends ORM implements Subject
                 $this->notifyObserversByInactivate();
                 break;
         }
+    }
+
+    protected function setDefaultProperties(array $post)
+    {
+        $data = $post;
+
+        $user               = Auth::instance()->get_user();
+        $data['user_id']    = $user->user_id;
+        $data['is_paid']    = 1;
+        $data['is_active']  = 1;
+
+        return $data;
     }
 
     protected function notifyObserversByInactivate()

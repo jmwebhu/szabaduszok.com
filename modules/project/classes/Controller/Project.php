@@ -25,12 +25,22 @@ abstract class Controller_Project extends Controller_DefaultTemplate
     public function defaultFinally()
     {
         if ($this->request->method() == Request::POST) {
-            Model_Database::trans_end([!$this->_error]);
-
-            if (!$this->_error) {
-                header('Location: ' . Route::url('projectProfile', ['slug' => $this->_project->getSlug()]), true, 302);
-                die();
-            }
+            $this->handlePostFinally();
         }
+    }
+
+    protected function handlePostFinally()
+    {
+        Model_Database::trans_end([!$this->_error]);
+
+        if (!$this->_error) {
+            $this->redirectToProfile();
+        }
+    }
+
+    protected function redirectToProfile()
+    {
+        header('Location: ' . Route::url('projectProfile', ['slug' => $this->_project->getSlug()]), true, 302);
+        die();
     }
 }
