@@ -55,7 +55,7 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
 
         $this->context->project     = $this->_project->getModel();
         $this->context->title       = 'Szabadúszó projekt ' . $this->_project->getName();
-        $this->context->salary      = Viewhelper_Project::getSalary($this->_project->getModel());
+        $this->context->salary      = Viewhelper_Project::getSalary($this->_project);
 
         $this->setContextAuthorization();
         $this->setContextRelations();

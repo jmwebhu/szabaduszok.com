@@ -70,10 +70,10 @@ class Controller_Project_Update extends Controller_Project
         $this->context->pageTitle   = $this->context->title = Viewhelper_Project::getPageTitle('edit') . $this->_project->getName();
         $this->context->project     = $this->_project->getModel();
 
-        $this->context->email       = Viewhelper_Project::getEmail($this->_user, 'edit', $this->_project->getModel());
-        $this->context->phonenumber = Viewhelper_Project::getPhonenumber($this->_user, 'edit', $this->_project->getModel());
+        $this->context->email       = Viewhelper_Project::getEmail($this->_user, 'edit', $this->_project);
+        $this->context->phonenumber = Viewhelper_Project::getPhonenumber($this->_user, 'edit', $this->_project);
 
-        $this->context->formAction  = Viewhelper_Project::getFormAction('edit', $this->_project->getModel());
+        $this->context->formAction  = Viewhelper_Project::getFormAction('edit', $this->_project);
         $this->context->hasCancel   = (int)$this->_authorization->hasCancel();
         $this->context->user        = $this->_user;
 

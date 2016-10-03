@@ -2,87 +2,74 @@
 
 class Authorization_Project extends Authorization
 {
-	/**
-	 * Lathatja -e a felvitel oldalt
-	 */
 	public function canCreate()
 	{
-		if ($this->before())
-		{
+		if ($this->before()) {
 			return true;
 		}
-		
-		// Csak Megbizo
-		if ($this->_user->type == 2)
-		{
+
+		if ($this->isUserEmployer()) {
 			return true;
 		}
 		
 		return false;
 	}
-	
-	/**
-	 * Van -e szerkesztes
-	 */
+
 	public function canEdit()
 	{
-		if ($this->before())
-		{
+		if ($this->before()) {
 			return true;
 		}
-		
-		// Sajat projektje
-		if ($this->_model->user_id == $this->_user->user_id && $this->_model->is_active == 1)
-		{
+
+		if ($this->isUserOwner() && $this->isProjectActive()) {
 			return true;
 		}
 		
 		return false;
 	}
-	
-	/**
-	 * Van -e torles gomb 
-	 */
+
 	public function canDelete()
 	{
-		if ($this->before())
-		{
-			return true;
-		}
-		
-		// Sajat projektje es aktiv
-		if ($this->_model->user_id == $this->_user->user_id && $this->_model->is_active == 1)
-		{
-			return true;
-		}
-		
-		return false;
+		$this->canEdit();
 	}
-	
-	/**
-	 * Van -e megsem gomb
-	 */
+
 	public function hasCancel()
 	{
-		if ($this->before())
-		{
+		if ($this->before()) {
 			return true;
 		}
-		
-		// Sajat projektje
-		if ($this->_model->user_id == $this->_user->user_id)
-		{
+
+		if ($this->isUserOwner()) {
 			return true;
 		}
 		
 		return false;
 	}
 	
-	public function before()
+	protected function before()
 	{	
-		if ($this->_user->is_admin == 1)
-		{
+		if ($this->isUserAdmin()) {
 			return true;
 		}
 	}
+
+	protected function isUserOwner()
+    {
+        return $this->_model->user_id == $this->_user->user_id;
+    }
+
+    protected function isUserAdmin()
+    {
+        return $this->_user->is_admin;
+    }
+
+    protected function isUserEmployer()
+    {
+        return $this->_user->type == 2;
+    }
+
+    protected function isProjectActive()
+    {
+        return $this->_model->is_active;
+    }
 }
