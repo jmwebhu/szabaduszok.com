@@ -41,8 +41,7 @@ class Controller_Project extends Controller_DefaultTemplate
 		{					
     		$authorization = new Authorization_Project();
     		
-    		if (!$authorization->canCreate())
-    		{
+    		if (!$authorization->canCreate()) {
     			throw new HTTP_Exception_403('Nincs jogosultságod új projektet indítani');
     		}
 			
@@ -291,9 +290,9 @@ class Controller_Project extends Controller_DefaultTemplate
             $this->auto_render = false;
 
             switch ($this->request->param('actiontarget')) {
-                case 'del':
+                case 'inactivate':
                     $project = new Model_Project(Input::post('id'));
-                    $this->_jsonResponse = json_encode($project->del());
+                    $this->_jsonResponse = json_encode($project->inactivate());
 
                     break;
 

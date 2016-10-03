@@ -379,9 +379,9 @@ class Entity_Project extends Entity
         $this->_business->getNameCutOffAt($maxChar);
     }
 
-    public function del()
+    public function inactivate()
     {
-        $this->_model->del();
+        $this->_model->inactivate();
         $this->mapModelToThis();
     }
 

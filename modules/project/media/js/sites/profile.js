@@ -47,7 +47,7 @@ var ProjectProfile = {
 		    title: 'Törlés',
 		    content: 'Biztosan törlöd a projektet?',
 		    confirm: function () {
-		        ProjectProfile.sendDelAjax($this.data('id'));
+		        ProjectProfile.sendInactivateAjax($this.data('id'));
 		    },
 		    cancel: function () {
 		        $this.prop('disabled', false);
@@ -56,7 +56,7 @@ var ProjectProfile = {
 		    cancelButton: 'NEM'
 		});				
 	},
-	sendDelAjax: function (id) {				
+	sendInactivateAjax: function (id) {
 		
 		ProjectProfile.$loading.isLoading({
             text:       "Folyamatban...",
@@ -97,7 +97,7 @@ var ProjectProfile = {
 			window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
 		};
 		
-		ajax.data({id: id}).url(ROOT + 'project/ajax/del').success(success).send();
+		ajax.data({id: id}).url(ROOT + 'project/ajax/inactivate').success(success).send();
 	},
 	/**
 	 * Ertekeles

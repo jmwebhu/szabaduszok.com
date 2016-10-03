@@ -139,4 +139,9 @@ class ORM extends Kohana_ORM
 
         return $models;
     }
+
+    public function clearCache()
+    {
+        AB::delete($this->_table_name, $this->pk())->execute();
+    }
 }

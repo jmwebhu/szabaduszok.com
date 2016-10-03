@@ -13,8 +13,10 @@
  * @package Core
  */
 
-class Model_Project extends ORM
+class Model_Project extends ORM implements Subject
 {
+    const EVENT_INACTIVATE = 'inactivate';
+
     protected $_table_name  = 'projects';
     protected $_primary_key = 'project_id';
 
@@ -138,13 +140,17 @@ class Model_Project extends ORM
         return $this;
     }
     
-    public function del()
+    public function inactivate()
     {
         try {
             $error = false;
             Model_Database::trans_start();
 
-            $this->inactivate();
+            $this->is_active = 0;
+            $this->save();
+
+            $this->clearCache();
+            $this->notifyObservers(self::EVENT_INACTIVATE);
 
         } catch (Exception $ex) {
             $error = true;
@@ -155,20 +161,6 @@ class Model_Project extends ORM
         }
     	
     	return ['error' => $error];
-    }
-
-    protected function inactivate()
-    {
-        $this->is_active = 0;
-        $this->save();
-
-        $this->clearCache();
-        Model_Project_Notification::deleteAllByProject($this);
-    }
-
-    protected function clearCache()
-    {
-        AB::delete($this->_table_name, $this->pk())->execute();
     }
 
     protected function addRelations(array $post)
@@ -280,5 +272,24 @@ class Model_Project extends ORM
         $projectRelations   = Arr::get($relations, $this->project_id, []);
 
         return $projectRelations;
+    }
+
+    public function notifyObservers($event)
+    {
+        switch ($event) {
+            case self::EVENT_INACTIVATE:
+                $this->notifyObserversByInactivate();
+                break;
+        }
+    }
+
+    protected function notifyObserversByInactivate()
+    {
+        foreach ($this->notifications->find_all() as $notification) {
+            /**
+             * @var $notification Observer
+             */
+            $notification->notify(self::EVENT_INACTIVATE);
+        }
     }
 }

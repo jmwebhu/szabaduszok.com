@@ -14,7 +14,7 @@
  * @version 1.0
  */
 
-class Model_Project_Notification extends ORM
+class Model_Project_Notification extends ORM implements Observer
 {
 	protected $_table_name 	= 'projects_notifications';
 	protected $_primary_key = 'project_notification_id';	
@@ -49,8 +49,12 @@ class Model_Project_Notification extends ORM
 		'created_at'				=> ['type' => 'datetime', 'null' => true]
 	];
 
-    public static function deleteAllByProject(Model_Project $project)
+    public function notify($event)
     {
-        DB::delete('projects_notifications')->where('project_id', '=', $project->project_id)->execute();
+        switch ($event) {
+            case Model_Project::EVENT_INACTIVATE:
+                $this->delete();
+                break;
+        }
     }
 }
