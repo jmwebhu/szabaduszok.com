@@ -387,7 +387,7 @@ class Entity_Project extends Entity
 
     public function getSearchTextFromFields()
     {
-        return $this->_model->getSearchTextFromFields();
+        return $this->_business->getSearchTextFromFields();
     }
 
     public function getOrderedAndLimited($limit, $offset)
@@ -413,5 +413,17 @@ class Entity_Project extends Entity
         }
 
         return $entities;
+    }
+
+    public function submit(array $data)
+    {
+        parent::submit($data);
+
+        $this->setSearchText($this->_business->getSearchTextFromFields());
+        $this->save();
+
+        $this->_model->cacheToCollection();
+
+        return $this;
     }
 }

@@ -88,22 +88,6 @@ class Model_Project extends ORM implements Subject
         return $base->where('is_active', '=', 1);
     }
 
-    /**
-     * @todo Business_Project::getShortDescriptionCutOffAt() csere
-     */
-    public function short_description()
-    {
-    	return (strlen($this->short_description) > 100) ? mb_substr($this->short_description, 0, 100) . '...' : $this->short_description;
-    }
-
-    /**
-     * @todo Business_Project::getNameCutOffAt() csere
-     */
-    public function name()
-    {
-    	return (strlen($this->name) > 70) ? mb_substr($this->name, 0, 70) . '...' : $this->name;
-    }
-
     public function submit(array $post)
     {    	           
         $id = Arr::get($post, 'project_id');
@@ -126,11 +110,6 @@ class Model_Project extends ORM implements Subject
 
         $this->saveSlug();
         $this->addRelations($post);
-        
-        $this->search_text = $this->getSearchText();
-        $this->save();
-
-        $this->cacheToCollection();
         
         if (!$id) {
             $user = new Model_User();
@@ -191,38 +170,6 @@ class Model_Project extends ORM implements Subject
         $this->addRelation($post, new Model_Project_Industry(), new Model_Industry());
         $this->addRelation($post, new Model_Project_Profession(), new Model_Profession());
         $this->addRelation($post, new Model_Project_Skill(), new Model_Skill());
-    }       
-
-    public function getSearchTextFromFields()
-    {
-        return $this->getSearchText();
-    }
-
-    /**
-     * @todo Business_Project::getSearchTextFromFields() csere
-     */
-    public function getSearchText()
-    {        
-        $searchText = $this->name . ' ' . $this->short_description . ' ' . $this->long_description . ' ' . $this->email . ' ' . $this->phonenumber .  ' ' . date('Y-m-d') . ' ';               
-        if ($this->user->loaded())
-        {        
-            $searchText .= $this->user->name() . ' ' . $this->user->address_city . ' ';
-            
-            if ($this->user->is_company)
-            {
-            	$searchText .= $this->user->company_name . ' ';
-            }            
-        }
-        
-        $relations = ['industries', 'professions', 'skills'];
-        
-        foreach ($relations as $relation)
-        {
-        	$text = $this->getRelationString($relation);
-        	$searchText .= $text . ' ';
-        }        
-
-        return $searchText;
     }
     
     /**
