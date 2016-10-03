@@ -399,4 +399,9 @@ class Entity_Project extends Entity
     {
         return $this->_model->getCount();
     }
+
+    public function isVisible()
+    {
+        return ($this->_model->loaded() && $this->_model->is_active);
+    }
 }

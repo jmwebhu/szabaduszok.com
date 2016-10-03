@@ -14,8 +14,8 @@ Route::set('projectUpdate', 'szabaduszo-projekt-szerkesztes/<slug>')
     
 Route::set('projectProfile', 'szabaduszo-projekt/<slug>')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'profile'
+        'controller'    => 'Project_Profile',
+        'action'        => 'index'
     ]);
     
 Route::set('projectList', 'szabaduszo-projektek(/<page>)')

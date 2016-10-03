@@ -22,10 +22,6 @@ AssetManager::instance()
         ->addAction('update')
             ->addJs(['wysihtml5', 'create'])
             ->addCss(['wysihtml5'])
-        
-        ->addAction('profile')
-            ->addJs(['barrating', 'profile'])
-            ->addCss(['font-awesome-stars'])
 
     ->addController('project_list')
         ->addAction('index')
@@ -35,4 +31,9 @@ AssetManager::instance()
         ->addAction('index')
             ->addJs(['wysihtml5', 'create'])
             ->addCss(['wysihtml5'])
+
+    ->addController('project_profile')
+        ->addAction('index')
+            ->addJs(['barrating', 'profile'])
+            ->addCss(['font-awesome-stars'])
 ;

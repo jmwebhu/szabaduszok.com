@@ -113,6 +113,14 @@ abstract class Entity
         return $result;
     }
 
+    public function getBySlug($slug)
+    {
+        $this->_model = $this->_model->getBySlug($slug);
+        $this->mapModelToThis();
+
+        return $this;
+    }
+
     protected function getEntityName()
     {
         $class = get_class($this);
