@@ -163,6 +163,25 @@ class Model_Project extends ORM implements Subject
     	return ['error' => $error];
     }
 
+    public function notifyObservers($event)
+    {
+        switch ($event) {
+            case self::EVENT_INACTIVATE:
+                $this->notifyObserversByInactivate();
+                break;
+        }
+    }
+
+    protected function notifyObserversByInactivate()
+    {
+        foreach ($this->notifications->find_all() as $notification) {
+            /**
+             * @var $notification Observer
+             */
+            $notification->notify(self::EVENT_INACTIVATE);
+        }
+    }
+
     protected function addRelations(array $post)
     {
     	$this->removeAll('projects_industries', 'project_id');
@@ -272,24 +291,5 @@ class Model_Project extends ORM implements Subject
         $projectRelations   = Arr::get($relations, $this->project_id, []);
 
         return $projectRelations;
-    }
-
-    public function notifyObservers($event)
-    {
-        switch ($event) {
-            case self::EVENT_INACTIVATE:
-                $this->notifyObserversByInactivate();
-                break;
-        }
-    }
-
-    protected function notifyObserversByInactivate()
-    {
-        foreach ($this->notifications->find_all() as $notification) {
-            /**
-             * @var $notification Observer
-             */
-            $notification->notify(self::EVENT_INACTIVATE);
-        }
     }
 }

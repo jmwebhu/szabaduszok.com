@@ -96,8 +96,15 @@ var ProjectProfile = {
 			
 			window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
 		};
+
+		var error = function (data) {
+			setTimeout(function () {
+				ProjectProfile.$loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
+				ProjectProfile.$loading.show();
+			}, 500);
+		};
 		
-		ajax.data({id: id}).url(ROOT + 'project/ajax/inactivate').success(success).send();
+		ajax.data({id: id}).url(ROOT + 'project/ajax/inactivate').success(success).error(error).send();
 	},
 	/**
 	 * Ertekeles
