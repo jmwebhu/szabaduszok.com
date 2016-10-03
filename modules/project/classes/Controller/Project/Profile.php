@@ -53,7 +53,7 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
         $myRating					= $loggedUser->getMyRating($this->_user);
         $this->context->myRating	= ($myRating) ? $myRating : '-';
 
-        $this->context->project     = $this->_project->getModel();
+        $this->context->project     = $this->_project;
         $this->context->title       = 'Szabadúszó projekt ' . $this->_project->getName();
         $this->context->salary      = Viewhelper_Project::getSalary($this->_project);
 
