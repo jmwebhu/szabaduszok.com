@@ -426,4 +426,12 @@ class Entity_Project extends Entity
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSalariesEqual()
+    {
+        return $this->getSalaryLow() == $this->getSalaryHigh() || !$this->getSalaryHigh();
+    }
 }

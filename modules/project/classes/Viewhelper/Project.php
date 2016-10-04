@@ -53,16 +53,9 @@ class Viewhelper_Project
 	
 	public static function getSalary(Entity_Project $project)
 	{
-		if ($project->getSalaryLow() == $project->getSalaryHigh() || !$project->getSalaryHigh()) {
-			$salary = number_format($project->getSalaryLow(), 0, '.', ' ');
-		} else {
-		    $sb = SB::create(number_format($project->getSalaryLow(), 0, '.', ' '));
-			$sb->append(' - ')->append(number_format($project->getSalaryHigh(), 0, '.', ' '));
-
-            $salary = $sb->get();
-		}		
-		
+        $salary = self::getSalaryByLowHigh($project);
 		$postfix = ' Ft';
+
 		if ($project->getSalaryType() == 1) {
 			$postfix = ' Ft /óra';
 		}
@@ -72,6 +65,24 @@ class Viewhelper_Project
 			'postfix'	=> $postfix
 		];
 	}
+
+    /**
+     * @param Entity_Project $project
+     * @return string
+     */
+	protected static function getSalaryByLowHigh(Entity_Project $project)
+    {
+        if ($project->isSalariesEqual()) {
+            $salary = number_format($project->getSalaryLow(), 0, '.', ' ');
+        } else {
+            $sb = SB::create(number_format($project->getSalaryLow(), 0, '.', ' '));
+            $sb->append(' - ')->append(number_format($project->getSalaryHigh(), 0, '.', ' '));
+
+            $salary = $sb->get();
+        }
+
+        return $salary;
+    }
 
     /**
      * @param string $action
