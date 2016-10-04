@@ -633,7 +633,7 @@ class Controller_User extends Controller_DefaultTemplate
 			}
 
 			$entity = new Entity_Project();
-			$this->context->projects 	= $entity->getEntitesFromModels($projects);
+			$this->context->projects 	= $entity->getEntitiesFromModels($projects);
 			$this->context->relations	= $relations;
 			$this->context->salaries	= $salaries;
 			$this->context->users		= $users;

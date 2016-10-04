@@ -2,6 +2,10 @@
 
 class Project_Search_Factory
 {
+    /**
+     * @param array $data
+     * @return Project_Search
+     */
     public static function makeSearch(array $data)
     {
         // Reszletes kereses

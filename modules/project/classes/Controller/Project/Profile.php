@@ -12,6 +12,10 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
      */
     private $_user;
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function __construct(Request $request, Response $response)
     {
         $this->_project = new Entity_Project();

@@ -364,16 +364,27 @@ class Entity_Project extends Entity
         $this->_search = $search;
     }
 
+    /**
+     * @return array
+     */
     public function search()
     {
         return $this->_search->search();
     }
 
+    /**
+     * @param int $maxChar
+     * @return string
+     */
     public function getShortDescriptionCutOffAt($maxChar = 100)
     {
         return $this->_business->getFieldCutOffAt('short_description', $maxChar);
     }
 
+    /**
+     * @param int $maxChar
+     * @return string
+     */
     public function getNameCutOffAt($maxChar = 70)
     {
         return $this->_business->getFieldCutOffAt('name', $maxChar);
@@ -385,27 +396,45 @@ class Entity_Project extends Entity
         $this->mapModelToThis();
     }
 
+    /**
+     * @return string
+     */
     public function getSearchTextFromFields()
     {
         return $this->_business->getSearchTextFromFields();
     }
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
     public function getOrderedAndLimited($limit, $offset)
     {
         return $this->_model->getOrderedAndLimited($limit, $offset);
     }
 
+    /**
+     * @return int
+     */
     public function getCount()
     {
         return $this->_model->getCount();
     }
 
+    /**
+     * @return bool
+     */
     public function isVisible()
     {
         return ($this->_model->loaded() && $this->_model->is_active);
     }
 
-    public function getEntitesFromModels(array $models)
+    /**
+     * @param array $models
+     * @return array
+     */
+    public function getEntitiesFromModels(array $models)
     {
         $entities = [];
         foreach ($models as $model) {
@@ -415,6 +444,10 @@ class Entity_Project extends Entity
         return $entities;
     }
 
+    /**
+     * @param array $data
+     * @return Entity_Project
+     */
     public function submit(array $data)
     {
         parent::submit($data);

@@ -16,6 +16,10 @@ abstract class Controller_Project extends Controller_DefaultTemplate
         $this->_project = $project;
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);

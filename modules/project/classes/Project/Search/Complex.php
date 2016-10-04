@@ -47,6 +47,12 @@ class Project_Search_Complex implements Project_Search
      */
     private $_relationIdsByProjectIds    = [];
 
+    /**
+     * @param array $searchedIndustryIds
+     * @param array $searchedProfessionIds
+     * @param array $searchedSkillIds
+     * @param $skillRelation
+     */
     public function __construct(
         array $searchedIndustryIds, array $searchedProfessionIds, array $searchedSkillIds, $skillRelation) {
 

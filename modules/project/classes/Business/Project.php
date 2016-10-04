@@ -56,16 +56,10 @@ class Business_Project extends Business
      */
     protected function getUserSearchText()
     {
-        if (!$this->_model->user->loaded()) {
-            return '';
-        }
-
         $sb = SB::create()->append($this->_model->user->name())->append(' ')
             ->append($this->_model->user->address_city)->append(' ');
 
-        if ($this->_model->user->is_company) {
-            $sb->append($this->_model->user->company_name)->append(' ');
-        }
+        $sb->append($this->_model->user->company_name)->append(' ');
 
         return $sb->get();
     }
@@ -80,11 +74,8 @@ class Business_Project extends Business
 
         foreach ($relations as $i => $relation) {
             $relationString = $this->_model->getRelationString($relation);
-            $sb->append($relationString);
 
-            if ($relationString) {
-                $sb->append($this->getSpaceIfIndexNotEqualsCount($i, count($relations)));
-            }
+            $sb->append($relationString)->append($this->getSpaceIfIndexNotEqualsCount($i, count($relations)));
         }
 
         return $sb->get();

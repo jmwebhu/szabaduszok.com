@@ -8,6 +8,10 @@
 
 class Model_ProjectMock extends Model_Project
 {
+    /**
+     * @param string $name
+     * @return string
+     */
     public function getRelationString($name)
     {
     	return $name;

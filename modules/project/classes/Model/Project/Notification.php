@@ -49,6 +49,9 @@ class Model_Project_Notification extends ORM implements Observer
 		'created_at'				=> ['type' => 'datetime', 'null' => true]
 	];
 
+    /**
+     * @param string $event
+     */
     public function notify($event)
     {
         switch ($event) {

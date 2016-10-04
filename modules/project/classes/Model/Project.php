@@ -82,12 +82,20 @@ class Model_Project extends ORM implements Subject
         ]      	
     ];
 
+    /**
+     * @return Array_Builder
+     */
     public function baseSelect()
     {
         $base = parent::baseSelect();
         return $base->where('is_active', '=', 1);
     }
 
+    /**
+     * @param array $post
+     * @return Model_Project
+     * @throws Exception
+     */
     public function submit(array $post)
     {    	           
         $id = Arr::get($post, 'project_id');
@@ -115,7 +123,10 @@ class Model_Project extends ORM implements Subject
 
         return $this;
     }
-    
+
+    /**
+     * @return array ['error']
+     */
     public function inactivate()
     {
         try {
@@ -139,6 +150,9 @@ class Model_Project extends ORM implements Subject
     	return ['error' => $error];
     }
 
+    /**
+     * @param string $event
+     */
     public function notifyObservers($event)
     {
         switch ($event) {
@@ -148,6 +162,10 @@ class Model_Project extends ORM implements Subject
         }
     }
 
+    /**
+     * @param array $post
+     * @return array
+     */
     protected function setDefaultProperties(array $post)
     {
         $data = $post;
@@ -170,6 +188,9 @@ class Model_Project extends ORM implements Subject
         }
     }
 
+    /**
+     * @param array $post ['industries', 'professions', 'skills']
+     */
     protected function addRelations(array $post)
     {
     	$this->removeAll('projects_industries', 'project_id');
@@ -205,13 +226,18 @@ class Model_Project extends ORM implements Subject
     /**
      * Visszaadja, hogy hany aktiv projekt van
      * 
-     * @return int $count
+     * @return int
      */
     public function getCount()
     {
     	return $this->baseSelect()->execute()->count();
     }
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
     public function getOrderedAndLimited($limit, $offset)
     {
         return $this->orderBy('created_at')
@@ -219,6 +245,11 @@ class Model_Project extends ORM implements Subject
             ->execute()->as_array();
     }
 
+    /**
+     * @param bool $execute
+     * @param string $direction
+     * @return Array_Builder|array
+     */
     public function getOrderedByCreated($execute = true, $direction = 'DESC')
     {
         $builder = $this->orderBy('created_at', $direction);
@@ -240,6 +271,9 @@ class Model_Project extends ORM implements Subject
         return $this->baseSelect()->order_by($field, $direction);
     }
 
+    /**
+     * @return array ['industries', 'professions', 'skills']
+     */
     public function getRelations()
     {
         if (!$this->loaded()) {
@@ -253,6 +287,10 @@ class Model_Project extends ORM implements Subject
     	];
     }
 
+    /**
+     * @param ORM $relationModel
+     * @return array
+     */
     protected function getRelation(ORM $relationModel)
     {
         $relations          = $relationModel->getAll();

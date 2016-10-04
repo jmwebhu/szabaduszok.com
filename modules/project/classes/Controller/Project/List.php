@@ -15,6 +15,10 @@ class Controller_Project_List extends Controller_Project
         $this->_pagerData = $pagerData;
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
@@ -108,7 +112,7 @@ class Controller_Project_List extends Controller_Project
 
         $this->context->title 		= 'Szabadúszó projektek, munkák';
 
-        $this->context->projects	= $this->_project->getEntitesFromModels($this->_matchedProjects);
+        $this->context->projects	= $this->_project->getEntitiesFromModels($this->_matchedProjects);
         $this->context->needPager   = $this->_needPager;
 
         $this->setContextPager();
