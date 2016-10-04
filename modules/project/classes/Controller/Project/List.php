@@ -5,6 +5,7 @@ class Controller_Project_List extends Controller_Project
     private $_matchedProjects   = [];
     private $_pagerData         = [];
     private $_needPager         = false;
+    private $_pagesCount;
 
     /**
      * @param array $pagerData
@@ -23,17 +24,20 @@ class Controller_Project_List extends Controller_Project
     {
         try {
             $this->setPagerDataByRequest();
-
-            if ($this->request->method() == Request::POST) {
-                $this->handlePostRequest();
-            } else {
-                $this->handleGetRequest();
-            }
-
+            $this->handleRequest();
             $this->setContext();
 
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
+        }
+    }
+
+    protected function handleRequest()
+    {
+        if ($this->request->method() == Request::POST) {
+            $this->handlePostRequest();
+        } else {
+            $this->handleGetRequest();
         }
     }
 
@@ -100,8 +104,30 @@ class Controller_Project_List extends Controller_Project
 
     protected function setContext()
     {
-        $user		= new Model_User();
+        $this->setContextRelations();
+
+        $this->context->title 		= 'Szabadúszó projektek, munkák';
+
+        $this->context->projects	= $this->_project->getEntitesFromModels($this->_matchedProjects);
+        $this->context->needPager   = $this->_needPager;
+
+        $this->setContextPager();
+    }
+
+    protected function setContextRelations()
+    {
+        $data       = $this->getRelationData();
         $industry	= new Model_Industry();
+
+        $this->context->relations	= $data['relations'];
+        $this->context->salaries	= $data['salaries'];
+        $this->context->users		= $data['users'];
+        $this->context->industries	= $industry->getAll();
+    }
+
+    protected function getRelationData()
+    {
+        $user		= new Model_User();
 
         $relations		= [];
         $salaries		= [];
@@ -117,27 +143,28 @@ class Controller_Project_List extends Controller_Project
             $users[$project->project_id]		= Arr::get($cacheUsers, $project->user_id);
         }
 
-        $this->context->relations	= $relations;
-        $this->context->salaries	= $salaries;
-        $this->context->users		= $users;
-        $this->context->industries	= $industry->getAll();
-        $this->context->title 		= 'Szabadúszó projektek, munkák';
-
-        $this->context->projects	= $this->_project->getEntitesFromModels($this->_matchedProjects);
-        $this->context->needPager   = $this->_needPager;
-
-        $this->setContextPager();
+        return [
+            'relations'     => $relations,
+            'salaries'      => $salaries,
+            'users'         => $users
+        ];
     }
 
     protected function setContextPager()
     {
-        /**
-         * @var $pagesCountFloat				Lapok szama tizedes szamban. Projektek szama / limit. Pl.: 33 / 10 = 3.3
-         * @var $pagesCountInt				    Lapok szama egesz szamban. Pl. 3.3 => 3
-         * @var $pagesCountDecimalRemainder	    A ket ertek kulonbsege, tehat a tizedes maradek. Pl.: 3.3 - 3 = 0.3
-         *
-         * Ha van maradek, akkor egyel tobb lap van
-         */
+        $this->setPagesCount();
+        $this->setContextPages();
+
+        $this->context->pagesCount			= $this->_pagesCount;
+        $this->context->currentPage			= $this->_pagerData['currentPage'];
+        $this->context->countProjects		= count($this->_matchedProjects);
+        $this->context->countAllProjects	= $this->_project->getCount();
+
+        $this->setContextPrevNextPage();
+    }
+
+    protected function setPagesCount()
+    {
         $pagesCountFloat            = $this->_project->getCount() / $this->_pagerData['limit']; // Pl.: 33 / 10 = 3.3
         $pagesCountInt 			    = floor($pagesCountFloat);				                    // 3.3 => 3
         $pagesCountDecimalRemainder	= $pagesCountFloat - $pagesCountInt;		                // 3.3 - 3 = 0.3
@@ -147,29 +174,46 @@ class Controller_Project_List extends Controller_Project
             $pagesCountInt++;
         }
 
+        $this->_pagesCount = $pagesCountInt;
+    }
+
+    protected function setContextPages()
+    {
         $pages = [];
-        for ($i = 1; $i <= $pagesCountInt; $i++) {
+        for ($i = 1; $i <= $this->_pagesCount; $i++) {
             $pages[] = $i;
         }
 
-        $this->context->pagesCount			= $pagesCountInt;
-        $this->context->pages				= $pages;
-        $this->context->currentPage			= $this->_pagerData['currentPage'];
-        $this->context->countProjects		= count($this->_matchedProjects);
-        $this->context->countAllProjects	= $this->_project->getCount();
+        $this->context->pages = $pages;
+    }
 
-        $nextPage = $this->_pagerData['currentPage'] + 1;
-        $prevPage = $this->_pagerData['currentPage'] - 1;
+    protected function setContextPrevNextPage()
+    {
+        $this->context->nextPage = $this->getNextPage();
+        $this->context->prevPage = $this->getPrevPage();
+    }
 
-        if ($this->_pagerData['currentPage'] == $pagesCountInt) {
-            $nextPage = $pagesCountInt;
+    /**
+     * @return int
+     */
+    protected function getNextPage()
+    {
+        if ($this->_pagerData['currentPage'] == $this->_pagesCount) {
+            return $this->_pagesCount;
         }
 
+        return $this->_pagerData['currentPage'] + 1;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getPrevPage()
+    {
         if ($this->_pagerData['currentPage'] == 1) {
-            $prevPage = 1;
+            return 1;
         }
 
-        $this->context->nextPage = $nextPage;
-        $this->context->prevPage = $prevPage;
+        return $this->_pagerData['currentPage'] - 1;
     }
 }

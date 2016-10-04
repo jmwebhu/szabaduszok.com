@@ -28,15 +28,16 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
             $this->setContext();
 
         } catch (HTTP_Exception_404 $exnf) {
-            Session::instance()->set('error', $exnf->getMessage());
-            $this->defaultExceptionRedirect($exnf);
+            $this->handleNotFoundException($exnf);
 
         } catch (Exception $ex) {
-            $this->context->error = __('defaultErrorMessage');
-            Log::instance()->addException($ex);
+            $this->handleException($ex);
         }
     }
 
+    /**
+     * @throws HTTP_Exception_404
+     */
     protected function throwExceptionIfNotVisible()
     {
         if (!$this->_project->isVisible()) {
@@ -44,14 +45,35 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
         }
     }
 
+    /**
+     * @param HTTP_Exception_404 $exnf
+     */
+    protected function handleNotFoundException(HTTP_Exception_404 $exnf)
+    {
+        Session::instance()->set('error', $exnf->getMessage());
+        $this->defaultExceptionRedirect($exnf);
+    }
+
+    /**
+     * @param Exception $ex
+     */
+    protected function handleException(Exception $ex)
+    {
+        $this->context->error = __('defaultErrorMessage');
+        Log::instance()->addException($ex);
+    }
+
     protected function setContext()
     {
         $this->_user                = $this->_user->getById($this->_project->getUserId());
         $this->context->user        = $this->_user;
 
-        $loggedUser 			    = Auth::instance()->get_user();
-        $myRating					= $loggedUser->getMyRating($this->_user);
-        $this->context->myRating	= ($myRating) ? $myRating : '-';
+        $myRating					= Auth::instance()->get_user()->getMyRating($this->_user);
+        $this->context->myRating	= $myRating;
+
+        if (!$myRating) {
+            $this->context->myRating = '-';
+        }
 
         $this->context->project     = $this->_project;
         $this->context->title       = 'Szabadúszó projekt ' . $this->_project->getName();

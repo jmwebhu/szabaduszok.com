@@ -371,12 +371,12 @@ class Entity_Project extends Entity
 
     public function getShortDescriptionCutOffAt($maxChar = 100)
     {
-        return $this->_business->getShortDescriptionCutOffAt($maxChar);
+        return $this->_business->getFieldCutOffAt('short_description', $maxChar);
     }
 
     public function getNameCutOffAt($maxChar = 70)
     {
-        return $this->_business->getNameCutOffAt($maxChar);
+        return $this->_business->getFieldCutOffAt('name', $maxChar);
     }
 
     public function inactivate()

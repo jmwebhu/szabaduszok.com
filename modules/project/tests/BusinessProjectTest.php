@@ -37,30 +37,30 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getShortDescriptionCutOffAt()
+     * @covers Business_Project::getFieldCutOffAt()
      */
-    public function testGetShortDescriptionCutOffAtTooLong()
+    public function testGetFieldCutOffAtShortDescriptionTooLong()
     {
         $this->givenModelWithTestData();
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getShortDescriptionCutOffAt();
+        $actual = $business->getFieldCutOffAt('short_description');
 
-        $expected = 'Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, folyamatos web fejlesztések e...';
+        $expected = 'Lelkes, megbízható, kiegyensúlyozott webprogramozót keresek projektek, foly...';
 
         $this->assertEquals($expected, $actual);
     }
 
     /**
-     * @covers Business_Project::getShortDescriptionCutOffAt()
+     * @covers Business_Project::getFieldCutOffAt()
      */
-    public function testGetShortDescriptionCutOffAtStandardLength()
+    public function testGetFieldCutOffAtShortDescriptionNormalLength()
     {
         $this->givenModelWithTestData();
         $this->_model->short_description = 'Lelkes, megbízható webprogramozót keresek';
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getShortDescriptionCutOffAt();
+        $actual = $business->getFieldCutOffAt('short_description');
 
         $expected = 'Lelkes, megbízható webprogramozót keresek';
 
@@ -68,14 +68,14 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getShortDescriptionCutOffAt()
+     * @covers Business_Project::getFieldCutOffAt()
      */
-    public function testGetShortDescriptionCutOffAtUnique()
+    public function testGetFieldCutOffAtShortDescriptionUnique()
     {
         $this->givenModelWithTestData();
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getShortDescriptionCutOffAt(20);
+        $actual = $business->getFieldCutOffAt('short_description', 20);
 
         $expected = 'Lelkes, megbízható, ...';
 
@@ -83,30 +83,30 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getNameCutOffAt()
+     * @covers Business_Project::getFieldCutOffAt()
      */
-    public function testGetNameCutOffAtTooLong()
+    public function testGetFieldCutOffAtNameTooLong()
     {
         $this->givenModelWithTestData();
         $this->_model->name = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfejlesztések';
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getNameCutOffAt();
+        $actual = $business->getFieldCutOffAt('name');
 
-        $expected = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfe...';
+        $expected = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfejlesz...';
 
         $this->assertEquals($expected, $actual);
     }
 
     /**
-     * @covers Business_Project::getNameShortenedBy()
+     * @covers Business_Project::getFieldCutOffAt()
      */
-    public function testGetNameCutOffAtNormalLong()
+    public function testGetFieldCutOffAtNameNormalLong()
     {
         $this->givenModelWithTestData();
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getNameCutOffAt();
+        $actual = $business->getFieldCutOffAt('name');
 
         $expected = 'Folyamatos webfejlesztések';
 
@@ -114,15 +114,15 @@ class BusinessProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Project::getNameCutOffAt()
+     * @covers Business_Project::getFieldCutOffAt()
      */
-    public function testGetNameCutOffAtUniqe()
+    public function testGetFieldCutOffAtUniqe()
     {
         $this->givenModelWithTestData();
         $this->_model->name = 'Folyamatos webfejlesztések Folyamatos webfejlesztések Folyamatos webfejlesztések';
 
         $business = new Business_Project($this->_model);
-        $actual = $business->getNameCutOffAt(20);
+        $actual = $business->getFieldCutOffAt('name', 20);
 
         $expected = 'Folyamatos webfejles...';
 

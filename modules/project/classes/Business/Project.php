@@ -105,28 +105,16 @@ class Business_Project extends Business
     }
 
     /**
+     * @param string $field
      * @param int $maxChars
-     * @return string
+     * @return mixed|string
      */
-    public function getShortDescriptionCutOffAt($maxChars = 100)
+    public function getFieldCutOffAt($field, $maxChars = 75)
     {
-        if (strlen($this->_model->short_description) > $maxChars) {
-            return mb_substr($this->_model->short_description, 0, $maxChars) . '...';
+        if (strlen($this->_model->{$field}) > $maxChars) {
+            return mb_substr($this->_model->{$field}, 0, $maxChars) . '...';
         }
 
-        return $this->_model->short_description;
-    }
-
-    /**
-     * @param int $maxChars
-     * @return string
-     */
-    public function getNameCutOffAt($maxChars = 70)
-    {
-        if (strlen($this->_model->name) > $maxChars) {
-            return mb_substr($this->_model->name, 0, $maxChars) . '...';
-        }
-
-        return $this->_model->name;
+        return $this->_model->{$field};
     }
 }
