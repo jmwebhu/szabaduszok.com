@@ -2,54 +2,53 @@
 
 class Viewhelper_Project
 {
+    /**
+     * @param string $action
+     * @return string
+     */
 	public static function getPageTitle($action = 'create')
 	{
-		switch ($action) {
-			case 'create': return 'Új Szabadúszó projekt'; break;
-			case 'edit': return 'Szabadúszó projekt szerkesztése: '; break;
-		}
-
-        return 'Új Szabadúszó projekt';
+	    $class = self::getClassByAction($action);
+        return $class::getPageTitle();
 	}
-	
+
+    /**
+     * @param string $action
+     * @return bool
+     */
 	public static function hasIdInput($action = 'create')
 	{
-		switch ($action) {
-			case 'create': return false; break;
-			case 'edit': return true; break;
-		}
+        $class = self::getClassByAction($action);
+        return $class::hasIdInput();
+	}
 
-		return false;
+    /**
+     * @param string $action
+     * @param Entity_Project|null $project
+     * @return string
+     */
+	public static function getFormAction($action = 'create', Entity_Project $project = null)
+	{
+        $class = self::getClassByAction($action);
+        return $class::getFormAction($project);
 	}
 	
-	public static function getFormAction($action = 'create', $project = null)
+	public static function getEmail(Model_User $user = null, $action = 'create', Entity_Project $project = null)
 	{
-		switch ($action) {
-			case 'create': return Route::url('projectCreate'); break;
-			case 'edit': return Route::url('projectUpdate', ['slug' => $project->getSlug()]); break;
-		}
-
-        return Route::url('projectCreate');
+        $class = self::getClassByAction($action);
+        return $class::getEmail($user, $project);
 	}
-	
-	public static function getEmail($user = null, $action = 'create', $project = null)
-	{
-		switch ($action) {
-			case 'create': return $user->email; break;
-			case 'edit': return ($project->getEmail()) ? $project->getEmail() : $user->getEmail(); break;
-		}
 
-        return $user->email;
-	}
-	
-	public static function getPhonenumber($user = null, $action = 'create', $project = null)
+    /**
+     * @param Model_User|null $user
+     * @param string $action
+     * @param Entity_Project|null $project
+     * @return string
+     */
+	public static function getPhonenumber(Model_User $user = null, $action = 'create', Entity_Project $project = null)
 	{
-		switch ($action) {
-			case 'create': return $user->phonenumber; break;
-			case 'edit': return ($project->getPhonenumber()) ? $project->getPhonenumber() : $user->getPhonenumber(); break;
-		}
-
-        return $user->phonenumber;
+        $class = self::getClassByAction($action);
+        return $class::getPhonenumber($user, $project);
 	}
 	
 	public static function getSalary(Entity_Project $project)
@@ -73,8 +72,13 @@ class Viewhelper_Project
 			'postfix'	=> $postfix
 		];
 	}
-	
-	public static function getEditUrl(Entity_Project $project){
-		return Route::url('projectUpdate', ['slug' => $project->getSlug()]);
-	}
+
+    /**
+     * @param string $action
+     * @return string
+     */
+	protected static function getClassByAction($action)
+    {
+        return 'Viewhelper_Project_' . ucfirst($action);
+    }
 }

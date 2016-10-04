@@ -8,15 +8,22 @@ class Business_Project extends Business
      */
     public static function getRelationIdField(ORM $relation)
     {
-        if ($relation instanceof Model_Project_Industry) {
-            return 'industry_id';
-        } elseif ($relation instanceof Model_Project_Profession) {
-            return 'profession_id';
-        } elseif ($relation instanceof Model_Project_Skill) {
-            return 'skill_id';
-        }
+        $model = self::getRelationEndModel($relation);
+        return $model->primary_key();
+    }
 
-        return 'industry_id';
+    /**
+     * @param ORM $relationModel
+     * @return ORM
+     */
+    protected static function getRelationEndModel(ORM $relationModel)
+    {
+        $className          = get_class($relationModel);
+        $parts              = explode('_', $className);
+        $endClassNamePart   = Arr::get($parts, count($parts) - 1, 'Industry');
+        $endClass           = 'Model_' . $endClassNamePart;
+
+        return new $endClass();
     }
 
     /**
@@ -90,11 +97,11 @@ class Business_Project extends Business
      */
     protected function getSpaceIfIndexNotEqualsCount($index, $count)
     {
-        if ($index != ($count - 1)) {
-            return ' ';
+        if ($index == ($count - 1)) {
+            return '';
         }
 
-        return '';
+        return ' ';
     }
 
     /**
@@ -103,9 +110,11 @@ class Business_Project extends Business
      */
     public function getShortDescriptionCutOffAt($maxChars = 100)
     {
-        return (strlen($this->_model->short_description) > $maxChars)
-            ? mb_substr($this->_model->short_description, 0, $maxChars) . '...'
-            : $this->_model->short_description;
+        if (strlen($this->_model->short_description) > $maxChars) {
+            return mb_substr($this->_model->short_description, 0, $maxChars) . '...';
+        }
+
+        return $this->_model->short_description;
     }
 
     /**
@@ -114,8 +123,10 @@ class Business_Project extends Business
      */
     public function getNameCutOffAt($maxChars = 70)
     {
-        return (strlen($this->_model->name) > $maxChars)
-            ? mb_substr($this->_model->name, 0, $maxChars) . '...'
-            : $this->_model->name;
+        if (strlen($this->_model->name) > $maxChars) {
+            return mb_substr($this->_model->name, 0, $maxChars) . '...';
+        }
+
+        return $this->_model->name;
     }
 }

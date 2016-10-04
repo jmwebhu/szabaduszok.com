@@ -129,6 +129,27 @@ class BusinessProjectTest extends Unittest_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @covers Business_Project::getRelationIdField()
+     */
+    public function testGetRelationIdField()
+    {
+        $industry = new Model_Project_Industry();
+        $pk = Business_Project::getRelationIdField($industry);
+
+        $this->assertEquals('industry_id', $pk);
+
+        $profession = new Model_Project_Profession();
+        $pk = Business_Project::getRelationIdField($profession);
+
+        $this->assertEquals('profession_id', $pk);
+
+        $skill = new Model_Project_Skill();
+        $pk = Business_Project::getRelationIdField($skill);
+
+        $this->assertEquals('skill_id', $pk);
+    }
+
     protected function givenModelWithTestData()
     {
         $model = new Model_Project();
