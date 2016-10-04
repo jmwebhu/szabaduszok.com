@@ -23,33 +23,28 @@ class Controller_Project_Create extends Controller_Project
     public function action_index()
     {
         try {
-            if (!$this->_authorization->canCreate()) {
-                throw new HTTP_Exception_403('Nincs jogosultságod új projektet indítani');
-            }
-
+            $this->throwExceptionIfCannotCreate();
             $this->setContext();
-
-            if ($this->request->method() == Request::POST) {
-                $this->handlePostRequest();
-            }
+            $this->handlePostRequest();
 
         } catch (HTTP_Exception_403 $exforbidden) {
-            $exforbidden->setRedirectRoute($this->request->route());
-            $exforbidden->setRedirectSlug($this->request->param('slug'));
-
-            Session::instance()->set('error', $exforbidden->getMessage());
-            $this->defaultExceptionRedirect($exforbidden);
-
-            $this->_error = true;
+            $this->handleForbiddenException($exforbidden);
 
         } catch (Exception $ex) {
-            $this->context->error = __('defaultErrorMessage');
-            Log::instance()->addException($ex);
-
-            $this->_error = true;
+            $this->handleException($ex);
 
         } finally {
             $this->defaultFinally();
+        }
+    }
+
+    /**
+     * @throws HTTP_Exception_403
+     */
+    protected function throwExceptionIfCannotCreate()
+    {
+        if (!$this->_authorization->canCreate()) {
+            throw new HTTP_Exception_403('Nincs jogosultságod új projektet indítani');
         }
     }
 
@@ -67,7 +62,34 @@ class Controller_Project_Create extends Controller_Project
 
     protected function handlePostRequest()
     {
-        Model_Database::trans_start();
-        $this->_project->submit(Input::post_all());
+        if ($this->request->method() == Request::POST) {
+            Model_Database::trans_start();
+            $this->_project->submit(Input::post_all());
+        }
+    }
+
+    /**
+     * @param HTTP_Exception_403 $exforbidden
+     */
+    protected function handleForbiddenException(HTTP_Exception_403 $exforbidden)
+    {
+        $exforbidden->setRedirectRoute($this->request->route());
+        $exforbidden->setRedirectSlug($this->request->param('slug'));
+
+        Session::instance()->set('error', $exforbidden->getMessage());
+        $this->defaultExceptionRedirect($exforbidden);
+
+        $this->_error = true;
+    }
+
+    /**
+     * @param Exception $ex
+     */
+    protected function handleException(Exception $ex)
+    {
+        $this->context->error = __('defaultErrorMessage');
+        Log::instance()->addException($ex);
+
+        $this->_error = true;
     }
 }

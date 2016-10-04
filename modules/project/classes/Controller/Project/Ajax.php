@@ -19,7 +19,7 @@ class Controller_Project_Ajax extends Controller_Project
             $this->callMethod();
 
         } catch (Exception $ex) {
-            $this->catchException($ex);
+            $this->handleException($ex);
 
         } finally {
             Model_Database::trans_end([!$this->_error]);
@@ -41,7 +41,7 @@ class Controller_Project_Ajax extends Controller_Project
     /**
      * @param Exception $ex
      */
-    protected function catchException(Exception $ex)
+    protected function handleException(Exception $ex)
     {
         Log::instance()->addException($ex);
 
