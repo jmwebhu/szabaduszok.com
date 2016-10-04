@@ -8,10 +8,7 @@ class Controller_Project_Ajax extends Controller_Project
     {
         parent::__construct($request, $response);
 
-        if (!$request->is_ajax()) {
-            throw new HTTP_Exception_400('Only Ajax');
-        }
-
+        $this->throwExceptionIfNotAjax();
         $this->auto_render = false;
     }
 
@@ -19,15 +16,10 @@ class Controller_Project_Ajax extends Controller_Project
     {
         try {
             Model_Database::trans_start();
-            $this->switchActiontarget();
+            $this->callMethod();
 
         } catch (Exception $ex) {
-            Log::instance()->addException($ex);
-
-            $this->_error           = true;
-            $this->_jsonResponse    = json_encode(['error' => $this->_error]);
-
-            $this->response->status(500);
+            $this->catchException($ex);
 
         } finally {
             Model_Database::trans_end([!$this->_error]);
@@ -36,23 +28,45 @@ class Controller_Project_Ajax extends Controller_Project
         $this->response->body($this->_jsonResponse);
     }
 
-    protected function switchActiontarget()
+    /**
+     * @throws HTTP_Exception_400
+     */
+    protected function throwExceptionIfNotAjax()
     {
-        switch ($this->request->param('actiontarget')) {
-            case 'inactivate':
-                $this->inactivate();
-                break;
+        if (!$this->request->is_ajax()) {
+            throw new HTTP_Exception_400('Only Ajax');
+        }
+    }
 
-            case 'professionAutocomplete':
-                $this->professionAutocomplete();
-                break;
+    /**
+     * @param Exception $ex
+     */
+    protected function catchException(Exception $ex)
+    {
+        Log::instance()->addException($ex);
 
-            case 'skillAutocomplete':
-                $this->skillAutocomplete();
-                break;
+        $this->_error           = true;
+        $this->_jsonResponse    = json_encode(['error' => $this->_error]);
 
-            default:
-                throw new HTTP_Exception_400('Action target not found');
+        $this->response->status(500);
+    }
+
+    protected function callMethod()
+    {
+        $method = $this->request->param('actiontarget');
+        $this->throwExceptionIfMethodNotExists($method);
+
+        $this->{$method};
+    }
+
+    /**
+     * @param string $method
+     * @throws HTTP_Exception_400
+     */
+    protected function throwExceptionIfMethodNotExists($method)
+    {
+        if (!method_exists($this, $method)) {
+            throw new HTTP_Exception_400('Action target not found');
         }
     }
 

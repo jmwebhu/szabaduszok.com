@@ -32,7 +32,13 @@ class Viewhelper_Project
         $class = self::getClassByAction($action);
         return $class::getFormAction($project);
 	}
-	
+
+    /**
+     * @param Model_User|null $user
+     * @param string $action
+     * @param Entity_Project|null $project
+     * @return string
+     */
 	public static function getEmail(Model_User $user = null, $action = 'create', Entity_Project $project = null)
 	{
         $class = self::getClassByAction($action);
@@ -50,7 +56,11 @@ class Viewhelper_Project
         $class = self::getClassByAction($action);
         return $class::getPhonenumber($user, $project);
 	}
-	
+
+    /**
+     * @param Entity_Project $project
+     * @return array ['salary', 'postfix']
+     */
 	public static function getSalary(Entity_Project $project)
 	{
         $salary = self::getSalaryByLowHigh($project);
