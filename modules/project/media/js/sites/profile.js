@@ -36,8 +36,8 @@ var ProjectProfile = {
     /**
 	 * Torles
 	 */
-	delClick: function () {										
-		
+	delClick: function () {
+	    
 		var $this = $(this);
 		$this.prop('disabled', true);				
 		

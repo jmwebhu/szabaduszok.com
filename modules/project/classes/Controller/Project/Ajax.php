@@ -58,10 +58,8 @@ class Controller_Project_Ajax extends Controller_Project
 
     protected function inactivate()
     {
-        echo Debug::vars('first');
         $project = new Model_Project(Input::post('id'));
         $this->_jsonResponse = json_encode($project->inactivate());
-        echo Debug::vars('last');
     }
 
     protected function professionAutocomplete()
