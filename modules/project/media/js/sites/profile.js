@@ -7,8 +7,7 @@ var ProjectProfile = {
     cacheElements: function () {
         this.$del = $('button#del');
         this.$submit = $('button[type="submit"]');
-        
-        this.$projectId = $('input[name="project_id"]');
+
         this.$userSlug = $('input[name="user_slug"]');
         
         this.$loading = $('span.loading');
@@ -31,7 +30,7 @@ var ProjectProfile = {
     	ProjectProfile.$rating.barrating({
 	        theme: 'fontawesome-stars',
 	        initialRating: ProjectProfile.$initialRating.val(),
-	        readonly: (ProjectProfile.$canRate.val() == '0') ? true : false
+	        readonly: (ProjectProfile.$canRate.val() == '0')
 	    });
     },
     /**
@@ -59,8 +58,7 @@ var ProjectProfile = {
 	sendInactivateAjax: function (id) {
 		
 		ProjectProfile.$loading.isLoading({
-            text:       "Folyamatban...",
-            //position:   'overlay'
+            text:       "Folyamatban..."
         });
 		
 		var ajax = new AjaxBuilder();
@@ -97,7 +95,7 @@ var ProjectProfile = {
 			window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
 		};
 
-		var error = function (data) {
+		var error = function () {
 			setTimeout(function () {
 				ProjectProfile.$loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
 				ProjectProfile.$loading.show();

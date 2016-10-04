@@ -124,6 +124,9 @@ class ORM extends Kohana_ORM
 		return $result;
 	}
 
+    /**
+     * @return Array_Builder
+     */
     public function baseSelect()
     {
         return AB::select()->from($this);

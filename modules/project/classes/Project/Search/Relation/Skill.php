@@ -5,23 +5,32 @@ class Project_Search_Relation_Skill extends Project_Search_Relation
     const SKILL_RELATION_OR         = 1;
     const SKILL_RELATION_AND        = 2;
 
+    /**
+     * @var int
+     */
     protected $_skillRelation;
 
     /**
-     * Project_Search_Relation_Skill constructor.
-     * @param $_skillRelation
+     * @param Model_Project $project
+     * @param array $searchedRelationIds
+     * @param array $relationIdsByProjectIds
+     * @param int $skillRelation
      */
-    public function __construct($_project, array $_searchedRelationIds, array $_relationIdsByProjectIds, $_skillRelation)
+    public function __construct(Model_Project $project, array $searchedRelationIds, array $relationIdsByProjectIds, $skillRelation)
     {
-        $this->_skillRelation = $_skillRelation;
-        parent::__construct($_project, $_searchedRelationIds, $_relationIdsByProjectIds);
+        $this->_skillRelation = $skillRelation;
+        parent::__construct($project, $searchedRelationIds, $relationIdsByProjectIds);
     }
 
+    /**
+     * @return bool
+     */
     public function searchRelationsInOneProject()
     {
-        $projectSkillIds = Arr::get($this->_relationIdsByProjectIds, $this->_project->project_id, []);
+        $projectSkillIds    = Arr::get($this->_relationIdsByProjectIds, $this->_project->project_id, []);
+        $difference         = array_diff($this->_searchedRelationIds, $projectSkillIds);
+        $found              = false;
 
-        $difference = array_diff($this->_searchedRelationIds, $projectSkillIds);
         switch ($this->_skillRelation) {
             case self::SKILL_RELATION_OR:
                 $found = count($difference) != count($this->_searchedRelationIds);

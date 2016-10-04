@@ -4,13 +4,15 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
+        try {
 
-        $entity = new Entity_Project(89);
-        $business = $entity->getBusiness();
+            echo 'try';
+            throw new Exception();
+        } catch (Exception $ex) {
+            echo 'catch';
+        }
 
-        echo Debug::vars($entity->getNameCutOffAt());
-        echo Debug::vars($business->getNameCutOffAt());
-        exit;
+        echo 'return';
     }	
 
     public function action_clearcache()

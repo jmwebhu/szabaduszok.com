@@ -183,12 +183,14 @@ class Model_Project extends ORM implements Subject
     
     /**
      * A projekthez tartozo osszes kapcsolat (iparagak, szakterulat, kepesseg) nevet osszefuzi egy stringbe
+     * @param string $relationName
+     * @return string
      */
     public function getRelationString($relationName)
     {
     	$items = $this->{$relationName}->find_all();
         $sb = SB::create();
-    
+
     	foreach ($items as $i => $item) {
             $sb->append($item->name);
 
@@ -197,7 +199,7 @@ class Model_Project extends ORM implements Subject
             }
     	}
     
-    	return $sb->get();
+    	return $sb->get('');
     }    
 
     /**
@@ -228,6 +230,11 @@ class Model_Project extends ORM implements Subject
         return $builder;
     }
 
+    /**
+     * @param string $field
+     * @param string $direction
+     * @return Array_Builder
+     */
     protected function orderBy($field, $direction = 'DESC')
     {
         return $this->baseSelect()->order_by($field, $direction);

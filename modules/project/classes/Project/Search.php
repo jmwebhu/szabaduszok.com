@@ -12,5 +12,8 @@
 
 interface Project_Search
 {
+    /**
+     * @return array
+     */
     public function search();
 }

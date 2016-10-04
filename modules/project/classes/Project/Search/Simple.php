@@ -7,7 +7,7 @@ class Project_Search_Simple implements Project_Search
 
     /**
      * Project_Search_Simple constructor.
-     * @param $searchTerm
+     * @param string $searchTerm
      */
     public function __construct($searchTerm)
     {
@@ -15,6 +15,9 @@ class Project_Search_Simple implements Project_Search
         $this->_project     = new Model_Project();
     }
 
+    /**
+     * @return array
+     */
     public function search()
     {
         /**

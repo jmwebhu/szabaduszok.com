@@ -124,6 +124,9 @@ class Project_Search_Complex implements Project_Search
         }
     }
 
+    /**
+     * @return array
+     */
     public function search()
     {
         $this->_projects = $this->_currentProject->getOrderedByCreated();
@@ -188,14 +191,22 @@ class Project_Search_Complex implements Project_Search
         }
 
         $this->_matchedProjects = $matchedProjects;
+
+        return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function isEmptySearch()
     {
         return empty($this->_searchedIndustryIds)
             && empty($this->_searchedProfessionIds) && empty($this->_searchedSkillIds);
     }
 
+    /**
+     * @return array
+     */
     protected function getSearchedRelationIdsByType()
     {
         // Egy get_class es switch szebb lenne, de unittest miatt NEM LEHET (Mock_xy osztalyok miatt)
@@ -206,5 +217,7 @@ class Project_Search_Complex implements Project_Search
         } elseif ($this->_searchedRelationModel instanceof Model_Project_Skill) {
             return $this->_searchedSkillIds;
         }
+
+        return $this->_searchedIndustryIds;
     }
 }

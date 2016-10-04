@@ -22,6 +22,28 @@ class StringBuilderTest extends Unittest_TestCase
         $sb->append('!%@|');
         $this->assertEquals($sb->get(), 'elso-masodik,. űáéúőóüöí!%@|');              
     }
+
+    /**
+     * @covers StringBuilder::append
+     */
+    public function testAppendNull()
+    {
+        $sb = new StringBuilder('elso');
+        $sb->append(null);
+
+        $this->assertEquals('elso', $sb->get());
+
+        $sb->append('');
+        $this->assertEquals('elso', $sb->get());
+
+        $sb = new StringBuilder();
+        $sb->append(null);
+
+        $this->assertEquals('', $sb->get());
+
+        $sb->append('');
+        $this->assertEquals('', $sb->get());
+    }
     
     /**
      * @covers StringBuilder::get

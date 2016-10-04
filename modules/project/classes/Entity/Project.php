@@ -364,9 +364,9 @@ class Entity_Project extends Entity
         $this->_search = $search;
     }
 
-    public function search(array $data)
+    public function search()
     {
-        return $this->_search->search($data, new Model_Project());
+        return $this->_search->search();
     }
 
     public function getShortDescriptionCutOffAt($maxChar = 100)

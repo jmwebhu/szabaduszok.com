@@ -14,23 +14,28 @@
 
 abstract class Project_Search_Relation
 {
+    /**
+     * @var Model_Project
+     */
     protected $_project;
     protected $_searchedRelationIds     = [];
     protected $_relationIdsByProjectIds = [];
 
     /**
-     * Project_Search_Relation constructor.
-     * @param $_project
-     * @param array $_searchedRelationIds
-     * @param array $_relationIdsByProjectIds
+     * @param Model_Project $project
+     * @param array $searchedRelationIds
+     * @param array $relationIdsByProjectIds
      */
-    public function __construct($_project, array $_searchedRelationIds, array $_relationIdsByProjectIds)
+    public function __construct(Model_Project $project, array $searchedRelationIds, array $relationIdsByProjectIds)
     {
-        $this->_project                 = $_project;
-        $this->_searchedRelationIds     = $_searchedRelationIds;
-        $this->_relationIdsByProjectIds = $_relationIdsByProjectIds;
+        $this->_project                 = $project;
+        $this->_searchedRelationIds     = $searchedRelationIds;
+        $this->_relationIdsByProjectIds = $relationIdsByProjectIds;
     }
 
+    /**
+     * @return bool
+     */
     public function searchRelationsInOneProject()
     {
         foreach ($this->_searchedRelationIds as $searchedRelationId) {
@@ -44,6 +49,10 @@ abstract class Project_Search_Relation
         return false;
     }
 
+    /**
+     * @param int $searchedRelationId
+     * @return bool
+     */
     protected function searchOneRelationInOneProject($searchedRelationId)
     {
         $projectRelationIds = Arr::get($this->_relationIdsByProjectIds, $this->_project->project_id, []);

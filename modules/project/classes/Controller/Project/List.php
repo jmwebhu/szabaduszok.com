@@ -60,7 +60,7 @@ class Controller_Project_List extends Controller_Project
         }
 
         $this->_project->setSearch(Project_Search_Factory::makeSearch(Input::post_all()));
-        $this->_matchedProjects = $this->_project->search(Input::post_all());
+        $this->_matchedProjects = $this->_project->search();
     }
 
     protected function handleComplexSearch()

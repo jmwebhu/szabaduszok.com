@@ -2,74 +2,45 @@
 
 class Authorization_Project extends Authorization
 {
+    /**
+     * @param ORM|null $model
+     * @param Model_User|null $user
+     */
+    public function __construct(ORM $model = null, Model_User $user = null)
+    {
+        parent::__construct($model, $user);
+        $this->_authorization_role = Authorization_Role_Project_Factory::makeRole($this);
+    }
+
+    /**
+     * @return bool
+     */
 	public function canCreate()
 	{
-		if ($this->before()) {
-			return true;
-		}
-
-		if ($this->isUserEmployer()) {
-			return true;
-		}
-		
-		return false;
+		return $this->_authorization_role->canCreate();
 	}
 
+    /**
+     * @return bool
+     */
 	public function canEdit()
 	{
-		if ($this->before()) {
-			return true;
-		}
-
-		if ($this->isUserOwner() && $this->isProjectActive()) {
-			return true;
-		}
-		
-		return false;
+		return $this->_authorization_role->canEdit();
 	}
 
+    /**
+     * @return boolean
+     */
 	public function canDelete()
 	{
-		return $this->canEdit();
+        return $this->_authorization_role->canDelete();
 	}
 
+    /**
+     * @return bool
+     */
 	public function hasCancel()
 	{
-		if ($this->before()) {
-			return true;
-		}
-
-		if ($this->isUserOwner()) {
-			return true;
-		}
-		
-		return false;
+        return $this->_authorization_role->canEdit();
 	}
-	
-	protected function before()
-	{	
-		if ($this->isUserAdmin()) {
-			return true;
-		}
-	}
-
-	protected function isUserOwner()
-    {
-        return $this->_model->user_id == $this->_user->user_id;
-    }
-
-    protected function isUserAdmin()
-    {
-        return $this->_user->is_admin;
-    }
-
-    protected function isUserEmployer()
-    {
-        return $this->_user->type == 2;
-    }
-
-    protected function isProjectActive()
-    {
-        return $this->_model->is_active;
-    }
 }

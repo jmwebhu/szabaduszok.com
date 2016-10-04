@@ -37,8 +37,8 @@ var ProjectCreate = {
         		"fa": true,
         		"blockquote": false,
         		"link": false, 
-        	    "image": false,
-        	},        	 
+        	    "image": false
+        	}
         });
     }
 };
