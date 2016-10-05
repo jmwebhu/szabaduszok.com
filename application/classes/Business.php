@@ -8,7 +8,6 @@ class Business
     protected $_model;
 
     /**
-     * Business constructor.
      * @param ORM $model
      */
     public function __construct(ORM $model)
@@ -16,6 +15,11 @@ class Business
         $this->_model = $model;
     }
 
+    /**
+     * @param array $models
+     * @param null|string $primaryKey
+     * @return array
+     */
     public static function getIdsFromModelsSingle(array $models, $primaryKey = null)
     {
         $ids = [];
@@ -35,6 +39,11 @@ class Business
         return $ids;
     }
 
+    /**
+     * @param array $models
+     * @param null|string $primaryKey
+     * @return array
+     */
     public static function getIdsFromModelsMulti(array $models, $primaryKey = null)
     {
         $ids = [];
@@ -49,6 +58,11 @@ class Business
         return $ids;
     }
 
+    /**
+     * @param mixed $model
+     * @return bool
+     * @throws Exception
+     */
     protected static function checkModel($model)
     {
         if (!$model instanceof ORM) {
@@ -58,6 +72,11 @@ class Business
         return true;
     }
 
+    /**
+     * @param ORM $model
+     * @param null|string $primaryKey
+     * @return mixed
+     */
     protected static function getIdFromModel(ORM $model, $primaryKey = null)
     {
         if ($primaryKey && self::checkPrimaryKey($model, $primaryKey)) {
@@ -67,6 +86,12 @@ class Business
         return $model->pk();
     }
 
+    /**
+     * @param ORM $model
+     * @param string $primaryKey
+     * @return bool
+     * @throws Exception
+     */
     protected static function checkPrimaryKey(ORM $model, $primaryKey)
     {
         $object = $model->object();

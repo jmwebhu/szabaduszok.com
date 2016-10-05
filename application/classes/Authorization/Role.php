@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Authorization_Role
+ *
+ * @todo nem biztos, hogy szukseg lesz az osztalyra, ez majd a user modul refactolasakor derul ki
+ */
+
 abstract class Authorization_Role
 {
     /**

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Entity_Project
+ *
+ * Felelosseg: Projekt model mappelese, Facade biztositasa Projekt kulonbozo szolgaltatsaihoz
+ */
+
 class Entity_Project extends Entity
 {
     /**

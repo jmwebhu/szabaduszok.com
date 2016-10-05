@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Controller_Project
+ *
+ * Felelosseg: Projekt controllerek ososztalya, altalanos viselkedessel
+ */
+
 abstract class Controller_Project extends Controller_DefaultTemplate
 {
     /**

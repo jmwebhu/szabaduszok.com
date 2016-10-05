@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Controller_Project_Update
+ *
+ * Felelosseg: Projekt szerkesztes keres kiszolgalasa
+ */
+
 class Controller_Project_Update extends Controller_Project
 {
     /**

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Controller_Project_Profile
+ *
+ * Felelosseg: Projekt profil keres kiszolgalasa
+ */
+
 class Controller_Project_Profile extends Controller_DefaultTemplate
 {
     /**

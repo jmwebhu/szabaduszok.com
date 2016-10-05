@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Authorization_Role_Project_Admin
+ *
+ * Felelosseg: admin felhasznalo hozzaferesenek szabalyozasa
+ */
+
 class Authorization_Role_Project_Admin extends Authorization_Role_Project
 {
     /**

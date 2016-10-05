@@ -3,7 +3,7 @@
 /**
  * Class Business_Project_Searchtext
  *
- * Business segedosztaly, ami a kereso szoveg eloallitasaert felel
+ * Felelosseg: Projekt kereso szoveg eloallitasa
  */
 
 class Business_Project_Searchtext

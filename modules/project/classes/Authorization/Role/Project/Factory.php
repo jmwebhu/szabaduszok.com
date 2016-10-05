@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Authorization_Role_Project_Factory
+ *
+ * Eroforrasok hozzaferesehez tartozo 'role' -ok gyartasa
+ */
+
 abstract class Authorization_Role_Project_Factory
 {
     /**

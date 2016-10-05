@@ -3,14 +3,24 @@
 /**
  * Class Project_Search_Complex
  *
- * Reszletes kereses, iparagak, szakteruletek, kepessegek alapjan
- * Iparag, szakterulet mindig VAGY kapcsolattal keres, kepessegek eseten pedig a felhasznalo altal megadott kapcsolatban
+ * Felelosseg: Reszletes kereses
  */
 
 class Project_Search_Complex implements Project_Search
 {
+    /**
+     * @var array
+     */
     private $_searchedIndustryIds   = [];
+
+    /**
+     * @var array
+     */
     private $_searchedProfessionIds = [];
+
+    /**
+     * @var array
+     */
     private $_searchedSkillIds      = [];
 
     /**
@@ -25,10 +35,24 @@ class Project_Search_Complex implements Project_Search
      */
     private $_searchedRelationModel;
 
+    /**
+     * @var int
+     */
     private $_skillRelation;
+
+    /**
+     * @var Model_Project
+     */
     private $_currentProject;
 
+    /**
+     * @var array
+     */
     private $_projects          = [];
+
+    /**
+     * @var array
+     */
     private $_matchedProjects   = [];
 
     /**

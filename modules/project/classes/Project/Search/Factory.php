@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Project_Search_Factory
+ *
+ * PRojekt kereses Strategy gyartas
+ */
+
 class Project_Search_Factory
 {
     /**

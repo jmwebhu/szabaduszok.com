@@ -3,14 +3,7 @@
 /**
  * class Model_Project
  *
- * projects tabla ORM osztalya
- * Ez az osztaly felelos a projektert
- *
- * @author  Joó Martin <m4rt1n.j00@gmail.com>
- * @link    https://docs.google.com/document/d/1vp-eK9MmS44o1XARQYg9z6nqWl1FhyErFHTObJ_Pyg8/edit#
- * @date    2016.03.16
- * @since   1.0
- * @package Core
+ * Felelosseg: Projekt lekerdezesek
  */
 
 class Model_Project extends ORM implements Subject

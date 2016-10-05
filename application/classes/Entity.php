@@ -16,19 +16,37 @@
 
 abstract class Entity
 {
-    // Azok az adattagok, amiket nem kell self::map() -nak masolni
+    /**
+     * @var array Azok az adattagok, amiket nem kell self::map() -nak masolni
+     */
     private static $_disabledPropertiesInMap = ['_model', '_business', '_destinationObject', '_targetObject', '_stdObject'];
 
+    /**
+     * @var ORM
+     */
     protected $_model;
+    /**
+     * @var Business
+     */
     protected $_business;
 
-    // self::map() altal hasznalt forras es cel objektumok
+    /**
+     * @var Object
+     */
     private $_destinationObject = null;
+    /**
+     * @var Object
+     */
     private $_targetObject      = null;
 
-    // Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
+    /**
+     * @var stdClass Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
+     */
     private $_stdObject;
 
+    /**
+     * @param null|int $id
+     */
     public function __construct($id = null)
     {
         $entity             = $this->getEntityName();
@@ -70,9 +88,7 @@ abstract class Entity
     }
 
     /**
-     * Entity mentese elore beallitott ertetkekbol. Betolti az ertekeit a Modelbe es elmenti azt.
-     *
-     * @return bool     true, ha sikerult a muvelet
+     * @return bool
      */
     public function save()
     {
@@ -95,9 +111,8 @@ abstract class Entity
     }
 
     /**
-     * Entity mentese kapott adatokbol. Elmenti a Modelt, es visszatolti az Entity -be
-     *
-     * @return bool     true, ha sikerult a muvelet
+     * @param array $data
+     * @return bool
      */
     public function submit(array $data)
     {
@@ -117,6 +132,10 @@ abstract class Entity
         return $result;
     }
 
+    /**
+     * @param string $slug
+     * @return Entity
+     */
     public function getBySlug($slug)
     {
         $this->_model = $this->_model->getBySlug($slug);
@@ -125,11 +144,18 @@ abstract class Entity
         return $this;
     }
 
+    /**
+     * @param string $name
+     * @return array
+     */
     public function getRelation($name)
     {
         return $this->_model->{$name}->find_all();
     }
 
+    /**
+     * @return string
+     */
     protected function getEntityName()
     {
         $class = get_class($this);
@@ -148,20 +174,26 @@ abstract class Entity
         return $name;
     }
 
+    /**
+     * @return bool
+     */
     protected function mapModelToThis()
     {
         $this->_destinationObject   = $this->_model;
         $this->_targetObject        = $this;
 
-        $this->map();
+        return $this->map();
     }
 
+    /**
+     * @return bool
+     */
     protected function mapThisToModel()
     {
         $this->_destinationObject   = $this;
         $this->_targetObject        = $this->_model;
 
-        $this->map();
+        return $this->map();
     }
 
     /**
@@ -205,6 +237,10 @@ abstract class Entity
         }
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     protected function validateObjects()
     {
         if (!is_object($this->_destinationObject) || !is_object($this->_targetObject)) {
@@ -214,6 +250,9 @@ abstract class Entity
         return true;
     }
 
+    /**
+     * @return stdClass
+     */
     protected function mapThisToStdObject()
     {
         foreach ($this as $key => $value) {
@@ -223,6 +262,10 @@ abstract class Entity
         return $this->_stdObject;
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
     protected function mapOnePropertyToStdObject($key, $value)
     {
         if (!in_array($key, self::$_disabledPropertiesInMap)) {
@@ -230,12 +273,20 @@ abstract class Entity
         }
     }
 
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
     protected function setStdObjectUnprefixedProperty($key, $value)
     {
         $unprefixedKey                         = $this->getUnprefixedPropertyName($key);
         $this->_stdObject->{$unprefixedKey}    = $value;
     }
 
+    /**
+     * @param string $prefixedName
+     * @return string
+     */
     protected function getUnprefixedPropertyName($prefixedName)
     {
         $unprefixedName = $prefixedName;

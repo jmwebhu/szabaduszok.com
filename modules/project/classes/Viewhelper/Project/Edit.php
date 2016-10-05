@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Viewhelper_Project_Edit
+ *
+ * * Felelosseg: update view -ban szereplo segedfuggvenyek
+ */
+
 class Viewhelper_Project_Edit
 {
     /**

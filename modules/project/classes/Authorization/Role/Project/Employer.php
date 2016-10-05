@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Authorization_Role_Project_Employer
+ *
+ * Felelosseg: Megbizo tipusu felhasznalo hozzaferesenek szabalyozasa
+ */
+
 class Authorization_Role_Project_Employer extends Authorization_Role_Project
 {
     /**

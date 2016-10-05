@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Controller_Project_Create
+ *
+ * Felelosseg: Projekt letrehozas keres kiszolgalasa
+ */
+
 class Controller_Project_Create extends Controller_Project
 {
     /**
@@ -12,6 +18,10 @@ class Controller_Project_Create extends Controller_Project
      */
     private $_user;
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class Controller_Project_List
+ *
+ * Felelosseg: Projekt lista keres kiszolgalasa
+ */
 class Controller_Project_List extends Controller_Project
 {
     private $_matchedProjects   = [];

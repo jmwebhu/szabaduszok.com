@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Viewhelper_Project
+ *
+ * Felelosseg: view -ban hasznalt segedfuggvenyek
+ */
+
 class Viewhelper_Project
 {
     /**

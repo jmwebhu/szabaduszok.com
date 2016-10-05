@@ -3,12 +3,19 @@
 /**
  * Class Project_Search_Simple
  *
- * Egyszeru keresesert felelos osztaly
+ * Felelosseg: Egyszeru kereses
  */
 
 class Project_Search_Simple implements Project_Search
 {
+    /**
+     * @var string
+     */
     private $_searchTerm;
+
+    /**
+     * @var Model_Project
+     */
     private $_project;
 
     /**

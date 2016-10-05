@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Viewhelper_Project_Create
+ *
+ * Felelosseg: create view -ban szereplo segedfuggvenyek
+ */
+
 class Viewhelper_Project_Create
 {
     /**

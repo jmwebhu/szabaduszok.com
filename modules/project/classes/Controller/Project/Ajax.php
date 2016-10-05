@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Controller_Project_Ajax
+ *
+ * Felelosseg: Ajax keresek kiszolgalasa
+ */
+
 class Controller_Project_Ajax extends Controller_Project
 {
     private $_jsonResponse;

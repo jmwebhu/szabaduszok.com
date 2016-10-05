@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Authorization_Project
+ *
+ * Felelosseg: projekt hozzaferes szabalyozasa
+ */
+
 class Authorization_Project extends Authorization
 {
     /**

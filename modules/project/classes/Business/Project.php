@@ -3,7 +3,7 @@
 /**
  * Class Business_Project
  *
- * Projekthez tartozo altalanos uzleti logika
+ * Felelosseg: Projekthez tartozo altalanos uzleti logika
  */
 
 class Business_Project extends Business
