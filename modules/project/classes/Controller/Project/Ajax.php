@@ -62,7 +62,7 @@ class Controller_Project_Ajax extends Controller_Project
         $method = $this->request->param('actiontarget');
         $this->throwExceptionIfMethodNotExists($method);
 
-        $this->{$method};
+        $this->{$method}();
     }
 
     /**

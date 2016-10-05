@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Authorization
+ *
+ * Felelosseg: Eroforras hozzaferesek kezelese
+ */
+
 class Authorization
 {
     /**

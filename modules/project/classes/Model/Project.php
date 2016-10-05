@@ -123,8 +123,10 @@ class Model_Project extends ORM implements Subject
     public function inactivate()
     {
         try {
-            $error = false;
+            $error      = false;
+            $message    = '';
             Model_Database::trans_start();
+            $this->throwExceptionIfCannotDelete();
 
             $this->is_active = 0;
             $this->save();
@@ -133,14 +135,31 @@ class Model_Project extends ORM implements Subject
             $this->notifyObservers(self::EVENT_INACTIVATE);
 
         } catch (Exception $ex) {
-            $error = true;
+            $error      = true;
+            $message    = 'Sajnos valami hiba történt...';
             Log::instance()->addException($ex);
+
+        } catch (HTTP_Exception_403 $ex) {
+            $error      = true;
+            $message    = $ex->getMessage();
 
         } finally {
             Model_Database::trans_end([!$error]);
         }
     	
-    	return ['error' => $error];
+    	return ['error' => $error, 'message' => $message];
+    }
+
+    /**
+     * @throws HTTP_Exception_403
+     */
+    protected function throwExceptionIfCannotDelete()
+    {
+        $authorization  = new Authorization_Project($this);
+
+        if (!$authorization->canDelete()) {
+            throw new HTTP_Exception_403('Nincs jogosultságod törölni a projektet');
+        }
     }
 
     /**

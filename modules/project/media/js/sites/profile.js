@@ -67,7 +67,7 @@ var ProjectProfile = {
 			
 			if (data.error) {
 				setTimeout(function () {
-					ProjectProfile.$loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
+					ProjectProfile.$loading.html(data.message).addClass('alert-danger');
 					ProjectProfile.$loading.show();
 				}, 500);				
 				
@@ -77,7 +77,8 @@ var ProjectProfile = {
 				
 				setTimeout(function () {
 					ProjectProfile.$del.prop('disabled', false);
-				}, 2000);				
+				}, 2000);
+
 			} else {
 				setTimeout(function () {
 					ProjectProfile.$loading.html('Sikeres törlés').addClass('alert-success');
@@ -86,10 +87,10 @@ var ProjectProfile = {
 				 
 				setTimeout(function () {
 					ProjectProfile.$loading.hide(); 
-				}, 1000);				
-			}		
-			
-			window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
+				}, 1000);
+
+				window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
+			}
 		};
 
 		var error = function () {
