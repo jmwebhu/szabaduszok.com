@@ -204,13 +204,14 @@ class Model_Project extends ORM implements Subject
     
     /**
      * A projekthez tartozo osszes kapcsolat (iparagak, szakterulat, kepesseg) nevet osszefuzi egy stringbe
+     *
      * @param string $relationName
      * @return string
      */
     public function getRelationString($relationName)
     {
-    	$items = $this->{$relationName}->find_all();
-        $sb = SB::create();
+    	$items  = $this->{$relationName}->find_all();
+        $sb     = SB::create();
 
     	foreach ($items as $i => $item) {
             $sb->append($item->name);
@@ -221,7 +222,7 @@ class Model_Project extends ORM implements Subject
     	}
     
     	return $sb->get('');
-    }    
+    }
 
     /**
      * Visszaadja, hogy hany aktiv projekt van

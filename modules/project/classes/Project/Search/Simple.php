@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Project_Search_Simple
+ *
+ * Egyszeru keresesert felelos osztaly
+ */
+
 class Project_Search_Simple implements Project_Search
 {
     private $_searchTerm;

@@ -5,10 +5,6 @@
  *
  * Reszletes kereses, iparagak, szakteruletek, kepessegek alapjan
  * Iparag, szakterulet mindig VAGY kapcsolattal keres, kepessegek eseten pedig a felhasznalo altal megadott kapcsolatban
- *
- * @author  Joo Martin
- * @since   2.2
- * @version 1.1
  */
 
 class Project_Search_Complex implements Project_Search

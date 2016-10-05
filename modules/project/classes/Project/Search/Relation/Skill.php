@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class Project_Search_Relation_Skill
+ *
+ * Kepessegek keresesere szolgal
+ */
+
 class Project_Search_Relation_Skill extends Project_Search_Relation
 {
     const SKILL_RELATION_OR         = 1;

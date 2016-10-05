@@ -1,7 +1,27 @@
 <?php
 
+/**
+ * Class Business_Project
+ *
+ * Projekthez tartozo altalanos uzleti logika
+ */
+
 class Business_Project extends Business
 {
+    /**
+     * @var Business_Project_Searchtext
+     */
+    protected $_searchText;
+
+    /**
+     * @param ORM $model
+     */
+    public function __construct(ORM $model)
+    {
+        parent::__construct($model);
+        $this->_searchText = new Business_Project_Searchtext($this->_model);
+    }
+
     /**
      * @param ORM $relation
      * @return string
@@ -27,75 +47,6 @@ class Business_Project extends Business
     }
 
     /**
-     * @return string
-     */
-    public function getSearchTextFromFields()
-    {
-        $sb = SB::create($this->getBaseSearchText());
-        $sb->append($this->getUserSearchText());
-        $sb->append($this->getRelationsSearchText());
-
-        return $sb->get();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getBaseSearchText()
-    {
-        return SB::create($this->_model->name)->append(' ')
-            ->append($this->_model->short_description)->append(' ')
-            ->append($this->_model->long_description)->append(' ')
-            ->append($this->_model->email)->append(' ')
-            ->append($this->_model->phonenumber)->append(' ')
-            ->append(date('Y-m-d'))->append(' ')->get();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUserSearchText()
-    {
-        $sb = SB::create()->append($this->_model->user->name())->append(' ')
-            ->append($this->_model->user->address_city)->append(' ');
-
-        $sb->append($this->_model->user->company_name)->append(' ');
-
-        return $sb->get();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRelationsSearchText()
-    {
-        $relations = ['industries', 'professions', 'skills'];
-        $sb = SB::create();
-
-        foreach ($relations as $i => $relation) {
-            $relationString = $this->_model->getRelationString($relation);
-
-            $sb->append($relationString)->append($this->getSpaceIfIndexNotEqualsCount($i, count($relations)));
-        }
-
-        return $sb->get();
-    }
-
-    /**
-     * @param int $index
-     * @param int $count
-     * @return string
-     */
-    protected function getSpaceIfIndexNotEqualsCount($index, $count)
-    {
-        if ($index == ($count - 1)) {
-            return '';
-        }
-
-        return ' ';
-    }
-
-    /**
      * @param string $field
      * @param int $maxChars
      * @return mixed|string
@@ -107,5 +58,13 @@ class Business_Project extends Business
         }
 
         return $this->_model->{$field};
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchTextFromFields()
+    {
+        return $this->_searchText->getSearchTextFromFields();
     }
 }

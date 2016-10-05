@@ -2,6 +2,9 @@
 
 class Project_Search_Relation_Factory
 {
+    /**
+     * @var Project_Search_Complex
+     */
     protected static $_complex;
 
     /**
