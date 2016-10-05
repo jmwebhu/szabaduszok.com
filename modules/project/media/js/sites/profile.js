@@ -33,9 +33,6 @@ var ProjectProfile = {
 	        readonly: (ProjectProfile.$canRate.val() == '0')
 	    });
     },
-    /**
-	 * Torles
-	 */
 	delClick: function () {
 	    
 		var $this = $(this);
@@ -104,9 +101,6 @@ var ProjectProfile = {
 		
 		ajax.data({id: id}).url(ROOT + 'project/ajax/inactivate').success(success).error(error).send();
 	},
-	/**
-	 * Ertekeles
-	 */
 	rateClick: function () {						
 		
 		var $this = $(this);
