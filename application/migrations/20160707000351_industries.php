@@ -20,6 +20,8 @@ class industries extends Migration
 
     $this->add_index('industries', 'name', ['name'], 'normal');    
     $this->sql("ALTER TABLE `industries` ADD UNIQUE (`slug`(50))");
+
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Informatika', 'Marketing', 'Média, PR', 'Menedzsment', 'Adminisztráció', 'Pénzügy', 'Ipar')");
   }
 
   public function down()
