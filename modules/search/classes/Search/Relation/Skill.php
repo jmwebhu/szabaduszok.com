@@ -17,10 +17,7 @@ class Search_Relation_Skill extends Search_Relation
     protected $_skillRelation;
 
     /**
-     * @param ORM $model
-     * @param array $searchedRelationIds
-     * @param array $relationIdsByModelIds
-     * @param int $skillRelation
+     * @param Search_Complex $complex
      */
     public function __construct(Search_Complex $complex)
     {

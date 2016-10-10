@@ -317,12 +317,12 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     protected function andBefore()
     {
-        $this->_skillRelation = Project_Search_Relation_Skill::SKILL_RELATION_AND;
+        $this->_skillRelation = Search_Relation_Skill::SKILL_RELATION_AND;
     }
 
     protected function orBefore()
     {
-        $this->_skillRelation = Project_Search_Relation_Skill::SKILL_RELATION_OR;
+        $this->_skillRelation = Search_Relation_Skill::SKILL_RELATION_OR;
     }
 
     protected function setSearch($relationClassName)
@@ -337,7 +337,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
             ->setConstructorArgs([
                 $this->_searchedIndustries, $this->_searchedProfessions,
                 $this->_searchedSkills, $this->_skillRelation])
-            ->setMethods(['createSearchModel', 'getIndustryRelationModel'])
+            ->setMethods(['createSearchModel', 'getIndustryRelationModel', 'getProfessionRelationModel', 'getSkillRelationModel'])
             ->getMock();
 
         $searchMock->expects($this->any())
@@ -367,6 +367,14 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
         $searchMock->expects($this->any())
             ->method('getIndustryRelationModel')
+            ->will($this->returnValue($relationMock));
+
+        $searchMock->expects($this->any())
+            ->method('getProfessionRelationModel')
+            ->will($this->returnValue($relationMock));
+
+        $searchMock->expects($this->any())
+            ->method('getSkillRelationModel')
             ->will($this->returnValue($relationMock));
 
         $searchMock->setCurrentModel($projectMock);
