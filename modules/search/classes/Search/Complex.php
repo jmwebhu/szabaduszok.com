@@ -208,8 +208,8 @@ abstract class Search_Complex implements Search
         foreach ($models as $model) {
             $this->_currentModel    = $model;
 
-            $this->_searchRelation  = Project_Search_Relation_Factory::makeSearch($this);
-            $found                  = $this->_searchRelation->searchRelationsInOneProject();
+            $this->_searchRelation  = Search_Relation_Factory::makeSearch($this);
+            $found                  = $this->_searchRelation->searchRelationsInOneModel();
 
             if ($found) {
                 $matchedModels[] = $this->_currentModel;

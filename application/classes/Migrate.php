@@ -124,13 +124,13 @@ class Migrate
 	
 	public static function searchText()
 	{
-		$projectModel	= new Model_Project();
+		$projectModel	= new ORM();
 		$projects		= $projectModel->find_all();
 		
 		foreach ($projects as $project)
 		{
 			/**
-			 * @var $project Model_Project
+			 * @var $project ORM
 			 */
 			$project->search_text = $project->getSearchText();
 			$project->save();

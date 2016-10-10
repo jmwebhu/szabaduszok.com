@@ -13,7 +13,7 @@ class ProjectTest extends Unittest_TestCase
     private $_projectSkills         = [];
 
     /**
-     * @covers Model_Project::getRelation()
+     * @covers ORM::getRelation()
      */
     public function testGetRelationIndustriesOk()
     {
@@ -26,7 +26,7 @@ class ProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Model_Project::getRelation()
+     * @covers ORM::getRelation()
      */
     public function testGetRelationIndustriesEmpty()
     {
@@ -39,7 +39,7 @@ class ProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Model_Project::getRelation()
+     * @covers ORM::getRelation()
      */
     public function testGetRelationProfessionsOk()
     {
@@ -52,7 +52,7 @@ class ProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Model_Project::getRelation()
+     * @covers ORM::getRelation()
      */
     public function testGetRelationProfessionsEmpty()
     {
@@ -65,7 +65,7 @@ class ProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Model_Project::getRelation()
+     * @covers ORM::getRelation()
      */
     public function testGetRelationSkillsOk()
     {
@@ -78,7 +78,7 @@ class ProjectTest extends Unittest_TestCase
     }
 
     /**
-     * @covers Model_Project::getRelation()
+     * @covers ORM::getRelation()
      */
     public function testGetRelationSkillsEmpty()
     {
@@ -110,7 +110,7 @@ class ProjectTest extends Unittest_TestCase
     protected function setUpProjects($max)
     {
         for ($i = 1; $i <= $max; $i++) {
-            $project = new Model_Project();
+            $project = new ORM();
             $project->project_id = $i;
 
             $this->_projects[] = $project;

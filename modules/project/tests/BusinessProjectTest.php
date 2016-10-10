@@ -152,7 +152,7 @@ class BusinessProjectTest extends Unittest_TestCase
 
     protected function givenModelWithTestData()
     {
-        $model = new Model_Project();
+        $model = new ORM();
         $model->name = 'Folyamatos webfejlesztések';
         $model->short_description = $this->getShortDescriptionForSearch();
         $model->long_description = $this->getLongDescriptionForSearch();
@@ -165,7 +165,7 @@ class BusinessProjectTest extends Unittest_TestCase
 
     protected function givenMockWithTestData()
     {
-        $mock = new Model_ProjectMock();
+        $mock = new ORMMock();
 
         $mock->name = 'Folyamatos webfejlesztések';
         $mock->short_description = $this->getShortDescriptionForSearch();

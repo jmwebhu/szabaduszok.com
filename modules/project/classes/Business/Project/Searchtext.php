@@ -9,14 +9,14 @@
 class Business_Project_Searchtext
 {
     /**
-     * @var Model_Project
+     * @var ORM
      */
     private $_model;
 
     /**
-     * @param Model_Project $model
+     * @param ORM $model
      */
-    public function __construct(Model_Project $model)
+    public function __construct(ORM $model)
     {
         $this->_model = $model;
     }

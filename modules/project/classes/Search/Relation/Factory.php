@@ -1,73 +1,67 @@
 <?php
 
-class Project_Search_Relation_Factory
+abstract class Search_Relation_Factory
 {
     /**
-     * @var _Search_Complex
+     * @var Search_Complex
      */
     protected static $_complex;
 
+    protected static $_relationModel;
+
     /**
-     * @param _Search_Complex $complex
-     * @return Project_Search_Relation
+     * @return bool
      */
-    public static function makeSearch(_Search_Complex $complex)
+    protected static function isIndustry()
     {
-        try {
-            self::$_complex = $complex;
-            $relation = $complex->getSearchedRelationModel();
-
-            if ($relation instanceof Model_Project_Industry) {
-                $search = self::makeForIndustry();
-
-            } elseif ($relation instanceof Model_Project_Profession) {
-                $search = self::makeForProfession();
-
-            } elseif ($relation instanceof Model_Project_Skill) {
-                $search = self::makeForSkill();
-            } else {
-                $search = self::makeForIndustry();
-
-                throw new Exception('Project_Search_Relation not found for class: ' . get_class($relation));
-            }
-        } catch (Exception $ex) {
-            Log::instance()->addException($ex);
-        }
-
-        return $search;
+        return (self::$_relationModel instanceof Model_Project_Industry);
     }
 
     /**
-     * @return Project_Search_Relation_Industry
+     * @return bool
+     */
+    protected static function isProfession()
+    {
+        return (self::$_relationModel instanceof Model_Project_Profession);
+    }
+
+    /**
+     * @return bool
+     */
+    protected static function isSkill()
+    {
+        return (self::$_relationModel instanceof Model_Project_Skill);
+    }
+
+    /**
+     * @return Search_Relation_Industry
      */
     protected static function makeForIndustry()
     {
-        return new Project_Search_Relation_Industry(
-            self::$_complex->getCurrentProject(),
+        return new Search_Relation_Industry(
+            self::$_complex->getCurrentModel(),
             self::$_complex->getSearchedRelationIds(),
-            self::$_complex->getRelationIdsByProjectIds());
+            self::$_complex->getRelationIdsByModelIds());
     }
-
     /**
-     * @return Project_Search_Relation_Profession
+     * @return Search_Relation_Profession
      */
     protected static function makeForProfession()
     {
-        return new Project_Search_Relation_Profession(
-            self::$_complex->getCurrentProject(),
+        return new Search_Relation_Profession(
+            self::$_complex->getCurrentModel(),
             self::$_complex->getSearchedRelationIds(),
-            self::$_complex->getRelationIdsByProjectIds());
+            self::$_complex->getRelationIdsByModelIds());
     }
-
     /**
-     * @return Project_Search_Relation_Skill
+     * @return Search_Relation_Skill
      */
     protected static function makeForSkill()
     {
-        return new Project_Search_Relation_Skill(
-            self::$_complex->getCurrentProject(),
+        return new Search_Relation_Skill(
+            self::$_complex->getCurrentModel(),
             self::$_complex->getSearchedRelationIds(),
-            self::$_complex->getRelationIdsByProjectIds(),
+            self::$_complex->getRelationIdsByModelIds(),
             self::$_complex->getSkillRelation());
     }
 }

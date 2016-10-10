@@ -145,7 +145,7 @@ class Controller_Project_List extends Controller_Project
 
         foreach ($this->_matchedProjects as $project) {
             /**
-             * @var $project Model_Project
+             * @var $project ORM
              */
             $relations[$project->project_id]    = $project->getRelations();
             $salaries[$project->project_id]     = Viewhelper_Project::getSalary(new Entity_Project($project->project_id));

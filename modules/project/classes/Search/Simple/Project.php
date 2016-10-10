@@ -9,11 +9,11 @@
 class Search_Simple_Project extends Search_Simple
 {
     /**
-     * @return Model_Project
+     * @return ORM
      */
     public function createSearchModel()
     {
-        return new Model_Project();
+        return new ORM();
     }
 
     /**

@@ -6,7 +6,7 @@
  * Model_Project -hez tartozo Mock osztaly unittestek reszere
  */
 
-class Model_ProjectMock extends Model_Project
+class ORMMock extends ORM
 {
     /**
      * @param string $name

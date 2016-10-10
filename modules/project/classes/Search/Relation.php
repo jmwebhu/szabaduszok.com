@@ -15,18 +15,18 @@
 abstract class Project_Search_Relation
 {
     /**
-     * @var Model_Project
+     * @var ORM
      */
     protected $_project;
     protected $_searchedRelationIds     = [];
     protected $_relationIdsByProjectIds = [];
 
     /**
-     * @param Model_Project $project
+     * @param ORM $project
      * @param array $searchedRelationIds
      * @param array $relationIdsByProjectIds
      */
-    public function __construct(Model_Project $project, array $searchedRelationIds, array $relationIdsByProjectIds)
+    public function __construct(ORM $project, array $searchedRelationIds, array $relationIdsByProjectIds)
     {
         $this->_project                 = $project;
         $this->_searchedRelationIds     = $searchedRelationIds;

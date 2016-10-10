@@ -78,7 +78,7 @@ class Controller_Project_Ajax extends Controller_Project
 
     protected function inactivate()
     {
-        $project = new Model_Project(Input::post('id'));
+        $project = new ORM(Input::post('id'));
         $this->_jsonResponse = json_encode($project->inactivate());
     }
 

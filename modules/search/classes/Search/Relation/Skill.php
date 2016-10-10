@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class Project_Search_Relation_Skill
+ * Class Search_Relation_Skill
  *
  * Kepessegek keresesere szolgal
  */
 
-class Project_Search_Relation_Skill extends Project_Search_Relation
+class Search_Relation_Skill extends Search_Relation
 {
     const SKILL_RELATION_OR         = 1;
     const SKILL_RELATION_AND        = 2;
@@ -17,24 +17,24 @@ class Project_Search_Relation_Skill extends Project_Search_Relation
     protected $_skillRelation;
 
     /**
-     * @param ORM $project
+     * @param ORM $model
      * @param array $searchedRelationIds
-     * @param array $relationIdsByProjectIds
+     * @param array $relationIdsByModelIds
      * @param int $skillRelation
      */
-    public function __construct(ORM $project, array $searchedRelationIds, array $relationIdsByProjectIds, $skillRelation)
+    public function __construct(ORM $model, array $searchedRelationIds, array $relationIdsByModelIds, $skillRelation)
     {
         $this->_skillRelation = $skillRelation;
-        parent::__construct($project, $searchedRelationIds, $relationIdsByProjectIds);
+        parent::__construct($model, $searchedRelationIds, $relationIdsByModelIds);
     }
 
     /**
      * @return bool
      */
-    public function searchRelationsInOneProject()
+    public function searchRelationsInOneModel()
     {
-        $projectSkillIds    = Arr::get($this->_relationIdsByProjectIds, $this->_project->project_id, []);
-        $difference         = array_diff($this->_searchedRelationIds, $projectSkillIds);
+        $modelSkillIds      = Arr::get($this->_relationIdsByModelIds, $this->_model->pk(), []);
+        $difference         = array_diff($this->_searchedRelationIds, $modelSkillIds);
         $found              = false;
 
         switch ($this->_skillRelation) {

@@ -6,7 +6,7 @@
  * Felelosseg: Projekt lekerdezesek
  */
 
-class Model_Project extends ORM implements Subject
+class ORM extends ORM implements Subject
 {
     const EVENT_INACTIVATE = 'inactivate';
 
@@ -86,7 +86,7 @@ class Model_Project extends ORM implements Subject
 
     /**
      * @param array $post
-     * @return Model_Project
+     * @return ORM
      * @throws Exception
      */
     public function submit(array $post)

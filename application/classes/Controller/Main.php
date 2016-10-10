@@ -8,7 +8,7 @@ class Controller_Main extends Controller_DefaultTemplate
 		$this->context->noHeader = true;
 		
 		$user = new Model_User();
-		$project = new Model_Project();
+		$project = new ORM();
 		
 		$this->context->countOfFreelancers		= $user->getCountByType(1);
 		$this->context->countOfProjectOwners	= $user->getCountByType(2);

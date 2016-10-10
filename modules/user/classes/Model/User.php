@@ -931,10 +931,10 @@ class Model_User extends Model_Auth_User
     /**
      * Letrehozza a projekt ertesitoket
      *      
-     * @param Model_Project $project    Uj projekt, amirol az ertesitest kell kuldeni
+     * @param ORM $project    Uj projekt, amirol az ertesitest kell kuldeni
      * @param mixed $users              Azok a felhasznalok, akiknek ertesitest kell kuldeni az uj projektrol. Nme kotelezo. Ha nincs megadva lekerdezi
      */
-    public function addToProjectNotification(Model_Project $project, $users = null)
+    public function addToProjectNotification(ORM $project, $users = null)
     {
         // Nincsenek felhasznalok
         if (!$users || !is_array($users))
@@ -960,10 +960,10 @@ class Model_User extends Model_Auth_User
     /**
      * Visszaadja azokat a felhasznalokat, akiknek ertesítest kell kuldeni a kapoot projektrol
      *
-     * @param Model_Project $project
+     * @param ORM $project
      * @param array         $users
      */
-    public function getUsersByProjectNotification(Model_Project $project, array $users)
+    public function getUsersByProjectNotification(ORM $project, array $users)
     {    	
         $projectSkillIds    = $project->getRelationIds('skills');        
         $usersToNotify      = [];
@@ -1183,7 +1183,7 @@ class Model_User extends Model_Auth_User
      */
     public function getProjects()
     {
-    	$project 	= new Model_Project();
+    	$project 	= new ORM();
     	$projects	= $project->getAll();
 
     	$result		= AB::select()->from($projects)->where('is_active', '=', 1)->and_where('user_id', '=', $this->user_id)->order_by('created_at', 'DESC')->execute()->as_array();

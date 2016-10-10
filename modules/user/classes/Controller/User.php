@@ -614,7 +614,7 @@ class Controller_User extends Controller_DefaultTemplate
 				
 			$logged = Auth::instance()->get_user();
 			
-			$project	= new Model_Project();
+			$project	= new ORM();
 			$industry	= new Model_Industry();
 			
 			$projects 	= $user->getProjects();
@@ -625,7 +625,7 @@ class Controller_User extends Controller_DefaultTemplate
 			foreach ($projects as $pr)
 			{
                 /**
-                 * @var $pr Model_Project
+                 * @var $pr ORM
                  */
 				$relations[$pr->project_id]	= $pr->getRelations();
 				$salaries[$pr->project_id]	= Viewhelper_Project::getSalary(new Entity_Project($pr->project_id));

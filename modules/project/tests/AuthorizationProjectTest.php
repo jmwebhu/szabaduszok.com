@@ -235,28 +235,28 @@ class AuthorozationProjectTest extends Unittest_TestCase
 
         $this->_employers[] = $employer5;
 
-        $project1 = new Model_Project();
+        $project1 = new ORM();
         $project1->project_id = 1;
         $project1->user_id = 4;
         $project1->is_active = 1;
 
         $this->_projects[] = $project1;
 
-        $project2 = new Model_Project();
+        $project2 = new ORM();
         $project2->project_id = 2;
         $project2->user_id = 4;
         $project2->is_active = 0;
 
         $this->_projects[] = $project2;
 
-        $project3 = new Model_Project();
+        $project3 = new ORM();
         $project3->project_id = 3;
         $project3->user_id = 5;
         $project3->is_active = 1;
 
         $this->_projects[] = $project3;
 
-        $project4 = new Model_Project();
+        $project4 = new ORM();
         $project4->project_id = 4;
         $project4->user_id = 5;
         $project4->is_active = 0;

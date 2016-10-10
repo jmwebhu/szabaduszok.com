@@ -3,10 +3,6 @@
 /**
  * Class Search_Relation
  *
- * Projekt relaciok keresesere szolgalo Strategy alaposztaly.
- * A konkret peldanyok ebbol orokolnek, vannak akik nem irjak felul az alapertelmezett viselkedest,
- * ezert van interface helyett abstract osztaly, megvalositott metodusokkal.
- *
  * @author Joo Martin
  * @since 2.2
  * @version 1.0
@@ -15,31 +11,31 @@
 abstract class Search_Relation
 {
     /**
-     * @var Model_Project
+     * @var ORM
      */
-    protected $_project;
+    protected $_model;
     protected $_searchedRelationIds     = [];
-    protected $_relationIdsByProjectIds = [];
+    protected $_relationIdsByModelIds   = [];
 
     /**
-     * @param Model_Project $project
+     * @param ORM $model
      * @param array $searchedRelationIds
-     * @param array $relationIdsByProjectIds
+     * @param array $relationIdsByModelIds
      */
-    public function __construct(Model_Project $project, array $searchedRelationIds, array $relationIdsByProjectIds)
+    public function __construct(ORM $model, array $searchedRelationIds, array $relationIdsByModelIds)
     {
-        $this->_project                 = $project;
+        $this->_model                   = $model;
         $this->_searchedRelationIds     = $searchedRelationIds;
-        $this->_relationIdsByProjectIds = $relationIdsByProjectIds;
+        $this->_relationIdsByModelIds   = $relationIdsByModelIds;
     }
 
     /**
      * @return bool
      */
-    public function searchRelationsInOneProject()
+    public function searchRelationsInOneModel()
     {
         foreach ($this->_searchedRelationIds as $searchedRelationId) {
-            $found = $this->searchOneRelationInOneProject($searchedRelationId);
+            $found = $this->searchOneRelationInOneModel($searchedRelationId);
 
             if ($found) {
                 return true;
@@ -53,9 +49,9 @@ abstract class Search_Relation
      * @param int $searchedRelationId
      * @return bool
      */
-    protected function searchOneRelationInOneProject($searchedRelationId)
+    protected function searchOneRelationInOneModel($searchedRelationId)
     {
-        $projectRelationIds = Arr::get($this->_relationIdsByProjectIds, $this->_project->project_id, []);
-        return in_array($searchedRelationId, $projectRelationIds);
+        $modelRelationIds = Arr::get($this->_relationIdsByModelIds, $this->_model->pk(), []);
+        return in_array($searchedRelationId, $modelRelationIds);
     }
 }

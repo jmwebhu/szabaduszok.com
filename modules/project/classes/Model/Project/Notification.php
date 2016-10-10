@@ -41,7 +41,7 @@ class Model_Project_Notification extends ORM implements Observer
     public function notify($event)
     {
         switch ($event) {
-            case Model_Project::EVENT_INACTIVATE:
+            case ORM::EVENT_INACTIVATE:
                 $this->delete();
                 break;
         }
