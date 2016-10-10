@@ -38,4 +38,12 @@ class Model_Project_Profession extends Model_Relation
     {
         return '_searchedProfessionIds';
     }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKeyForEndModel()
+    {
+        return 'profession_id';
+    }
 }

@@ -195,7 +195,9 @@ abstract class Search_Complex implements Search
          */
 
         $relationModelsByModelIds     = $this->_searchedRelationModel->getAll();
-        $this->_relationIdsByModelIds = Business::getIdsFromModelsMulti($relationModelsByModelIds);
+        $this->_relationIdsByModelIds = Business::getIdsFromModelsMulti(
+            $relationModelsByModelIds,
+            $relationModel->getPrimaryKeyForEndModel());
 
         // Elso keresesnel a matchedModels ures lesz, aztan beletesszuk a talalatokat es a tobbi keresnel ezeket szukiti tovabb
         $this->_matchedModels   = (empty($this->_matchedModels)) ? $this->_models : $this->_matchedModels;

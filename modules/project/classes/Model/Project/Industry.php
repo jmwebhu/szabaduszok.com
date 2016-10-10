@@ -38,4 +38,12 @@ class Model_Project_Industry extends Model_Relation
     {
         return '_searchedIndustryIds';
     }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKeyForEndModel()
+    {
+        return 'industry_id';
+    }
 }

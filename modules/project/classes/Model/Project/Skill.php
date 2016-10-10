@@ -38,4 +38,12 @@ class Model_Project_Skill extends Model_Relation
     {
         return '_searchedSkillIds';
     }
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKeyForEndModel()
+    {
+        return 'skill_id';
+    }
 }

@@ -7,6 +7,16 @@ abstract class Model_Relation extends ORM
      * @var string
      */
     protected $_relationFk;
+
+    /**
+     * A kapcsolat vegpondjanak elsodleges kulcsat adja vissza. Pl.: Model_Project_Industry eseten a
+     * Model_Industry elsodleges kulcsat, industry_id
+     *
+     * unittestben nem mukodik az ORM->pk()
+     * @return string
+     */
+    abstract public function getPrimaryKeyForEndModel();
+
     /**
      * Visszaadja a kapcsolat vegpontjahoz tartozo ORM objektumot.
      * Pl.: Model_Project_Industry eseten visszaad egy Model_Industry peldanyt
