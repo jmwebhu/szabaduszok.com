@@ -2,6 +2,7 @@
 
 class Model_Project_Industry extends Model_Relation
 {
+    protected $_relationFk = 'project_id';
     protected $_table_name  = 'projects_industries';
     protected $_primary_key = 'id';
 

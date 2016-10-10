@@ -197,6 +197,8 @@ abstract class Search_Complex implements Search
          */
 
         $relationModelsByModelIds     = $this->_searchedRelationModel->getAll();
+        echo Debug::vars($relationModelsByModelIds);
+        exit;
         $this->_relationIdsByModelIds = Business::getIdsFromModelsMulti(
             $relationModelsByModelIds,
             $this->_searchedRelationModel->primary_key());

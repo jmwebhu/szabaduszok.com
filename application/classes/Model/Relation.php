@@ -3,6 +3,11 @@
 abstract class Model_Relation extends ORM
 {
     /**
+     * Kapcsolat idegenkulcs neve, pl.: 'project_id'
+     * @var string
+     */
+    protected $_relationFk;
+    /**
      * Visszaadja a kapcsolat vegpontjahoz tartozo ORM objektumot.
      * Pl.: Model_Project_Industry eseten visszaad egy Model_Industry peldanyt
      *
@@ -31,12 +36,12 @@ abstract class Model_Relation extends ORM
         $collection = [];
 
         foreach ($models as $model) {
-            if (!isset($collection[$model->pk()])) {
-                $collection[$model->pk()] = [];
+            if (!isset($collection[$model->{$this->_relationFk}])) {
+                $collection[$model->{$this->_relationFk}] = [];
             }
 
             $relationName = $this->getRelationNameFromClassName();
-            $collection[$model->pk()][] = $model->{$relationName};
+            $collection[$model->{$this->_relationFk}][] = $model->{$relationName};
         }
 
         $cache->set($this->_table_name, $collection);

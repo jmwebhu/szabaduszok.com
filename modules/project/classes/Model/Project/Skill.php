@@ -2,6 +2,7 @@
 
 class Model_Project_Skill extends Model_Relation
 {
+    protected $_relationFk = 'project_id';
 	protected $_table_name = 'projects_skills';
     protected $_primary_key = 'id';
 	
