@@ -96,7 +96,7 @@ class BusinessTest extends Unittest_TestCase
     protected function setUpProjects($max)
     {
         for ($i = 1; $i <= $max; $i++) {
-            $project = new ORM();
+            $project = new Model_Project();
             $project->project_id = $i;
 
             $this->_projects[] = $project;
@@ -114,7 +114,7 @@ class BusinessTest extends Unittest_TestCase
 
     protected function setUpProjectsMulti()
     {
-        $project = new ORM();
+        $project = new Model_Project();
         $project->project_id = 14;
 
         $this->_projectsMulti = [

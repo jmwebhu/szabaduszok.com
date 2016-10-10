@@ -9,9 +9,9 @@
 class Search_Factory_Project implements Search_Factory
 {
     /**
-     * @param array $data
-     * @return Search
-     */
+* @param array $data
+* @return Search
+*/
     public static function makeSearch(array $data)
     {
         // Reszletes kereses

@@ -110,7 +110,7 @@ class ProjectTest extends Unittest_TestCase
     protected function setUpProjects($max)
     {
         for ($i = 1; $i <= $max; $i++) {
-            $project = new ORM();
+            $project = new Model_Project();
             $project->project_id = $i;
 
             $this->_projects[] = $project;

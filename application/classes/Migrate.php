@@ -124,7 +124,7 @@ class Migrate
 	
 	public static function searchText()
 	{
-		$projectModel	= new ORM();
+		$projectModel	= new Model_Project();
 		$projects		= $projectModel->find_all();
 		
 		foreach ($projects as $project)

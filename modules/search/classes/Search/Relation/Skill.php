@@ -22,10 +22,10 @@ class Search_Relation_Skill extends Search_Relation
      * @param array $relationIdsByModelIds
      * @param int $skillRelation
      */
-    public function __construct(ORM $model, array $searchedRelationIds, array $relationIdsByModelIds, $skillRelation)
+    public function __construct(Search_Complex $complex)
     {
-        $this->_skillRelation = $skillRelation;
-        parent::__construct($model, $searchedRelationIds, $relationIdsByModelIds);
+        $this->_skillRelation = $complex->getSkillRelation();
+        parent::__construct($complex);
     }
 
     /**
@@ -33,13 +33,17 @@ class Search_Relation_Skill extends Search_Relation
      */
     public function searchRelationsInOneModel()
     {
-        $modelSkillIds      = Arr::get($this->_relationIdsByModelIds, $this->_model->pk(), []);
-        $difference         = array_diff($this->_searchedRelationIds, $modelSkillIds);
+        $model              = $this->_complexSearch->getCurrentModel();
+        $modelSkillIds      = Arr::get(
+            $this->_complexSearch->getRelationIdsByModelIds(),
+            $model->{$this->_complexSearch->getModelPrimaryKey()}, []);
+
+        $difference         = array_diff($this->_complexSearch->getSearchedRelationIds(), $modelSkillIds);
         $found              = false;
 
         switch ($this->_skillRelation) {
             case self::SKILL_RELATION_OR:
-                $found = count($difference) != count($this->_searchedRelationIds);
+                $found = count($difference) != count($this->_complexSearch->getSearchedRelationIds());
                 break;
 
             case self::SKILL_RELATION_AND:
@@ -48,5 +52,13 @@ class Search_Relation_Skill extends Search_Relation
         }
 
         return $found;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelPk()
+    {
+        return 'skill_id';
     }
 }

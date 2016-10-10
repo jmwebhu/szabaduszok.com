@@ -211,7 +211,6 @@ abstract class Search_Complex implements Search
             $this->_searchRelation  = $this->makeSearchRelation();
             $found                  = $this->_searchRelation->searchRelationsInOneModel();
 
-            // @todo ES BENNE VAN -E MAR A _matchedModels -ben
             if ($this->needToAddCurrentToMatchedBy($found)) {
                 $matchedModels[] = $this->_currentModel;
             }
@@ -249,7 +248,7 @@ abstract class Search_Complex implements Search
     protected function isCurrentInMatchedModels()
     {
         foreach ($this->_matchedModels as $matchedModel) {
-            if ($matchedModel->pk() == $this->_currentModel->pk()) {
+            if ($matchedModel->{$this->getModelPrimaryKey()} == $this->_currentModel->{$this->getModelPrimaryKey()}) {
                 return true;
             }
         }
@@ -270,4 +269,10 @@ abstract class Search_Complex implements Search
      * @return Search_Relation
      */
     abstract protected function makeSearchRelation();
+
+    /**
+     * unittestben nem mukodik az ORM->pk(), ezert felul kell irni
+     * @return string
+     */
+    abstract public function getModelPrimaryKey();
 }

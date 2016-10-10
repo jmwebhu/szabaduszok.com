@@ -31,4 +31,12 @@ class Search_Complex_Project extends Search_Complex
     {
         return Search_Relation_Factory_Project::makeSearch($this);
     }
+
+    /**
+     * @return string
+     */
+    public function getModelPrimaryKey()
+    {
+        return 'project_id';
+    }
 }

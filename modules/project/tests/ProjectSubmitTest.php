@@ -21,7 +21,7 @@ class ProjectSubmitTest extends PHPUnit_Framework_TestCase
         $professionModel    = new Model_Profession();
         $skillModel         = new Model_Skill();
         $userModel          = new Model_User();
-        $projectModel       = new ORM();
+        $projectModel       = new Model_Project();
         
         $industryModel->truncate();
         $professionModel->truncate();
@@ -232,7 +232,7 @@ class ProjectSubmitTest extends PHPUnit_Framework_TestCase
             
         ];
         
-        $projectModel   = new ORM();
+        $projectModel   = new Model_Project();
         $project        = $projectModel->submit($data);     
         
         self::$_project = $project;
@@ -299,7 +299,7 @@ class ProjectSubmitTest extends PHPUnit_Framework_TestCase
             ]            
         ];
         
-        $projectModel   = new ORM();
+        $projectModel   = new Model_Project();
         $project        = $projectModel->submit($data);     
         
         self::$_project = $project;

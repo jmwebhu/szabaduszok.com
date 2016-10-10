@@ -254,6 +254,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     {
         $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
         $this->setMockAny('\Model_Project_Industry', 'getEndRelationModel', new Model_Industry());
+        $this->setMockAny('\Model_Project_Industry', 'getSearchedRelationIdsPropertyName', '_searchedIndustryIds');
 
         $this->_searchedIndustries  = $industries;
         $this->_searchType          = self::TYPE_INDUSTRY;
@@ -263,6 +264,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     {
         $this->setMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
         $this->setMockAny('\Model_Project_Profession', 'getEndRelationModel', new Model_Profession());
+        $this->setMockAny('\Model_Project_Profession', 'getSearchedRelationIdsPropertyName', '_searchedProfessionIds');
 
         $this->_searchedProfessions = $professions;
         $this->_searchType          = self::TYPE_PROFESSION;
@@ -272,6 +274,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     {
         $this->setMockAny('\Model_Project_Skill', 'getAll', $this->_projectSkills);
         $this->setMockAny('\Model_Project_Skill', 'getEndRelationModel', new Model_Skill());
+        $this->setMockAny('\Model_Project_Skill', 'getSearchedRelationIdsPropertyName', '_searchedSkillIds');
 
         $this->_searchedSkills      = $skills;
         $this->_searchType          = self::TYPE_SKILLS;
@@ -330,21 +333,21 @@ class ProjectSearchComplexTest extends Unittest_TestCase
             'skill_relation'    => $this->_skillRelation
         ];
 
-        $search = Project_Search_Factory::makeSearch($data);
+        $search = Search_Factory_Project::makeSearch($data);
 
         if (!$projects) {
             $projects = $this->_projects;
         }
 
-        $search->setProjects($projects);
+        $search->setModels($projects);
 
         return $search;
     }
 
-    protected function setMatchedProjectIdsFromSearch(_Search_Complex $search)
+    protected function setMatchedProjectIdsFromSearch(Search_Complex $search)
     {
         $this->_matchedProjects = [];
-        $projects = $search->getMatchedProjects();
+        $projects = $search->getMatchedModels();
 
         foreach ($projects as $project) {
             $this->_matchedProjects[] = $project->project_id;
@@ -370,7 +373,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     protected function setUpProjects($max)
     {
         for ($i = 1; $i <= $max; $i++) {
-            $project = new ORM();
+            $project = new Model_Project();
             $project->project_id = $i;
 
             $this->_projects[] = $project;

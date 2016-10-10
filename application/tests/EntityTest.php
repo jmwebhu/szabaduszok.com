@@ -81,7 +81,7 @@ class EntityTest extends Unittest_TestCase
 
     protected function givenTestModelWithId($id)
     {
-        $model = new ORM();
+        $model = new Model_Project();
         $model->project_id = $id;
         $model->name = 'Teszt';
         $model->short_description = 'Rövid leírás';
@@ -123,7 +123,7 @@ class EntityTest extends Unittest_TestCase
     public function setUp()
     {
         $this->_entity = new Entity_Project();
-        $this->_model = new ORM();
+        $this->_model = new Model_Project();
         parent::setUp();
     }
 }

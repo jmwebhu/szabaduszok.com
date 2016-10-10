@@ -614,7 +614,7 @@ class Controller_User extends Controller_DefaultTemplate
 				
 			$logged = Auth::instance()->get_user();
 			
-			$project	= new ORM();
+			$project	= new Model_Project();
 			$industry	= new Model_Industry();
 			
 			$projects 	= $user->getProjects();

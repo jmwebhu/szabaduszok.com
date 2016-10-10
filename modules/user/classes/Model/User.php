@@ -1183,7 +1183,7 @@ class Model_User extends Model_Auth_User
      */
     public function getProjects()
     {
-    	$project 	= new ORM();
+    	$project 	= new Model_Project();
     	$projects	= $project->getAll();
 
     	$result		= AB::select()->from($projects)->where('is_active', '=', 1)->and_where('user_id', '=', $this->user_id)->order_by('created_at', 'DESC')->execute()->as_array();

@@ -152,7 +152,7 @@ class BusinessProjectTest extends Unittest_TestCase
 
     protected function givenModelWithTestData()
     {
-        $model = new ORM();
+        $model = new Model_Project();
         $model->name = 'Folyamatos webfejlesztések';
         $model->short_description = $this->getShortDescriptionForSearch();
         $model->long_description = $this->getLongDescriptionForSearch();

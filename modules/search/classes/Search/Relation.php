@@ -11,22 +11,16 @@
 abstract class Search_Relation
 {
     /**
-     * @var ORM
+     * @var Search_Complex
      */
-    protected $_model;
-    protected $_searchedRelationIds     = [];
-    protected $_relationIdsByModelIds   = [];
+    protected $_complexSearch;
 
     /**
-     * @param ORM $model
-     * @param array $searchedRelationIds
-     * @param array $relationIdsByModelIds
+     * @param Search_Complex $complex
      */
-    public function __construct(ORM $model, array $searchedRelationIds, array $relationIdsByModelIds)
+    public function __construct(Search_Complex $complex)
     {
-        $this->_model                   = $model;
-        $this->_searchedRelationIds     = $searchedRelationIds;
-        $this->_relationIdsByModelIds   = $relationIdsByModelIds;
+        $this->_complexSearch = $complex;
     }
 
     /**
@@ -34,7 +28,7 @@ abstract class Search_Relation
      */
     public function searchRelationsInOneModel()
     {
-        foreach ($this->_searchedRelationIds as $searchedRelationId) {
+        foreach ($this->_complexSearch->getSearchedRelationIds() as $searchedRelationId) {
             $found = $this->searchOneRelationInOneModel($searchedRelationId);
 
             if ($found) {
@@ -51,7 +45,11 @@ abstract class Search_Relation
      */
     protected function searchOneRelationInOneModel($searchedRelationId)
     {
-        $modelRelationIds = Arr::get($this->_relationIdsByModelIds, $this->_model->pk(), []);
+        $model = $this->_complexSearch->getCurrentModel();
+        $modelRelationIds = Arr::get(
+            $this->_complexSearch->getRelationIdsByModelIds(),
+            $model->{$this->_complexSearch->getModelPrimaryKey()}, []);
+
         return in_array($searchedRelationId, $modelRelationIds);
     }
 }
