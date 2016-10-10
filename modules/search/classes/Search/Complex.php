@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Class Project_Search_Complex
+ * Class Search_Complex
  *
  * Felelosseg: Reszletes kereses
  */
 
-class Project_Search_Complex implements Project_Search
+class Search_Complex implements Search
 {
     /**
      * @var array

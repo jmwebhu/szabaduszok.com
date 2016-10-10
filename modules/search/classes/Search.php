@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Interface Project_Search
+ * Interface Search
  *
  * Keresesre szolgalo Strategy interface, az impletmentaciok tartalmazzak az osszetett es az egyszeru keresest
  *
@@ -10,10 +10,20 @@
  * @since 2.2
  */
 
-interface Project_Search
+interface Search
 {
     /**
      * @return array
      */
     public function search();
+
+    /**
+     * @return Array_Builder
+     */
+    public function getInitModels();
+
+    /**
+     * @return ORM
+     */
+    public function createSearchModel();
 }

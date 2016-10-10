@@ -154,6 +154,7 @@ Kohana::modules(array(
 	'arraybuilder'		=> MODPATH.'arraybuilder',		// ArrayBuilder osztalyok
 	'flexiblemigrations'	=> MODPATH.'flexiblemigrations',
 	'landing'	=> MODPATH.'landing',
+    'search'    => MODPATH.'search',
 
 	));
 

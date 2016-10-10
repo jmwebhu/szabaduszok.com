@@ -29,7 +29,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group industry
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsIndustryOk()
     {
@@ -53,7 +53,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group industry
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsIndustryNotOk()
     {
@@ -70,7 +70,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group industry
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsIndustryNoPostOk()
     {
@@ -84,7 +84,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group profession
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsProfessionOk()
     {
@@ -109,7 +109,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group profession
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsProfessionNotOk()
     {
@@ -126,7 +126,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group profession
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsProfessionNoPostOk()
     {
@@ -140,7 +140,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillOrOk()
     {
@@ -167,7 +167,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillOrNotOk()
     {
@@ -186,7 +186,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillAndOk()
     {
@@ -212,7 +212,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillAndNotOk()
     {
@@ -231,7 +231,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers Project_Search_Complex::searchRelationsInProjects()
+     * @covers _Search_Complex::searchRelationsInProjects()
      */
     public function testSearchRelationsInProjectsSkillAndNoPostOk()
     {
@@ -341,7 +341,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         return $search;
     }
 
-    protected function setMatchedProjectIdsFromSearch(Project_Search_Complex $search)
+    protected function setMatchedProjectIdsFromSearch(_Search_Complex $search)
     {
         $this->_matchedProjects = [];
         $projects = $search->getMatchedProjects();

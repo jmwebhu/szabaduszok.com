@@ -3,15 +3,15 @@
 class Project_Search_Relation_Factory
 {
     /**
-     * @var Project_Search_Complex
+     * @var _Search_Complex
      */
     protected static $_complex;
 
     /**
-     * @param Project_Search_Complex $complex
+     * @param _Search_Complex $complex
      * @return Project_Search_Relation
      */
-    public static function makeSearch(Project_Search_Complex $complex)
+    public static function makeSearch(_Search_Complex $complex)
     {
         try {
             self::$_complex = $complex;

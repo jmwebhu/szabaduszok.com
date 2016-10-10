@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Class Project_Search_Factory
+ * Class Search_Factory_Project
  *
- * PRojekt kereses Strategy gyartas
+ * Projekt kereses Strategy gyartas
  */
 
-class Project_Search_Factory
+class Search_Factory_Project
 {
     /**
      * @param array $data
-     * @return Project_Search
+     * @return Search
      */
     public static function makeSearch(array $data)
     {
@@ -22,10 +22,10 @@ class Project_Search_Factory
             $skillIds       = Arr::get($data, 'skills', []);
             $skillRelation  = Arr::get($data, 'skill_relation', 1);
 
-            $search = new Project_Search_Complex($industryIds, $professionIds, $skillIds, $skillRelation);
+            $search = new Search_Complex_Project($industryIds, $professionIds, $skillIds, $skillRelation);
 
         } else {    // Egyszeru kereses
-            $search = new Project_Search_Simple(Arr::get($data, 'search_term'));
+            $search = new Search_Simple_Project(Arr::get($data, 'search_term'));
         }
 
         return $search;

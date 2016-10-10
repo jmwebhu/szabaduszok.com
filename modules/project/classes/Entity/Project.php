@@ -9,7 +9,7 @@
 class Entity_Project extends Entity
 {
     /**
-     * @var Project_Search
+     * @var Search
      */
     private $_search;
 
@@ -355,7 +355,7 @@ class Entity_Project extends Entity
     }
 
     /**
-     * @return Project_Search
+     * @return Search
      */
     public function getSearch()
     {
@@ -363,9 +363,9 @@ class Entity_Project extends Entity
     }
 
     /**
-     * @param Project_Search $search
+     * @param Search $search
      */
-    public function setSearch(Project_Search $search)
+    public function setSearch(Search $search)
     {
         $this->_search = $search;
     }
