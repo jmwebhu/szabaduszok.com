@@ -67,6 +67,8 @@ abstract class Search_Complex implements Search
      */
     protected $_relationIdsByModelIds    = [];
 
+    protected $_isFirstSearch = true;
+
     /**
      * @param array $searchedIndustryIds
      * @param array $searchedProfessionIds
@@ -197,30 +199,62 @@ abstract class Search_Complex implements Search
          */
 
         $relationModelsByModelIds     = $this->_searchedRelationModel->getAll();
-        echo Debug::vars($relationModelsByModelIds);
-        exit;
-        $this->_relationIdsByModelIds = Business::getIdsFromModelsMulti(
-            $relationModelsByModelIds,
-            $this->_searchedRelationModel->primary_key());
+        $this->_relationIdsByModelIds = Business::getIdsFromModelsMulti($relationModelsByModelIds);
 
         // Elso keresesnel a matchedModels ures lesz, aztan beletesszuk a talalatokat es a tobbi keresnel ezeket szukiti tovabb
-        $models           = (empty($this->_matchedModels)) ? $this->_models : $this->_matchedModels;
-        $matchedModels    = [];
+        $this->_matchedModels   = (empty($this->_matchedModels)) ? $this->_models : $this->_matchedModels;
+        $matchedModels          = [];
 
-        foreach ($models as $model) {
+        foreach ($this->_matchedModels as $model) {
             $this->_currentModel    = $model;
 
             $this->_searchRelation  = $this->makeSearchRelation();
             $found                  = $this->_searchRelation->searchRelationsInOneModel();
 
-            if ($found) {
+            // @todo ES BENNE VAN -E MAR A _matchedModels -ben
+            if ($this->needToAddCurrentToMatchedBy($found)) {
                 $matchedModels[] = $this->_currentModel;
             }
         }
 
-        $this->_matchedModels = $matchedModels;
+        $this->_matchedModels   = $matchedModels;
+        $this->_isFirstSearch   = false;
 
         return true;
+    }
+
+    /**
+     * @param bool $found
+     * @return array
+     */
+    protected function needToAddCurrentToMatchedBy($found)
+    {
+        $needToAdd = false;
+        switch ($this->_isFirstSearch) {
+            case true:
+                $needToAdd = $found;
+                break;
+
+            case false:
+                $needToAdd = $found && $this->isCurrentInMatchedModels();
+                break;
+        }
+
+        return $needToAdd;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isCurrentInMatchedModels()
+    {
+        foreach ($this->_matchedModels as $matchedModel) {
+            if ($matchedModel->pk() == $this->_currentModel->pk()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
