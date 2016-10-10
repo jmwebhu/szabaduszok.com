@@ -6,7 +6,7 @@
  * Felelosseg: Projekt lekerdezesek
  */
 
-class ORM extends ORM implements Subject
+class Model_Project extends ORM implements Subject
 {
     const EVENT_INACTIVATE = 'inactivate';
 

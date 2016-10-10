@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Project_Search_Complex
+ * Class Search_Complex_Project
  *
  * Felelosseg: Reszletes kereses
  */
@@ -9,11 +9,11 @@
 class Search_Complex_Project extends Search_Complex
 {
     /**
-     * @return ORM
+     * @return Model_Project
      */
     public function createSearchModel()
     {
-        return new ORM();
+        return new Model_Project();
     }
 
     /**
@@ -22,5 +22,13 @@ class Search_Complex_Project extends Search_Complex
     public function getInitModels()
     {
         return $this->_model->getOrderedByCreated(false);
+    }
+
+    /**
+     * @return Search_Relation
+     */
+    protected function makeSearchRelation()
+    {
+        return Search_Relation_Factory_Project::makeSearch($this);
     }
 }

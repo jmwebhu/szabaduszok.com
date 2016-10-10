@@ -208,7 +208,7 @@ abstract class Search_Complex implements Search
         foreach ($models as $model) {
             $this->_currentModel    = $model;
 
-            $this->_searchRelation  = Search_Relation_Factory::makeSearch($this);
+            $this->_searchRelation  = $this->makeSearchRelation();
             $found                  = $this->_searchRelation->searchRelationsInOneModel();
 
             if ($found) {
@@ -229,4 +229,9 @@ abstract class Search_Complex implements Search
         return empty($this->_searchedIndustryIds)
             && empty($this->_searchedProfessionIds) && empty($this->_searchedSkillIds);
     }
+
+    /**
+     * @return Search_Relation
+     */
+    abstract protected function makeSearchRelation();
 }
