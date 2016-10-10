@@ -160,27 +160,23 @@ abstract class Search_Complex implements Search
         $this->_models = $this->_currentModel->getOrderedByCreated();
 
         // Szukites iparagakra
-        $this->searchRelationsInProjects(new Model_Project_Industry());
+        $this->searchRelationsInModels($this->getIndustryRelationModel());
 
         // Szukites szakteruletekre
-        $this->searchRelationsInProjects(new Model_Project_Profession());
+        $this->searchRelationsInModels($this->getProfessionRelationModel());
 
         // Szukites kepessegekre
-        $this->searchRelationsInProjects(new Model_Project_Skill());
+        $this->searchRelationsInModels($this->getSkillRelationModel());
 
         return $this->_matchedModels;
     }
 
     /**
-     * Keresi a kapcsolatokat a projetkekben
-     *
-     * @param Model_Project_Relation $relationModel    Egy peldany a keresett kapcsolat modeljebol, pl.: Model_Project_Industry
-     *                              unittest dependency injection miatt van ra szukseg, egyebkent eleg lenne a $this -ben
-     *                              tarolt peldany
+     * Keresi a kapcsolatokat a modelekben
      *
      * @return bool
      */
-    protected function searchRelationsInProjects(Model_Relation $relationModel)
+    protected function searchRelationsInModels(Model_Relation $relationModel)
     {
         $this->_searchedRelationModel   = $relationModel;
         $this->_searchedRelationIds     = $this->{$this->_searchedRelationModel->getSearchedRelationIdsPropertyName()};
@@ -275,4 +271,19 @@ abstract class Search_Complex implements Search
      * @return string
      */
     abstract public function getModelPrimaryKey();
+
+    /**
+     * @return Model_Relation
+     */
+    abstract protected function getIndustryRelationModel();
+
+    /**
+     * @return Model_Relation
+     */
+    abstract protected function getProfessionRelationModel();
+
+    /**
+     * @return Model_Relation
+     */
+    abstract protected function getSkillRelationModel();
 }

@@ -39,4 +39,30 @@ class Search_Complex_Project extends Search_Complex
     {
         return 'project_id';
     }
+
+    /**
+     * @return Model_Project_Industry
+     */
+    protected function getIndustryRelationModel()
+    {
+        return new Model_Project_Industry();
+    }
+
+    /**
+     * @return Model_Project_Profession
+     */
+    protected function getProfessionRelationModel()
+    {
+        return new Model_Project_Profession();
+    }
+
+    /**
+     * @return Model_Project_Skill
+     */
+    protected function getSkillRelationModel()
+    {
+        return new Model_Project_Skill();
+    }
+
+
 }

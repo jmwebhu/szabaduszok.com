@@ -296,7 +296,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
                 break;
         }
 
-        $this->invokeMethod($search, 'searchRelationsInProjects', [$this->_mock]);
+        $this->invokeMethod($search, 'searchRelationsInModels', [$this->_mock]);
         $this->setMatchedProjectIdsFromSearch($search);
     }
 
