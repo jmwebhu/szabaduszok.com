@@ -282,20 +282,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     protected function whenSearch()
     {
-        switch ($this->_searchType) {
-            case self::TYPE_INDUSTRY:
-                $this->setSearch('Model_Project_Industry');
-                break;
-
-            case self::TYPE_PROFESSION:
-                $this->setSearch('Model_Project_Profession');
-                break;
-
-            case self::TYPE_SKILLS:
-                $this->setSearch('Model_Project_Skill');
-                break;
-        }
-
+        $this->setSearch();
         $this->invokeMethod($this->_searchMock, 'search');
         $this->setMatchedProjectIdsFromSearch();
     }
@@ -325,7 +312,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->_skillRelation = Search_Relation_Skill::SKILL_RELATION_OR;
     }
 
-    protected function setSearch($relationClassName)
+    protected function setSearch()
     {
         $projectMock              = $this->getMockBuilder('\Model_Project')->getMock();
 
@@ -344,38 +331,38 @@ class ProjectSearchComplexTest extends Unittest_TestCase
             ->method('createSearchModel')
             ->will($this->returnValue($projectMock));
 
-        $relationMock = $this->getMockBuilder('\\' . $relationClassName)->setMethods(['getAll'])
+        $industryMock = $this->getMockBuilder('\Model_Project_Industry')->setMethods(['getAll'])
             ->getMock();
 
-        switch ($relationClassName) {
-            case 'Model_Project_Industry':
-                $return = $this->_projectIndustries;
-                break;
-
-            case 'Model_Project_Profession':
-                $return = $this->_projectProfessions;
-                break;
-
-            case 'Model_Project_Skill':
-                $return = $this->_projectSkills;
-                break;
-        }
-
-        $relationMock->expects($this->any())
+        $industryMock->expects($this->any())
             ->method('getAll')
-            ->will($this->returnValue($return));
+            ->will($this->returnValue($this->_projectIndustries));
+
+        $professionMock = $this->getMockBuilder('\Model_Project_Profession')->setMethods(['getAll'])
+            ->getMock();
+
+        $professionMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectProfessions));
+
+        $skillMock = $this->getMockBuilder('\Model_Project_Skill')->setMethods(['getAll'])
+            ->getMock();
+
+        $skillMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->_projectSkills));
 
         $searchMock->expects($this->any())
             ->method('getIndustryRelationModel')
-            ->will($this->returnValue($relationMock));
+            ->will($this->returnValue($industryMock));
 
         $searchMock->expects($this->any())
             ->method('getProfessionRelationModel')
-            ->will($this->returnValue($relationMock));
+            ->will($this->returnValue($professionMock));
 
         $searchMock->expects($this->any())
             ->method('getSkillRelationModel')
-            ->will($this->returnValue($relationMock));
+            ->will($this->returnValue($skillMock));
 
         $searchMock->setCurrentModel($projectMock);
 
