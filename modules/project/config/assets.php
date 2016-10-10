@@ -17,20 +17,22 @@ AssetCollection::instance()
  * AssetManager initialize
  */
 AssetManager::instance()
-    ->addController('project')
-        
-        ->addAction('create')
+    ->addController('project_create')
+        ->addAction('index')
             ->addJs(['wysihtml5', 'create'])
             ->addCss(['wysihtml5'])
-        
-        ->addAction('update')
+
+    ->addController('project_update')
+        ->addAction('index')
             ->addJs(['wysihtml5', 'create'])
             ->addCss(['wysihtml5'])
-        
-        ->addAction('profile')
+
+    ->addController('project_list')
+        ->addAction('index')
+            ->addJs(['list'])
+
+    ->addController('project_profile')
+        ->addAction('index')
             ->addJs(['barrating', 'profile'])
             ->addCss(['font-awesome-stars'])
-            
-        ->addAction('list')
-        	->addJs(['list'])
 ;

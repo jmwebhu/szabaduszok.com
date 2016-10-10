@@ -4,8 +4,7 @@ class ORM extends Kohana_ORM
 {
     public function setDb($db)
     {
-        if (is_string($db))
-        {            
+        if (is_string($db)) {
             $this->_db_group = $db;
         }                                      
     }
@@ -17,8 +16,7 @@ class ORM extends Kohana_ORM
     {
         $models = $this->find_all();        
         
-        foreach ($models as $model)
-        {
+        foreach ($models as $model) {
             DB::delete($this->_table_name)->where($this->_primary_key, '=', $model->pk())->execute();
             Cache::instance()->delete($this->_table_name);
         }
@@ -45,17 +43,13 @@ class ORM extends Kohana_ORM
         $modelTemp  = new $className();		
         
         // Azonosito, tehat letezik
-        if (Text::isId($value))
-        {
+        if (Text::isId($value)) {
             $model = $modelTemp->findByPk($value);                
-        }
-        else	// Uj elem
-        {                      			
+        } else {    // Uj elem
 			$byName				= new $className();
 			$byNameModel		= $byName->where('name', '=', mb_strtolower($value))->find(); 
 			
-			if ($byNameModel->loaded())
-			{
+			if ($byNameModel->loaded()) {
 				return $byNameModel;
 			}
 			
@@ -89,14 +83,11 @@ class ORM extends Kohana_ORM
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
 		
-		if (!empty($postData))
-		{
-			foreach ($postData as $value)
-			{            
+		if (!empty($postData)) {
+			foreach ($postData as $value) {
 				$relation       = $this->getOrCreate($value, $relationEndModel);
 				
-				if (!$this->has($relationEndModel->object_plural(), $relation->pk()))
-				{
+				if (!$this->has($relationEndModel->object_plural(), $relation->pk())) {
 					$relationIds[]  = $relation->pk();
 				}				
 
@@ -118,8 +109,7 @@ class ORM extends Kohana_ORM
 		 */
 
 		$tmp = AB::select([$this->primary_key(), 'name'])->from($items)->where('name', 'LIKE', $term)->order_by('name')->execute()->as_array();
-		foreach ($tmp as $item)
-		{
+		foreach ($tmp as $item) {
 			$firstChar = substr($term, 0, 1);
 			$isLower = ctype_lower($firstChar);			
 			
@@ -133,4 +123,28 @@ class ORM extends Kohana_ORM
 		
 		return $result;
 	}
+
+    /**
+     * @return Array_Builder
+     */
+    public function baseSelect()
+    {
+        return AB::select()->from($this);
+    }
+
+    public function getModelsByIds(array $ids)
+    {
+        $models = [];
+
+        foreach ($ids as $id) {
+            $models[] = $this->getById($id);
+        }
+
+        return $models;
+    }
+
+    public function clearCache()
+    {
+        AB::delete($this->_table_name, $this->pk())->execute();
+    }
 }

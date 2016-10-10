@@ -2651,5 +2651,16 @@ class Kohana_ORM extends Model implements serializable {
     
     	return 0;
     }
+
+    public function getBySlug($slug)
+    {
+        $model = AB::select()->from($this)->where('slug', '=', $slug)->execute()->current();
+
+        if (!$model) {
+            return $this;
+        }
+
+        return $model;
+    }
 	
 } // End ORM

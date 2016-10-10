@@ -1,20 +1,6 @@
 <?php
 
-/**
- * class Model_Project_Notification
- *
- * projects_notifications tabla ORM osztalya
- * Ez az osztaly felelos a projekt ertesitok tarolasaert es kuldeseert
- *
- * @author  Joó Martin <joomartin@jmweb.hu>
- * @link    https://docs.google.com/document/d/1vp-eK9MmS44o1XARQYg9z6nqWl1FhyErFHTObJ_Pyg8/edit#
- * @date    2016.07.08
- * @since   2.0
- * @package Core
- * @version 1.0
- */
-
-class Model_Project_Notification extends ORM
+class Model_Project_Notification extends ORM implements Observer
 {
 	protected $_table_name 	= 'projects_notifications';
 	protected $_primary_key = 'project_notification_id';	
@@ -48,4 +34,16 @@ class Model_Project_Notification extends ORM
 		'updated_at'				=> ['type' => 'datetime', 'null' => true],
 		'created_at'				=> ['type' => 'datetime', 'null' => true]
 	];
+
+    /**
+     * @param string $event
+     */
+    public function notify($event)
+    {
+        switch ($event) {
+            case Model_Project::EVENT_INACTIVATE:
+                $this->delete();
+                break;
+        }
+    }
 }

@@ -19,14 +19,4 @@ class Model_Profession extends ORM
 		'name'			=> ['type' => 'string', 'null' => true],
 		'slug'			=> ['type' => 'string', 'null' => true],
 	];
-	
-	public function likeName($name)
-	{
-		return $this->where('name', 'LIKE', '%' . $name . '%');
-	}
-	
-	public function byName($name)
-	{
-		return $this->where('name', '=', $name);
-	}
 }

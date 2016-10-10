@@ -1,7 +1,4 @@
 var ProjectList = {
-	/**
-	 * Init fuggvenyt. Az app belepesi pontja.
-	 */
 	init : function() {
 		this.cacheElements();
 		this.bindEvents();
@@ -9,9 +6,6 @@ var ProjectList = {
 		
 		this.$ul.find('li[data-content="' + this.$ul.data('current') + '"]').trigger('click');
 	},
-	/**
-	 * DOM elemek eltarolasa valtozokba
-	 */
 	cacheElements : function() {
 		this.$complexForm = $('form#complex-search-form');
 		
@@ -22,9 +16,6 @@ var ProjectList = {
 		
 		this.$ul = $('ul.nav-tabs');
 	},
-	/**
-	 * jQuery esemenyek hozzarendelese az eltarolt DOM elemekhez
-	 */
 	bindEvents : function() {
 
 	},

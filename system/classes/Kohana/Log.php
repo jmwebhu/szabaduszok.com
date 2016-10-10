@@ -177,6 +177,14 @@ class Kohana_Log {
 		return $this;
 	}
 
+	public function addException(Exception $ex)
+    {
+        $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString();
+        $this->add(self::ERROR, $message);
+        
+        Email::send('martin@szabaduszok.com', 'HIBA', $message);
+    }
+
 	/**
 	 * Write and clear all of the messages.
 	 *

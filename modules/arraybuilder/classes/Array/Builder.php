@@ -123,17 +123,17 @@ abstract class Array_Builder
 	 * ```AB::select()->from('projects')```
 	 * Cache::get('projects') indexnek letezni kell, onnan kerdezi le az adatokat
 	 * 
-	 * @param array|string $from		Vagy a lekerdezni kivant tomb, vagy egy index a cache -ben
+	 * @param array|ORM $from		Vagy a lekerdezni kivant tomb, vagy az entitas ORM peldanya
 	 * @return Array_Builder
 	 * 
 	 * @uses Array_Builder::_from
 	 */
 	public function from($from)
 	{
-		// Nem array -t kap, csak egy indexet. Kiszedi cache -bol
-		if (!is_array($from) && is_string($from))
+		// Nem array -t kap. Kiszedi cache -bol
+		if (!is_array($from) && is_object($from))
 		{
-			$from = Cache::instance()->get($from);			
+		    $from = $from->getAll();
 		}
 		
 		$this->_from = $from;

@@ -9,14 +9,14 @@
 			
 			{% if not error %}
 		
-			<input type="hidden" name="project_id" value="{{ project.project_id }}">
+			<input type="hidden" name="project_id" value="{{ project.getProjectId() }}">
 			<input type="hidden" name="user_slug" value="{{ user.slug }}">
 			<input type="hidden" value="{{ user.rating_points_avg }}" id="initial-rating">
 			<input type="hidden" value="{{ canRate }}" id="can-rate">
 			
 			<div class="col-sm-12">
 				<h1 class="mg-md text-center tc-black">
-					{{ project.name }}
+					{{ project.getName() }}
 				</h1>
 				<div class="panel">
 					<div class="panel-heading">
@@ -180,41 +180,41 @@
 								<span class="ion ion-email icon-sm icon-dark-gray"></span>
 							</div>
 							<div class="col-95 fs18">
-								<a href="mailto:{{ project.email }}" target="_top">{{ project.email }}</a>
+								<a href="mailto:{{ project.geteMail() }}" target="_top">{{ project.getEmail() }}</a>
 							</div>
 							
 							<div class="col-5">
 								<span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
 							</div>
 							<div class="col-95 fs18">
-								{{ project.phonenumber }}
+								{{ project.getPhonenumber() }}
 							</div>
 						
 						</div>
 					
 						<div class="project-details-long-description text-justify col-sm-7">
 							<p class="project-profile-short">
-							{{ project.short_description }}
+							{{ project.getShortDescription() }}
 							</p>
 							{% autoescape false %}
-							{{ project.long_description }}
+							{{ project.getLongDescription() }}
 							{% endautoescape %}
 						</div>
 							
 																				
 						<p class="text-right project-share-date cb">
-							Megosztva: {{ project.created_at|date("Y-m-d") }}
+							Megosztva: {{ project.getCreatedAt()|date("Y-m-d") }}
 						</p>
 						
 						{% if canEdit %}
 						<div class="text-center">
-							<a href="{{ ROOT }}szabaduszo-projekt-szerkesztes/{{ project.slug }}" class="btn btn-block btn-lg btn-ultramarine-blue"><span class="ion ion-edit icon-spacer"></span>Szerkeszt</a>
+							<a href="{{ ROOT }}szabaduszo-projekt-szerkesztes/{{ project.getSlug() }}" class="btn btn-block btn-lg btn-ultramarine-blue"><span class="ion ion-edit icon-spacer"></span>Szerkeszt</a>
 						</div>		
 						{% endif %}
 						
 						{% if canDelete %}
 						<div class="text-center">
-							<button class="btn btn-block btn-lg btn-ultramarine-blue btn-tomato" id="del" data-id="{{ project.project_id }}"><span class="ion ion-trash-b icon-white icon-spacer"></span>Töröl</button>
+							<button class="btn btn-block btn-lg btn-ultramarine-blue btn-tomato" id="del" data-id="{{ project.getProjectId() }}"><span class="ion ion-trash-b icon-white icon-spacer"></span>Töröl</button>
 						</div>		
 						{% endif %}
 						<span class="loading text-center"></span>

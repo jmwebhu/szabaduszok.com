@@ -624,12 +624,16 @@ class Controller_User extends Controller_DefaultTemplate
 			 
 			foreach ($projects as $pr)
 			{
-				$relations[$pr->project_id]	= $pr->getAndCacheRelations();
-				$salaries[$pr->project_id]	= Viewhelper_Project::getSalary($pr);
+                /**
+                 * @var $pr Model_Project
+                 */
+				$relations[$pr->project_id]	= $pr->getRelations();
+				$salaries[$pr->project_id]	= Viewhelper_Project::getSalary(new Entity_Project($pr->project_id));
 				$users[$pr->project_id]		= $user;
 			}
-			 
-			$this->context->projects 	= $projects;			
+
+			$entity = new Entity_Project();
+			$this->context->projects 	= $entity->getEntitiesFromModels($projects);
 			$this->context->relations	= $relations;
 			$this->context->salaries	= $salaries;
 			$this->context->users		= $users;

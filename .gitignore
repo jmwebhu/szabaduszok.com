@@ -12,4 +12,5 @@
 /db
 /modules/arraybuilder/docs
 .DS_Store
-/.idea
+.idea
+phpmetrics

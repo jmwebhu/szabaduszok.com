@@ -145,7 +145,7 @@ var Validator = {
                     $form.find('span.error-label:not(.general-error-label)').remove();
 
                     $elem.focus();
-                    var $formGroup = $elem.parent('.form-group:first')
+                    var $formGroup = $elem.parent('.form-group:first');
 
                     $formGroup.addClass('has-error');													
                     $formGroup.append("<span class='error-label has-error'>" + Validator.map(error.rule) + "</span>");

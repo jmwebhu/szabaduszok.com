@@ -3,10 +3,16 @@
 class Controller_Test extends Controller
 {
     public function action_index()
-    {	        
-		$skill = 67;
-		$count = DB::select([DB::expr('COUNT(user_id)'), 'count'])->from('users_skills')->where('skill_id', '=', $skill)->execute()->get('count');
-		echo Debug::vars($count);		
+    {
+        try {
+
+            echo 'try';
+            throw new Exception();
+        } catch (Exception $ex) {
+            echo 'catch';
+        }
+
+        echo 'return';
     }	
 
     public function action_clearcache()

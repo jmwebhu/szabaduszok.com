@@ -10,7 +10,7 @@ $(document).ready(function () {
 		$divs.removeClass('active').removeClass('in');
 		$divs.hide();
 		
-		var $div = $('div#' + content)
+		var $div = $('div#' + content);
 		$div.addClass('active').addClass('in');
 		$div.show();
 	});

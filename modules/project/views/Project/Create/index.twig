@@ -7,7 +7,7 @@
 			<div class="col-sm-12">
 				<form id="project-form" method="post" action="{{ formAction }}">
 					
-					<input type="hidden" value="{{ project.project_id }}" name="project_id">									
+					<input type="hidden" value="{{ project.getProjectId() }}" name="project_id">
 				
 					<h1 class="mg-md text-center tc-black">
 						{{ pageTitle }}
@@ -27,7 +27,7 @@
 								</label>
 								<select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
 								{% for industry in industries %}
-								<option value="{{ industry.industry_id }}" {% if project.has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
+								<option value="{{ industry.industry_id }}" {% if project.getModel().has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
 								{% endfor %}
 								</select>
 							</div>							
@@ -39,7 +39,7 @@
 									Szakterületek*
 								</label>
 								<select id="professions" class="form-control" name="professions[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
-								{% for profession in project.professions.find_all() %}
+								{% for profession in project.relation("professions") %}
 								<option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
 								{% endfor %}
 	 							</select>
@@ -52,7 +52,7 @@
 									Szükséges képességek
 								</label>
 								<select id="skills" class="form-control" name="skills[]" multiple="multiple">
-								{% for skill in project.skills.find_all() %}
+								{% for skill in project.relation("skills") %}
 								<option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
 								{% endfor %}
 								</select>		
@@ -74,12 +74,12 @@
 								<label>
 									Projekt neve*
 								</label>
-								<input id="name" name="name" class="form-control" required data-rules='{"notEmpty": "true"}' value="{{ project.name }}">
+								<input id="name" name="name" class="form-control" required data-rules='{"notEmpty": "true"}' value="{{ project.getName() }}">
 							</div><span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
 							<div class="form-group">
 								<label>
 									Rövid leírás*
-								</label><textarea id="short-description" name="short_description" class="form-control" rows="2" cols="50" required data-rules='{"notEmpty": "true"}'>{{ project.short_description }}</textarea>
+								</label><textarea id="short-description" name="short_description" class="form-control" rows="2" cols="50" required data-rules='{"notEmpty": "true"}'>{{ project.getShortDescription() }}</textarea>
 							</div>
 							<p class="text-justify">
 								Ez fog megjelenni a projekt listában, tehát mindenki ezt látja először. Legyen tömör, és egyértelmű.
@@ -88,7 +88,7 @@
 								<label>
 									Hosszabb leírás*
 								</label>
-								<textarea class="form-control" rows="20" cols="50" id="long-description" name="long_description" data-rules='{"notEmpty": "true"}'>{{ project.long_description }}</textarea>
+								<textarea class="form-control" rows="20" cols="50" id="long-description" name="long_description" data-rules='{"notEmpty": "true"}'>{{ project.getLongDescription() }}</textarea>
 							</div>
 							<p class="text-justify">
 								Ez fog megjelenni, ha valaki rákattint a projektra a listából. Ez lehet részletesebb.
@@ -110,7 +110,7 @@
 									<input type="radio" name="salary_type" id="salary-type-hourly" value="1" 
 									
 									{% if project %}
-										{% if project.salary_type == 1 %}
+										{% if project.getSalaryType() == 1 %}
 										checked
 										{% endif %}
 									{% else %}
@@ -122,7 +122,7 @@
 							</div>
 							<div class="radio">
 								<label>
-									<input type="radio" name="salary_type" value="2" id="salary-type-fix" {% if project.salary_type == 2 %}checked{% endif %}>Fix összeg
+									<input type="radio" name="salary_type" value="2" id="salary-type-fix" {% if project.getSalaryType() == 2 %}checked{% endif %}>Fix összeg
 								</label>
 							</div>
 							
@@ -131,7 +131,7 @@
 								<label>
 									Nettó alsó határ*
 								</label>
-								<input class="form-control" type="text" id="salary-low" name="salary_low" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ project.salary_low }}">
+								<input class="form-control" type="text" id="salary-low" name="salary_low" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ project.getSalaryLow() }}">
 							</div>
 							
 							<span class="ion ion-arrow-graph-up-right pull-left icon-sm icon-dark-gray"></span>
@@ -139,7 +139,7 @@
 								<label>
 									Nettó felső határ
 								</label>
-								<input class="form-control" type="text" id="salary-high" name="salary_high" data-rules='{"number": "true"}' value="{{ project.salary_high }}">
+								<input class="form-control" type="text" id="salary-high" name="salary_high" data-rules='{"number": "true"}' value="{{ project.getSalaryHigh() }}">
 							</div>
 						</div>
 					</div>
@@ -169,7 +169,7 @@
 					</div> 
 					
 					{% if hasCancel %}
-					<a href="{{ ROOT }}szabaduszo-projekt/{{ project.slug }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+					<a href="{{ ROOT }}szabaduszo-projekt/{{ project.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
 					{% endif %}	
 					
 					<button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit" id="submit">

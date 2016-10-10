@@ -6,49 +6,50 @@
 					<div class="col-sm-12 list">
 					
 					{% for project in projects %}
-					<a href="{{ ROOT }}szabaduszo-projekt/{{ project.slug }}" class="anchor-no-effect project-list-anchor">
+
+					<a href="{{ ROOT }}szabaduszo-projekt/{{ project.getSlug() }}" class="anchor-no-effect project-list-anchor">
 						<div class="row project-row bgc-white">
 							<div class="col-sm-2 project-img mobile-hide">
-								<img src="{{ ROOT }}media/img/szabaduszo-projekt.png" class="img-responsive project-image center-block hidden-xs" alt="Szabadúszó projekt, munka {{ project.name }}">
+								<img src="{{ ROOT }}media/img/szabaduszo-projekt.png" class="img-responsive project-image center-block hidden-xs" alt="Szabadúszó projekt, munka {{ project.getName() }}">
 								<h4 class="mg-md text-center hidden-xs project-owner-name">
-									{% if users[project.project_id].is_company %}
-										{{ users[project.project_id].company_name }}
+									{% if users[project.getProjectId()].is_company %}
+										{{ users[project.getProjectId()].company_name }}
 									{% else %}
-										{{ users[project.project_id].name() }}
+										{{ users[project.getProjectId()].name() }}
 									{% endif %}
 								</h4>
 							</div>
 							<div class="col-sm-10 list-details">
 								<span class="ion ion-folder pull-left icon-sm project-sign icon-lapis-lazuli"></span>
 								<h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli project-title-list">
-									{{ project.name() }}
+									{{ project.getNameCutOffAt() }}
 								</h3>
 								<div class="divider-h project-title-divider">
 									<span class="divider"></span>
 								</div>
 								
 								<span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray"></span>
-								{% for profession in relations[project.project_id]['professions'] %}
+								{% for profession in relations[project.getProjectId()]['professions'] %}
 								<span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
 								{% endfor %}		
 							
 								
 								<h4 class="mg-md db cb pt10 project-salary">
 									<span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
-									<span class="strong ml5">{{ salaries[project.project_id]['salary'] }}</span> {{ salaries[project.project_id]['postfix'] }} 
+									<span class="strong ml5">{{ salaries[project.getProjectId()]['salary'] }}</span> {{ salaries[project.getProjectId()]['postfix'] }}
 								</h4>
 								
 								<p class="text-justify project-short-description cb">
-									{{ project.short_description() }}
+									{{ project.getShortDescriptionCutOffAt() }}
 								</p>
 								
 								
 								<p class="text-left text-right project-share-date">
-									Megosztva: {{ project.created_at|date('Y-m-d') }}
+									Megosztva: {{ project.getCreatedAt()|date('Y-m-d') }}
 								</p>
 								
 								<span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray"></span>
-								{% for skill in relations[project.project_id]['skills'] %}
+								{% for skill in relations[project.getProjectId()]['skills'] %}
 								<span id="{{ skill.skill_id }}" class="tag skill-list">{{ skill.name }}</span>
 								{% endfor %}	
 							</div>

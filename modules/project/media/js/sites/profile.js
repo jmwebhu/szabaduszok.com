@@ -7,8 +7,7 @@ var ProjectProfile = {
     cacheElements: function () {
         this.$del = $('button#del');
         this.$submit = $('button[type="submit"]');
-        
-        this.$projectId = $('input[name="project_id"]');
+
         this.$userSlug = $('input[name="user_slug"]');
         
         this.$loading = $('span.loading');
@@ -31,14 +30,11 @@ var ProjectProfile = {
     	ProjectProfile.$rating.barrating({
 	        theme: 'fontawesome-stars',
 	        initialRating: ProjectProfile.$initialRating.val(),
-	        readonly: (ProjectProfile.$canRate.val() == '0') ? true : false
+	        readonly: (ProjectProfile.$canRate.val() == '0')
 	    });
     },
-    /**
-	 * Torles
-	 */
-	delClick: function () {										
-		
+	delClick: function () {
+	    
 		var $this = $(this);
 		$this.prop('disabled', true);				
 		
@@ -47,7 +43,7 @@ var ProjectProfile = {
 		    title: 'Törlés',
 		    content: 'Biztosan törlöd a projektet?',
 		    confirm: function () {
-		        ProjectProfile.sendDelAjax($this.data('id'));
+		        ProjectProfile.sendInactivateAjax($this.data('id'));
 		    },
 		    cancel: function () {
 		        $this.prop('disabled', false);
@@ -56,11 +52,10 @@ var ProjectProfile = {
 		    cancelButton: 'NEM'
 		});				
 	},
-	sendDelAjax: function (id) {				
+	sendInactivateAjax: function (id) {
 		
 		ProjectProfile.$loading.isLoading({
-            text:       "Folyamatban...",
-            //position:   'overlay'
+            text:       "Folyamatban..."
         });
 		
 		var ajax = new AjaxBuilder();
@@ -72,7 +67,7 @@ var ProjectProfile = {
 			
 			if (data.error) {
 				setTimeout(function () {
-					ProjectProfile.$loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
+					ProjectProfile.$loading.html(data.message).addClass('alert-danger');
 					ProjectProfile.$loading.show();
 				}, 500);				
 				
@@ -82,7 +77,8 @@ var ProjectProfile = {
 				
 				setTimeout(function () {
 					ProjectProfile.$del.prop('disabled', false);
-				}, 2000);				
+				}, 2000);
+
 			} else {
 				setTimeout(function () {
 					ProjectProfile.$loading.html('Sikeres törlés').addClass('alert-success');
@@ -91,17 +87,21 @@ var ProjectProfile = {
 				 
 				setTimeout(function () {
 					ProjectProfile.$loading.hide(); 
-				}, 1000);				
-			}		
-			
-			window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
+				}, 1000);
+
+				window.location.replace(ROOT + 'megbizo/' + ProjectProfile.$userSlug.val());
+			}
+		};
+
+		var error = function () {
+			setTimeout(function () {
+				ProjectProfile.$loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
+				ProjectProfile.$loading.show();
+			}, 500);
 		};
 		
-		ajax.data({id: id}).url(ROOT + 'project/ajax/del').success(success).send();
+		ajax.data({id: id}).url(ROOT + 'project/ajax/inactivate').success(success).error(error).send();
 	},
-	/**
-	 * Ertekeles
-	 */
 	rateClick: function () {						
 		
 		var $this = $(this);

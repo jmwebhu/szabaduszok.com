@@ -1,7 +1,14 @@
 <?php
 
+/**
+ * Class Authorization_Project
+ *
+ * Felelosseg: projekt hozzaferes szabalyozasa
+ */
+
 class Authorization_Project extends Authorization
 {
+<<<<<<< HEAD
 	/**
 	 * @todo
 	 */
@@ -23,65 +30,48 @@ class Authorization_Project extends Authorization
 	/**
 	 * Lathatja -e a felvitel oldalt
 	 */
+=======
+    /**
+     * @param ORM|null $model
+     * @param Model_User|null $user
+     */
+    public function __construct(ORM $model = null, Model_User $user = null)
+    {
+        parent::__construct($model, $user);
+        $this->_authorization_role = Authorization_Role_Project_Factory::makeRole($this);
+    }
+
+    /**
+     * @return bool
+     */
+>>>>>>> project_refact
 	public function canCreate()
 	{
-		if ($this->before())
-		{
-			return true;
-		}
-		
-		// Csak Megbizo
-		if ($this->_user->type == 2)
-		{
-			return true;
-		}
-		
-		return false;
+		return $this->_authorization_role->canCreate();
 	}
-	
-	/**
-	 * Van -e szerkesztes
-	 */
+
+    /**
+     * @return bool
+     */
 	public function canEdit()
 	{
-		if ($this->before())
-		{
-			return true;
-		}
-		
-		// Sajat projektje
-		if ($this->_model->user_id == $this->_user->user_id && $this->_model->is_active == 1)
-		{
-			return true;
-		}
-		
-		return false;
+		return $this->_authorization_role->canEdit();
 	}
-	
-	/**
-	 * Van -e torles gomb 
-	 */
+
+    /**
+     * @return boolean
+     */
 	public function canDelete()
 	{
-		if ($this->before())
-		{
-			return true;
-		}
-		
-		// Sajat projektje es aktiv
-		if ($this->_model->user_id == $this->_user->user_id && $this->_model->is_active == 1)
-		{
-			return true;
-		}
-		
-		return false;
+        return $this->_authorization_role->canDelete();
 	}
-	
-	/**
-	 * Van -e megsem gomb
-	 */
+
+    /**
+     * @return bool
+     */
 	public function hasCancel()
 	{
+<<<<<<< HEAD
 		if ($this->before())
 		{
 			return true;
@@ -102,5 +92,8 @@ class Authorization_Project extends Authorization
 		{
 			return true;
 		}
+=======
+        return $this->_authorization_role->canEdit();
+>>>>>>> project_refact
 	}
 }

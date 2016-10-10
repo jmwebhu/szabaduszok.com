@@ -20,6 +20,14 @@ class industries extends Migration
 
     $this->add_index('industries', 'name', ['name'], 'normal');    
     $this->sql("ALTER TABLE `industries` ADD UNIQUE (`slug`(50))");
+
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Informatika', 'informatika');");
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Marketing', 'marketing');");
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Média, PR', 'media-pr');");
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Menedzsment', 'menedzsment');");
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Adminisztráció', 'adminisztracio');");
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Pénzügy', 'penzugy');");
+      $this->sql("INSERT INTO `industries`(name, slug) VALUES('Ipar', 'ipar');");
   }
 
   public function down()

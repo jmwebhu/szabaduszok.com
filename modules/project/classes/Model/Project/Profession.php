@@ -1,8 +1,9 @@
 <?php
 
-class Model_Project_Profession extends ORM
+class Model_Project_Profession extends Model_Project_Relation
 {
 	protected $_table_name = 'projects_professions';
+    protected $_primary_key = 'id';
 	
 	protected $_belongs_to = [
 		'project' => [
@@ -16,6 +17,7 @@ class Model_Project_Profession extends ORM
 	];
 	
 	protected $_table_columns = [
+        'id'            => ['type' => 'int', 'key' => 'PRI'],
 		'project_id'	=> ['type' => 'int', 'null' => true],
 		'profession_id'	=> ['type' => 'int', 'null' => true],
 	];

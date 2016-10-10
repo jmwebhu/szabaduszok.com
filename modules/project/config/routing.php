@@ -2,30 +2,30 @@
 
 Route::set('projectCreate', 'uj-szabaduszo-projekt')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'create'
+        'controller'    => 'Project_Create',
+        'action'        => 'index'
     ]);
 
 Route::set('projectUpdate', 'szabaduszo-projekt-szerkesztes/<slug>')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'update'
+        'controller'    => 'Project_Update',
+        'action'        => 'index'
     ]);
     
 Route::set('projectProfile', 'szabaduszo-projekt/<slug>')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'profile'
+        'controller'    => 'Project_Profile',
+        'action'        => 'index'
     ]);
     
 Route::set('projectList', 'szabaduszo-projektek(/<page>)')
     ->defaults([
-    	'controller'    => 'Project',
-   		'action'        => 'list'
+    	'controller'    => 'Project_List',
+   		'action'        => 'index'
     ]);
 
 Route::set('projectAjax', 'project/ajax/<actiontarget>(/<maintarget>)')
     ->defaults([
-        'controller'    => 'Project',
-        'action'        => 'ajax'
+        'controller'    => 'Project_Ajax',
+        'action'        => 'index'
     ]);
