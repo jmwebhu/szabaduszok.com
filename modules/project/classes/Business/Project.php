@@ -23,27 +23,13 @@ class Business_Project extends Business
     }
 
     /**
-     * @param ORM $relation
+     * @param Model_Project_Relation $relation
      * @return string
      */
-    public static function getRelationIdField(ORM $relation)
+    public static function getRelationIdField(Model_Project_Relation $relation)
     {
-        $model = self::getRelationEndModel($relation);
+        $model = $relation->getEndRelationModel();
         return $model->primary_key();
-    }
-
-    /**
-     * @param ORM $relationModel
-     * @return ORM
-     */
-    protected static function getRelationEndModel(ORM $relationModel)
-    {
-        $className          = get_class($relationModel);
-        $parts              = explode('_', $className);
-        $endClassNamePart   = Arr::get($parts, count($parts) - 1, 'Industry');
-        $endClass           = 'Model_' . $endClassNamePart;
-
-        return new $endClass();
     }
 
     /**

@@ -21,4 +21,12 @@ class Model_Project_Industry extends Model_Project_Relation
         'project_id'	=> ['type' => 'int', 'null' => true],
         'industry_id'	=> ['type' => 'int', 'null' => true],
     ];
+
+    /**
+     * @return Model_Industry
+     */
+    public function getEndRelationModel()
+    {
+        return new Model_Industry();
+    }
 }

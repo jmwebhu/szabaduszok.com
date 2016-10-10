@@ -21,4 +21,12 @@ class Model_Project_Skill extends Model_Project_Relation
 		'project_id'	=> ['type' => 'int', 'null' => true],
 		'skill_id'		=> ['type' => 'int', 'null' => true],
 	];
+
+    /**
+     * @return Model_Skill
+     */
+    public function getEndRelationModel()
+    {
+        return new Model_Skill();
+    }
 }

@@ -4,15 +4,10 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        try {
+        $ind = new Model_Project_Industry();
+        $model = $ind->getEndRelationModel();
 
-            echo 'try';
-            throw new Exception();
-        } catch (Exception $ex) {
-            echo 'catch';
-        }
-
-        echo 'return';
+        echo Debug::vars($model->primary_key());
     }	
 
     public function action_clearcache()

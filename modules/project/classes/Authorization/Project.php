@@ -8,29 +8,6 @@
 
 class Authorization_Project extends Authorization
 {
-<<<<<<< HEAD
-	/**
-	 * @todo
-	 */
-	public function __call($method, $arguments) 
-	{
-        /*if (method_exists($this, $method))
-        {
-            $before = $this->before();
-
-            if ($before)
-            {
-            	return true;
-            }
-
-            return call_user_func_array([$this, $method], $arguments);
-        }*/
-    }
-
-	/**
-	 * Lathatja -e a felvitel oldalt
-	 */
-=======
     /**
      * @param ORM|null $model
      * @param Model_User|null $user
@@ -44,7 +21,6 @@ class Authorization_Project extends Authorization
     /**
      * @return bool
      */
->>>>>>> project_refact
 	public function canCreate()
 	{
 		return $this->_authorization_role->canCreate();
@@ -71,29 +47,6 @@ class Authorization_Project extends Authorization
      */
 	public function hasCancel()
 	{
-<<<<<<< HEAD
-		if ($this->before())
-		{
-			return true;
-		}
-		
-		// Sajat projektje
-		if ($this->_model->user_id == $this->_user->user_id)
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	protected function before()
-	{	
-		if ($this->_user->is_admin == 1)
-		{
-			return true;
-		}
-=======
-        return $this->_authorization_role->canEdit();
->>>>>>> project_refact
+        return $this->_authorization_role->hasCancel();
 	}
 }

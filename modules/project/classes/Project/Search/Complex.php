@@ -101,7 +101,7 @@ class Project_Search_Complex implements Project_Search
     }
 
     /**
-     * @return ORM
+     * @return Model_Project_Relation
      */
     public function getSearchedRelationModel()
     {
@@ -172,13 +172,13 @@ class Project_Search_Complex implements Project_Search
     /**
      * Keresi a kapcsolatokat a projetkekben
      *
-     * @param ORM $relationModel    Egy peldany a keresett kapcsolat modeljebol, pl.: Model_Project_Industry
+     * @param Model_Project_Relation $relationModel    Egy peldany a keresett kapcsolat modeljebol, pl.: Model_Project_Industry
      *                              unittest dependency injection miatt van ra szukseg, egyebkent eleg lenne a $this -ben
      *                              tarolt peldany
      *
      * @return bool
      */
-    protected function searchRelationsInProjects(ORM $relationModel)
+    protected function searchRelationsInProjects(Model_Project_Relation $relationModel)
     {
         $this->_searchedRelationModel   = $relationModel;
         $this->_searchedRelationIds     = $this->getSearchedRelationIdsByType();

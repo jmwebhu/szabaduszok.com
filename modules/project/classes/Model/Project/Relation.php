@@ -9,6 +9,14 @@
 abstract class Model_Project_Relation extends ORM
 {
     /**
+     * Visszaadja a kapcsolat vegpontjahoz tartozo ORM objektumot.
+     * Pl.: Model_Project_Industry eseten visszaad egy Model_Industry peldanyt
+     *
+     * @return Model_Project_Relation
+     */
+    abstract public function getEndRelationModel();
+
+    /**
      * @return array
      */
     public function cacheAll()

@@ -21,4 +21,12 @@ class Model_Project_Profession extends Model_Project_Relation
 		'project_id'	=> ['type' => 'int', 'null' => true],
 		'profession_id'	=> ['type' => 'int', 'null' => true],
 	];
+
+    /**
+     * @return Model_Profession
+     */
+    public function getEndRelationModel()
+    {
+        return new Model_Profession();
+    }
 }

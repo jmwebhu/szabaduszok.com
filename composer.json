@@ -4,7 +4,6 @@
 		"phing/phing": "dev-master",
 		"phpdocumentor/phpdocumentor": "2.*",
 		"phpmd/phpmd" : "@stable",
-		"squizlabs/php_codesniffer": "2.*",
-        "phpmetrics/phpmetrics": "dev-master"
+		"squizlabs/php_codesniffer": "2.*"
 	}
 }

@@ -131,7 +131,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     public function testSearchRelationsInProjectsProfessionNoPostOk()
     {
         $this->givenProfessions([]);
-        $this->whenSearch().
+        $this->whenSearch();
 
         $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
     }
@@ -253,6 +253,8 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     protected function givenIndustries(array $industries)
     {
         $this->setMockAny('\Model_Project_Industry', 'getAll', $this->_projectIndustries);
+        $this->setMockAny('\Model_Project_Industry', 'getEndRelationModel', new Model_Industry());
+
         $this->_searchedIndustries  = $industries;
         $this->_searchType          = self::TYPE_INDUSTRY;
     }
@@ -260,6 +262,8 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     protected function givenProfessions(array $professions)
     {
         $this->setMockAny('\Model_Project_Profession', 'getAll', $this->_projectProfessions);
+        $this->setMockAny('\Model_Project_Profession', 'getEndRelationModel', new Model_Profession());
+
         $this->_searchedProfessions = $professions;
         $this->_searchType          = self::TYPE_PROFESSION;
     }
@@ -267,6 +271,8 @@ class ProjectSearchComplexTest extends Unittest_TestCase
     protected function givenSkills(array $skills)
     {
         $this->setMockAny('\Model_Project_Skill', 'getAll', $this->_projectSkills);
+        $this->setMockAny('\Model_Project_Skill', 'getEndRelationModel', new Model_Skill());
+
         $this->_searchedSkills      = $skills;
         $this->_searchType          = self::TYPE_SKILLS;
     }

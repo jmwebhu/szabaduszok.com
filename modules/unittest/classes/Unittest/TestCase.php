@@ -37,7 +37,10 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
 
     public function setMockAny($class, $method, $return)
     {
-        $mock  = $this->getMockBuilder($class)->getMock();
+        $mock = $this->_mock;
+        if ($this->_mock == null) {
+            $mock  = $this->getMockBuilder($class)->getMock();
+        }
 
         $mock->expects($this->any())
             ->method($method)
