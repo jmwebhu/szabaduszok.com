@@ -6,7 +6,7 @@
  * Projekt kereses Strategy gyartas
  */
 
-class Search_Factory_Project
+class Search_Factory_Project implements Search_Factory
 {
     /**
      * @param array $data

@@ -6,66 +6,66 @@
  * Felelosseg: Reszletes kereses
  */
 
-class Search_Complex implements Search
+abstract class Search_Complex implements Search
 {
     /**
      * @var array
      */
-    private $_searchedIndustryIds   = [];
+    protected $_searchedIndustryIds   = [];
 
     /**
      * @var array
      */
-    private $_searchedProfessionIds = [];
+    protected $_searchedProfessionIds = [];
 
     /**
      * @var array
      */
-    private $_searchedSkillIds      = [];
+    protected $_searchedSkillIds      = [];
 
     /**
      * @var array Mindig az aktualisan keresett kapcsolat azonositoit tartalmazza
      */
-    private $_searchedRelationIds   = [];
+    protected $_searchedRelationIds   = [];
 
     /**
-     * @var ORM Egy peldany a keresett kapcsolat osszekoto modeljebol, ez lehet Model_Project_Industry, vagy
-     * Model_Project_Profession. Mivel a ket kapcsolat keresese ugyanugy van megvalositva, ezzel fogjuk megkulonboztetni
+     * @var ORM Egy peldany a keresett kapcsolat osszekoto modeljebol, ez lehet Model_XY_Industry, vagy
+     * Model_XY_Profession. Mivel a ket kapcsolat keresese ugyanugy van megvalositva, ezzel fogjuk megkulonboztetni
      * hogy eppen a $_searchedIndustryIds -bol vagy a $_searchedProfessionIds -bol kell keresni
      */
-    private $_searchedRelationModel;
+    protected $_searchedRelationModel;
 
     /**
      * @var int
      */
-    private $_skillRelation;
+    protected $_skillRelation;
 
     /**
-     * @var Model_Project
+     * @var ORM
      */
-    private $_currentProject;
+    protected $_currentModel;
 
     /**
      * @var array
      */
-    private $_projects          = [];
+    protected $_models          = [];
 
     /**
      * @var array
      */
-    private $_matchedProjects   = [];
+    protected $_matchedModels     = [];
 
     /**
-     * @var Project_Search_Relation
+     * @var Search_Relation
      */
-    private $_searchRelation;
+    protected $_searchRelation;
 
     /**
-     * @var array Az osszes projekt osszes kapcsolat azonositoja. Ebbol szedjuk ki az adott projekt azonositoit.
+     * @var array Az osszes model osszes kapcsolat azonositoja. Ebbol szedjuk ki az adott model azonositoit.
      * Ez a tomb cache -bol lekerdezheto, ezért hasznalja ezt.
-     * Minden index egy projekt azonosito, minden elem egy tomb, ami tartalmazza a kapcsolatok azonositoit
+     * Minden index egy model azonosito, minden elem egy tomb, ami tartalmazza a kapcsolatok azonositoit
      */
-    private $_relationIdsByProjectIds    = [];
+    protected $_relationIdsByModelIds    = [];
 
     /**
      * @param array $searchedIndustryIds
@@ -81,27 +81,27 @@ class Search_Complex implements Search
         $this->_searchedSkillIds        = $searchedSkillIds;
         $this->_skillRelation           = $skillRelation;
 
-        $this->_currentProject          = new Model_Project();
+        $this->_currentModel            = $this->createSearchModel();
     }
 
     /**
-     * @param array $projects
+     * @param array $models
      */
-    public function setProjects($projects)
+    public function setModels($models)
     {
-        $this->_projects = $projects;
+        $this->_models = $models;
     }
 
     /**
      * @return array
      */
-    public function getMatchedProjects()
+    public function getMatchedModels()
     {
-        return $this->_matchedProjects;
+        return $this->_matchedModels;
     }
 
     /**
-     * @return Model_Project_Relation
+     * @return Model_Relation
      */
     public function getSearchedRelationModel()
     {
@@ -109,11 +109,11 @@ class Search_Complex implements Search
     }
 
     /**
-     * @return Model_Project
+     * @return ORM
      */
-    public function getCurrentProject()
+    public function getCurrentModel()
     {
-        return $this->_currentProject;
+        return $this->_currentModel;
     }
 
     /**
@@ -127,9 +127,9 @@ class Search_Complex implements Search
     /**
      * @return array
      */
-    public function getRelationIdsByProjectIds()
+    public function getRelationIdsByModelIds()
     {
-        return $this->_relationIdsByProjectIds;
+        return $this->_relationIdsByModelIds;
     }
 
     /**
@@ -141,12 +141,12 @@ class Search_Complex implements Search
     }
 
     /**
-     * @param Model_Project $currentProject
+     * @param ORM $currentModel
      */
-    public function setCurrentProject($currentProject)
+    public function setCurrentModel($currentModel)
     {
-        if ($this->_currentProject == null) {
-            $this->_currentProject = $currentProject;
+        if ($this->_currentModel == null) {
+            $this->_currentModel = $currentModel;
         }
     }
 
@@ -155,7 +155,7 @@ class Search_Complex implements Search
      */
     public function search()
     {
-        $this->_projects = $this->_currentProject->getOrderedByCreated();
+        $this->_models = $this->_currentModel->getOrderedByCreated();
 
         // Szukites iparagakra
         $this->searchRelationsInProjects(new Model_Project_Industry());
@@ -166,7 +166,7 @@ class Search_Complex implements Search
         // Szukites kepessegekre
         $this->searchRelationsInProjects(new Model_Project_Skill());
 
-        return $this->_matchedProjects;
+        return $this->_matchedModels;
     }
 
     /**
@@ -178,13 +178,13 @@ class Search_Complex implements Search
      *
      * @return bool
      */
-    protected function searchRelationsInProjects(Model_Project_Relation $relationModel)
+    protected function searchRelationsInProjects(Model_Relation $relationModel)
     {
         $this->_searchedRelationModel   = $relationModel;
-        $this->_searchedRelationIds     = $this->getSearchedRelationIdsByType();
+        $this->_searchedRelationIds     = $this->{$this->_searchedRelationModel->getSearchedRelationIdsPropertyName()};
 
         if ($this->isEmptySearch()) {
-            $this->_matchedProjects = $this->_projects;
+            $this->_matchedModels = $this->_models;
             return true;
         }
 
@@ -196,27 +196,27 @@ class Search_Complex implements Search
          * @todo AB hasznalata ha az IN operator stabil
          */
 
-        $relationModelsByProjectIds     = $this->_searchedRelationModel->getAll();
-        $this->_relationIdsByProjectIds = Business::getIdsFromModelsMulti(
-            $relationModelsByProjectIds,
-            Business_Project::getRelationIdField($this->_searchedRelationModel));
+        $relationModelsByModelIds     = $this->_searchedRelationModel->getAll();
+        $this->_relationIdsByModelIds = Business::getIdsFromModelsMulti(
+            $relationModelsByModelIds,
+            $this->_searchedRelationModel->primary_key());
 
-        // Elso keresesnel a matchedProjects ures lesz, aztan beletesszuk a talalatokat es a tobbi keresnel ezeket szukiti tovabb
-        $projects           = (empty($this->_matchedProjects)) ? $this->_projects : $this->_matchedProjects;
-        $matchedProjects    = [];
+        // Elso keresesnel a matchedModels ures lesz, aztan beletesszuk a talalatokat es a tobbi keresnel ezeket szukiti tovabb
+        $models           = (empty($this->_matchedModels)) ? $this->_models : $this->_matchedModels;
+        $matchedModels    = [];
 
-        foreach ($projects as $project) {
-            $this->_currentProject = $project;
+        foreach ($models as $model) {
+            $this->_currentModel    = $model;
 
             $this->_searchRelation  = Project_Search_Relation_Factory::makeSearch($this);
             $found                  = $this->_searchRelation->searchRelationsInOneProject();
 
             if ($found) {
-                $matchedProjects[] = $this->_currentProject;
+                $matchedModels[] = $this->_currentModel;
             }
         }
 
-        $this->_matchedProjects = $matchedProjects;
+        $this->_matchedModels = $matchedModels;
 
         return true;
     }
@@ -228,22 +228,5 @@ class Search_Complex implements Search
     {
         return empty($this->_searchedIndustryIds)
             && empty($this->_searchedProfessionIds) && empty($this->_searchedSkillIds);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSearchedRelationIdsByType()
-    {
-        // Egy get_class es switch szebb lenne, de unittest miatt NEM LEHET (Mock_xy osztalyok miatt)
-        if ($this->_searchedRelationModel instanceof Model_Project_Industry) {
-            return $this->_searchedIndustryIds;
-        } elseif ($this->_searchedRelationModel instanceof Model_Project_Profession) {
-            return $this->_searchedProfessionIds;
-        } elseif ($this->_searchedRelationModel instanceof Model_Project_Skill) {
-            return $this->_searchedSkillIds;
-        }
-
-        return $this->_searchedIndustryIds;
     }
 }

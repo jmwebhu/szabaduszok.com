@@ -1,20 +1,21 @@
 <?php
 
-/**
- * Class Model_Project_Relation
- *
- * Projekt kapcsolatainak alaposztalya
- */
-
-abstract class Model_Project_Relation extends ORM
+abstract class Model_Relation extends ORM
 {
     /**
      * Visszaadja a kapcsolat vegpontjahoz tartozo ORM objektumot.
      * Pl.: Model_Project_Industry eseten visszaad egy Model_Industry peldanyt
      *
-     * @return Model_Project_Relation
+     * @return ORM
      */
     abstract public function getEndRelationModel();
+
+    /**
+     * Kereskor hasznalt tomb.
+     * Pl.: Model_Project_Industry visszzadja, hogy '_searchedIndustryIds'
+     * @return string
+     */
+    abstract public function getSearchedRelationIdsPropertyName();
 
     /**
      * @return array
@@ -30,12 +31,12 @@ abstract class Model_Project_Relation extends ORM
         $collection = [];
 
         foreach ($models as $model) {
-            if (!isset($collection[$model->project_id])) {
-                $collection[$model->project_id] = [];
+            if (!isset($collection[$model->pk()])) {
+                $collection[$model->pk()] = [];
             }
 
             $relationName = $this->getRelationNameFromClassName();
-            $collection[$model->project_id][] = $model->{$relationName};
+            $collection[$model->pk()][] = $model->{$relationName};
         }
 
         $cache->set($this->_table_name, $collection);
