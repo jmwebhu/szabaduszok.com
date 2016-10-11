@@ -27,13 +27,13 @@ class Search_View_Container_Factory_Project
         $selectedIndustryIds    = Arr::get($data, 'selectedIndustryIds', []);
 
         foreach ($industries as $industry) {
-            $selected = (in_array($industry->industry_id, $selectedIndustryIds));
+        $selected = (in_array($industry->industry_id, $selectedIndustryIds));
 
-            $industryItem = new Search_View_Container_Relation_Item(
-                $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY, $selected);
+        $industryItem = new Search_View_Container_Relation_Item(
+            $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY, $selected);
 
-            $relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
-        }
+        $relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+    }
 
         $professions = Arr::get($data, 'professions', []);
         foreach ($professions as $profession) {
@@ -53,7 +53,7 @@ class Search_View_Container_Factory_Project
 
         $relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
 
-        $container = new Search_View_Container_Project(Arr::get($data, 'current'));
+        $container = new Search_View_Container_Project('complex');
         $container->setRelationContainer($relationContainer);
 
         return $container;
@@ -65,8 +65,21 @@ class Search_View_Container_Factory_Project
      */
     private static function createSimple(array $data)
     {
-        $container = new Search_View_Container_Project(Arr::get($data, 'current'));
+        $container = new Search_View_Container_Project('simple');
         $container->setSearchTerm(Arr::get($data, 'search_term'));
+
+        $relationContainer = new Search_View_Container_Relation_Project();
+        $industryModel = new Model_Industry();
+        $industries = $industryModel->getAll();
+
+        foreach ($industries as $industry) {
+            $industryItem = new Search_View_Container_Relation_Item(
+                $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY, false);
+
+            $relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+        }
+
+        $container->setRelationContainer($relationContainer);
 
         return $container;
     }
