@@ -29,7 +29,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group industry
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsIndustryOk()
     {
@@ -53,7 +53,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group industry
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsIndustryNotOk()
     {
@@ -70,7 +70,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group industry
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsIndustryNoPostOk()
     {
@@ -84,7 +84,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group profession
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsProfessionOk()
     {
@@ -109,7 +109,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group profession
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsProfessionNotOk()
     {
@@ -126,7 +126,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group profession
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsProfessionNoPostOk()
     {
@@ -140,7 +140,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsSkillOrOk()
     {
@@ -167,7 +167,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsSkillOrNotOk()
     {
@@ -186,7 +186,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsSkillAndOk()
     {
@@ -212,7 +212,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsSkillAndNotOk()
     {
@@ -231,7 +231,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     /**
      * @group skill
-     * @covers _Search_Complex::searchRelationsInProjects()
+     * @covers Search_Complex_Project::search()
      */
     public function testSearchRelationsInProjectsSkillAndNoPostOk()
     {
@@ -241,6 +241,184 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $this->whenSearch();
 
         $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
+    }
+
+    // -------- Kevert --------
+
+    /**
+     * @group industry
+     * @group profession
+     * @covers Search_Complex_Project::search()
+     */
+    public function testSearchMixedIndustryProfession()
+    {
+        $this->givenIndustries([1]);
+        $this->givenProfessions([1, 2]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 3, 5]);
+        $this->thenMatchesShouldNotContain([2, 4]);
+
+        $this->givenIndustries([1, 2]);
+        $this->givenProfessions([3]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 4, 5]);
+        $this->thenMatchesShouldNotContain([2, 3]);
+
+        $this->givenIndustries([3]);
+        $this->givenProfessions([3, 4]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([4, 5]);
+        $this->thenMatchesShouldNotContain([1, 2, 3]);
+
+        $this->givenIndustries([1, 2, 3, 4]);
+        $this->givenProfessions([1, 2, 3, 4]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 2, 3, 4, 5]);
+    }
+
+    /**
+     * @group industry
+     * @group skill
+     * @covers Search_Complex_Project::search()
+     */
+    public function testSearchMixedIndustrySkillOr()
+    {
+        $this->orBefore();
+
+        $this->givenIndustries([1]);
+        $this->givenSkills([1, 2]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 3]);
+        $this->thenMatchesShouldNotContain([2, 4, 5]);
+
+        $this->givenIndustries([3, 4]);
+        $this->givenSkills([2, 5]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldEmpty();
+
+        $this->givenIndustries([3, 4]);
+        $this->givenSkills([1, 2, 3]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([5]);
+        $this->thenMatchesShouldNotContain([1, 2, 3, 4]);
+    }
+
+    /**
+     * @group profession
+     * @group skill
+     * @covers Search_Complex_Project::search()
+     */
+    public function testSearchMixedProfessionSkillOr()
+    {
+        $this->orBefore();
+
+        $this->givenProfessions([3]);
+        $this->givenSkills([1, 3]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 5]);
+        $this->thenMatchesShouldNotContain([2, 3, 4]);
+
+        $this->givenProfessions([2, 4]);
+        $this->givenSkills([3, 1, 5]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 2, 3, 5]);
+        $this->thenMatchesShouldNotContain([4]);
+
+        $this->givenProfessions([1]);
+        $this->givenSkills([1]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 3]);
+        $this->thenMatchesShouldNotContain([2, 4, 5]);
+    }
+
+    /**
+     * @group industry
+     * @group skill
+     * @covers Search_Complex_Project::search()
+     */
+    public function testSearchMixedIndustrySkillAnd()
+    {
+        $this->andBefore();
+
+        $this->givenIndustries([1]);
+        $this->givenSkills([1, 2]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1]);
+        $this->thenMatchesShouldNotContain([2, 3, 4, 5]);
+
+        $this->givenIndustries([3, 4]);
+        $this->givenSkills([2, 5]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldEmpty();
+
+        $this->givenIndustries([2]);
+        $this->givenSkills([4, 5]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([2]);
+        $this->thenMatchesShouldNotContain([1, 3, 4, 5]);
+
+        $this->givenIndustries([1]);
+        $this->givenSkills([1]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 3]);
+        $this->thenMatchesShouldNotContain([2, 4, 5]);
+    }
+
+    /**
+     * @group profession
+     * @group skill
+     * @covers Search_Complex_Project::search()
+     */
+    public function testSearchMixedProfessionSkillAnd()
+    {
+        $this->andBefore();
+
+        $this->givenProfessions([3]);
+        $this->givenSkills([1, 3]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldEmpty();
+
+        $this->givenProfessions([1, 2, 3]);
+        $this->givenSkills([1]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1, 3]);
+        $this->thenMatchesShouldNotContain([2, 4, 5]);
+
+        $this->givenProfessions([1, 2, 3]);
+        $this->givenSkills([1, 2]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([1]);
+        $this->thenMatchesShouldNotContain([2, 3, 4, 5]);
+
+        $this->givenProfessions([1, 2, 3]);
+        $this->givenSkills([4, 5]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldContain([2]);
+        $this->thenMatchesShouldNotContain([1, 3, 4, 5]);
+
+        $this->givenProfessions([1, 2, 3]);
+        $this->givenSkills([1, 4, 5]);
+        $this->whenSearch();
+
+        $this->thenMatchesShouldEmpty();
     }
 
     public function assertPostConditions()
