@@ -9,7 +9,7 @@ abstract class Search_View_Container
     protected $_currentType;
 
     /**
-     * @var View_Container_Relation
+     * @var Search_View_Container_Relation
      */
     protected $_relationContainer;
 
@@ -35,7 +35,7 @@ abstract class Search_View_Container
     }
 
     /**
-     * @return View_Container_Relation
+     * @return Search_View_Container_Relation
      */
     public function getRelationContainer()
     {
@@ -51,7 +51,7 @@ abstract class Search_View_Container
     }
 
     /**
-     * @param View_Container_Relation $relationContainer
+     * @param Search_View_Container_Relation $relationContainer
      */
     public function setRelationContainer($relationContainer)
     {

@@ -1,6 +1,6 @@
 <?php
 
-class Search_View_Container_Relation
+abstract class Search_View_Container_Relation
 {
     /**
      * @var array of Search_View_Container_Relation_Item
@@ -63,6 +63,10 @@ class Search_View_Container_Relation
         $this->_skillRelation = $skillRelation;
     }
 
+    /**
+     * @param Search_View_Container_Relation_Item $item
+     * @param int $type
+     */
     public function addItem(Search_View_Container_Relation_Item $item, $type)
     {
         switch ($type) {
@@ -79,4 +83,19 @@ class Search_View_Container_Relation
                 break;
         }
     }
+
+    /**
+     * @return string
+     */
+    abstract public function getIndustrySubtitle();
+
+    /**
+     * @return string
+     */
+    abstract public function getProfessionSubtitle();
+
+    /**
+     * @return string
+     */
+    abstract public function getSkillSubtitle();
 }

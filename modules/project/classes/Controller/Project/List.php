@@ -36,9 +36,6 @@ class Controller_Project_List extends Controller_Project
             $this->handleRequest();
             $this->setContext();
 
-            //echo Debug::vars($this->context->container);
-            //exit;
-
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
         }
@@ -111,11 +108,12 @@ class Controller_Project_List extends Controller_Project
     {
         $industry = new Model_Industry();
         $this->context->container = Search_View_Container_Factory_Project::createContainer([
-            'industries'        => $industry->getModelsByIds(Input::post('industries', [])),
-            'professions'       => $postProfessions,
-            'skills'            => $postSkills,
-            'skill_relation'    => Input::post('skill_relation', 1),
-            'current'           => 'complex'
+            'selectedIndustryIds'   => Input::post('industries', []),
+            'professions'           => $postProfessions,
+            'skills'                => $postSkills,
+            'skill_relation'        => Input::post('skill_relation', 1),
+            'current'               => 'complex',
+            'industries'            => $industry->getAll(),
         ]);
     }
 
@@ -140,7 +138,9 @@ class Controller_Project_List extends Controller_Project
         $this->context->salaries	= $data['salaries'];
         $this->context->users		= $data['users'];
 
-        $this->context->container = Search_View_Container_Factory_Project::createContainer(['current' => 'complex', 'industries' => $industry->getAll()]);
+        if (!isset($this->context->container)) {
+            $this->context->container = Search_View_Container_Factory_Project::createContainer(['current' => 'complex', 'industries' => $industry->getAll()]);
+        }
     }
 
     protected function getRelationData()

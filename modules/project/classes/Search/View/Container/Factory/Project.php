@@ -21,28 +21,32 @@ class Search_View_Container_Factory_Project
      */
     private static function createComplex(array $data)
     {
-        $relationContainer = new Search_View_Container_Relation();
+        $relationContainer = new Search_View_Container_Relation_Project();
 
-        $industries = Arr::get($data, 'industries', []);
+        $industries             = Arr::get($data, 'industries', []);
+        $selectedIndustryIds    = Arr::get($data, 'selectedIndustryIds', []);
+
         foreach ($industries as $industry) {
-            $industryItem = new Search_View_Container_Relation_Item_Project(
-                $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+            $selected = (in_array($industry->industry_id, $selectedIndustryIds));
+
+            $industryItem = new Search_View_Container_Relation_Item(
+                $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY, $selected);
 
             $relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
         }
 
         $professions = Arr::get($data, 'professions', []);
         foreach ($professions as $profession) {
-            $professionItem = new Search_View_Container_Relation_Item_Project(
-                $profession, Search_View_Container_Relation_Item::TYPE_PROFESSION);
+            $professionItem = new Search_View_Container_Relation_Item(
+                $profession, Search_View_Container_Relation_Item::TYPE_PROFESSION, true);
 
             $relationContainer->addItem($professionItem, Search_View_Container_Relation_Item::TYPE_PROFESSION);
         }
 
         $skills = Arr::get($data, 'skills', []);
         foreach ($skills as $skill) {
-            $skillItem = new Search_View_Container_Relation_Item_Project(
-                $skill, Search_View_Container_Relation_Item::TYPE_SKILL);
+            $skillItem = new Search_View_Container_Relation_Item(
+                $skill, Search_View_Container_Relation_Item::TYPE_SKILL, true);
 
             $relationContainer->addItem($skillItem, Search_View_Container_Relation_Item::TYPE_SKILL);
         }

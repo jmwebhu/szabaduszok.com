@@ -1,6 +1,6 @@
 <?php
 
-abstract class Search_View_Container_Relation_Item
+class Search_View_Container_Relation_Item
 {
     /**
      * @var int
@@ -34,13 +34,15 @@ abstract class Search_View_Container_Relation_Item
 
     /**
      * Search_View_Container_Relation_Item constructor.
-     * @param ORM $_model
-     * @param int $_type
+     * @param ORM $model
+     * @param int $type
+     * @param bool $selected
      */
-    public function __construct(ORM $_model, $_type)
+    public function __construct(ORM $model, $type, $selected)
     {
-        $this->_model   = $_model;
-        $this->_type    = $_type;
+        $this->_model       = $model;
+        $this->_type        = $type;
+        $this->_selected    = $selected;
     }
 
     /**
@@ -68,15 +70,19 @@ abstract class Search_View_Container_Relation_Item
     }
 
     /**
-     * @param boolean $selected
+     * @return int
      */
-    public function setSelected($selected)
+    public function getId()
     {
-        $this->_selected = $selected;
+        return $this->_model->pk();
     }
 
     /**
      * @return string
      */
-    abstract public function getSubtitle();
+    public function getName()
+    {
+        $name = ($this->_model->_nameField) ? $this->_model->_nameField : 'name';
+        return $this->_model->{$name};
+    }
 }
