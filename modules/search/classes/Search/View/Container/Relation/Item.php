@@ -18,15 +18,9 @@ abstract class Search_View_Container_Relation_Item
     const TYPE_SKILL        = 3;
 
     /**
-     * @var array of ORMs
+     * @var ORM
      */
-    protected $_items = [];
-
-    /**
-     * ES / VAGY kapcsolat
-     * @var int
-     */
-    protected $_relation;
+    protected $_model;
 
     /**
      * @var int
@@ -34,36 +28,51 @@ abstract class Search_View_Container_Relation_Item
     protected $_type;
 
     /**
-     * @param array $items
+     * @var bool
      */
-    public function __construct(array $items, $type)
+    protected $_selected;
+
+    /**
+     * Search_View_Container_Relation_Item constructor.
+     * @param ORM $_model
+     * @param int $_type
+     */
+    public function __construct(ORM $_model, $_type)
     {
-        $this->_items   = $items;
-        $this->_type    = $type;
+        $this->_model   = $_model;
+        $this->_type    = $_type;
     }
 
     /**
-     * @return array
+     * @return ORM
      */
-    public function getItems()
+    public function getModel()
     {
-        return $this->_items;
+        return $this->_model;
     }
 
     /**
      * @return int
      */
-    public function getRelation()
+    public function getType()
     {
-        return $this->_relation;
+        return $this->_type;
     }
 
     /**
-     * @param int $relation
+     * @return boolean
      */
-    public function setRelation($relation)
+    public function isSelected()
     {
-        $this->_relation = $relation;
+        return $this->_selected;
+    }
+
+    /**
+     * @param boolean $selected
+     */
+    public function setSelected($selected)
+    {
+        $this->_selected = $selected;
     }
 
     /**

@@ -109,8 +109,9 @@ class Controller_Project_List extends Controller_Project
 
     protected function setContainerToComplexSearch(array $postProfessions, array $postSkills)
     {
+        $industry = new Model_Industry();
         $this->context->container = Search_View_Container_Factory_Project::createContainer([
-            'industries'        => Input::post('industries'),
+            'industries'        => $industry->getModelsByIds(Input::post('industries', [])),
             'professions'       => $postProfessions,
             'skills'            => $postSkills,
             'skill_relation'    => Input::post('skill_relation', 1),

@@ -21,18 +21,33 @@ class Search_View_Container_Factory_Project
      */
     private static function createComplex(array $data)
     {
-        $industryItem = new Search_View_Container_Relation_Item_Project(
-            Arr::get($data, 'industries', []), Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+        $relationContainer = new Search_View_Container_Relation();
 
-        $professionItem = new Search_View_Container_Relation_Item_Project(
-            Arr::get($data, 'professions', []), Search_View_Container_Relation_Item::TYPE_PROFESSION);
+        $industries = Arr::get($data, 'industries', []);
+        foreach ($industries as $industry) {
+            $industryItem = new Search_View_Container_Relation_Item_Project(
+                $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
 
-        $skillItem = new Search_View_Container_Relation_Item_Project(
-            Arr::get($data, 'skills', []), Search_View_Container_Relation_Item::TYPE_SKILL);
+            $relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+        }
 
-        $skillItem->setRelation(Arr::get($data, 'skill_relation', 1));
+        $professions = Arr::get($data, 'professions', []);
+        foreach ($professions as $profession) {
+            $professionItem = new Search_View_Container_Relation_Item_Project(
+                $profession, Search_View_Container_Relation_Item::TYPE_PROFESSION);
 
-        $relationContainer = new Search_View_Container_Relation($industryItem, $professionItem, $skillItem);
+            $relationContainer->addItem($professionItem, Search_View_Container_Relation_Item::TYPE_PROFESSION);
+        }
+
+        $skills = Arr::get($data, 'skills', []);
+        foreach ($skills as $skill) {
+            $skillItem = new Search_View_Container_Relation_Item_Project(
+                $skill, Search_View_Container_Relation_Item::TYPE_SKILL);
+
+            $relationContainer->addItem($skillItem, Search_View_Container_Relation_Item::TYPE_SKILL);
+        }
+
+        $relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
 
         $container = new Search_View_Container_Project(Arr::get($data, 'current'));
         $container->setRelationContainer($relationContainer);

@@ -3,36 +3,28 @@
 class Search_View_Container_Relation
 {
     /**
-     * @var Search_View_Container_Relation_Item
+     * @var array of Search_View_Container_Relation_Item
      */
-    protected $_industries;
+    protected $_industries  = [];
 
     /**
-     * @var Search_View_Container_Relation_Item
+     * @var array of Search_View_Container_Relation_Item
      */
-    protected $_professions;
+    protected $_professions = [];
 
     /**
-     * @var Search_View_Container_Relation_Item
+     * @var array of Search_View_Container_Relation_Item
      */
-    protected $_skills;
+    protected $_skills      = [];
 
     /**
-     * @param Search_View_Container_Relation_Item $industries
-     * @param Search_View_Container_Relation_Item $professions
-     * @param Search_View_Container_Relation_Item $skills
+     * ES / VAGY kapcsolat
+     * @var int
      */
-    public function __construct(
-        Search_View_Container_Relation_Item $industries, Search_View_Container_Relation_Item $professions,
-        Search_View_Container_Relation_Item $skills)
-    {
-        $this->_industries  = $industries;
-        $this->_professions = $professions;
-        $this->_skills      = $skills;
-    }
+    protected $_skillRelation;
 
     /**
-     * @return Search_View_Container_Relation_Item
+     * @return array
      */
     public function getIndustries()
     {
@@ -40,7 +32,7 @@ class Search_View_Container_Relation
     }
 
     /**
-     * @return Search_View_Container_Relation_Item
+     * @return array
      */
     public function getProfessions()
     {
@@ -48,10 +40,43 @@ class Search_View_Container_Relation
     }
 
     /**
-     * @return Search_View_Container_Relation_Item
+     * @return array
      */
     public function getSkills()
     {
         return $this->_skills;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkillRelation()
+    {
+        return $this->_skillRelation;
+    }
+
+    /**
+     * @param int $skillRelation
+     */
+    public function setSkillRelation($skillRelation)
+    {
+        $this->_skillRelation = $skillRelation;
+    }
+
+    public function addItem(Search_View_Container_Relation_Item $item, $type)
+    {
+        switch ($type) {
+            case Search_View_Container_Relation_Item::TYPE_INDUSTRY:
+                $this->_industries[] = $item;
+                break;
+
+            case Search_View_Container_Relation_Item::TYPE_PROFESSION:
+                $this->_professions[] = $item;
+                break;
+
+            case Search_View_Container_Relation_Item::TYPE_SKILL:
+                $this->_skills[] = $item;
+                break;
+        }
     }
 }
