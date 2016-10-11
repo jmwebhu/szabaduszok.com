@@ -3,14 +3,24 @@
 abstract class View_Container_Relation_Item
 {
     /**
+     * @var int
+     */
+    const TYPE_INDUSTRY     = 1;
+
+    /**
+     * @var int
+     */
+    const TYPE_PROFESSION   = 2;
+
+    /**
+     * @var int
+     */
+    const TYPE_SKILL        = 3;
+
+    /**
      * @var array of ORMs
      */
     protected $_items = [];
-
-    /**
-     * @var string
-     */
-    protected $_subtitle;
 
     /**
      * ES / VAGY kapcsolat
@@ -19,13 +29,17 @@ abstract class View_Container_Relation_Item
     protected $_relation;
 
     /**
-     * @param array $items
-     * @param string $subtitle
+     * @var int
      */
-    public function __construct(array $items, $subtitle)
+    protected $_type;
+
+    /**
+     * @param array $items
+     */
+    public function __construct(array $items, $type)
     {
-        $this->_items       = $items;
-        $this->_subtitle    = $subtitle;
+        $this->_items   = $items;
+        $this->_type    = $type;
     }
 
     /**
@@ -34,14 +48,6 @@ abstract class View_Container_Relation_Item
     public function getItems()
     {
         return $this->_items;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubtitle()
-    {
-        return $this->_subtitle;
     }
 
     /**
@@ -59,4 +65,9 @@ abstract class View_Container_Relation_Item
     {
         $this->_relation = $relation;
     }
+
+    /**
+     * @return string
+     */
+    abstract public function getSubtitle();
 }

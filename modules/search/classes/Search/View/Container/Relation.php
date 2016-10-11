@@ -1,6 +1,6 @@
 <?php
 
-abstract class View_Container_Relation
+class View_Container_Relation
 {
     /**
      * @var View_Container_Relation_Item
@@ -54,6 +54,4 @@ abstract class View_Container_Relation
     {
         return $this->_skills;
     }
-
-
 }

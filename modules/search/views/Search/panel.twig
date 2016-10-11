@@ -1,4 +1,5 @@
-{% macro search(container) %}
+{% macro render(container) %}
+<div class="panel">
     <div class="panel-heading">
         <h2 class="mg-clear tc-black">
             {{ container.getEntityName() }} kereső
@@ -79,7 +80,7 @@
                     <input type="hidden" name="simple" value="1">
 
                     <p class="search-form-paragraph">
-                        {{ container.getSimpleSubtitle() }}:
+                        {% autoescape false %}{{ container.getSimpleSubtitle() }}:{% endautoescape %}
                     </p>
 
                     <div class="form-group">
@@ -96,10 +97,11 @@
 
             </div>
             <!-- simple END -->
-
         </div>
-
+        <!-- tab-content END -->
     </div>
-    </div>
+    <!-- panel-body END -->
+</div>
+<!-- panel END -->
 
 {% endmacro %}

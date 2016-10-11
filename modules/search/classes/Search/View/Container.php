@@ -24,11 +24,6 @@ abstract class Search_View_Container
     protected $_searchTerm;
 
     /**
-     * @var string
-     */
-    protected $_simpleSubtitle;
-
-    /**
      * @param string $entityName
      * @param $currentType
      */
@@ -73,8 +68,5 @@ abstract class Search_View_Container
     /**
      * @return string
      */
-    public function getSimpleSubtitle()
-    {
-        return $this->_simpleSubtitle;
-    }
+    abstract public function getSimpleSubtitle();
 }
