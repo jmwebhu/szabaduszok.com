@@ -22,19 +22,19 @@ class Search_View_Container_Factory_Project
     private static function createComplex(array $data)
     {
         $industryItem = new Search_View_Container_Relation_Item_Project(
-            $data['industries'], Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+            Arr::get($data, 'industries', []), Search_View_Container_Relation_Item::TYPE_INDUSTRY);
 
         $professionItem = new Search_View_Container_Relation_Item_Project(
-            $data['professions'], Search_View_Container_Relation_Item::TYPE_PROFESSION);
+            Arr::get($data, 'professions', []), Search_View_Container_Relation_Item::TYPE_PROFESSION);
 
         $skillItem = new Search_View_Container_Relation_Item_Project(
-            $data['skills'], Search_View_Container_Relation_Item::TYPE_SKILL);
+            Arr::get($data, 'skills', []), Search_View_Container_Relation_Item::TYPE_SKILL);
 
-        $skillItem->setRelation($data['skill_relation']);
+        $skillItem->setRelation(Arr::get($data, 'skill_relation', 1));
 
         $relationContainer = new Search_View_Container_Relation($industryItem, $professionItem, $skillItem);
 
-        $container = new Search_View_Container_Project($data['current']);
+        $container = new Search_View_Container_Project(Arr::get($data, 'current'));
         $container->setRelationContainer($relationContainer);
 
         return $container;
@@ -46,8 +46,8 @@ class Search_View_Container_Factory_Project
      */
     private static function createSimple(array $data)
     {
-        $container = new Search_View_Container_Project($data['current']);
-        $container->setSearchTerm($data['search_term']);
+        $container = new Search_View_Container_Project(Arr::get($data, 'current'));
+        $container->setSearchTerm(Arr::get($data, 'search_term'));
 
         return $container;
     }

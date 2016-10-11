@@ -138,7 +138,8 @@ class Controller_Project_List extends Controller_Project
         $this->context->relations	= $data['relations'];
         $this->context->salaries	= $data['salaries'];
         $this->context->users		= $data['users'];
-        $this->context->industries	= $industry->getAll();
+
+        $this->context->container = Search_View_Container_Factory_Project::createContainer(['current' => 'complex', 'industries' => $industry->getAll()]);
     }
 
     protected function getRelationData()
@@ -152,7 +153,7 @@ class Controller_Project_List extends Controller_Project
 
         foreach ($this->_matchedProjects as $project) {
             /**
-             * @var $project ORM
+             * @var $project Model_Project
              */
             $relations[$project->project_id]    = $project->getRelations();
             $salaries[$project->project_id]     = Viewhelper_Project::getSalary(new Entity_Project($project->project_id));

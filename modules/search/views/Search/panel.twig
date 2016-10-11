@@ -21,7 +21,7 @@
 
                     <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
                     <p class="search-form-paragraph">
-                        {{ container.getRelationContainer().getIndustries().getSubtitle() }}:
+                        {% autoescape false %}{{ container.getRelationContainer().getIndustries().getSubtitle() }}{% endautoescape %}
                     </p>
 
                     <div class="form-group">
@@ -34,7 +34,7 @@
 
                     <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
                     <p class="search-form-paragraph">
-                        {{ container.getRelationContainer().getProfessions().getSubtitle() }}:
+                        {% autoescape false %}{{ container.getRelationContainer().getProfessions().getSubtitle() }}{% endautoescape %}
                     </p>
                     <div class="form-group">
                         <select id="professions" class="form-control" name="professions[]" multiple="multiple">
@@ -46,7 +46,7 @@
 
                     <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
                     <p class="search-form-paragraph">
-                        {{ container.getRelationContainer().getSkills().getSubtitle() }}:
+                        {% autoescape false %}{{ container.getRelationContainer().getSkills().getSubtitle() }}{% endautoescape %}
                     </p>
                     <div class="form-group">
                         <select id="skills" class="form-control" name="skills[]" multiple="multiple">
@@ -80,7 +80,7 @@
                     <input type="hidden" name="simple" value="1">
 
                     <p class="search-form-paragraph">
-                        {% autoescape false %}{{ container.getSimpleSubtitle() }}:{% endautoescape %}
+                        {% autoescape false %}{{ container.getSimpleSubtitle() }}{% endautoescape %}
                     </p>
 
                     <div class="form-group">

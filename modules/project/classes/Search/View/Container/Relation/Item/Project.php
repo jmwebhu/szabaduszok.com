@@ -9,7 +9,7 @@ class Search_View_Container_Relation_Item_Project extends Search_View_Container_
     {
         switch ($this->_type) {
             case self::TYPE_INDUSTRY:
-                return "Mutasd azokat a projekteket, amik az alábbi <span class=\"bold\">iparágakba</span> tartoznak";
+                return "Mutasd azokat a projekteket, amik az alábbi <span class=\"bold\">iparágakba</span> tartoznak:";
                 break;
 
             case self::TYPE_PROFESSION:

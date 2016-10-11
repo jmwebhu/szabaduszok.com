@@ -3,28 +3,28 @@
 class Search_View_Container_Relation
 {
     /**
-     * @var View_Container_Relation_Item
+     * @var Search_View_Container_Relation_Item
      */
     protected $_industries;
 
     /**
-     * @var View_Container_Relation_Item
+     * @var Search_View_Container_Relation_Item
      */
     protected $_professions;
 
     /**
-     * @var View_Container_Relation_Item
+     * @var Search_View_Container_Relation_Item
      */
     protected $_skills;
 
     /**
-     * @param View_Container_Relation_Item $industries
-     * @param View_Container_Relation_Item $professions
-     * @param View_Container_Relation_Item $skills
+     * @param Search_View_Container_Relation_Item $industries
+     * @param Search_View_Container_Relation_Item $professions
+     * @param Search_View_Container_Relation_Item $skills
      */
     public function __construct(
-        View_Container_Relation_Item $industries, View_Container_Relation_Item $professions,
-        View_Container_Relation_Item $skills)
+        Search_View_Container_Relation_Item $industries, Search_View_Container_Relation_Item $professions,
+        Search_View_Container_Relation_Item $skills)
     {
         $this->_industries  = $industries;
         $this->_professions = $professions;
@@ -32,7 +32,7 @@ class Search_View_Container_Relation
     }
 
     /**
-     * @return View_Container_Relation_Item
+     * @return Search_View_Container_Relation_Item
      */
     public function getIndustries()
     {
@@ -40,7 +40,7 @@ class Search_View_Container_Relation
     }
 
     /**
-     * @return View_Container_Relation_Item
+     * @return Search_View_Container_Relation_Item
      */
     public function getProfessions()
     {
@@ -48,7 +48,7 @@ class Search_View_Container_Relation
     }
 
     /**
-     * @return View_Container_Relation_Item
+     * @return Search_View_Container_Relation_Item
      */
     public function getSkills()
     {
