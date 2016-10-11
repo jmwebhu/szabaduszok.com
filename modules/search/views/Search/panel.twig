@@ -1,4 +1,4 @@
-{% macro render(container) %}
+{% macro build(container) %}
 <div class="panel">
     <div class="panel-heading">
         <h2 class="mg-clear tc-black">
@@ -26,7 +26,7 @@
 
                     <div class="form-group">
                         <select class="form-control" name="industries[]" id="industries" multiple>
-                            {% for industry in {{ container.getRelationContainer().getIndustries().getItems() }} %}
+                            {% for industry in container.getRelationContainer().getIndustries().getItems() %}
                                 <option value="{{ industry.industry_id }}" {% if industry.industry_id in postIndustries %}selected{% endif %}>{{ industry.name }}</option>
                             {% endfor %}
                         </select>

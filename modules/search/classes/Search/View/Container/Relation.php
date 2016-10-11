@@ -1,6 +1,6 @@
 <?php
 
-class View_Container_Relation
+class Search_View_Container_Relation
 {
     /**
      * @var View_Container_Relation_Item
@@ -26,9 +26,9 @@ class View_Container_Relation
         View_Container_Relation_Item $industries, View_Container_Relation_Item $professions,
         View_Container_Relation_Item $skills)
     {
-        $this->_industries = $industries;
+        $this->_industries  = $industries;
         $this->_professions = $professions;
-        $this->_skills = $skills;
+        $this->_skills      = $skills;
     }
 
     /**

@@ -36,17 +36,11 @@ class Controller_Project_List extends Controller_Project
             $this->handleRequest();
             $this->setContext();
 
+            //echo Debug::vars($this->context->container);
+            //exit;
+
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
-        }
-    }
-
-    protected function handleRequest()
-    {
-        if ($this->request->method() == Request::POST) {
-            $this->handlePostRequest();
-        } else {
-            $this->handleGetRequest();
         }
     }
 
@@ -62,6 +56,15 @@ class Controller_Project_List extends Controller_Project
         ];
     }
 
+    protected function handleRequest()
+    {
+        if ($this->request->method() == Request::POST) {
+            $this->handlePostRequest();
+        } else {
+            $this->handleGetRequest();
+        }
+    }
+
     protected function handlePostRequest()
     {
         $this->_needPager = false;
@@ -69,7 +72,7 @@ class Controller_Project_List extends Controller_Project
         if (Input::post('complex')) {
             $this->handleComplexSearch();
         } else {
-            $this->setContextToSimpleSearch();
+            $this->setContainerToSimpleSearch();
         }
 
         $this->_project->setSearch(Search_Factory_Project::makeSearch(Input::post_all()));
@@ -87,13 +90,15 @@ class Controller_Project_List extends Controller_Project
         $postProfessions	= $profession->getModelsByIds($postProfessionIds);
         $postSkills 		= $skill->getModelsByIds($postSkillIds);
 
-        $this->setContextToComplexSearch($postProfessions, $postSkills);
+        $this->setContainerToComplexSearch($postProfessions, $postSkills);
     }
 
-    protected function setContextToSimpleSearch()
+    protected function setContainerToSimpleSearch()
     {
-        $this->context->searchTerm			= Input::post('search_term');
-        $this->context->current				= 'simple';
+        $this->context->container = Search_View_Container_Factory_Project::createContainer([
+            'search_term'   => Input::post('search_term'),
+            'current'       => 'simple'
+        ]);
     }
 
     protected function handleGetRequest()
@@ -102,13 +107,15 @@ class Controller_Project_List extends Controller_Project
         $this->_matchedProjects = $this->_project->getOrderedAndLimited($this->_pagerData['limit'], $this->_pagerData['offset']);
     }
 
-    protected function setContextToComplexSearch(array $postProfessions, array $postSkills)
+    protected function setContainerToComplexSearch(array $postProfessions, array $postSkills)
     {
-        $this->context->postIndustries 		= Input::post('industries');
-        $this->context->postProfessions 	= $postProfessions;
-        $this->context->postSkills 			= $postSkills;
-        $this->context->postSkillRelation	= Input::post('skill_relation', 1);
-        $this->context->current				= 'complex';
+        $this->context->container = Search_View_Container_Factory_Project::createContainer([
+            'industries'        => Input::post('industries'),
+            'professions'       => $postProfessions,
+            'skills'            => $postSkills,
+            'skill_relation'    => Input::post('skill_relation', 1),
+            'current'           => 'complex'
+        ]);
     }
 
     protected function setContext()

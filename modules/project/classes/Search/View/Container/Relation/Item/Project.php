@@ -1,6 +1,6 @@
 <?php
 
-class View_Container_Relation_Item_Project extends View_Container_Relation_Item
+class Search_View_Container_Relation_Item_Project extends Search_View_Container_Relation_Item
 {
     /**
      * @return string

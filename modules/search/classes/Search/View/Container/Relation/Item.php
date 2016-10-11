@@ -1,6 +1,6 @@
 <?php
 
-abstract class View_Container_Relation_Item
+abstract class Search_View_Container_Relation_Item
 {
     /**
      * @var int

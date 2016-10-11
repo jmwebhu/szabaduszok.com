@@ -3,13 +3,8 @@
 abstract class Search_View_Container
 {
     /**
-     * @var string
-     */
-    protected $_entityName;
-
-    /**
      * Aktualis tipus (egyszeru, reszletes)
-     * @var
+     * @var string
      */
     protected $_currentType;
 
@@ -24,21 +19,11 @@ abstract class Search_View_Container
     protected $_searchTerm;
 
     /**
-     * @param string $entityName
-     * @param $currentType
+     * @param string $currentType
      */
-    public function __construct($entityName, $currentType)
+    public function __construct($currentType)
     {
-        $this->_entityName  = $entityName;
-        $this->_currentType = $currentType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEntityName()
-    {
-        return $this->_entityName;
+        $this->_currentType         = $currentType;
     }
 
     /**
@@ -66,7 +51,32 @@ abstract class Search_View_Container
     }
 
     /**
+     * @param View_Container_Relation $relationContainer
+     */
+    public function setRelationContainer($relationContainer)
+    {
+        if ($this->_relationContainer == null) {
+            $this->_relationContainer = $relationContainer;
+        }
+    }
+
+    /**
+     * @param string $searchTerm
+     */
+    public function setSearchTerm($searchTerm)
+    {
+        if ($this->_searchTerm == null) {
+            $this->_searchTerm = $searchTerm;
+        }
+    }
+
+    /**
      * @return string
      */
     abstract public function getSimpleSubtitle();
+
+    /**
+     * @return string
+     */
+    abstract public function getEntityNameForHuman();
 }
