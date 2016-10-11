@@ -1,10 +1,10 @@
 <?php
 
-class Search_View_Container_Factory_Project
+class Search_View_Container_Factory_User
 {
     /**
      * @param array $data
-     * @return Search_View_Container_Project
+     * @return Search_View_Container_User
      */
     public static function createContainer(array $data)
     {
@@ -17,11 +17,11 @@ class Search_View_Container_Factory_Project
 
     /**
      * @param array $data
-     * @return Search_View_Container_Project
+     * @return Search_View_Container_User
      */
     private static function createComplex(array $data)
     {
-        $relationContainer = new Search_View_Container_Relation_Project();
+        $relationContainer = new Search_View_Container_Relation_User();
 
         $industries             = Arr::get($data, 'industries', []);
         $selectedIndustryIds    = Arr::get($data, 'selectedIndustryIds', []);
@@ -53,7 +53,7 @@ class Search_View_Container_Factory_Project
 
         $relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
 
-        $container = new Search_View_Container_Project('complex');
+        $container = new Search_View_Container_User('complex');
         $container->setRelationContainer($relationContainer);
 
         return $container;
@@ -61,16 +61,16 @@ class Search_View_Container_Factory_Project
 
     /**
      * @param array $data
-     * @return Search_View_Container_Project
+     * @return Search_View_Container_User
      */
     private static function createSimple(array $data)
     {
-        $container = new Search_View_Container_Project('simple');
+        $container = new Search_View_Container_User('simple');
         $container->setSearchTerm(Arr::get($data, 'search_term'));
 
-        $relationContainer = new Search_View_Container_Relation_Project();
-        $industryModel = new Model_Industry();
-        $industries = $industryModel->getAll();
+        $relationContainer  = new Search_View_Container_Relation_User();
+        $industryModel      = new Model_Industry();
+        $industries         = $industryModel->getAll();
 
         foreach ($industries as $industry) {
             $industryItem = new Search_View_Container_Relation_Item(
