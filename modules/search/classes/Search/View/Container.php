@@ -34,7 +34,7 @@ abstract class Search_View_Container
      */
     public function __construct($entityName, $currentType)
     {
-        $this->_entityName = $entityName;
+        $this->_entityName  = $entityName;
         $this->_currentType = $currentType;
     }
 

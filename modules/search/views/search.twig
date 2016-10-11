@@ -1,12 +1,12 @@
-{% macro search(entityNames, relations) %}
+{% macro search(container) %}
     <div class="panel-heading">
         <h2 class="mg-clear tc-black">
-            {{ entityNames.singular }} kereső
+            {{ container.getEntityName() }} kereső
         </h2>
     </div>
 
     <div class="panel-body">
-        <ul class="nav nav-tabs" data-current="{{ current }}">
+        <ul class="nav nav-tabs" data-current="{{ container.getCurrentType() }}">
             <li data-content="complex" class="active"><span class="ion ion-settings icon-dark-gray hidden-xs"></span>Részletes</li>
             <li data-content="simple"><span class="ion ion-search icon-dark-gray hidden-xs"></span>Egyszerű</li>
         </ul>
@@ -20,17 +20,12 @@
 
                     <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
                     <p class="search-form-paragraph">
-                        {{ relations.industries.subtitle }}:
-                        Mutasd azokat a projekteket, amik az alábbi <span class="bold">iparágakba</span> tartoznak:
+                        {{ container.getRelationContainer().getIndustries().getSubtitle() }}:
                     </p>
 
                     <div class="form-group">
                         <select class="form-control" name="industries[]" id="industries" multiple>
-                            {% for industry in relations.industries.items %}
-                                <option value="{{ industry.industry_id }}" {% if industry.industry_id in postIndustries %}selected{% endif %}>{{ industry.name }}</option>
-                            {% endfor %}
-
-                            {% for industry in industries %}
+                            {% for industry in {{ container.getRelationContainer().getIndustries().getItems() }} %}
                                 <option value="{{ industry.industry_id }}" {% if industry.industry_id in postIndustries %}selected{% endif %}>{{ industry.name }}</option>
                             {% endfor %}
                         </select>
@@ -38,16 +33,11 @@
 
                     <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
                     <p class="search-form-paragraph">
-                        {{ relations.professions.subtitle }}:
-                        ÉS a következő <span class="bold">szakterületeken</span> futnak:
+                        {{ container.getRelationContainer().getProfessions().getSubtitle() }}:
                     </p>
                     <div class="form-group">
                         <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                            {% for profession in relations.professions.items %}
-                                <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
-                            {% endfor %}
-
-                            {% for profession in postProfessions %}
+                            {% for profession in container.getRelationContainer().getProfessions().getItems() %}
                                 <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
                             {% endfor %}
                         </select>
@@ -55,26 +45,18 @@
 
                     <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
                     <p class="search-form-paragraph">
-                        {{ relations.skills.subtitle }}:
-                        ÉS az alábbi <span class="bold">képességek:</span>
+                        {{ container.getRelationContainer().getSkills().getSubtitle() }}:
                     </p>
                     <div class="form-group">
                         <select id="skills" class="form-control" name="skills[]" multiple="multiple">
-                            {% for skill in relations.skills.items %}
-                                <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
-                            {% endfor %}
-
-                            {% for skill in postSkills %}
+                            {% for skill in container.getRelationContainer().getSkills().getItems() %}
                                 <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <select class="form-control" name="skill_relation" id="skill-relation">
-                        <option value="1" {% if relations.skills.relation == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
-                        <option value="2" {% if relations.skills.relation == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
-
-                        <option value="1" {% if postSkillRelation == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
-                        <option value="2" {% if postSkillRelation == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
+                        <option value="1" {% if container.getRelationContainer().getSkills().getRelation() == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
+                        <option value="2" {% if container.getRelationContainer().getSkills().getRelation() == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
                     </select>
                     <p class="search-form-paragraph">
                         igénylik.
@@ -97,13 +79,11 @@
                     <input type="hidden" name="simple" value="1">
 
                     <p class="search-form-paragraph">
-                        {{ simple.subtitle }}:
-                        Mutasd azokat a projekteket, amikben megtalálható az alábbi <span class="bold">kifejezés</span>:
+                        {{ container.getSimpleSubtitle() }}:
                     </p>
 
                     <div class="form-group">
-                        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ simple.searchTerm }}">
-                        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ searchTerm }}">
+                        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ container.getSearchTerm() }}">
                     </div>
 
                     <button id="simple-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
@@ -123,108 +103,3 @@
     </div>
 
 {% endmacro %}
-
-<div class="panel">
-    <div class="panel-heading">
-        <h2 class="mg-clear tc-black">
-            Projekt kereső
-        </h2>
-    </div>
-    <div class="panel-body">
-        <ul class="nav nav-tabs" data-current="{{ current }}">
-            <li data-content="complex" class="active"><span class="ion ion-settings icon-dark-gray hidden-xs"></span>Részletes</li>
-            <li data-content="simple"><span class="ion ion-search icon-dark-gray hidden-xs"></span>Egyszerű</li>
-        </ul>
-
-        <div class="tab-content">
-            <div id="complex" class="tab-pane fade in active">
-
-                <form id="complex-search-form" method="POST" action="{{ ROOT }}szabaduszo-projektek">
-
-                    <input type="hidden" name="complex" value="1">
-
-                    <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
-                    <p class="search-form-paragraph">
-                        Mutasd azokat a projekteket, amik az alábbi <span class="bold">iparágakba</span> tartoznak:
-                    </p>
-
-                    <div class="form-group">
-                        <select class="form-control" name="industries[]" id="industries" multiple>
-                            {% for industry in industries %}
-                                <option value="{{ industry.industry_id }}" {% if industry.industry_id in postIndustries %}selected{% endif %}>{{ industry.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
-                    <p class="search-form-paragraph">
-                        ÉS a következő <span class="bold">szakterületeken</span> futnak:
-                    </p>
-                    <div class="form-group">
-                        <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                            {% for profession in postProfessions %}
-                                <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
-                    <p class="search-form-paragraph">
-                        ÉS az alábbi <span class="bold">képességek:</span>
-                    </p>
-                    <div class="form-group">
-                        <select id="skills" class="form-control" name="skills[]" multiple="multiple">
-                            {% for skill in postSkills %}
-                                <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <select class="form-control" name="skill_relation" id="skill-relation">
-                        <option value="1" {% if postSkillRelation == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
-                        <option value="2" {% if postSkillRelation == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
-                    </select>
-                    <p class="search-form-paragraph">
-                        igénylik.
-                    </p>
-
-                    <button id="complex-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
-                        <span class="ion ion-search icon-spacer icon-white"></span>Mehet
-                    </button>
-                    <a id="empty-form" class="bloc-button btn-block btn btn-lg btn-gray btn-d" href="{{ ROOT }}szabaduszo-projektek">
-                        <span class="ion ion-android-cancel icon-spacer icon-white"></span>Ürít
-                    </a>
-                </form>
-            </div>
-            <!-- complex END -->
-
-            <div id="simple" class="tab-pane fade">
-
-                <form id="simple-search-form" method="POST" action="{{ ROOT }}szabaduszo-projektek">
-
-                    <input type="hidden" name="simple" value="1">
-
-                    <p class="search-form-paragraph">
-                        {{ simple.subtitle }}:
-                        Mutasd azokat a projekteket, amikben megtalálható az alábbi <span class="bold">kifejezés</span>:
-                    </p>
-
-                    <div class="form-group">
-                        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ simple.searchTerm }}">
-                        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ searchTerm }}">
-                    </div>
-
-                    <button id="simple-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
-                        <span class="ion ion-search icon-spacer icon-white"></span>Mehet
-                    </button>
-                    <a id="empty-form" class="bloc-button btn-block btn btn-lg btn-gray btn-d" href="{{ ROOT }}szabaduszo-projektek">
-                        <span class="ion ion-android-cancel icon-spacer icon-white"></span>Ürít
-                    </a>
-                </form>
-
-            </div>
-            <!-- simple END -->
-
-        </div>
-
-    </div>
-</div>

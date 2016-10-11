@@ -3,7 +3,7 @@
 abstract class View_Container_Relation_Item
 {
     /**
-     * @var array
+     * @var array of ORMs
      */
     protected $_items = [];
 
