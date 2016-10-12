@@ -98,7 +98,19 @@ class Model_User extends Model_Auth_User
             'model'         => 'User_Project_Notification',
             'foreign_key'   => 'user_id',
         ],
-    ]; 
+    ];
+
+    public function getByEmail($email, $id)
+    {
+        $userWithEmail = $this->byEmail($email);
+
+        if ($id) {
+            $this->_model->where('user_id', '=', $id)->find();
+            $userWithEmail  = $userWithEmail->byNotId($id);
+        }
+
+        return $userWithEmail->limit(1)->find();
+    }
     
     public function last_login($format = null)
     {

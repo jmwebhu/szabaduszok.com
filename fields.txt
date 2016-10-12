@@ -1,0 +1,165 @@
+	/**
+	 * @var int
+	 */
+	protected $_user_id;
+
+	/**
+	 * @var string
+	 */
+	protected $_lastname;
+
+	/**
+	 * @var string
+	 */
+	protected $_firstname;
+
+	/**
+	 * @var string
+	 */
+	protected $_email;
+
+	/**
+	 * @var string
+	 */
+	protected $_password;
+
+	/**
+	 * @var int
+	 */
+	protected $_logins;
+
+	/**
+	 * @var int
+	 */
+	protected $_last_login;
+
+	/**
+	 * @var int
+	 */
+	protected $_address_postal_code;
+
+	/**
+	 * @var string
+	 */
+	protected $_address_city;
+
+	/**
+	 * @var string
+	 */
+	protected $_address_street;
+
+	/**
+	 * @var string
+	 */
+	protected $_phonenumber;
+
+	/**
+	 * @var string
+	 */
+	protected $_slug;
+
+	/**
+	 * @var int
+	 */
+	protected $_type;
+
+	/**
+	 * @var int
+	 */
+	protected $_min_net_hourly_wage;
+
+	/**
+	 * @var string
+	 */
+	protected $_short_description;
+
+	/**
+	 * @var string
+	 */
+	protected $_profile_picture_path;
+
+	/**
+	 * @var string
+	 */
+	protected $_list_picture_path;
+
+	/**
+	 * @var string
+	 */
+	protected $_cv_path;
+
+	/**
+	 * @var int
+	 */
+	protected $_is_company;
+
+	/**
+	 * @var string
+	 */
+	protected $_company_name;
+
+	/**
+	 * @var string
+	 */
+	protected $_created_at;
+
+	/**
+	 * @var string
+	 */
+	protected $_updated_at;
+
+	/**
+	 * @var int
+	 */
+	protected $_rating_points_sum;
+
+	/**
+	 * @var int
+	 */
+	protected $_raters_count;
+
+	/**
+	 * @var int
+	 */
+	protected $_rating_points_avg;
+
+	/**
+	 * @var int
+	 */
+	protected $_skill_relation;
+
+	/**
+	 * @var int
+	 */
+	protected $_is_admin;
+
+	/**
+	 * @var string
+	 */
+	protected $_search_text;
+
+	/**
+	 * @var int
+	 */
+	protected $_old_user_id;
+
+	/**
+	 * @var string
+	 */
+	protected $_password_plain;
+
+	/**
+	 * @var int
+	 */
+	protected $_landing_page_id;
+
+	/**
+	 * @var int
+	 */
+	protected $_need_project_notification;
+
+	/**
+	 * @var string
+	 */
+	protected $_webpage;
+

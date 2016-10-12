@@ -19,6 +19,10 @@ class EntityFieldGenerator
             return 'int';
         }
 
+        if ($type == 'datetime') {
+            return 'string';
+        }
+
         return $type;
     }
 }

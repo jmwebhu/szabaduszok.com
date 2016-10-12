@@ -3,16 +3,6 @@
 class Entity_User extends Entity
 {
     /**
-     * @var Text_User
-     */
-    protected $_text;
-
-    /**
-     * @var File_User
-     */
-    protected $_file;
-
-    /**
      * @var int
      */
     protected $_user_id;
@@ -113,12 +103,12 @@ class Entity_User extends Entity
     protected $_company_name;
 
     /**
-     * @var datetime
+     * @var string
      */
     protected $_created_at;
 
     /**
-     * @var datetime
+     * @var string
      */
     protected $_updated_at;
 
@@ -177,40 +167,298 @@ class Entity_User extends Entity
      */
     protected $_webpage;
 
-    public function submit(array $data)
+    /**
+     * @return int
+     */
+    public function getUserId()
     {
-        $post['type']               = $this->_model->getType();
-        $landing                    = Model_Landing::byName(Arr::get($post, 'landing_page_name'));
-        $post['landing_page_id']    = $landing->landing_page_id;
+        return $this->_user_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastname()
+    {
+        return $this->_lastname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstname()
+    {
+        return $this->_firstname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->_email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->_password;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLogins()
+    {
+        return $this->_logins;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastLogin()
+    {
+        return $this->_last_login;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAddressPostalCode()
+    {
+        return $this->_address_postal_code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressCity()
+    {
+        return $this->_address_city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressStreet()
+    {
+        return $this->_address_street;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhonenumber()
+    {
+        return $this->_phonenumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->_slug;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinNetHourlyWage()
+    {
+        return $this->_min_net_hourly_wage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShortDescription()
+    {
+        return $this->_short_description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfilePicturePath()
+    {
+        return $this->_profile_picture_path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListPicturePath()
+    {
+        return $this->_list_picture_path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCvPath()
+    {
+        return $this->_cv_path;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsCompany()
+    {
+        return $this->_is_company;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompanyName()
+    {
+        return $this->_company_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        return $this->_created_at;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedAt()
+    {
+        return $this->_updated_at;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatingPointsSum()
+    {
+        return $this->_rating_points_sum;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatersCount()
+    {
+        return $this->_raters_count;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRatingPointsAvg()
+    {
+        return $this->_rating_points_avg;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkillRelation()
+    {
+        return $this->_skill_relation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsAdmin()
+    {
+        return $this->_is_admin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchText()
+    {
+        return $this->_search_text;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOldUserId()
+    {
+        return $this->_old_user_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordPlain()
+    {
+        return $this->_password_plain;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLandingPageId()
+    {
+        return $this->_landing_page_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNeedProjectNotification()
+    {
+        return $this->_need_project_notification;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebpage()
+    {
+        return $this->_webpage;
+    }
+
+    public function __construct($id)
+    {
+        parent::__construct($id);
+    }
+
+    public function submit(array $post)
+    {
         $id                         = Arr::get($post, 'user_id');
         $userModel                  = new Model_User();
-
-        $userWithEmail = $userModel->byEmail(Arr::get($post, 'email'));
-
-        if ($id) {
-            $this->_model->where('user_id', '=', $id)->find();
-
-            $userWithEmail  = $userWithEmail->byNotId($id);
-
-            if (!Arr::get($post, 'password')) {
-                unset($post['password']);
-                unset($post['password_again']);
-            }
-        }
-
-        $userWithEmail = $userWithEmail->limit(1)->find();
+        $userWithEmail              = $userModel->getByEmail(Arr::get($post, 'email'), $id);
 
         if ($userWithEmail->loaded()) {
             throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
         }
 
-        $this->_text->fixPostalCode($post);
+        $post['type']               = $this->_model->getType();
+        $landing                    = Model_Landing::byName(Arr::get($post, 'landing_page_name'));
+        $post['landing_page_id']    = $landing->landing_page_id;
+
+        $this->unsetPasswordFrom($post);
+
+        Text_User::fixPostalCode($post);
 
         // Szabaduszo
-        $this->_text->fixUrl($post, 'webpage');
+        Text_User::fixUrl($post, 'webpage');
 
         // Megbizo
-        $this->_text->alterCheckboxValue($post);
+        Text_User::alterCheckboxValue($post);
 
         if ($id) {
             $this->_model->update_user($post);
@@ -226,7 +474,7 @@ class Entity_User extends Entity
         // Szabaduszo
         $this->_model->saveProjectNotificationByUser();
 
-        $this->_file->uploadFiles();
+        File_User::uploadFiles();
         $this->_business->saveSearchText();
 
         $this->_model->last_login = time();
@@ -240,5 +488,16 @@ class Entity_User extends Entity
         $signupModel->deleteIfExists($this->email);
 
         $this->mapModelToThis();
+    }
+
+    /**
+     * @param array $post
+     */
+    protected function unsetPasswordFrom(array $post)
+    {
+        if (!Arr::get($post, 'password')) {
+            unset($post['password']);
+            unset($post['password_again']);
+        }
     }
 }
