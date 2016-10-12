@@ -1,6 +1,6 @@
 <?php
 
-class Model_User_Freelancer extends Model_User
+class Model_User_Freelancer extends Model_User_Abstract
 {
     public function submit(array $data)
     {

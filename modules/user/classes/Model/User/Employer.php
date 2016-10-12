@@ -1,6 +1,6 @@
 <?php
 
-class Model_User_Employer extends Model_User
+class Model_User_Employer extends Model_User_Abstract
 {
     /**
      * @return int

@@ -483,13 +483,17 @@ abstract class Entity_User extends Entity
 
             $this->mapModelToThis();
 
-            return $this;
         } catch (Exception $ex) {
+            echo Debug::vars($ex);
+            exit;
+
             Log::instance()->addException($ex);
             $result = false;
         } finally {
-            Model_Database::trans_end([!$result]);
+            Model_Database::trans_end([$result]);
         }
+
+        return $this;
     }
 
     /**
