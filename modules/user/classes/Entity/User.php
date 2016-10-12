@@ -438,38 +438,30 @@ class Entity_User extends Entity
 
     public function submit(array $post)
     {
-        $id                         = Arr::get($post, 'user_id');
+        $data                       = $post;
+        $id                         = Arr::get($data, 'user_id');
         $userModel                  = new Model_User();
-        $userWithEmail              = $userModel->getByEmail(Arr::get($post, 'email'), $id);
+        $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
 
         if ($userWithEmail->loaded()) {
             throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
         }
 
-        $post['type']               = $this->_model->getType();
-        $landing                    = Model_Landing::byName(Arr::get($post, 'landing_page_name'));
-        $post['landing_page_id']    = $landing->landing_page_id;
+        $data['type']               = $this->_model->getType();
+        $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
+        $data['landing_page_id']    = $landing->landing_page_id;
 
-        $this->unsetPasswordFrom($post);
-
-        Text_User::fixPostalCode($post);
-
-        // Szabaduszo
-        Text_User::fixUrl($post, 'webpage');
-
-        // Megbizo
-        Text_User::alterCheckboxValue($post);
+        $data = $this->unsetPasswordFrom($data);
+        $data = $this->fixPost($data);
 
         if ($id) {
-            $this->_model->update_user($post);
-        }
-        else {
-            $this->_model->create_user($post);
+            $this->_model->update_user($data);
+        } else {
+            $this->_model->create_user($data);
         }
 
         $this->_model->saveSlug();
-
-        $this->_model->addRelations($post);
+        $this->_model->addRelations($data);
 
         // Szabaduszo
         $this->_model->saveProjectNotificationByUser();
@@ -481,23 +473,37 @@ class Entity_User extends Entity
         $this->_model->save();
 
         $this->_model->cacheToCollection();
-
         $this->_model->updateSession();
 
         $signupModel = new Model_Signup();
         $signupModel->deleteIfExists($this->email);
 
         $this->mapModelToThis();
+
+        return $this;
     }
 
     /**
      * @param array $post
+     * @return array
+     */
+    protected function fixPost(array $post)
+    {
+        return Text_User::fixPostalCode($post);
+    }
+
+    /**
+     * @param array $post
+     * @return array
      */
     protected function unsetPasswordFrom(array $post)
     {
-        if (!Arr::get($post, 'password')) {
-            unset($post['password']);
-            unset($post['password_again']);
+        $data = $post;
+        if (Arr::get($data, 'user_id') && !Arr::get($data, 'password')) {
+            unset($data['password']);
+            unset($data['password_again']);
         }
+
+        return $data;
     }
 }

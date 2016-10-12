@@ -21,7 +21,6 @@ class Model_User_Freelancer extends Model_User
         $this->removeAll('users_profiles', 'user_id');
 
         $this->addRelation($post, new Model_User_Skill(), new Model_Skill());
-
         $this->addProfiles($post, new Model_Profile());
     }
 }
