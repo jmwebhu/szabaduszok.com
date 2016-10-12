@@ -3,6 +3,11 @@
 class Entity_User extends Entity
 {
     /**
+     * @var File_User
+     */
+    protected $_file;
+
+    /**
      * @var int
      */
     protected $_user_id;
@@ -431,11 +436,6 @@ class Entity_User extends Entity
         return $this->_webpage;
     }
 
-    public function __construct($id)
-    {
-        parent::__construct($id);
-    }
-
     public function submit(array $post)
     {
         $data                       = $post;
@@ -454,26 +454,10 @@ class Entity_User extends Entity
         $data = $this->unsetPasswordFrom($data);
         $data = $this->fixPost($data);
 
-        if ($id) {
-            $this->_model->update_user($data);
-        } else {
-            $this->_model->create_user($data);
-        }
+        $this->_model->submit($data);
 
-        $this->_model->saveSlug();
-        $this->_model->addRelations($data);
-
-        // Szabaduszo
-        $this->_model->saveProjectNotificationByUser();
-
-        File_User::uploadFiles();
+        $this->_file->uploadFiles();
         $this->_business->saveSearchText();
-
-        $this->_model->last_login = time();
-        $this->_model->save();
-
-        $this->_model->cacheToCollection();
-        $this->_model->updateSession();
 
         $signupModel = new Model_Signup();
         $signupModel->deleteIfExists($this->email);

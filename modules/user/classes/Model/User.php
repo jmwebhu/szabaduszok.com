@@ -245,65 +245,22 @@ class Model_User extends Model_Auth_User
 
     public function submit(array $data)
     {
-        $post['type']               = $this->getType();
-        $landing                    = Model_Landing::byName(Arr::get($post, 'landing_page_name'));
-        $post['landing_page_id']    = $landing->landing_page_id;
-        $id                         = Arr::get($post, 'user_id');
-        $userModel      = new Model_User();
-
-        $userWithEmail = $userModel->byEmail(Arr::get($post, 'email'));
+        $id = Arr::get($data, 'user_id');
 
         if ($id) {
-            //$this->where('user_id', '=', $id)->find();
-
-            $userWithEmail  = $userWithEmail->byNotId($id);
-
-            if (!Arr::get($post, 'password')) {
-                unset($post['password']);
-                unset($post['password_again']);
-            }
+            $this->_model->update_user($data);
+        } else {
+            $this->_model->create_user($data);
         }
 
-        $userWithEmail->limit(1)->find();
+        $this->_model->saveSlug();
+        $this->_model->addRelations($data);
 
-        if ($userWithEmail->loaded()) {
-            throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
-        }
+        $this->_model->last_login = time();
+        $this->_model->save();
 
-        $this->fixPostalCode($post);
-
-        // Szabaduszo
-        $this->fixUrl($post, 'webpage');
-
-        // Megbizo
-        $this->alterCheckboxValue($post);
-
-        if ($id) {
-            $this->update_user($post);
-        }
-        else {
-            $this->create_user($post);
-        }
-
-        $this->saveSlug();
-
-        $this->addRelations($post);
-
-        // Szabaduszo
-        $this->saveProjectNotificationByUser();
-
-        $this->uploadFiles();
-        $this->saveSearchText();
-
-        $this->last_login = time();
-        $this->save();
-
-        $this->cacheToCollection();
-
-        $this->updateSession();
-
-        $signupModel = new Model_Signup();
-        $signupModel->deleteIfExists($this->email);
+        $this->_model->cacheToCollection();
+        $this->_model->updateSession();
 
         return $this;
     }
@@ -681,115 +638,7 @@ class Model_User extends Model_Auth_User
 		}
 	}
     
-    /**
-     * Felhasznalo fajlok feltoltese (profilkep, oneletrajz)
-     *
-     * @throws Exception_UserRegistration	Hibas file formatum, sikertelen feltoltes eseten
-     */
-    public function uploadFiles()
-    {
-    	// Van oneletrajz
-    	if (isset($_FILES['cv']) && !empty($_FILES['cv']['name']))
-    	{
-    		// Feltoltes
-    		$filename = $this->uploadCv($_FILES['cv']);
-    			
-    		// Mentes userhez
-    		$this->cv_path = $filename;
-    		$this->save();
-    	}
-    
-    	// Van profilkep
-    	if (isset($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['name']))
-    	{
-    		// Feltoltes
-    		$filenames = $this->uploadProfilePicture($_FILES['profile_picture']);
-    
-    		// Mentes userhez
-    		$this->profile_picture_path = Arr::get($filenames, 'profile');
-    		$this->list_picture_path	= Arr::get($filenames, 'list');
-    		$this->save();
-    	}
-    }
-    
-    /**
-     * Oneletrajz feltoltese uploads/cv mappaba
-     *
-     * @param array $file	_POST file adatok
-     * @return mixed 		Sikeres feltoltes eseten a file neve, hiba eseten false
-     */
-    protected function uploadCv(array $file)
-    {
-    	// Kiterjesztes validalasa
-    	if (!Upload::valid($file) || !Upload::not_empty($file) || !Upload::type($file, ['pdf', 'doc', 'docx', 'pages', 'odt', 'wps', 'wpd', 'rtf', 'docm']))
-    	{
-    		return false;
-    	}
-    
-    	// File nev elkeszitese slug alapjan
-    	$directory = DOCROOT . 'uploads/cv';
-    	$ext = Upload::getExt($file);
-    	$filename = strtolower('szabaduszok-' .  $this->slug . '-cv.' . $ext);
-    	 
-    	// Feltoltes
-    	$fullFilename = Upload::save($file, $filename, $directory);
-    	 
-    	// Hiba eseten kivetel dobasa
-    	if (!$fullFilename)
-    	{
-    		throw new Exception_UserRegistration('Hiba történt az önéletrajz feltöltése során. Kérjük próbáld meg újra.');
-    	}
-    	 
-    	return $filename;
-    }
-    
-    protected function uploadProfilePicture($file)
-    {
-    	// Kiterjesztes validalasa
-    	if (!Upload::valid($file) || !Upload::not_empty($file) || !Upload::type($file, ['jpg', 'jpeg', 'png', 'gif', 'bmp']))
-    	{
-    		return false;
-    	}
-    
-    	// File nev elkeszitese slug alapjan
-    	$directory	= DOCROOT . 'uploads/picture';
-    	$ext 		= Upload::getExt($file);
-    	$filename 	= strtolower($this->slug . '.' . $ext);
-    	 
-    	// Feltoltes
-    	$fullFilename = Upload::save($file, $filename, $directory);    
-    	 
-    	// Hiba eseten kivetel dobasa
-    	if (!$fullFilename)
-    	{
-    		throw new Exception_UserRegistration('Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
-    	}
-    
-    	// Profilkep
-    	$realFilename 		= 'szabaduszok-' . $this->slug . '-pic' . '.' . $ext;
-    	$realFullFilename 	= $directory . DIRECTORY_SEPARATOR . $realFilename;
-    	
-    	// Profilkep listaban megjeleno valtozata
-    	$listFileName 		= 'szabaduszok-' . $this->slug . '-pic-list' . '.' . $ext;
-    	$listFullFileName	= $directory . DIRECTORY_SEPARATOR . $listFileName;
-    
-    	// Atmeretezes es mentes
-    	Image::factory($fullFilename)
-	    	->resize(200, 200, Image::AUTO)
-	    	->save($realFullFilename); 	    
-	    
-	    Image::factory($fullFilename)
-		    ->resize(200, 200, Image::HEIGHT)
-		    ->save($listFullFileName);
-    
-		// Atmeneti file torlese
-    	unlink($fullFilename);
-    	 
-    	return [
-    		'profile' 	=> $realFilename,
-    		'list'		=> $listFileName
-    	];
-    }
+
     
     /**
      * Visszaadja a kapott kapcsolatokbol alkotott stringet.
@@ -894,98 +743,7 @@ class Model_User extends Model_Auth_User
     	return $result;
     }
     
-    /**
-     * Elmenti a projekt ertesito beallitasait
-     * 
-     * A profilon levo projekt ertesito mentese
-     *
-     * @param array $post		_POST adatok
-     */
-    public function saveProjectNotification(array $post)
-    {
-    	$this->removeAll('users_project_notification', $this->_primary_key);
-    
-    	$industries = Arr::get($post, 'industries', []);
-    	$professions = Arr::get($post, 'professions', []);
-    	$skills = Arr::get($post, 'skills', []);
-    	$skillRelation = Arr::get($post, 'skill_relation', 1);
-    
-    	foreach ($industries as $industryId)
-    	{
-    		$notificationIndustry = new Model_User_Project_Notification();
-    			
-    		$notificationIndustry->industry_id = $industryId;
-    		$notificationIndustry->user_id = $this->user_id;
-    			
-    		$notificationIndustry->save();
-    	}
-    
-    	foreach ($professions as $professionId)
-    	{
-    		$profession = $this->getOrCreateRelation($professionId, 'profession', false);
-    		$notificationProfession = new Model_User_Project_Notification();
-    
-    		$notificationProfession->profession_id = $profession->profession_id;
-    		$notificationProfession->user_id = $this->user_id;
-    
-    		$notificationProfession->save();    		
-    	}
-    
-    	foreach ($skills as $skillId)
-    	{
-    		$skill = $this->getOrCreateRelation($skillId, 'skill', false);
-    		$notificationSkill = new Model_User_Project_Notification();
-    
-    		$notificationSkill->skill_id = $skill->skill_id;
-    		$notificationSkill->user_id = $this->user_id;
-    
-    		$notificationSkill->save();
-    	}
-    
-    	$this->skill_relation = $skillRelation;
-    	$this->save();
-    
-    	return ['error' => false];
-    }
-    
-    /**
-     * Elmenti a projekt ertesito beallitasait
-     *
-     * Csak regisztracio eseten fut le
-     *
-     */
-   	public function saveProjectNotificationByUser()
-   	{
-   		foreach ($this->industries->find_all() as $industry)
-   		{
-   			$notificationIndustry = new Model_User_Project_Notification();
-   			 
-   			$notificationIndustry->industry_id = $industry->industry_id;
-   			$notificationIndustry->user_id = $this->user_id;
-   			 
-   			$notificationIndustry->save();
-   		}
-   		
-   		foreach ($this->professions->find_all() as $profession)
-   		{
-   			$notificationProfession = new Model_User_Project_Notification();
-   		
-   			$notificationProfession->profession_id = $profession->profession_id;
-   			$notificationProfession->user_id = $this->user_id;
-   		
-   			$notificationProfession->save();
-   		}
-   		
-   		foreach ($this->skills->find_all() as $skill)
-   		{
-   			$notificationSkill = new Model_User_Project_Notification();
-   		
-   			$notificationSkill->skill_id = $skill->skill_id;
-   			$notificationSkill->user_id = $this->user_id;
-   		
-   			$notificationSkill->save();
-   		}
-   	}
+
     
     /**
      * Letrehozza a projekt ertesitoket
