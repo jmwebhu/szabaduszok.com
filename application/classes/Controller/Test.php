@@ -4,10 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $prpr = new Model_Project_Profession();
-        $all = $prpr->getAll();
-
-        echo Debug::vars($all);
+        EntityFieldGenerator::generateFromModel(new Model_User());
     }	
 
     public function action_clearcache()

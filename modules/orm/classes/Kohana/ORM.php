@@ -255,6 +255,14 @@ class Kohana_ORM extends Model implements serializable {
 	 * @var string
 	 */
 	protected $_errors_filename = NULL;
+
+    /**
+     * @return array
+     */
+    public function getTableColumns()
+    {
+        return $this->_table_columns;
+    }
 	
 	/**
 	 * Constructs a new model and loads a record if given
