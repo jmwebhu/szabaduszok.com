@@ -1,6 +1,6 @@
 <?php
 
-class Text_UserTest extends Unittest_TestCase
+class Text_User_Test extends Unittest_TestCase
 {
     /**
      * @covers Text_User::fixPostalCode()

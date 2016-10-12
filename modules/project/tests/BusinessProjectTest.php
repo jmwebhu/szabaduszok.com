@@ -165,7 +165,7 @@ class BusinessProjectTest extends Unittest_TestCase
 
     protected function givenMockWithTestData()
     {
-        $mock = new ORMMock();
+        $mock = new Model_ProjectMock();
 
         $mock->name = 'Folyamatos webfejlesztések';
         $mock->short_description = $this->getShortDescriptionForSearch();
