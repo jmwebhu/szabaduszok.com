@@ -1,6 +1,6 @@
 <?php
 
-class Entity_User extends Entity
+abstract class Entity_User extends Entity
 {
     /**
      * @var File_User
@@ -171,6 +171,14 @@ class Entity_User extends Entity
      * @var string
      */
     protected $_webpage;
+
+    /**
+     * Entity_User constructor.
+     */
+    public function __construct()
+    {
+        $this->_stdObject = new stdClass();
+    }
 
     /**
      * @return int
@@ -436,35 +444,52 @@ class Entity_User extends Entity
         return $this->_webpage;
     }
 
+    /**
+     * @param array $post
+     * @return Entity_User
+     * @throws Exception_UserRegistration
+     */
     public function submit(array $post)
     {
-        $data                       = $post;
-        $id                         = Arr::get($data, 'user_id');
-        $userModel                  = new Model_User();
-        $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
+        try {
+            Model_Database::trans_start();
+            $result = true;
 
-        if ($userWithEmail->loaded()) {
-            throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
+            $data                       = $post;
+            $id                         = Arr::get($data, 'user_id');
+            $userModel                  = new Model_User();
+            $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
+
+            if ($userWithEmail->loaded()) {
+                throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
+            }
+
+            $data['type']               = $this->_model->getType();
+            $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
+            $data['landing_page_id']    = $landing->landing_page_id;
+
+            $data = $this->unsetPasswordFrom($data);
+            $data = $this->fixPost($data);
+
+            $this->_model->submit($data);
+
+            $this->_file->uploadFiles();
+
+            $this->_model->search_text = $this->_business->getSearchTextFromFields();
+            $this->_model->save();
+
+            $signupModel = new Model_Signup();
+            $signupModel->deleteIfExists($this->_model->email);
+
+            $this->mapModelToThis();
+
+            return $this;
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+            $result = false;
+        } finally {
+            Model_Database::trans_end([!$result]);
         }
-
-        $data['type']               = $this->_model->getType();
-        $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
-        $data['landing_page_id']    = $landing->landing_page_id;
-
-        $data = $this->unsetPasswordFrom($data);
-        $data = $this->fixPost($data);
-
-        $this->_model->submit($data);
-
-        $this->_file->uploadFiles();
-        $this->_business->saveSearchText();
-
-        $signupModel = new Model_Signup();
-        $signupModel->deleteIfExists($this->email);
-
-        $this->mapModelToThis();
-
-        return $this;
     }
 
     /**

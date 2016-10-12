@@ -2479,13 +2479,13 @@ class Kohana_ORM extends Model implements serializable {
 	
 	public function saveSlug()
 	{
-            if ($this->_slugField)
-            {
-                $slug = $this->getUniqueSlug();
-		$this->{$this->_slugField} = $slug;
-		
-		$this->save();	
-            }		
+        if ($this->_slugField)
+        {
+            $slug = $this->getUniqueSlug();
+            $this->{$this->_slugField} = $slug;
+
+            $this->save();
+        }
 	}
 	
 	public function removeAll($table, $key)

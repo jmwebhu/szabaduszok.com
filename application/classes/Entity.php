@@ -25,10 +25,16 @@ abstract class Entity
      * @var ORM
      */
     protected $_model;
+
     /**
      * @var Business
      */
     protected $_business;
+
+    /**
+     * @var stdClass Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
+     */
+    protected $_stdObject;
 
     /**
      * @var Object
@@ -38,11 +44,6 @@ abstract class Entity
      * @var Object
      */
     private $_targetObject      = null;
-
-    /**
-     * @var stdClass Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
-     */
-    private $_stdObject;
 
     /**
      * @param null|int $id
@@ -102,7 +103,7 @@ abstract class Entity
             $this->setPrimaryKeyFromModel();
         } catch (Exception $ex) {
             $result = false;
-            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            Log::instance()->addException($ex);
         } finally {
             Model_Database::trans_end([$result]);
         }
@@ -124,7 +125,7 @@ abstract class Entity
             $this->mapModelToThis();
         } catch (Exception $ex) {
             $result = false;
-            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            Log::instance()->addException($ex);
         } finally {
             Model_Database::trans_end([$result]);
         }
@@ -207,7 +208,7 @@ abstract class Entity
             $this->mapProperties();
 
         } catch (Exception $ex) {
-            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            Log::instance()->addException($ex);
             $result = false;
         }
 

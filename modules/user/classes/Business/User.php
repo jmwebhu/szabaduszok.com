@@ -1,6 +1,24 @@
 <?php
 
-class Business_User extends Business
+abstract class Business_User extends Business
 {
+    /**
+     * @return string
+     */
+    public function getSearchTextFromFields()
+    {
+        $sb = SB::create($this->_model->name())->append(' ')
+            ->append($this->_model->short_description)->append(' ')
+            ->append(date('Y-m-d'))->append(' ')
+            ->append($this->_model->address_city)->append(' ')
+            ->append($this->_model->company_name)->append(' ');
 
+        $relations = ['industries', 'professions'];
+
+        foreach ($relations as $relation) {
+            $sb->append($this->_model->getRelationString($relation))->append(' ');
+        }
+
+        return $sb->get();
+    }
 }

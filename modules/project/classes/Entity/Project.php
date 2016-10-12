@@ -458,7 +458,7 @@ class Entity_Project extends Entity
     {
         parent::submit($data);
 
-        $this->setSearchText($this->_business->getSearchTextFromFields());
+        $this->_search_text = $this->_business->getSearchTextFromFields();
         $this->save();
 
         $this->_model->cacheToCollection();

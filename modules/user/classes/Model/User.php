@@ -248,19 +248,19 @@ class Model_User extends Model_Auth_User
         $id = Arr::get($data, 'user_id');
 
         if ($id) {
-            $this->_model->update_user($data);
+            $this->update_user($data);
         } else {
-            $this->_model->create_user($data);
+            $this->create_user($data);
         }
 
-        $this->_model->saveSlug();
-        $this->_model->addRelations($data);
+        $this->saveSlug();
+        $this->addRelations($data);
 
-        $this->_model->last_login = time();
-        $this->_model->save();
+        $this->last_login = time();
+        $this->save();
 
-        $this->_model->cacheToCollection();
-        $this->_model->updateSession();
+        $this->cacheToCollection();
+        $this->updateSession();
 
         return $this;
     }
@@ -637,8 +637,6 @@ class Model_User extends Model_Auth_User
 			}
 		}
 	}
-    
-
     
     /**
      * Visszaadja a kapott kapcsolatokbol alkotott stringet.
@@ -1374,4 +1372,8 @@ class Model_User extends Model_Auth_User
         return $user;
     }
 
-} // End User Model
+    public function getType()
+    {
+
+    }
+}

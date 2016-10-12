@@ -30,7 +30,7 @@ class File_User_Freelancer extends File_User
     protected function uploadCv()
     {
         if (!$this->validateCvFile()) {
-            return false;
+            throw new Exception_UserRegistration('Hibás önéletrajz formátum. Kérjük próbáld meg újra.');
         }
 
         $extension      = Upload::getExt($this->_cvFile);

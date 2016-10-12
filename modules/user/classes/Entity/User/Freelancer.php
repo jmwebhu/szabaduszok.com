@@ -7,8 +7,14 @@ class Entity_User_Freelancer extends Entity_User
      */
     public function __construct($id = null)
     {
-        parent::__construct($id = null);
-        $this->_file = new File_User_Freelancer($this->_model);
+        parent::__construct();
+        $this->_model       = new Model_User_Freelancer($id);
+        $this->_file        = new File_User_Freelancer($this->_model);
+        $this->_business    = new Business_User_Freelancer($this->_model);
+
+        if ($id) {
+            $this->mapModelToThis();
+        }
     }
 
     /**

@@ -64,7 +64,7 @@ abstract class File_User
     protected function uploadProfilePicture()
     {
         if (!$this->validateImageFile()) {
-            return false;
+            throw new Exception_UserRegistration('Hibás kép formátum. Kérjük próbáld meg újra.');
         }
 
         $extension 	    = Upload::getExt($this->_profilePictureFile);
