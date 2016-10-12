@@ -500,7 +500,8 @@ abstract class Entity_User extends Entity
      */
     protected function fixPost(array $post)
     {
-        return Text_User::fixPostalCode($post);
+        $data = Text_User::fixPostalCode($post);
+        return Text_User::alterCheckboxValue($data);
     }
 
     /**

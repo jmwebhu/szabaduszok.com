@@ -449,7 +449,8 @@ class Model_User extends Model_Auth_User
 		foreach (Arr::get($post, 'profiles') as $url)
 		{
 			$temp = ['url' => $url];
-			$fixedUrl = $this->fixUrl($temp, 'url');
+            $fixedUrl = Text_User::fixUrl($temp, 'url');
+			//$fixedUrl = $this->fixUrl($temp, 'url');
 			
 			// Vegmegy a rendszerben levo profilokon
 			foreach ($baseUrls as $profileId => $baseUrl)

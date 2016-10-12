@@ -8,10 +8,10 @@ class Controller_Test extends Controller
         $data = [
             'lastname'  => 'Joó',
             'firstname' => 'Martin',
-            'email'     => 'joomartin6@jmweb.hu',
+            'email'     => 'joomartin7@jmweb.hu',
             'password'  => 'Deth4Life01',
             'password_confirm'  => 'Deth4Life01',
-            'address_postal_code'   => '9700',
+            'address_postal_code'   => '',
             'address_city'  => 'Szombathely',
             'address_street'    => 'Engels',
             'phonenumber'   => '06301923380',
