@@ -1,7 +1,10 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 
 class Model_User extends Model_Auth_User
-{	
+{
+    const TYPE_FREELANCER = 1;
+    const TYPE_EMPLOYER = 2;
+
 	public $_nameField = 'lastname';
 	public $_nameFieldSecond = 'firstname';
 	
@@ -227,7 +230,72 @@ class Model_User extends Model_Auth_User
     		->limit(1)
     		->execute()->get('rating_point');
     }
-    
+
+    public function submit(array $data)
+    {
+        $post['type']               = $this->getType();
+        $landing                    = Model_Landing::byName(Arr::get($post, 'landing_page_name'));
+        $post['landing_page_id']    = $landing->landing_page_id;
+        $id                         = Arr::get($post, 'user_id');
+        $userModel      = new Model_User();
+
+        $userWithEmail = $userModel->byEmail(Arr::get($post, 'email'));
+
+        if ($id) {
+            //$this->where('user_id', '=', $id)->find();
+
+            $userWithEmail  = $userWithEmail->byNotId($id);
+
+            if (!Arr::get($post, 'password')) {
+                unset($post['password']);
+                unset($post['password_again']);
+            }
+        }
+
+        $userWithEmail->limit(1)->find();
+
+        if ($userWithEmail->loaded()) {
+            throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
+        }
+
+        $this->fixPostalCode($post);
+
+        // Szabaduszo
+        $this->fixUrl($post, 'webpage');
+
+        // Megbizo
+        $this->alterCheckboxValue($post);
+
+        if ($id) {
+            $this->update_user($post);
+        }
+        else {
+            $this->create_user($post);
+        }
+
+        $this->saveSlug();
+
+        $this->addRelations($post);
+
+        // Szabaduszo
+        $this->saveProjectNotificationByUser();
+
+        $this->uploadFiles();
+        $this->saveSearchText();
+
+        $this->last_login = time();
+        $this->save();
+
+        $this->cacheToCollection();
+
+        $this->updateSession();
+
+        $signupModel = new Model_Signup();
+        $signupModel->deleteIfExists($this->email);
+
+        return $this;
+    }
+
     /**
      * Szabaduszo regisztracio
      *
@@ -237,8 +305,8 @@ class Model_User extends Model_Auth_User
     public function registerFreelancer(array $post)
     {
     	// Szabaduszo
-    	$post['type']               = 1;  
-        $post['landing_page_id']    = $this->getLandingPageIdByPost($post);
+    	$post['type']               = 1;
+        $post['landing_page_id']    = Model_Landing::byName(Arr::get($post, 'landing_page_name'));
     	$id                         = Arr::get($post, 'user_id');
     	
     	if ($id)
@@ -314,6 +382,88 @@ class Model_User extends Model_Auth_User
         $signupModel->deleteIfExists($this->email);
     
     	return $this;
+    }
+
+    /**
+     * Megbizo regisztracio
+     *
+     * @param array $post					_POST adatok
+     * @throws Exception_UserRegistration	Hiba eseten
+     */
+    public function registerProjectowner(array $post)
+    {
+        // Megbizo
+        $post['type']               = 2;
+        $post['landing_page_id']    = $this->getLandingPageIdByPost($post);
+        $id                         = Arr::get($post, 'user_id');
+
+        if ($id)
+        {
+            $this->where('user_id', '=', $id)->find();
+
+            // ORM peldanyositas
+            $userModel = new Model_User();
+
+            // Felhasznalo lekerdeze a kapott e-mail cimmel
+            $userWithEmail = $userModel->byEmail(Arr::get($post, 'email'))->byNotId($id)->limit(1)->find();
+
+            if (!Arr::get($post, 'password'))
+            {
+                unset($post['password']);
+                unset($post['password_again']);
+            }
+        }
+        else
+        {
+            // ORM peldanyositas
+            $userModel = new Model_User();
+
+            // Felhasznalo lekerdeze a kapott e-mail cimmel
+            $userWithEmail = $userModel->byEmail(Arr::get($post, 'email'))->find();
+        }
+
+        // Letezik ilyen, tehat hibat kell dobni
+        if ($userWithEmail->loaded())
+        {
+            throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
+        }
+
+        $this->alterCheckboxValue($post);
+
+        if ($id)
+        {
+            // Szerkesztes
+            $submit = $this->update_user($post);
+        }
+        else
+        {
+            // Mentes
+            $submit = $this->create_user($post);
+        }
+
+        // Slug generalas
+        $this->saveSlug();
+
+        // Kapcsolatok hozzaadasa
+        $this->addRelations($post, 2);
+
+        // Feltoltott fajlok mentese
+        $this->uploadFiles();
+
+        $this->last_login = time();
+        $this->save();
+
+        // Hozzaadas cache gyujtemeneyhez
+        $this->cacheToCollection();
+
+        // User frissitese Session -ben
+        $this->updateSession();
+
+        // Torli a feliratkozast, ha letezik
+        $signupModel = new Model_Signup();
+        $signupModel->deleteIfExists($this->email);
+
+        return $this;
     }
 	
 	/**
@@ -417,88 +567,6 @@ class Model_User extends Model_Auth_User
         return ($landingPage->loaded()) ? $landingPage->landing_page_id : null;
     }
     
-    /**
-     * Megbizo regisztracio
-     *
-     * @param array $post					_POST adatok
-     * @throws Exception_UserRegistration	Hiba eseten
-     */
-    public function registerProjectowner(array $post)
-    {    
-    	// Megbizo
-    	$post['type']               = 2;
-        $post['landing_page_id']    = $this->getLandingPageIdByPost($post);
-    	$id                         = Arr::get($post, 'user_id');        
-    	 
-    	if ($id)
-    	{
-    		$this->where('user_id', '=', $id)->find();
-    		
-    		// ORM peldanyositas
-    		$userModel = new Model_User();
-    		 
-    		// Felhasznalo lekerdeze a kapott e-mail cimmel
-    		$userWithEmail = $userModel->byEmail(Arr::get($post, 'email'))->byNotId($id)->limit(1)->find();
-    		 
-    		if (!Arr::get($post, 'password'))
-    		{
-    			unset($post['password']);
-    			unset($post['password_again']);
-    		}
-    	}
-    	else
-    	{
-    		// ORM peldanyositas
-	    	$userModel = new Model_User();
-	    		
-	    	// Felhasznalo lekerdeze a kapott e-mail cimmel
-	    	$userWithEmail = $userModel->byEmail(Arr::get($post, 'email'))->find();
-    	}    	    	
-    		
-    	// Letezik ilyen, tehat hibat kell dobni
-    	if ($userWithEmail->loaded())
-    	{
-    		throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
-    	}
-
-   		$this->alterCheckboxValue($post);   
-   		
-    	if ($id)
-    	{
-    		// Szerkesztes
-    		$submit = $this->update_user($post);
-    	}
-    	else
-    	{
-    		// Mentes
-    		$submit = $this->create_user($post);
-    	}
-    
-   		// Slug generalas
-    	$this->saveSlug();
-    
-    	// Kapcsolatok hozzaadasa
-        $this->addRelations($post, 2);
-    
-        // Feltoltott fajlok mentese
-        $this->uploadFiles();     
-
-        $this->last_login = time();
-        $this->save();
-    
-    	// Hozzaadas cache gyujtemeneyhez
-    	$this->cacheToCollection();
-        
-        // User frissitese Session -ben
-        $this->updateSession();   
-        
-        // Torli a feliratkozast, ha letezik
-        $signupModel = new Model_Signup();
-        $signupModel->deleteIfExists($this->email);
-    
-    	return $this;
-    }
-    
     protected function updateSession()
     {
         Session::instance()->set('auth_user', $this);
@@ -544,38 +612,17 @@ class Model_User extends Model_Auth_User
     
     	return $url;
     }
-    
+
     /**
-     * Hozzaadja a felhasznalohoz a _POST -bol kapott kapcsolatokat (iparagak, szakteruletek, kepessegek)
-     * 
-     * @param array $post       _POST adatok
-     * @param int $type         Felhasznalo tipus
-     * 
-     * @return void
+     * @param array $post
      */
-    public function addRelations(array $post, $type)
+    public function addRelations(array $post)
     {        
         $this->removeAll('users_industries', 'user_id');
-    	$this->removeAll('users_professions', 'user_id');		
-        
-        // Kepesseg csak szabaduszok eseten
-        if ($type == 1)
-        {
-            $this->removeAll('users_skills', 'user_id');
-			$this->removeAll('users_profiles', 'user_id');
-        }           	
-        
+    	$this->removeAll('users_professions', 'user_id');
+
         $this->addRelation($post, new Model_User_Industry(), new Model_Industry());
-        $this->addRelation($post, new Model_User_Profession(), new Model_Profession());        		
-        
-        // Kepesseg csak szabaduszok eseten
-        if ($type == 1)
-        {
-            $this->addRelation($post, new Model_User_Skill(), new Model_Skill());
-			
-			// Kulso profilok
-			$this->addProfiles($post, new Model_Profile());
-        }    					
+        $this->addRelation($post, new Model_User_Profession(), new Model_Profession());
     }               
 	
 	/**
@@ -1537,5 +1584,24 @@ class Model_User extends Model_Auth_User
 		
 		return $data;
 	}
+
+    /**
+     * @param int $type
+     * @return Model_User
+     */
+	public static function createUser($type)
+    {
+        switch ($type) {
+            case self::TYPE_FREELANCER:
+                $user = new Model_User_Freelancer();
+                break;
+
+            case self::TYPE_EMPLOYER:
+                $user = new Model_User_Employer();
+                break;
+        }
+
+        return $user;
+    }
 
 } // End User Model
