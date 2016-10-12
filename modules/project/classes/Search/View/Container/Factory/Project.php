@@ -3,6 +3,11 @@
 class Search_View_Container_Factory_Project
 {
     /**
+     * @var Search_View_Container_Relation_Project
+     */
+    private static $_relationContainer;
+
+    /**
      * @param array $data
      * @return Search_View_Container_Project
      */
@@ -21,7 +26,7 @@ class Search_View_Container_Factory_Project
      */
     private static function createComplex(array $data)
     {
-        $relationContainer = new Search_View_Container_Relation_Project();
+        self::$_relationContainer = new Search_View_Container_Relation_Project();
 
         $industries             = Arr::get($data, 'industries', []);
         $selectedIndustryIds    = Arr::get($data, 'selectedIndustryIds', []);
@@ -32,29 +37,19 @@ class Search_View_Container_Factory_Project
             $industryItem = new Search_View_Container_Relation_Item(
                 $industry, Search_View_Container_Relation_Item::TYPE_INDUSTRY, $selected);
 
-            $relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
+            self::$_relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
         }
 
         $professions = Arr::get($data, 'professions', []);
-        foreach ($professions as $profession) {
-            $professionItem = new Search_View_Container_Relation_Item(
-                $profession, Search_View_Container_Relation_Item::TYPE_PROFESSION, true);
-
-            $relationContainer->addItem($professionItem, Search_View_Container_Relation_Item::TYPE_PROFESSION);
-        }
+        self::addItems($professions, Search_View_Container_Relation_Item::TYPE_PROFESSION);
 
         $skills = Arr::get($data, 'skills', []);
-        foreach ($skills as $skill) {
-            $skillItem = new Search_View_Container_Relation_Item(
-                $skill, Search_View_Container_Relation_Item::TYPE_SKILL, true);
+        self::addItems($skills, Search_View_Container_Relation_Item::TYPE_SKILL);
 
-            $relationContainer->addItem($skillItem, Search_View_Container_Relation_Item::TYPE_SKILL);
-        }
-
-        $relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
+        self::$_relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
 
         $container = new Search_View_Container_Project('complex');
-        $container->setRelationContainer($relationContainer);
+        $container->setRelationContainer(self::$_relationContainer);
 
         return $container;
     }
@@ -68,9 +63,9 @@ class Search_View_Container_Factory_Project
         $container = new Search_View_Container_Project('simple');
         $container->setSearchTerm(Arr::get($data, 'search_term'));
 
-        $relationContainer = new Search_View_Container_Relation_Project();
-        $industryModel = new Model_Industry();
-        $industries = $industryModel->getAll();
+        $relationContainer  = new Search_View_Container_Relation_Project();
+        $industryModel      = new Model_Industry();
+        $industries         = $industryModel->getAll();
 
         foreach ($industries as $industry) {
             $industryItem = new Search_View_Container_Relation_Item(
@@ -82,5 +77,19 @@ class Search_View_Container_Factory_Project
         $container->setRelationContainer($relationContainer);
 
         return $container;
+    }
+
+    /**
+     * @param array $models
+     * @param int $type
+     */
+    private static function addItems(array $models, $type)
+    {
+        foreach ($models as $model) {
+            $item = new Search_View_Container_Relation_Item(
+                $model, $type, true);
+
+            self::$_relationContainer->addItem($item, $type);
+        }
     }
 }
