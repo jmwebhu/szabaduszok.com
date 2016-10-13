@@ -2,11 +2,11 @@
 
 class Model_User extends Model_Auth_User
 {
-	public $_nameField = 'lastname';
-	public $_nameFieldSecond = 'firstname';
+	public $_nameField          = 'lastname';
+	public $_nameFieldSecond    = 'firstname';
 	
-	protected $_table_name = 'users';
-	protected $_primary_key = 'user_id';		
+	protected $_table_name      = 'users';
+	protected $_primary_key     = 'user_id';
 	
 	protected $_created_column = [
 		'column' => 'created_at',
@@ -97,6 +97,21 @@ class Model_User extends Model_Auth_User
         ],
     ];
 
+    public function byType($type)
+    {
+        return $this->where('type', '=', $type);
+    }
+
+    public function byEmail($email)
+    {
+        return $this->where('email', '=', $email);
+    }
+
+    public function byNotId($id)
+    {
+        return $this->where('user_id', '!=', $id);
+    }
+
     public function getByEmail($email, $id)
     {
         $model          = new Model_User();
@@ -109,7 +124,10 @@ class Model_User extends Model_Auth_User
 
         return $userWithEmail->limit(1)->find();
     }
-    
+
+    /**
+     * @todo csere
+     */
     public function last_login($format = null)
     {
     	$format = ($format) ? $format : 'Y-m-d';
@@ -125,10 +143,7 @@ class Model_User extends Model_Auth_User
     }
 
     /**
-     * Visszaadja a megbizo nevet. Ha van kereszt es vezeteknev, akkor azokat, ha nincs
-     * akkor cegnevet.
-     *
-     * @return string   Nev
+     * @todo csere
      */
     public function name()
     {
@@ -141,104 +156,15 @@ class Model_User extends Model_Auth_User
         
         return $name;
     }
-    
-    public function freelancerName()
-    {
-        if ($this->firstname)
-        {
-            return $this->firstname;
-        }
-        
-        if ($this->lastname)
-        {
-            return $this->lastname;
-        }
-        
-        return 'Szabadúszó';
-    }
 
     /**
-     * Visszaadja a megbizo nevet. Ha van kereszt es vezeteknev, akkor azokat, ha nincs
-     * akkor cegnevet.
-     *
-     * @return string   Nev
+     * @todo csere. Csak Model_User_Freelancer, es Entity_User_Freelancer
+     * @return bool
      */
-    public function employerName()
-    {
-        if ($this->firstname && $this->lastname)
-        {
-            return $this->firstname . ' ' . $this->lastname;
-        }
-        else
-        {
-            return $this->company_name;
-        }
-    }
-    
-    public function byType($type)
-    {
-    	return $this->where('type', '=', $type);
-    }
-    
-    public function byEmail($email)
-    {
-    	return $this->where('email', '=', $email);
-    }
-    
-    public function byNotId($id)
-    {
-    	return $this->where('user_id', '!=', $id);
-    }
-    
-    /**
-     * Visszaadja cache -bol a kapott tipusu felhasznalokat
-     * 
-     * @param int $type		Tipus
-     * @return array		Felhasznalok
-     */
-    public function getByType($type = 1)
-    {
-    	$users = $this->getAll();
-    	$result = [];
-    	 
-    	foreach ($users as $user)
-    	{
-    		if ($user->type == $type)
-    		{
-    			$result[] = $user;
-    		}
-    	}
-    	 
-    	return $result;
-    }
-    
-    /**
-     * Visszaadja, hogy hany felhasznalo van a kapott tipusbol
-     * 
-     * @param int $type		Tipus
-     * @return int $count
-     */
-    public function getCountByType($type = 1)
-    {    	
-    	$users = $this->getAll();
-    	return AB::select()->from($users)->where('type', '=', $type)->execute()->count();    	    	
-    }    
-    
     public function hasProjectNotification()
     {
-    	$notifications = $this->project_notifications->find_all();    	
-    	
+    	$notifications = $this->project_notifications->find_all();
     	return !empty($notifications);
-    }
-    
-    public function getMyRating($user)
-    {
-    	return DB::select('rating_point')
-    		->from('users_ratings')
-    		->where('user_id', '=', $user->user_id)
-    		->and_where('rater_user_id', '=', $this->user_id)
-    		->limit(1)
-    		->execute()->get('rating_point');
     }
 
     public function submit(array $data)

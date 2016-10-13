@@ -78,7 +78,7 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
         $this->_user                = $this->_user->getById($this->_project->getUserId());
         $this->context->user        = $this->_user;
 
-        $myRating					= Auth::instance()->get_user()->getMyRating($this->_user);
+        $myRating                   = Model_User_Rating::getRating(Auth::instance()->get_user(), $this->_user);
         $this->context->myRating	= $myRating;
 
         if (!$myRating) {

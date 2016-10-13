@@ -6,12 +6,14 @@ class Controller_Main extends Controller_DefaultTemplate
 	{								
 		Session::instance()->delete('error');
 		$this->context->noHeader = true;
-		
-		$user = new Model_User();
+
 		$project = new Model_Project();
-		
-		$this->context->countOfFreelancers		= $user->getCountByType(1);
-		$this->context->countOfProjectOwners	= $user->getCountByType(2);
+
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $employer   = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
+
+        $this->context->countOfFreelancers		= $freelancer->getCount();
+        $this->context->countOfProjectOwners	= $employer->getCount();
 		$this->context->countOfProjects 		= $project->getCount();
 		$this->context->landingPage				= Input::get('landing');
 	}

@@ -560,7 +560,7 @@ class Controller_User extends Controller_DefaultTemplate
 			}			
 			
 			$logged 					= Auth::instance()->get_user();
-			$myRating					= $logged->getMyRating($this->context->user);
+            $myRating                   = Model_User_Rating::getRating($logged, $this->context->user);
 			$this->context->myRating	= ($myRating) ? $myRating : '-';
 			
 			if ($canSeeProjectNotification) 
@@ -650,8 +650,8 @@ class Controller_User extends Controller_DefaultTemplate
 			$this->context->salaries	= $salaries;
 			$this->context->users		= $users;
 			$this->context->industries	= $industry->getAll();
-				
-			$ownRating = $logged->getMyRating($user);
+
+            $ownRating = Model_User_Rating::getRating($logged, $user);
 			$this->context->myRating = ($ownRating) ? $ownRating : '-';
 		}		
 		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
@@ -744,8 +744,10 @@ class Controller_User extends Controller_DefaultTemplate
 	        }	                	        	     
 	                	        
 	        $industry				= new Model_Industry();	        	        
-	        $countUsers				= count($users);	
-	        $countAllUsers			= $user->getCountByType(1);
+	        $countUsers				= count($users);
+
+            $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+            $countAllUsers = $freelancer->getCount();
 	        $this->context->users	= $users;
 	        $this->context->title	= $countAllUsers . ' Szabadúszó egy helyen';
 	        

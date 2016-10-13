@@ -105,4 +105,13 @@ class Model_User_Freelancer extends Model_User_Abstract
         $this->addRelation($post, new Model_User_Skill(), new Model_Skill());
         $this->addProfiles($post, new Model_Profile());
     }
+
+    /**
+     * @return bool
+     */
+    public function hasProjectNotification()
+    {
+        $notifications = $this->project_notifications->find_all();
+        return !empty($notifications);
+    }
 }

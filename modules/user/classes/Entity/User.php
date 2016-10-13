@@ -351,6 +351,22 @@ abstract class Entity_User extends Entity
     }
 
     /**
+     * @param string $lastname
+     */
+    public function setLastname($lastname)
+    {
+        $this->_lastname = $lastname;
+    }
+
+    /**
+     * @param string $firstname
+     */
+    public function setFirstname($firstname)
+    {
+        $this->_firstname = $firstname;
+    }
+
+    /**
      * @param array $post
      * @return Entity_User
      * @throws Exception_UserRegistration
@@ -434,5 +450,29 @@ abstract class Entity_User extends Entity
             case self::TYPE_EMPLOYER:
                 return new Entity_User_Employer($id);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastLoginFormatted()
+    {
+        return $this->_business->getLastLoginFormatted();
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return SB::create($this->_lastname)->append(' ')->append($this->_firstname)->get();
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->_model->getCount();
     }
 }

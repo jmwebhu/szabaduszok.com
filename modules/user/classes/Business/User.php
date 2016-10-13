@@ -7,7 +7,7 @@ abstract class Business_User extends Business
      */
     public function getSearchTextFromFields()
     {
-        $sb = SB::create($this->_model->name())->append(' ')
+        $sb = SB::create($this->_model->lastname)->append(' ')->append($this->_model->firstname)->append(' ')
             ->append($this->_model->short_description)->append(' ')
             ->append(date('Y-m-d'))->append(' ')
             ->append($this->_model->address_city)->append(' ')
@@ -20,5 +20,17 @@ abstract class Business_User extends Business
         }
 
         return $sb->get();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastLoginFormatted()
+    {
+        if (!$this->_model->last_login) {
+            return 'Még nem lépett be';
+        }
+
+        return date('Y-m-d', $this->_model->last_login);
     }
 }

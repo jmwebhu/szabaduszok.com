@@ -91,4 +91,21 @@ class Entity_User_Freelancer extends Entity_User
         $data = parent::fixPost($post);
         return Text_User::fixUrl($data, 'webpage');
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        $name = parent::getName();
+        return (empty(trim($name))) ? 'Szabadúszó' : $name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasProjectNotification()
+    {
+        return $this->_model->hasProjectNotification();
+    }
 }
