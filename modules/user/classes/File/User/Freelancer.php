@@ -34,7 +34,7 @@ class File_User_Freelancer extends File_User
         }
 
         $extension      = Upload::getExt($this->_cvFile);
-        $filename       = strtolower(self::FILE_PREFFIX .  $this->_user->slug . self::CV_SUFFIX . $extension);
+        $filename       = strtolower(self::FILE_PREFFIX .  $this->_user->slug . self::CV_SUFFIX . '.' . $extension);
         $fullFilename   = Upload::save($this->_cvFile, $filename, self::PATH_CV);
 
         if (!$fullFilename) {

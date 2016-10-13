@@ -10,7 +10,7 @@ abstract class File_User
     /**
      * @var Model_User
      */
-    protected $_user;
+    public $_user;
 
     /**
      * @var array
@@ -20,22 +20,22 @@ abstract class File_User
     /**
      * @var string
      */
-    protected $_profilePictureFilename;
+    protected $_relativeProfilePictureFilename;
 
     /**
      * @var string
      */
-    protected $_profilePictureListFilename;
+    protected $_absoluteProfilePictureFilename;
 
     /**
      * @var string
      */
-    protected $_tempProfilePictureFilename;
+    protected $_absoluteProfilePictureListFilename;
 
     /**
      * @var string
      */
-    protected $_tempProfilePictureListFilename;
+    protected $_relativeProfilePictureListFilename;
 
     /**
      * @param Model_User $user
@@ -51,8 +51,8 @@ abstract class File_User
             $this->_profilePictureFile = $_FILES['profile_picture'];
             $filenames = $this->uploadProfilePicture();
 
-            $this->_user->profile_picture_path = Arr::get($filenames, 'profile');
-            $this->_user->list_picture_path	= Arr::get($filenames, 'list');
+            $this->_user->profile_picture_path  = Arr::get($filenames, 'profile');
+            $this->_user->list_picture_path     = Arr::get($filenames, 'list');
             $this->_user->save();
         }
     }
@@ -67,24 +67,22 @@ abstract class File_User
             throw new Exception_UserRegistration('Hibás kép formátum. Kérjük próbáld meg újra.');
         }
 
-        $extension 	    = Upload::getExt($this->_profilePictureFile);
-        $filename 	    = strtolower($this->_user->slug . '.' . $extension);
-        $fullFilename   = Upload::save($this->_profilePictureFile, $filename, self::PATH_PROFILE_PICTURE);
-
-        if (!$fullFilename) {
-            throw new Exception_UserRegistration('Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
-        }
+        $extension = Upload::getExt($this->_profilePictureFile);
 
         $this->setProfilePictureFilenameWith($extension);
         $this->setProfilePictureListFilenameWith($extension);
 
-        $this->saveImages();
+        $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, self::PATH_PROFILE_PICTURE);
 
-        unlink($fullFilename);
+        if (!$sourceFilename) {
+            throw new Exception_UserRegistration('Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
+        }
+
+        $this->saveImagesFrom($sourceFilename);
 
         return [
-            'profile' 	=> $this->_tempProfilePictureFilename,
-            'list'		=> $this->_tempProfilePictureListFilename
+            'profile' 	=> $this->_relativeProfilePictureFilename,
+            'list'		=> $this->_relativeProfilePictureListFilename
         ];
     }
 
@@ -102,8 +100,8 @@ abstract class File_User
      */
     protected function setProfilePictureFilenameWith($extension)
     {
-        $this->_tempProfilePictureFilename  = $this->getBaseFilenameWith(self::PROFILE_PICTURE_SUFFIX) . '.' . $extension;
-        $this->_profilePictureFilename      = $this->getFullPathBy($this->_tempProfilePictureFilename);
+        $this->_relativeProfilePictureFilename  = $this->getBaseFilenameWith(self::PROFILE_PICTURE_SUFFIX) . '.' . $extension;
+        $this->_absoluteProfilePictureFilename  = $this->getFullPathBy($this->_relativeProfilePictureFilename);
     }
 
     /**
@@ -111,8 +109,8 @@ abstract class File_User
      */
     protected function setProfilePictureListFilenameWith($extension)
     {
-        $this->_tempProfilePictureListFilename  = $this->getBaseFilenameWith(self::PROFILE_PICTURE_LIST_SUFFIX) . '.' . $extension;
-        $this->_profilePictureListFilename      = $this->getFullPathBy($this->_tempProfilePictureListFilename);
+        $this->_relativeProfilePictureListFilename  = $this->getBaseFilenameWith(self::PROFILE_PICTURE_LIST_SUFFIX) . '.' . $extension;
+        $this->_absoluteProfilePictureListFilename  = $this->getFullPathBy($this->_relativeProfilePictureListFilename);
     }
 
     /**
@@ -133,14 +131,17 @@ abstract class File_User
         return self::PATH_PROFILE_PICTURE . DIRECTORY_SEPARATOR . $filename;
     }
 
-    protected function saveImages()
+    /**
+     * @param $sourceFilename
+     */
+    protected function saveImagesFrom($sourceFilename)
     {
-        Image::factory($this->_tempProfilePictureFilename)
+        Image::factory($sourceFilename)
             ->resize(200, 200, Image::AUTO)
-            ->save($this->_profilePictureFilename);
+            ->save($this->_absoluteProfilePictureFilename);
 
-        Image::factory($this->_tempProfilePictureListFilename)
+        Image::factory($sourceFilename)
             ->resize(200, 200, Image::HEIGHT)
-            ->save($this->_profilePictureListFilename);
+            ->save($this->_absoluteProfilePictureListFilename);
     }
 }

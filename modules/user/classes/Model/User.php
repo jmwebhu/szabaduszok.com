@@ -2,9 +2,6 @@
 
 class Model_User extends Model_Auth_User
 {
-    const TYPE_FREELANCER = 1;
-    const TYPE_EMPLOYER = 2;
-
 	public $_nameField = 'lastname';
 	public $_nameFieldSecond = 'firstname';
 	
@@ -102,10 +99,11 @@ class Model_User extends Model_Auth_User
 
     public function getByEmail($email, $id)
     {
-        $userWithEmail = $this->byEmail($email);
+        $model          = new Model_User();
+        $userWithEmail  = $model->byEmail($email);
 
         if ($id) {
-            $this->_model->where('user_id', '=', $id)->find();
+            $this->where('user_id', '=', $id)->find();
             $userWithEmail  = $userWithEmail->byNotId($id);
         }
 
@@ -259,9 +257,6 @@ class Model_User extends Model_Auth_User
         $this->last_login = time();
         $this->save();
 
-        $this->cacheToCollection();
-        $this->updateSession();
-
         return $this;
     }
 	
@@ -366,11 +361,6 @@ class Model_User extends Model_Auth_User
         return ($landingPage->loaded()) ? $landingPage->landing_page_id : null;
     }
     
-    protected function updateSession()
-    {
-        Session::instance()->set('auth_user', $this);
-    }
-    
     /**
      * Belepes
      *
@@ -449,8 +439,7 @@ class Model_User extends Model_Auth_User
 		foreach (Arr::get($post, 'profiles') as $url)
 		{
 			$temp = ['url' => $url];
-            $fixedUrl = Text_User::fixUrl($temp, 'url');
-			//$fixedUrl = $this->fixUrl($temp, 'url');
+            $fixedUrl = Text_User::fixUrl($temp, 'url')['url'];
 			
 			// Vegmegy a rendszerben levo profilokon
 			foreach ($baseUrls as $profileId => $baseUrl)
@@ -922,23 +911,4 @@ class Model_User extends Model_Auth_User
 		
 		return $data;
 	}
-
-    /**
-     * @param int $type
-     * @return Model_User
-     */
-	public static function createUser($type)
-    {
-        switch ($type) {
-            case self::TYPE_FREELANCER:
-                $user = new Model_User_Freelancer();
-                break;
-
-            case self::TYPE_EMPLOYER:
-                $user = new Model_User_Employer();
-                break;
-        }
-
-        return $user;
-    }
 }

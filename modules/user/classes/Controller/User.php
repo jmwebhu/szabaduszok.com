@@ -45,13 +45,15 @@ class Controller_User extends Controller_DefaultTemplate
 				
 				Model_Database::trans_start();
 				
-				$user = new Model_User();
-				$user->registerFreelancer($post);
+				//$user = new Model_User();
+				//$user->registerFreelancer($post);
+                $user = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+                $user->submit($post);
 				
 				$result = ['error' => false];
 				
 				// Bejelentkeztetes
-				Auth_ORM::instance()->force_login($user);																
+				Auth_ORM::instance()->force_login($user->getModel());
 			}
 		}		
 		catch (Exception_UserRegistration $exur)		// Regisztracios hiba
@@ -86,7 +88,7 @@ class Controller_User extends Controller_DefaultTemplate
 					$user->addToMailService($api, 1, $id);
 					
 					// Atiranyitas kezdooldalra
-					header('Location: ' . Route::url('freelancerProfile', ['slug' => $user->slug]), true, 302);
+					header('Location: ' . Route::url('freelancerProfile', ['slug' => $user->getSlug()]), true, 302);
 					die();
 				}
 			}								
@@ -128,7 +130,7 @@ class Controller_User extends Controller_DefaultTemplate
 	
 				//$user = new Model_User();
 				//$user->registerProjectowner($post);
-                $user = new Entity_User_Employer();
+                $user = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
                 $user->submit($post);
 	
 				$result = ['error' => false];
@@ -139,6 +141,8 @@ class Controller_User extends Controller_DefaultTemplate
 		}
 		catch (Exception_UserRegistration $exur)		// Regisztracios hiba
 		{
+		    echo Debug::vars($exur);
+            exit;
 			// Visszaadja a view -nak
 			$this->context->error = $exur->getMessage();
 				
@@ -146,6 +150,8 @@ class Controller_User extends Controller_DefaultTemplate
 		}
 		catch (Exception $ex)		// Altalanos hiba
 		{
+		    echo Debug::vars($ex);
+            exit;
 			$this->context->error = __('defaultErrorMessage');
 				
 			// Logbejegyzest keszit
@@ -236,8 +242,10 @@ class Controller_User extends Controller_DefaultTemplate
 				
 				Model_Database::trans_start();
 				
-				$user = new Model_User();
-				$user = $user->registerFreelancer($post);
+				//$user = new Model_User();
+				//$user = $user->registerFreelancer($post);
+                $user = Entity_User::createUser(Entity_User::TYPE_FREELANCER, $user->user_id);
+                $user->submit($post);
 			}														
 		}
 		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
@@ -281,7 +289,7 @@ class Controller_User extends Controller_DefaultTemplate
 
 					$user->addToMailService($api, 1, $id);
 					
-					header('Location: ' . Route::url('freelancerProfile', ['slug' => $user->slug]), true, 302);
+					header('Location: ' . Route::url('freelancerProfile', ['slug' => $user->getSlug()]), true, 302);
 					die();
 				}
 			}		    
@@ -301,7 +309,7 @@ class Controller_User extends Controller_DefaultTemplate
 			}
 			
 			$user = new Model_User();
-			$user = $user->getByColumn('slug', $slug);		
+			$user = $user->getByColumn('slug', $slug);
 			
 			if (!$user->loaded())
 			{
@@ -341,9 +349,11 @@ class Controller_User extends Controller_DefaultTemplate
 			// Mentes
 			if ($this->request->method() == Request::POST)
 			{
-				$user = new Model_User();
+				//$user = new Model_User();
 				$post = Input::post_all();
-				$user = $user->registerProjectowner($post);
+				//$user = $user->registerProjectowner($post);
+                $user = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $user->user_id);
+                $user->submit($post);
 			}
 		}
 		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
@@ -387,7 +397,7 @@ class Controller_User extends Controller_DefaultTemplate
 
 					$user->addToMailService($api, 1, $id);
 					
-					header('Location: ' . Route::url('projectOwnerProfile', ['slug' => $user->slug]), true, 302);
+					header('Location: ' . Route::url('projectOwnerProfile', ['slug' => $user->getSlug()]), true, 302);
 					die();
 				}
 			}
@@ -600,8 +610,8 @@ class Controller_User extends Controller_DefaultTemplate
 				
 			$user = new Model_User();
 			$user = $user->getByColumn('slug', $slug);
-				
-			if (!$user->loaded())
+
+            if (!$user->loaded())
 			{
 				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
 			}

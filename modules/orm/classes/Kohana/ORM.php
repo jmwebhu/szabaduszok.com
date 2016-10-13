@@ -2495,15 +2495,6 @@ class Kohana_ORM extends Model implements serializable {
 	
 	public function cacheToCollection()
 	{
-		$cache = Cache::instance();
-		$collection = $cache->get($this->_table_name, []);
-	
-		if (empty($collection))
-		{
-			$orm = ORM::factory($this->_object_name);
-			$collection = $orm->getAll();
-		}		
-		
 		AB::insert($this->_table_name)->set($this->pk())->values($this)->execute();
 	}
 	

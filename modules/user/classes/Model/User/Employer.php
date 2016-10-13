@@ -7,6 +7,6 @@ class Model_User_Employer extends Model_User_Abstract
      */
     public function getType()
     {
-        return Model_User::TYPE_EMPLOYER;
+        return Entity_User::TYPE_EMPLOYER;
     }
 }

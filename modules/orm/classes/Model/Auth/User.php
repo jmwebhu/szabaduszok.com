@@ -196,4 +196,9 @@ class Model_Auth_User extends ORM {
 		return $this->values($values, $expected)->update($extra_validation);
 	}
 
+    public function updateSession()
+    {
+        Session::instance()->set('auth_user', $this);
+    }
+
 } // End Auth User Model

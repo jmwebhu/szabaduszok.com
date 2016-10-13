@@ -58,7 +58,7 @@ class Model_User_Freelancer extends Model_User_Abstract
             $relation = $this->getOrCreateRelation($relationId, $type, false);
             $notificationProfession = new Model_User_Project_Notification();
 
-            $notificationProfession->{$foreignKey} = $relation->{$relation};
+            $notificationProfession->{$foreignKey} = $relation->{$foreignKey};
             $notificationProfession->user_id = $this->user_id;
 
             $notificationProfession->save();
@@ -89,7 +89,7 @@ class Model_User_Freelancer extends Model_User_Abstract
      */
     public function getType()
     {
-        return Model_User::TYPE_FREELANCER;
+        return Entity_User::TYPE_FREELANCER;
     }
 
     /**

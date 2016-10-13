@@ -3,6 +3,16 @@
 abstract class Entity_User extends Entity
 {
     /**
+     * @var int
+     */
+    const TYPE_FREELANCER   = 1;
+
+    /**
+     * @var int
+     */
+    const TYPE_EMPLOYER     = 2;
+
+    /**
      * @var File_User
      */
     protected $_file;
@@ -370,6 +380,9 @@ abstract class Entity_User extends Entity
         $this->_model->search_text = $this->_business->getSearchTextFromFields();
         $this->_model->save();
 
+        $this->_model->cacheToCollection();
+        $this->_model->updateSession();
+
         $signupModel = new Model_Signup();
         $signupModel->deleteIfExists($this->_model->email);
 
@@ -406,5 +419,20 @@ abstract class Entity_User extends Entity
         }
 
         return $data;
+    }
+
+    /**
+     * @param int $type
+     * @return Entity_User
+     */
+    public static function createUser($type, $id = null)
+    {
+        switch ($type) {
+            case self::TYPE_FREELANCER:
+                return new Entity_User_Freelancer($id);
+
+            case self::TYPE_EMPLOYER:
+                return new Entity_User_Employer($id);
+        }
     }
 }
