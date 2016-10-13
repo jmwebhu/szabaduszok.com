@@ -60,22 +60,12 @@ abstract class Entity_User extends Entity
     /**
      * @var string
      */
-    protected $_phonenumber;
-
-    /**
-     * @var string
-     */
     protected $_slug;
 
     /**
      * @var int
      */
     protected $_type;
-
-    /**
-     * @var int
-     */
-    protected $_min_net_hourly_wage;
 
     /**
      * @var string
@@ -91,21 +81,6 @@ abstract class Entity_User extends Entity
      * @var string
      */
     protected $_list_picture_path;
-
-    /**
-     * @var string
-     */
-    protected $_cv_path;
-
-    /**
-     * @var int
-     */
-    protected $_is_company;
-
-    /**
-     * @var string
-     */
-    protected $_company_name;
 
     /**
      * @var string
@@ -135,11 +110,6 @@ abstract class Entity_User extends Entity
     /**
      * @var int
      */
-    protected $_skill_relation;
-
-    /**
-     * @var int
-     */
     protected $_is_admin;
 
     /**
@@ -161,16 +131,6 @@ abstract class Entity_User extends Entity
      * @var int
      */
     protected $_landing_page_id;
-
-    /**
-     * @var int
-     */
-    protected $_need_project_notification;
-
-    /**
-     * @var string
-     */
-    protected $_webpage;
 
     /**
      * Entity_User constructor.
@@ -263,14 +223,6 @@ abstract class Entity_User extends Entity
     /**
      * @return string
      */
-    public function getPhonenumber()
-    {
-        return $this->_phonenumber;
-    }
-
-    /**
-     * @return string
-     */
     public function getSlug()
     {
         return $this->_slug;
@@ -282,14 +234,6 @@ abstract class Entity_User extends Entity
     public function getType()
     {
         return $this->_type;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMinNetHourlyWage()
-    {
-        return $this->_min_net_hourly_wage;
     }
 
     /**
@@ -314,30 +258,6 @@ abstract class Entity_User extends Entity
     public function getListPicturePath()
     {
         return $this->_list_picture_path;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCvPath()
-    {
-        return $this->_cv_path;
-    }
-
-    /**
-     * @return int
-     */
-    public function getIsCompany()
-    {
-        return $this->_is_company;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompanyName()
-    {
-        return $this->_company_name;
     }
 
     /**
@@ -383,14 +303,6 @@ abstract class Entity_User extends Entity
     /**
      * @return int
      */
-    public function getSkillRelation()
-    {
-        return $this->_skill_relation;
-    }
-
-    /**
-     * @return int
-     */
     public function getIsAdmin()
     {
         return $this->_is_admin;
@@ -429,69 +341,46 @@ abstract class Entity_User extends Entity
     }
 
     /**
-     * @return int
-     */
-    public function getNeedProjectNotification()
-    {
-        return $this->_need_project_notification;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWebpage()
-    {
-        return $this->_webpage;
-    }
-
-    /**
      * @param array $post
      * @return Entity_User
      * @throws Exception_UserRegistration
      */
     public function submit(array $post)
     {
-        try {
-            Model_Database::trans_start();
-            $result = true;
+        $data                       = $post;
+        $id                         = Arr::get($data, 'user_id');
+        $userModel                  = new Model_User();
+        $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
 
-            $data                       = $post;
-            $id                         = Arr::get($data, 'user_id');
-            $userModel                  = new Model_User();
-            $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
-
-            if ($userWithEmail->loaded()) {
-                throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
-            }
-
-            $data['type']               = $this->_model->getType();
-            $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
-            $data['landing_page_id']    = $landing->landing_page_id;
-
-            $data = $this->unsetPasswordFrom($data);
-            $data = $this->fixPost($data);
-
-            $this->_model->submit($data);
-
-            $this->_file->uploadFiles();
-
-            $this->_model->search_text = $this->_business->getSearchTextFromFields();
-            $this->_model->save();
-
-            $signupModel = new Model_Signup();
-            $signupModel->deleteIfExists($this->_model->email);
-
-            $this->mapModelToThis();
-
-        } catch (Exception $ex) {
-            Log::instance()->addException($ex);
-            $result = false;
-
-        } finally {
-            Model_Database::trans_end([$result]);
+        if ($userWithEmail->loaded()) {
+            throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
         }
 
+        $data['type']               = $this->_model->getType();
+        $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
+        $data['landing_page_id']    = $landing->landing_page_id;
+
+        $data = $this->unsetPasswordFrom($data);
+        $data = $this->fixPost($data);
+
+        $this->_model->submit($data);
+
+        $this->_file->uploadFiles();
+
+        $this->_model->search_text = $this->_business->getSearchTextFromFields();
+        $this->_model->save();
+
+        $signupModel = new Model_Signup();
+        $signupModel->deleteIfExists($this->_model->email);
+
+        $this->mapModelToThis();
+
         return $this;
+    }
+
+    public function addToMailService(Api_Mailservice $api, $type, $id)
+    {
+        return true;
     }
 
     /**

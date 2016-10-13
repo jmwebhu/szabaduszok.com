@@ -126,13 +126,15 @@ class Controller_User extends Controller_DefaultTemplate
 				
 				Model_Database::trans_start();
 	
-				$user = new Model_User();
-				$user->registerProjectowner($post);
+				//$user = new Model_User();
+				//$user->registerProjectowner($post);
+                $user = new Entity_User_Employer();
+                $user->submit($post);
 	
 				$result = ['error' => false];
 	
 				// Bejelentkeztetes
-				Auth_ORM::instance()->force_login($user);
+				Auth_ORM::instance()->force_login($user->getModel());
 			}
 		}
 		catch (Exception_UserRegistration $exur)		// Regisztracios hiba
@@ -167,7 +169,7 @@ class Controller_User extends Controller_DefaultTemplate
 					$user->addToMailService($api, 2, $id);
 					
 					// Atiranyitas kezdooldalra
-					header('Location: ' . Route::url('projectOwnerProfile', ['slug' => $user->slug]), true, 302);
+					header('Location: ' . Route::url('projectOwnerProfile', ['slug' => $user->getSlug()]), true, 302);
 					die();
 				}
 			}

@@ -3,6 +3,45 @@
 class Entity_User_Employer extends Entity_User
 {
     /**
+     * @var string
+     */
+    protected $_phonenumber;
+
+    /**
+     * @var int
+     */
+    protected $_is_company;
+
+    /**
+     * @var string
+     */
+    protected $_company_name;
+
+    /**
+     * @return string
+     */
+    public function getPhonenumber()
+    {
+        return $this->_phonenumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsCompany()
+    {
+        return $this->_is_company;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompanyName()
+    {
+        return $this->_company_name;
+    }
+
+    /**
      * @param int|null $id
      */
     public function __construct($id = null)

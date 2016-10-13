@@ -3,6 +3,71 @@
 class Entity_User_Freelancer extends Entity_User
 {
     /**
+     * @var int
+     */
+    protected $_min_net_hourly_wage;
+
+    /**
+     * @var string
+     */
+    protected $_cv_path;
+
+    /**
+     * @var int
+     */
+    protected $_skill_relation;
+
+    /**
+     * @var int
+     */
+    protected $_need_project_notification;
+
+    /**
+     * @var string
+     */
+    protected $_webpage;
+
+    /**
+     * @return int
+     */
+    public function getMinNetHourlyWage()
+    {
+        return $this->_min_net_hourly_wage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCvPath()
+    {
+        return $this->_cv_path;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkillRelation()
+    {
+        return $this->_skill_relation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNeedProjectNotification()
+    {
+        return $this->_need_project_notification;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebpage()
+    {
+        return $this->_webpage;
+    }
+
+    /**
      * @param int|null $id
      */
     public function __construct($id = null)

@@ -8,7 +8,7 @@ class Controller_Test extends Controller
         $data = [
             'lastname'  => 'Joó',
             'firstname' => 'Martin',
-            'email'     => 'joomartin7@jmweb.hu',
+            'email'     => 'joomartin8@jmweb.hu',
             'password'  => 'Deth4Life01',
             'password_confirm'  => 'Deth4Life01',
             'address_postal_code'   => '',
