@@ -418,8 +418,7 @@ abstract class Entity_User extends Entity
      */
     protected function fixPost(array $post)
     {
-        $data = Text_User::fixPostalCode($post);
-        return Text_User::alterCheckboxValue($data);
+        return Text_User::fixPostalCode($post);
     }
 
     /**

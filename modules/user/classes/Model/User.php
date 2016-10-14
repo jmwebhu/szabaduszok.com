@@ -185,70 +185,6 @@ class Model_User extends Model_Auth_User
 
         return $this;
     }
-	
-	/**
-	 * A weboldal ele teszi a 'http' stringet, ha nincs ott
-	 * 
-	 * @param array $post	_POST adatok
-	 * @return string		Javitott URL
-	 */
-	protected function fixUrl(array &$post, $index)
-	{
-		$webpage = Arr::get($post, $index);
-		if (!empty($webpage))
-		{
-			$needPrefix = (stripos($webpage, 'http://') === false && stripos($webpage, 'https://') === false);
-		
-			if ($needPrefix)
-			{
-				$post[$index] = 'http://' . $post[$index];				
-			}
-		}				
-		
-		return $post[$index];
-	}
-	
-	/**
-	 * NULL -ra allitja az iranyitoszamot, ha ures string
-	 * 
-	 * @param array $post	_POST adatok
-	 * @return void
-	 */
-	protected function fixPostalCode(array &$post)
-	{
-		if (empty(Arr::get($post, 'address_postal_code')))
-		{
-			$post['address_postal_code'] = null;
-		}
-	}
-    
-    public function saveSearchText()
-    {    	    	
-    	$this->search_text = $this->collectSearchText();
-    	$this->save();
-    	
-    	return $this;
-    }
-
-    public function collectSearchText()
-    {
-        $searchText = $this->name() . ' ' . $this->short_description . ' ' . date('Y-m-d') . ' ' . $this->address_city . ' ';
-        
-        if ($this->is_company)
-        {
-            $searchText .= $this->company_name . ' ';
-        }    
-        
-        $relations = ($this->type == 1) ? ['industries', 'professions', 'skills'] : ['industries', 'professions'];
-        
-        foreach ($relations as $relation)
-        {
-            $text = $this->getRelationString($relation);
-            $searchText .= $text . ' ';
-        }
-
-        return $searchText;
-    }    
     
     /**
      * Hozzaadja a felhasznalot a megfelelo e-mail listahoz
@@ -404,22 +340,6 @@ class Model_User extends Model_Auth_User
     	return $result;
     }
     
-    private function alterCheckboxValue(array &$post)
-    {
-    	$isCompany = Arr::get($post, 'is_company');
-    
-    	if ($isCompany == 'on')
-    	{
-    		$post['is_company'] = 1;
-    	}
-    
-    	if (!$isCompany || $isCompany == 'off')
-    	{
-    		$post['is_company'] = 0;
-    		$post['company_name'] = null;
-    	}
-    }
-    
     /**
      * Jelszo emlekezteto. General egy uj jelszot, es elkuldi a kapott e-mail cimre
      *
@@ -486,8 +406,6 @@ class Model_User extends Model_Auth_User
     
     	return $result;
     }
-    
-
     
     /**
      * Letrehozza a projekt ertesitoket

@@ -25,100 +25,33 @@
 
 abstract class Api_Mailservice
 {
-	// Lehetseges service tipusok
-	const MAILMASTER	= 'mailmaster';
-	const MAILCHIMP 	= 'mailchimp';
-	
-	/**
-	 * @var null|Api_Mailservice	Singleton instance
-	 */
-	private static $_instance = null;
-	
-	/**
-	 * @var string $_type Service tipusa (pl.: mailchimp)
-	 */
-	protected $_type = '';	
-	/**
-	 * @var Config_Group $_config Service -hez tartozo config
-	 */
-	protected $_config = [];
-	/**
-	 * @var string API hivasok alap URL -je
-	 */
-	protected $_url = '';
-	
-	public function __construct($type)
-	{
-		$this->_type 	= $type;
-		$this->_config	= Kohana::$config->load($this->_type);
-		$this->_url 	= $this->initUrl();
-	}
-	
-	public function config() { return $this->_config; }
-	public function type() { return $this->_type; }
-	public function url() { return $this->_url; }
-	
-	/**
-	 * Singleton instance
-	 * 
-         * @param mixed $class      Kert osztaly
-         * @return Api_Mailservice  Peldany
-	 */
-	public static function instance($class = null)
-	{
-		if (self::$_instance)
-		{
-			return self::$_instance;
-		}
-		else
-		{
-			if (!$class)
-			{
-				$class = Kohana::$config->load('mailservice')->get('class');
-			}	
-			
-			$fullClass = 'Api_Mailservice_' . ucfirst($class);
-			self::$_instance = new $fullClass(strtolower($class));
-			
-			return self::$_instance;
-		}								
-	}
-	
-	/**
-	 * Szabaduszo feliratasa listara
-	 * @param Model_User $user
-	 */
-	abstract public function subscribeFreelancer(Model_User $user);
-	
-	/**
-	 * Megbizo feliratasa listara
-	 * @param Model_User $user
-	 */
-	abstract public function subscribeProjectowner(Model_User $user);
-	
-	/**
-	 * Szabaduszo frissitese listan
-	 * @param Model_User $user
-	 */
-	abstract public function updateFreelancer(Model_User $user);
-	
-	/**
-	 * Megbizo frissitese listan
-	 * @param Model_User $user
-	 */
-	abstract public function updateProjectowner(Model_User $user);
-	
-	/**
-	 * Beallitja az API hivasok alap URL -jet
-	 */
-	abstract protected function initUrl();
-	/**
-	 * Hozzaadja a HTTP Basic hitelesiteshez szukseges headert, a kapott headerhez
-	 *
-	 * @param string	$header	Header string
-	 * @return string	$header	Header string Auth -val kiegeszitve
-	 */
-	abstract protected function addAuthHeader($header);
+    /**
+     * @var Kohana_Config
+     */
+    protected $_config;
+
+    /**
+     * @var string
+     */
+    protected $_url;
+
+    /**
+     * @param Model_User $user
+     */
+	abstract public function subscribe(Model_User $user);
+
+    /**
+     * @param Model_User $user
+     */
+    abstract public function update(Model_User $user);
+
+    abstract protected function initConfig();
+    abstract protected function initUrl();
+
+    /**
+     * @param string $header
+     */
+    abstract protected function addAuthHeader($header);
 	
 	/**
 	 * HTTP keres kuldese
@@ -132,12 +65,9 @@ abstract class Api_Mailservice
 	 */
 	protected function sendRequest($url, $data, $header = null, $method = 'POST')
 	{
-		// Csak PRODUCTION
-		if (Kohana::$environment == Kohana::PRODUCTION)
-		{
-			// Kiegeszites Content-type -val
+		if (Kohana::$environment == Kohana::PRODUCTION) {
 			$header = ($header) ? $header : '';
-			$header .= $header = "Content-type: application/json\r\n";
+			$header .= "Content-type: application/json\r\n";
 			
 			$options = [
 				'http' => [
