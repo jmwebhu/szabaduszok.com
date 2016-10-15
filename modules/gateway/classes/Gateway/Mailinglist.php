@@ -1,29 +1,6 @@
 <?php
 
-/**
- * abstract class Api_Mailservice
- * E-mail cimlista kezelo API ososztaly. Ez az osztaly definialja az alap viselkedest. Minden konkret szolgaltatas API osztalya ebbol orokol es az
- *
- * Api_Mailservice_<service> nevet viseli az
- * 
- * Api/Mailservice/<service>.php fileban. A hozza tartozo config a config/<service>.php fileban talalhato.
- * 
- * Ez az osztaly olyan alap viselkedeseket definial, mint pl.:
- *  - Feliratkozas
- *  - Feliratkozas frissitese
- *  stb
- *  
- *  A konkret megvalositas, a konkret service osztaly feladata.
- * 
- * @author		Joó Martin <joomartin@jmweb.hu>
- * @date		2016-06-19
- * @package 	API
- * @copyright	Szabaduszok.com 2016
- * @since		2.0
- * @version		1.0
- */
-
-abstract class Api_Mailservice
+abstract class Gateway_Mailinglist
 {
     /**
      * @var Kohana_Config
@@ -34,6 +11,15 @@ abstract class Api_Mailservice
      * @var string
      */
     protected $_url;
+
+    /**
+     * Gateway_Mailinglist constructor.
+     */
+    protected function __construct()
+    {
+        $this->initConfig();
+        $this->initUrl();
+    }
 
     /**
      * @param Model_User $user
@@ -52,7 +38,9 @@ abstract class Api_Mailservice
      * @param string $header
      */
     abstract protected function addAuthHeader($header);
-	
+
+
+
 	/**
 	 * HTTP keres kuldese
 	 *

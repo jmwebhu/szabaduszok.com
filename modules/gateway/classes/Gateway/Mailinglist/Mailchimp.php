@@ -1,6 +1,6 @@
 <?php
 
-abstract class Api_Mailservice_Mailchimp extends Api_Mailservice
+abstract class Gateway_Mailinglist_Mailchimp extends Gateway_Mailinglist
 {
 	const STATUS_SUBSCRIBED = 'subscribed';
 

@@ -1,7 +1,12 @@
 <?php
 
-class Api_Mailservice_Mailchimp_Freelancer extends Api_Mailservice_Mailchimp
+class Gateway_Mailinglist_Mailchimp_Freelancer extends Gateway_Mailinglist_Mailchimp implements ISingleton
 {
+    /**
+     * @var Gateway_Mailinglist_Mailchimp_Freelancer
+     */
+    private static $_instance = null;
+
     /**
      * @param Model_User $user
      * @return bool
@@ -21,6 +26,18 @@ class Api_Mailservice_Mailchimp_Freelancer extends Api_Mailservice_Mailchimp
         return $this->sendRequest(
             $this->_url . 'lists/' . $this->_config->get('freelancerListId') . '/members/' . md5(strtolower($user->email)),
             $this->getUserData($user), null, 'PATCH');
+    }
+
+    /**
+     * @return Gateway_Mailinglist_Mailchimp_Freelancer
+     */
+    public static function getInstance()
+    {
+        if (self::$_instance == null) {
+            self::$_instance = new Gateway_Mailinglist_Mailchimp_Freelancer();
+        }
+
+        return self::$_instance;
     }
 
     /**
