@@ -19,7 +19,7 @@ abstract class Entity
     /**
      * @var array Azok az adattagok, amiket nem kell self::map() -nak masolni
      */
-    private static $_disabledPropertiesInMap = ['_model', '_business', '_destinationObject', '_targetObject', '_stdObject', '_file', '_search'];
+    private static $_disabledPropertiesInMap = ['_model', '_business', '_destinationObject', '_targetObject', '_stdObject', '_file', '_search', '_mailinglist'];
 
     /**
      * @var ORM

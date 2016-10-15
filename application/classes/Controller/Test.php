@@ -5,12 +5,12 @@ class Controller_Test extends Controller
     public function action_index()
     {
         Kohana::$environment = Kohana::PRODUCTION;
-        $user = new Entity_User_Freelancer(407);
+        $user = new Entity_User_Freelancer();
 
         $data = [
-            'firstname'     => 'Martinka7',
+            'firstname'     => 'Szabadúszó',
             'lastname'      => 'Joó',
-            'email'         => 'martinka7@szabaduszok.com',
+            'email'         => '33@szabaduszok.com',
             'address_postal_code'   => '9700',
             'address_city'  => 'Szombathely',
             'min_net_hourly_wage'   => 2500,
@@ -19,12 +19,11 @@ class Controller_Test extends Controller
             'password_confirm'      => 'Deth4Life01',
         ];
 
-        $user->setFirstname('Martinka7');
-        $user->save();
+        $user->submit($data);
 
-        //$user->submit($data);
+        echo Debug::vars($user->getSlug());
 
-        echo Debug::vars($user->addToMailingList(407));
+        echo Debug::vars($user->addToMailingList());
     }	
 
     public function action_clearcache()

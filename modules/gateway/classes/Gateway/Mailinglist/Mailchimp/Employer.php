@@ -54,7 +54,7 @@ class Gateway_Mailinglist_Mailchimp_Employer extends Gateway_Mailinglist_Mailchi
                 'CITY'			=> $this->_user->getAddressCity(),
                 'STREET'		=> $this->_user->getAddressStreet(),
                 'PHONE'			=> $this->_user->getPhonenumber(),
-                'SLUG'			=> $this->_user->getShortDescription(),
+                'SLUG'			=> $this->_user->getSlug(),
                 'SHORT'			=> $this->_user->getShortDescription(),
                 'INDUSTRIES' 	=> $this->_user->getRelationString('industries'),
                 'PROFS' 		=> $this->_user->getRelationString('professions'),
