@@ -5,10 +5,9 @@ abstract class Gateway_Mailinglist_Mailchimp extends Gateway_Mailinglist
 	const STATUS_SUBSCRIBED = 'subscribed';
 
     /**
-     * @param Model_User $user
      * @return array
      */
-    abstract protected function getUserData(Model_User $user);
+    abstract protected function getUserData();
 
     protected function initUrl()
 	{
@@ -41,10 +40,9 @@ abstract class Gateway_Mailinglist_Mailchimp extends Gateway_Mailinglist
 	}
 
     /**
-     * @param Model_User $user
      * @return array
      */
-	protected function getClearedUserData(Model_User $user)
+	protected function getClearedUserData()
     {
         $data = $this->getUserData();
         return $this->getClearedData($data);

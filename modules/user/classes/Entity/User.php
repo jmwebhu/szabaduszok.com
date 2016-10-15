@@ -474,4 +474,13 @@ abstract class Entity_User extends Entity
     {
         return $this->_model->getCount();
     }
+
+    /**
+     * @param string $relationName
+     * @return string
+     */
+    public function getRelationString($relationName)
+    {
+        return $this->_model->getRelationString($relationName);
+    }
 }

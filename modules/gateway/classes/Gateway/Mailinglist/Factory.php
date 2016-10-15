@@ -1,7 +1,5 @@
 <?php
 
-use Szabaduszok\Assert;
-
 abstract class Gateway_Mailinglist_Factory
 {
     /**
@@ -11,12 +9,14 @@ abstract class Gateway_Mailinglist_Factory
     public static function createMailinglist(Entity_User $user)
     {
         if ($user instanceof Entity_User_Freelancer) {
-            return Gateway_Mailinglist_Mailchimp_Freelancer::getInstance();
+            $gateway = Gateway_Mailinglist_Mailchimp_Freelancer::getInstance();
         }
 
         if ($user instanceof Entity_User_Employer) {
-            return Gateway_Mailinglist_Mailchimp_Employer::getInstance();
+            $gateway = Gateway_Mailinglist_Mailchimp_Employer::getInstance();
         }
+
+        $gateway->setUser($user);
 
         Assert::neverShouldReachHere();
     }

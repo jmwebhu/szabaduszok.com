@@ -298,8 +298,7 @@ class Model_User extends Model_Auth_User
 		}
 		
 		// Vegmegy a post profilokon
-		foreach (Arr::get($post, 'profiles') as $url)
-		{
+		foreach (Arr::get($post, 'profiles', []) as $url) {
 			$temp = ['url' => $url];
             $fixedUrl = Text_User::fixUrl($temp, 'url')['url'];
 			

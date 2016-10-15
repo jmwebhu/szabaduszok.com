@@ -3,6 +3,11 @@
 abstract class Gateway_Mailinglist
 {
     /**
+     * @var Entity_User
+     */
+    protected $_user;
+
+    /**
      * @var Kohana_Config
      */
     protected $_config;
@@ -22,14 +27,14 @@ abstract class Gateway_Mailinglist
     }
 
     /**
-     * @param Model_User $user
+     * @return bool
      */
-	abstract public function subscribe(Model_User $user);
+	abstract public function subscribe();
 
     /**
-     * @param Model_User $user
+     * @return bool
      */
-    abstract public function update(Model_User $user);
+    abstract public function update();
 
     abstract protected function initConfig();
     abstract protected function initUrl();
@@ -39,7 +44,13 @@ abstract class Gateway_Mailinglist
      */
     abstract protected function addAuthHeader($header);
 
-
+    /**
+     * @param Entity_User $user
+     */
+    public function setUser($user)
+    {
+        $this->_user = $user;
+    }
 
 	/**
 	 * HTTP keres kuldese
