@@ -187,29 +187,6 @@ class Model_User extends Model_Auth_User
     }
     
     /**
-     * Hozzaadja a felhasznalot a megfelelo e-mail listahoz
-     *
-     * @param Api_Mailservice $api  Mailservice objektum
-     * @param int $type             Tipus (1, 2)
-     * @param int $id               Azonosito. Nem kotelezo
-     * 
-     * @return void  
-     */
-    public function addToMailService(Api_Mailservice $api, $type, $id = null)
-    {
-        /**
-         * @var $api Api_Mailservice
-         */
-        $action     = ($id) ? 'update' : 'subscribe';
-        $typeString = ($type == 1) ? 'freelancer' : 'projectowner';        
-        $method     = $action . ucfirst($typeString);        
-        
-        $api->{$method}($this);
-        
-        return $method;
-    }        
-    
-    /**
      * Visszaadja a landing oldal azonositojat a postban levo nev alapjan
      * 
      * @param array $post       _POST adatok
