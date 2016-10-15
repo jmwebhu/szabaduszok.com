@@ -203,50 +203,6 @@ class Model_User extends Model_Auth_User
     }
     
     /**
-     * Jelszo emlekezteto. General egy uj jelszot, es elkuldi a kapott e-mail cimre
-     *
-     * @param string $email		E-mail cim
-     * @return array $result
-     */
-    public function passwordReminder($email)
-    {
-    	// Lekerdezi a felhasznalot a kapott e-mail cimmel
-    	$user = new Model_User();
-    	$user = $user->getByColumn('email', $email);
-    
-    	// Van felhasznalo ezzel az e-mail cimmel
-    	if ($user && $user->loaded())
-    	{
-    		$password = self::generatePassword();
-    
-    		$user->password = $password;
-    		$user->save();
-    
-    		$html = Twig::getHtmlFromTemplate('Templates/newPasswordEmail.twig', ['email' => $email, 'password' => $password, 'user' => $user->firstname]);
-    
-    		Email::send($email, __('newPasswordSubject'), $html, __('newPasswordEmailType'));
-    	}
-    	else // Nincs ilyen felhasznalo
-    	{
-    		$result['error'] = true;
-    		$result['message'] = 'noUserWithThisEmail';
-    	}
-    
-    	return $result;
-    }
-    
-    /**
-     * General es visszaad egy random jelszot
-     *
-     * @param int $length   Jelszo hossza
-     * @return string       Jelszo
-     */
-    public static function generatePassword($length = 6)
-    {
-    	return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-    }
-    
-    /**
      * Felhasznalo ertekeles
      * @param int $rating
      */

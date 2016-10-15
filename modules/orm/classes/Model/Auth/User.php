@@ -241,4 +241,30 @@ class Model_Auth_User extends ORM {
         return $url;
     }
 
+    /**
+     * @param string $email
+     * @return array
+     */
+    public function passwordReminder($email)
+    {
+        $user = new Model_User();
+        $user = $user->getByColumn('email', $email);
+
+        if ($user && $user->loaded()) {
+            $password = Text::generatePassword();
+
+            $user->password = $password;
+            $user->save();
+
+            $html = Twig::getHtmlFromTemplate('Templates/newPasswordEmail.twig', ['email' => $email, 'password' => $password, 'user' => $user->firstname]);
+
+            Email::send($email, __('newPasswordSubject'), $html, __('newPasswordEmailType'));
+        } else {
+            $result['error'] = true;
+            $result['message'] = 'noUserWithThisEmail';
+        }
+
+        return $result;
+    }
+
 } // End Auth User Model
