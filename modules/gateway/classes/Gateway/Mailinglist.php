@@ -76,8 +76,13 @@ abstract class Gateway_Mailinglist
 				]
 			];
 			
-			$context  = stream_context_create($options);
-			return file_get_contents($url, false, $context);
+			$context = stream_context_create($options);
+			$content = @file_get_contents($url, false, $context);
+
+            if (is_bool($content) && $content == false) {
+                Log::instance()->add(Log::DEBUG, 'Mailinglist::sendRequest() method: ' . $method . ' data: ' . json_encode($data));
+                return false;
+            }
 		}
 		
 		return true;

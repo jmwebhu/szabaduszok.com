@@ -91,6 +91,14 @@ abstract class Entity
     /**
      * @return bool
      */
+    public function loaded()
+    {
+        return $this->_model->loaded();
+    }
+
+    /**
+     * @return bool
+     */
     public function save()
     {
         try {

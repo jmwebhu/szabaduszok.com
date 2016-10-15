@@ -4,7 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $user = new Entity_User_Freelancer(400);
+        Kohana::$environment = Kohana::PRODUCTION;
+        $user = new Entity_User_Employer(390);
 
         /*$data = [
             'firstname'     => 'Martin',
@@ -21,6 +22,9 @@ class Controller_Test extends Controller
         $user->submit($data);*/
 
         $mailinglist = Gateway_Mailinglist_Factory::createMailinglist($user);
+        $subscribe = $mailinglist->subscribe();
+
+        echo Debug::vars($subscribe);
     }	
 
     public function action_clearcache()

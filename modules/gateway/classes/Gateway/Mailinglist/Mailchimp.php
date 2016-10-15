@@ -29,7 +29,7 @@ abstract class Gateway_Mailinglist_Mailchimp extends Gateway_Mailinglist
 	{
 		$header = ($header) ? $header : '';
 		
-		$apiKey = $this->config()->get('apiKey');	
+		$apiKey = $this->_config->get('apiKey');
 		$base64 = base64_encode('user:' . $apiKey);
 		
 		$auth = "Authorization: Basic " . $base64 .  "\r\n";

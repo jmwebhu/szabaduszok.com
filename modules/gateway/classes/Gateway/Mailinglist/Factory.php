@@ -16,8 +16,10 @@ abstract class Gateway_Mailinglist_Factory
             $gateway = Gateway_Mailinglist_Mailchimp_Employer::getInstance();
         }
 
+        Assert::notNull($gateway);
+
         $gateway->setUser($user);
 
-        Assert::neverShouldReachHere();
+        return $gateway;
     }
 }
