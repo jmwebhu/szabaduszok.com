@@ -114,4 +114,35 @@ class Model_User_Freelancer extends Model_User_Abstract
         $notifications = $this->project_notifications->find_all();
         return !empty($notifications);
     }
+
+    /**
+     *
+     * @param array			$post
+     * @param Model_Profile	$profileModel
+     *
+     */
+    protected function addProfiles(array $post, Model_Profile $profileModel)
+    {
+        $profiles		= $profileModel->where('is_active', '=', 1)->find_all();
+        $baseUrls		= [];
+
+        foreach ($profiles as $profile) {
+            $baseUrls[$profile->pk()] = $profile->base_url;
+        }
+
+        foreach (Arr::get($post, 'profiles', []) as $url) {
+            $fixedUrl   = Text_User::fixUrl(['url' => $url], 'url')['url'];
+
+            foreach ($baseUrls as $profileId => $baseUrl) {
+                if (stripos($fixedUrl, $baseUrl) !== false) {
+                    $userProfile				= new Model_User_Profile();
+                    $userProfile->profile_id	= $profileId;
+                    $userProfile->url			= $fixedUrl;
+                    $userProfile->user_id		= $this->pk();
+
+                    $userProfile->save();
+                }
+            }
+        }
+    }
 }

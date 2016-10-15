@@ -201,4 +201,44 @@ class Model_Auth_User extends ORM {
         Session::instance()->set('auth_user', $this);
     }
 
+    /**
+     * Belepes
+     *
+     * @param array $post	_POST adatok
+     * @return string $url	Ide kell atiranyitani a usert
+     *
+     * @throws Exception_UserLogin
+     */
+    public function login(array $post)
+    {
+        // Felhasznalo beleptetese
+        $isLoggedIn = Auth::instance()->login(Input::post('email'), Input::post('password'));
+
+        // Sikertelen belepes
+        if (!$isLoggedIn)
+        {
+            // Kivetelt dob
+            throw new Exception_UserLogin('Hibás e-mail vagy jelszó. Kérjük próbáld meg újra!');
+        }
+
+        // At kell -e iranyitani valami, vagy mehet default
+        $url = Session::instance()->get('redirectUrl');
+        $user = Auth::instance()->get_user();
+
+        // Nem volt session -ben semmilyen url
+        if (!$url)
+        {
+            // Profilra iranyitja
+            $url = ($user->type == 1) ? Route::url('freelancerProfile', ['slug' => $user->slug]) : Route::url('projectOwnerProfile', ['slug' => $user->slug]);
+        }
+
+        $userModel				= new Model_User();
+        $all					= $userModel->getAll();
+        $all[$user->user_id]	= $user;
+
+        Cache::instance()->set('users', $all);
+
+        return $url;
+    }
+
 } // End Auth User Model

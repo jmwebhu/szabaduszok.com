@@ -147,4 +147,24 @@ class ORM extends Kohana_ORM
     {
         AB::delete($this->_table_name, $this->pk())->execute();
     }
+
+    /**
+     * @param string $relationName
+     * @return string
+     */
+    public function getRelationString($relationName)
+    {
+        $items  = $this->{$relationName}->find_all();
+        $sb     = SB::create();
+
+        foreach ($items as $i => $item) {
+            $sb->append($item->name);
+
+            if ($i == count($items) - 1) {
+                $sb->append(', ');
+            }
+        }
+
+        return $sb->get('');
+    }
 }

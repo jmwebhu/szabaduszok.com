@@ -43,4 +43,14 @@ class Business_Project extends Business
     {
         return $this->_searchText->getSearchTextFromFields();
     }
+
+    /**
+     * @param Model_Relation $relation
+     * @return string
+     */
+    public static function getRelationIdField(Model_Relation $relation)
+    {
+        $model = $relation->getEndRelationModel();
+        return $model->primary_key();
+    }
 }

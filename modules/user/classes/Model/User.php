@@ -167,6 +167,10 @@ class Model_User extends Model_Auth_User
     	return !empty($notifications);
     }
 
+    /**
+     * @param array $data
+     * @return Model_User
+     */
     public function submit(array $data)
     {
         $id = Arr::get($data, 'user_id');
@@ -185,61 +189,6 @@ class Model_User extends Model_Auth_User
 
         return $this;
     }
-    
-    /**
-     * Visszaadja a landing oldal azonositojat a postban levo nev alapjan
-     * 
-     * @param array $post       _POST adatok
-     * @return null|integer     ID vagy null
-     */
-    public function getLandingPageIdByPost(array $post)
-    {
-        $landing        = new Model_Landing();
-        $landingPage    = $landing->where('name', '=', Arr::get($post, 'landing_page_name'))->limit(1)->find();
-        
-        return ($landingPage->loaded()) ? $landingPage->landing_page_id : null;
-    }
-    
-    /**
-     * Belepes
-     *
-     * @param array $post	_POST adatok
-     * @return string $url	Ide kell atiranyitani a usert
-     *
-     * @throws Exception_UserLogin
-     */
-    public function login(array $post)
-    {
-    	// Felhasznalo beleptetese
-    	$isLoggedIn = Auth::instance()->login(Input::post('email'), Input::post('password'));
-    
-    	// Sikertelen belepes
-    	if (!$isLoggedIn)
-    	{
-    		// Kivetelt dob
-    		throw new Exception_UserLogin('Hibás e-mail vagy jelszó. Kérjük próbáld meg újra!');
-    	}
-    
-    	// At kell -e iranyitani valami, vagy mehet default
-    	$url = Session::instance()->get('redirectUrl');
-    	$user = Auth::instance()->get_user();
-    
-    	// Nem volt session -ben semmilyen url
-    	if (!$url)
-    	{
-    		// Profilra iranyitja    		
-    		$url = ($user->type == 1) ? Route::url('freelancerProfile', ['slug' => $user->slug]) : Route::url('projectOwnerProfile', ['slug' => $user->slug]);
-    	}        	
-    	
-    	// @todo
-    	$userModel				= new Model_User();
-    	$all					= $userModel->getAll();
-    	$all[$user->user_id]	= $user;   
-    	
-    	Cache::instance()->set('users', $all);
-    
-    	return $url;
-    }
 
     /**
      * @param array $post
@@ -251,69 +200,6 @@ class Model_User extends Model_Auth_User
 
         $this->addRelation($post, new Model_User_Industry(), new Model_Industry());
         $this->addRelation($post, new Model_User_Profession(), new Model_Profession());
-    }               
-	
-	/**
-	 * Hozzaadja a felhasznalohoz a kulso profilokat
-	 * 
-	 * @param array			$post			_POST adatok
-	 * @param Model_Profile	$profileModel	Egy ures Model_Profile objektum
-	 * 
-	 * @return void
-	 */
-	protected function addProfiles(array $post, Model_Profile $profileModel)
-	{
-		$profiles		= $profileModel->where('is_active', '=', 1)->find_all();
-		$baseUrls		= [];
-		
-		foreach ($profiles as $profile)
-		{
-			/**
-			 * @var $profile Model_Profile
-			 */
-			$baseUrls[$profile->pk()] = $profile->base_url;
-		}
-		
-		// Vegmegy a post profilokon
-		foreach (Arr::get($post, 'profiles', []) as $url) {
-			$temp = ['url' => $url];
-            $fixedUrl = Text_User::fixUrl($temp, 'url')['url'];
-			
-			// Vegmegy a rendszerben levo profilokon
-			foreach ($baseUrls as $profileId => $baseUrl)
-			{
-				// Ha kapott url megfelel valamelyik rendszerben levonek
-				if (stripos($fixedUrl, $baseUrl) !== false)
-				{
-					$userProfile				= new Model_User_Profile();
-					$userProfile->profile_id	= $profileId;
-					$userProfile->url			= $fixedUrl;
-					$userProfile->user_id		= $this->pk();
-					
-					$userProfile->save();
-				}
-			}
-		}
-	}
-    
-    /**
-     * Visszaadja a kapott kapcsolatokbol alkotott stringet.
-     * A felhasznalohoz tartozo osszes entitas (iparagak, stb) nevet osszefuzi egy stringbe
-     *
-     * @param string $name		Kapcsolat neve
-     * @return string			Eredmeny
-     */
-    public function getRelationString($name)
-    {
-    	$items = $this->{$name}->find_all();
-    	$result = '';
-    
-    	foreach ($items as $i => $item)
-    	{
-    		$result .= ($i == count($items) - 1) ? $item->name : ($item->name . ', ');
-    	}
-    
-    	return $result;
     }
     
     /**

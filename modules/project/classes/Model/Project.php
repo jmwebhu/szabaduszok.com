@@ -213,28 +213,6 @@ class Model_Project extends ORM implements Subject
         $this->addRelation($post, new Model_Project_Profession(), new Model_Profession());
         $this->addRelation($post, new Model_Project_Skill(), new Model_Skill());
     }
-    
-    /**
-     * A projekthez tartozo osszes kapcsolat (iparagak, szakterulat, kepesseg) nevet osszefuzi egy stringbe
-     *
-     * @param string $relationName
-     * @return string
-     */
-    public function getRelationString($relationName)
-    {
-    	$items  = $this->{$relationName}->find_all();
-        $sb     = SB::create();
-
-    	foreach ($items as $i => $item) {
-            $sb->append($item->name);
-
-            if ($i == count($items) - 1) {
-                $sb->append(', ');
-            }
-    	}
-    
-    	return $sb->get('');
-    }
 
     /**
      * Visszaadja, hogy hany aktiv projekt van
