@@ -31,11 +31,11 @@ class Search_Relation_Skill extends Search_Relation
     public function searchRelationsInOneModel()
     {
         $model              = $this->_complexSearch->getCurrentModel();
-        $modelSkillIds      = Arr::get(
+        $modelRelationIds   = Arr::get(
             $this->_complexSearch->getRelationIdsByModelIds(),
             $model->{$this->_complexSearch->getModelPrimaryKey()}, []);
 
-        $difference         = array_diff($this->_complexSearch->getSearchedRelationIds(), $modelSkillIds);
+        $difference         = array_diff($this->_complexSearch->getSearchedRelationIds(), $modelRelationIds);
         $found              = false;
 
         switch ($this->_skillRelation) {

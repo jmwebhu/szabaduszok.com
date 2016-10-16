@@ -172,8 +172,7 @@ abstract class Search_Complex implements Search
     }
 
     /**
-     * Keresi a kapcsolatokat a modelekben
-     *
+     * @param Model_Relation $relationModel
      * @return bool
      */
     protected function searchRelationsInModels(Model_Relation $relationModel)

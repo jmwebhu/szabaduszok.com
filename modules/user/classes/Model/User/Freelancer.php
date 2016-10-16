@@ -2,6 +2,15 @@
 
 class Model_User_Freelancer extends Model_User_Abstract
 {
+    /**
+     * @return Array_Builder
+     */
+    public function baseSelect()
+    {
+        $base = parent::baseSelect();
+        return $base->where('type', '=', $this->getType());
+    }
+
     public function submit(array $data)
     {
         parent::submit($data);

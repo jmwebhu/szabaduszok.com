@@ -67,5 +67,10 @@ class Model_User_Project_Notification extends ORM
 		}	
 		
 		return $skillIds;
-	}		
+	}
+
+	public static function createBy(Model_Project $project)
+    {
+        $search = Search_Factory_User::makeSearch();
+    }
 }

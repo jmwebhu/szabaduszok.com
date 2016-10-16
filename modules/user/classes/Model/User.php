@@ -201,10 +201,10 @@ class Model_User extends Model_Auth_User
         $this->addRelation($post, new Model_User_Industry(), new Model_Industry());
         $this->addRelation($post, new Model_User_Profession(), new Model_Profession());
     }
-    
+
     /**
-     * Felhasznalo ertekeles
-     * @param int $rating
+     * @param $rating
+     * @return array
      */
     public function rate($rating)
     {
