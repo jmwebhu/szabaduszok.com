@@ -493,4 +493,13 @@ abstract class Entity_User extends Entity
     {
         return $this->_mailinglist->add($id);
     }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    public function saveProjectNotification(array $data)
+    {
+        return $this->_model->saveProjectNotification($data);
+    }
 }

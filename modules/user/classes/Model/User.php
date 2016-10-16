@@ -91,8 +91,16 @@ class Model_User extends Model_Auth_User
     	/**
          * Felhasznalo profilon megjeleno projekt ertesito beallitasok.
          */    
-        'project_notifications' => [
-            'model'         => 'User_Project_Notification',
+        'project_notification_industries' => [
+            'model'         => 'User_Project_Notification_Industry',
+            'foreign_key'   => 'user_id',
+        ],
+        'project_notification_professions' => [
+            'model'         => 'User_Project_Notification_Profession',
+            'foreign_key'   => 'user_id',
+        ],
+        'project_notification_skills' => [
+            'model'         => 'User_Project_Notification_Skill',
             'foreign_key'   => 'user_id',
         ],
     ];

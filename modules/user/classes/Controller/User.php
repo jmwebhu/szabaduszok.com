@@ -858,8 +858,9 @@ class Controller_User extends Controller_DefaultTemplate
     				break;
     		
     			// Porjekt ertesito beallitasa
-    			case 'saveProjectNotification':    				
-    				$user = $user->getById(Input::post('user_id'));    				
+    			case 'saveProjectNotification':
+    			    $user = Entity_User::createUser(Entity_User::TYPE_FREELANCER, Input::post('user_id'));
+    				//$user = $user->getById(Input::post('user_id'));
     				$data = $user->saveProjectNotification(Input::post_all());
     				$json = json_encode($data);
     				
