@@ -565,10 +565,9 @@ class Controller_User extends Controller_DefaultTemplate
 			
 			if ($canSeeProjectNotification) 
 			{
-				$this->context->projectNotifications = $user->project_notifications->find_all();
-				$this->context->industries = Viewhelper_User::getIndustriesForProfile($user);
+				$this->context->industries  = Viewhelper_User::getIndustriesForProfile($user);
 				$this->context->professions = Viewhelper_User::getProfessionsForProfile($user);
-				$this->context->skills = Viewhelper_User::getSkillsForProfile($user);
+				$this->context->skills      = Viewhelper_User::getSkillsForProfile($user);
 			}
 						
 		}		

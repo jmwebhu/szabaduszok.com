@@ -104,37 +104,23 @@ class Viewhelper_User
 		$industryModel = new Model_Industry();
 		$industries = $industryModel->getAll();
 		$result = [];
-		
-		if ($user->hasProjectNotification())
-		{
-			$notifications = $user->project_notifications->where('industry_id', 'IS NOT', null)->find_all();
-			$ids = [];
-			
-			foreach ($notifications as $notification)
-			{
-				$ids[] = $notification->industry_id;
-			}
-			
-			foreach ($industries as $industry)
-			{
-				$result[] = [
-					'id'		=> $industry->industry_id,
-					'name'		=> $industry->name,
-					'selected'	=> (in_array($industry->industry_id, $ids)) ? 'selected' : '',
-				];
-			}
-		}
-		else 
-		{
-			foreach ($industries as $industry)
-			{
-				$result[] = [
-					'id'		=> $industry->industry_id,
-					'name'		=> $industry->name,
-					'selected'	=> '',
-				];
-			}			
-		}
+
+        $notifications = $user->project_notification_industries->find_all();
+        $ids = [];
+
+        foreach ($notifications as $notification) {
+            $ids[] = $notification->industry_id;
+        }
+
+        foreach ($industries as $industry)
+        {
+            $result[] = [
+                'id'		=> $industry->industry_id,
+                'name'		=> $industry->name,
+                'selected'	=> (in_array($industry->industry_id, $ids)) ? 'selected' : '',
+            ];
+        }
+
 		
 		return $result;
 	}
@@ -144,26 +130,23 @@ class Viewhelper_User
 		$professionModel = new Model_Profession();
 		$professions = $professionModel->getAll();
 		$result = [];
-	
-		if ($user->hasProjectNotification())
-		{
-			$notifications = $user->project_notifications->where('profession_id', 'IS NOT', null)->find_all();
-			$ids = [];
-				
-			foreach ($notifications as $notification)
-			{
-				$ids[] = $notification->profession_id;
-			}
-				
-			foreach ($professions as $profession)
-			{
-				$result[] = [
-					'id'		=> $profession->profession_id,
-					'name'		=> $profession->name,
-					'selected'	=> (in_array($profession->profession_id, $ids)) ? 'selected' : '',
-				];
-			}
-		}
+
+        $notifications = $user->project_notification_professions->find_all();
+        $ids = [];
+
+        foreach ($notifications as $notification)
+        {
+            $ids[] = $notification->profession_id;
+        }
+
+        foreach ($professions as $profession)
+        {
+            $result[] = [
+                'id'		=> $profession->profession_id,
+                'name'		=> $profession->name,
+                'selected'	=> (in_array($profession->profession_id, $ids)) ? 'selected' : '',
+            ];
+        }
 	
 		return $result;
 	}
@@ -173,26 +156,23 @@ class Viewhelper_User
 		$skillModel = new Model_Skill();
 		$skills = $skillModel->getAll();
 		$result = [];
-	
-		if ($user->hasProjectNotification())
-		{
-			$notifications = $user->project_notifications->where('skill_id', 'IS NOT', null)->find_all();
-			$ids = [];
-	
-			foreach ($notifications as $notification)
-			{
-				$ids[] = $notification->skill_id;
-			}
-	
-			foreach ($skills as $skill)
-			{
-				$result[] = [
-					'id'		=> $skill->skill_id,
-					'name'		=> $skill->name,
-					'selected'	=> (in_array($skill->skill_id, $ids)) ? 'selected' : '',
-				];
-			}
-		}
+
+        $notifications = $user->project_notification_skills->find_all();
+        $ids = [];
+
+        foreach ($notifications as $notification)
+        {
+            $ids[] = $notification->skill_id;
+        }
+
+        foreach ($skills as $skill)
+        {
+            $result[] = [
+                'id'		=> $skill->skill_id,
+                'name'		=> $skill->name,
+                'selected'	=> (in_array($skill->skill_id, $ids)) ? 'selected' : '',
+            ];
+        }
 	
 		return $result;
 	}
