@@ -157,7 +157,7 @@ abstract class Search_Complex implements Search
      */
     public function search()
     {
-        $this->_models = $this->_currentModel->getOrderedByCreated();
+        $this->_models = $this->getInitModels();
 
         // Szukites iparagakra
         $this->searchRelationsInModels($this->getIndustryRelationModel());

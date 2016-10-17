@@ -1,6 +1,6 @@
 <?php
 
-class Model_User_Profession extends ORM
+class Model_User_Profession extends Model_Relation
 {
 	protected $_table_name = 'users_professions';
 	
@@ -19,4 +19,36 @@ class Model_User_Profession extends ORM
 		'user_id'		=> ['type' => 'int'],
 		'profession_id'	=> ['type' => 'int'],
 	];
+
+    /**
+     * @return string
+     */
+    public function getPrimaryKeyForEndModel()
+    {
+        return 'profession_id';
+    }
+
+    /**
+     * @return Model_Profession
+     */
+    public function getEndRelationModel()
+    {
+        return new Model_Profession();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearchedRelationIdsPropertyName()
+    {
+        return '_searchedProfessionIds';
+    }
+
+    /**
+     * @return string
+     */
+    public function getForeignKey()
+    {
+        return 'user_id';
+    }
 }

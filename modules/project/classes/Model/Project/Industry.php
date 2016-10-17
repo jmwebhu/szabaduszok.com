@@ -2,7 +2,6 @@
 
 class Model_Project_Industry extends Model_Relation
 {
-    protected $_relationFk = 'project_id';
     protected $_table_name  = 'projects_industries';
     protected $_primary_key = 'id';
 
@@ -45,5 +44,13 @@ class Model_Project_Industry extends Model_Relation
     public function getPrimaryKeyForEndModel()
     {
         return 'industry_id';
+    }
+
+    /**
+     * @return string
+     */
+    public function getForeignKey()
+    {
+        return 'project_id';
     }
 }

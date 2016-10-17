@@ -47,7 +47,10 @@ class Model_Project_Notification extends ORM implements Observer
         }
     }
 
-    public function addProject(Model_Project $project)
+    /**
+     * @param Model_Project $project
+     */
+    public static function addProject(Model_Project $project)
     {
         $search = Project_Notification_Search_Factory_User::makeSearch([
             'industries'    => $project->getRelationIds('industries'),
@@ -57,16 +60,11 @@ class Model_Project_Notification extends ORM implements Observer
 
         $users = $search->search();
 
-        $usersAll       = $this->getAll();
-        $freelancers    = AB::select()->from($usersAll)->where('type', '=', 1)->execute()->as_array();
-        $users          = $this->getUsersByProjectNotification($project, $freelancers);
-
         foreach ($users as $user)
         {
             /**
              * @var $user Model_User
              */
-
             $notification           = new Model_Project_Notification();
             $notification->user     = $user;
             $notification->project  = $project;

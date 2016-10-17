@@ -3,12 +3,6 @@
 abstract class Model_Relation extends ORM
 {
     /**
-     * Kapcsolat idegenkulcs neve, pl.: 'project_id'
-     * @var string
-     */
-    protected $_relationFk;
-
-    /**
      * A kapcsolat vegpondjanak elsodleges kulcsat adja vissza. Pl.: Model_Project_Industry eseten a
      * Model_Industry elsodleges kulcsat, industry_id
      *
@@ -16,6 +10,12 @@ abstract class Model_Relation extends ORM
      * @return string
      */
     abstract public function getPrimaryKeyForEndModel();
+
+    /**
+     * Idegen kulcs, pl Model_Project_Industy eseten project_id
+     * @return string
+     */
+    abstract public function getForeignKey();
 
     /**
      * Visszaadja a kapcsolat vegpontjahoz tartozo ORM objektumot.
@@ -46,12 +46,12 @@ abstract class Model_Relation extends ORM
         $collection = [];
 
         foreach ($models as $model) {
-            if (!isset($collection[$model->{$this->_relationFk}])) {
-                $collection[$model->{$this->_relationFk}] = [];
+            if (!isset($collection[$model->{$this->getForeignKey()}])) {
+                $collection[$model->{$this->getForeignKey()}] = [];
             }
 
             $relationName = $this->getRelationNameFromClassName();
-            $collection[$model->{$this->_relationFk}][] = $model->{$relationName};
+            $collection[$model->{$this->getForeignKey()}][] = $model->{$relationName};
         }
 
         $cache->set($this->_table_name, $collection);

@@ -19,7 +19,7 @@ class Search_Complex_User extends Search_Complex
         $withoutPicture	= AB::select()->from($this->createSearchModel())->where('profile_picture_path', '=', '')->and_where('type', '=', Entity_User::TYPE_FREELANCER)->order_by('lastname')->execute()->as_array();
         $merged			= Arr::merge($withPicture, $withoutPicture);
 
-        return AB::select()->from($merged)->where('user_id', '!=', '');
+        return AB::select()->from($merged)->where('user_id', '!=', '')->execute()->as_array();
     }
 
     /**
