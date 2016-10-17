@@ -18,4 +18,17 @@ class Model_User_Employer extends Model_User_Abstract
         $base = parent::baseSelect();
         return $base->where('type', '=', $this->getType());
     }
+
+    /**
+     * @return array
+     */
+    public function getProjects()
+    {
+        $result = AB::select()->from(new Model_Project())
+            ->where('is_active', '=', 1)
+            ->and_where('user_id', '=', $this->user_id)
+            ->order_by('created_at', 'DESC')->execute()->as_array();
+
+        return $result;
+    }
 }

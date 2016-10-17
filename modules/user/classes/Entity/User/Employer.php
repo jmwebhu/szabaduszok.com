@@ -42,6 +42,14 @@ class Entity_User_Employer extends Entity_User
     }
 
     /**
+     * @return array
+     */
+    public function getProjects()
+    {
+        return $this->_model->getProjects();
+    }
+
+    /**
      * @param int|null $id
      */
     public function __construct($id = null)
@@ -65,5 +73,4 @@ class Entity_User_Employer extends Entity_User
         $data = parent::fixPost($post);
         return Text_User::alterCheckboxValue($data);
     }
-
 }

@@ -71,4 +71,34 @@ class Model_Project_Notification extends ORM implements Observer
             $notification->save();
         }
     }
+
+    public function send()
+    {
+        $limit          = Kohana::$config->load('cron')->get('notificationLimit');
+        $notifications  = $this->where('is_sended', '=', 0)->limit($limit)->find_all();
+
+        $this->sendToUsers($notifications);
+    }
+
+    /**
+     * @param array $notifications
+     */
+    protected function sendToUsers(array $notifications)
+    {
+        foreach ($notifications as $notification) {
+            /**
+             * @var $notification    Model_Project_Notification
+             */
+            $html = Twig::getHtmlFromTemplate('Templates/newProjectTemplate.twig', [
+                'user'      => Entity_User::createUser(Entity_User::TYPE_FREELANCER, $notification->user->user_id),
+                'project'   => new Entity_Project($notification->project->project_id),
+                'root'      => URL::base(true, false)
+            ]);
+
+            Email::send($notification->user->email, '[ÚJ PROJEKT]', $html);
+
+            $notification->is_sended = 1;
+            $notification->save();
+        }
+    }
 }

@@ -234,65 +234,6 @@ class Model_User extends Model_Auth_User
     }
     
     /**
-     * Kikuldi a cache -ben talalhato felhasznaloknak a projekt ertesitot
-     *  
-     */
-    public function sendProjectNotification()
-    {
-        $notificationModel	= new Model_Project_Notification();
-        $notifications		= $notificationModel->where('is_sended', '=', 0)->find_all();
-		
-		$signupModel		= new Model_Signup();
-        $signups			= $signupModel->find_all();
-		
-		$limit = Kohana::$config->load('cron')->get('notificationLimit');                
-        
-        if ($notifications)
-        {            
-            foreach ($notifications as $i => $notification)
-            {
-                /**
-                 * @var $notification    Model_Project_Notification
-                 */                                             
-                     
-                $html = Twig::getHtmlFromTemplate('Templates/newProjectTemplate.twig', [
-                    'user'      => $notification->user,
-                    'project'   => $notification->project,
-                    'root'      => URL::base(true, false)
-                ]);
-                     
-                Email::send($notification->user->email, '[ÚJ PROJEKT]', $html);
-
-                // Allapot frissitese
-                $notification->is_sended = 1;
-                $notification->save();
-                
-                if (($i + 1) == $limit)
-                {
-                    return false;
-                }
-            }
-        }  
-		
-		/**
-		 * @todo 
-		 *  - osszegyujteni projekteket az elozo ciklusbol
-		 *  - vegmenni feliratkozokon
-		 *  - mindegyik projektrol kuldeni ertesitot
-		 */
-        
-        return true;
-    }
-    
-    /**
-     * POST -ban kapoott szakterulet, kepesseg alapjan visszaadja a megfelelo objektumot.
-     * Ha id -t kap, visszaad egy meglevot, ha string -et, akkor leterhozza, es visszaadja
-     * 
-     * Regisztracio, profil szerkesztes, projekt ertesito beallitasnal a select -ekben lehet meglevot valasztani, vagy ujat letrehozni. Uj eseten a $value string lesz (nev)
-     * A POST feldolgozasanal ez a metodus adja vissza az objektumot.
-     * 
-     * A metodus hozza is adja a rekordot a user kapcsolataihoz, ha szukseges
-     * 
      * $skill		= $this->getOrCreateRelation('php', 'skill')		Letrehoz egy uj kepesseget php nevvel
      * $profession	= $this->getOrCreateRelation(2, 'profession')		Visszaadja a letezo objektumot
      * 
@@ -304,89 +245,29 @@ class Model_User extends Model_Auth_User
      */
     protected function getOrCreateRelation($value, $relation, $addRelation = true)
     {
-    	$relation = strtolower($relation);
-    	$class = 'Model_' . ucfirst($relation);
-    	
-    	// Azonosito, tehat letezik
-    	if (Text::isId($value))
-    	{    		
+    	$relation   = strtolower($relation);
+    	$class      = 'Model_' . ucfirst($relation);
+
+    	if (Text::isId($value)) {
     		$intval = intval($value);
     		$model = new $class($intval);
-    	}
-    	else	// Uj entitas
-    	{
-    		// Letrehoz egy ujat
+    	} else {
     		$model = new $class();
     		$model->name = $value;
     		$model->save();
-    	
-    		// Slug generalas, hozzadas cache gyujtemenyhez
+
     		$model->saveSlug();
     		$model->cacheToCollection();
     	}
-    	
-    	// Hozza kell adni a user kapcsolataihoz
-    	if ($addRelation)
-    	{
+
+    	if ($addRelation) {
     		$plural =  $relation . 's';
     		$this->add($plural, $model);
     	}    	    	
     	
     	return $model;
     }
-    
-    /**
-     * Visszaadja a felhasznalo osszes aktiv projektjet
-     * 
-     * @return mixed[]|unknown[][]
-     */
-    public function getProjects()
-    {
-    	$project 	= new Model_Project();
-    	$projects	= $project->getAll();
 
-    	$result		= AB::select()->from($projects)->where('is_active', '=', 1)->and_where('user_id', '=', $this->user_id)->order_by('created_at', 'DESC')->execute()->as_array();
-    	
-    	return $result;    
-    }
-    
-    /**
-     * Visszaadja a Szabaduszokat datum szerint novekvo sorrendben
-     * Cache -bol dolgozik
-     *
-     * @return array 	Szabaduszok ORM
-     */
-    public function getOrdered($limit, $offset)
-    {
-    	// Csak az aktiv projektek
-    	$users = $this->getAll();
-    	 
-    	return AB::select()->from($users)->where('type', '=', 1)->order_by('rating_points_avg', 'DESC')->limit($limit)->offset($offset)->execute()->as_array();
-    }
-    
-    /**
-     * Ket modelt hasonlit ossze, aszerint, hogy mikor hoztak letre
-     *
-     * @param ORM $a  Egyik projekt
-     * @param ORM $b  Masik projekt
-     *
-     * @return integer          1, 0, -1
-     */
-    public function sortByrating(Model_User $a, Model_User $b)
-    {
-    	// Datum szerint csokkeno
-    	if ($a->rating_points_avg < $b->rating_points_avg)
-    	{
-    		return 1;
-    	}
-    	elseif ($a->rating_points_avg > $b->rating_points_avg)
-    	{
-    		return -1;
-    	}
-    
-    	return 0;
-    }
-    
     /**
      * Kikuldi az aktualis, tipushoz tartozo lead magnetet a kapott e-mail cimre
      * 

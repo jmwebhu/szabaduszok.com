@@ -14,16 +14,14 @@ class Controller_Cron extends Controller
 		{
 			Model_Database::trans_start();
 			
-			$user = new Model_User();
-			$user->sendProjectNotification();
+			$notification = new Model_Project_Notification();
+            $notification->send();
 			
 			$result = ['error' => false, 'status' => 200];
 		}
 		catch (Exception $ex)		// Altalanos hiba
 		{
-			// Logbejegyzest keszit
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
+			Log::instance()->addException($ex);
 		
 			$result = ['error' => true, 'status' => 500];
 		}
