@@ -20,7 +20,7 @@ abstract class Model_User_Relation extends Model_Relation
             $model              = $model->where($model->primary_key(), '=', $intval)->find();
 
         } else {
-            $model = $model->where('name', '=', $value)->find();
+            $model		        = $model->where('name', '=', mb_strtolower($value))->find();
 
             if ($model->loaded()) {
                 return $model;
