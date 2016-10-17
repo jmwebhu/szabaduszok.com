@@ -39,7 +39,14 @@
                     <div class="form-group">
                         <select id="professions" class="form-control" name="professions[]" multiple="multiple">
                             {% for profession in container.getRelationContainer().getProfessions() %}
-                                <option value="{{ profession.getId() }}" selected>{{ profession.getName() }}</option>
+                                <option value="{{ profession.getId() }}"
+                                    {% if container.getRelationContainer().isAllSelected() %}
+                                        selected
+                                    {% else %}
+                                        {% if profession.isSelected() %}selected{% endif %}
+                                    {% endif %}>
+                                    {{ profession.getName() }}
+                                </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -51,7 +58,14 @@
                     <div class="form-group">
                         <select id="skills" class="form-control" name="skills[]" multiple="multiple">
                             {% for skill in container.getRelationContainer().getSkills() %}
-                                <option value="{{ skill.getId() }}" selected>{{ skill.getName() }}</option>
+                                <option value="{{ skill.getId() }}"
+                                    {% if container.getRelationContainer().isAllSelected() %}
+                                        selected
+                                    {% else %}
+                                        {% if skill.isSelected() %}selected{% endif %}
+                                    {% endif %}>
+                                    {{ skill.getName() }}
+                                </option>
                             {% endfor %}
                         </select>
                     </div>

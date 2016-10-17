@@ -25,4 +25,12 @@ class Project_Notification_Search_View_Container_Relation_User extends Search_Vi
     {
         return "ÉS az alábbi <strong>képességek</strong>:";
     }
+
+    /**
+     * @return bool
+     */
+    public function isAllSelected()
+    {
+        return false;
+    }
 }

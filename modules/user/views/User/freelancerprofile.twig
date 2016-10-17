@@ -1,4 +1,5 @@
 {% extends "Templates/default.twig" %}
+{% import "Search/panel.twig" as searchPanel %}
 
 {% block content %}
 
@@ -174,7 +175,8 @@
 				</div>
 				
 				{% if canSeeProjectNotification %}
-				<div class="panel">
+				{{ searchPanel.build(container) }}
+				{#<div class="panel">
 					<div class="panel-heading">
 						<h3 class="mg-clear tc-black">
 							Projekt értesítő beállításai
@@ -238,7 +240,7 @@
 							<span class="loading text-center"></span>
 						</form>
 					</div>
-				</div>	
+				</div>	#}
 				{% endif %}	
 												
 			</div>

@@ -64,6 +64,14 @@ abstract class Search_View_Container_Relation
     }
 
     /**
+     * @return bool
+     */
+    public function isAllSelected()
+    {
+        return true;
+    }
+
+    /**
      * @param Search_View_Container_Relation_Item $item
      * @param int $type
      */
