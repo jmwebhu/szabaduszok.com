@@ -27,4 +27,20 @@ class Viewhelper_User
     {
         return $this->_type->getEditUrl($user);
     }
+
+    /**
+     * @return string
+     */
+    public function getPageTitle()
+    {
+        return $this->_type->getPageTitle();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPrivacyCheckbox()
+    {
+        return $this->_type->hasPrivacyCheckbox();
+    }
 }

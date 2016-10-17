@@ -367,6 +367,14 @@ abstract class Entity_User extends Entity
     }
 
     /**
+     * @param string $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->_slug = $slug;
+    }
+
+    /**
      * @param array $post
      * @return Entity_User
      * @throws Exception_UserRegistration
