@@ -21,7 +21,7 @@ class Controller_User_Create_Freelancer extends Controller_DefaultTemplate
     {
         parent::__construct($request, $response);
 
-        $this->_email = Input::post('email');
+        $this->_email = Input::get('email');
         $this->_error = false;
     }
 
@@ -32,9 +32,6 @@ class Controller_User_Create_Freelancer extends Controller_DefaultTemplate
             $this->handleSignup();
             Model_Leadmagnet::sendTo($this->_email, Entity_User::TYPE_FREELANCER);
 
-            $industry                   = new Model_Industry();
-            $this->context->industries  = $industry->getAll();
-
             $this->handlePostRequest();
 
         } catch (Exception_UserRegistration $exur) {
@@ -43,9 +40,9 @@ class Controller_User_Create_Freelancer extends Controller_DefaultTemplate
 
         } catch (Exception $ex) {
             $this->context->error = __('defaultErrorMessage');
-            Log::instance()->addException($ex);
-
             $this->_error = true;
+
+            Log::instance()->addException($ex);
 
         } finally {
             if ($this->request->method() == Request::POST) {
@@ -77,6 +74,9 @@ class Controller_User_Create_Freelancer extends Controller_DefaultTemplate
 
         $this->context->email           = $this->_email;
         $this->context->landingPageName = Input::get('landing_page_name');
+
+        $industry                   = new Model_Industry();
+        $this->context->industries  = $industry->getAll();
     }
 
     protected function handleSignup()

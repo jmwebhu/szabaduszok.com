@@ -39,8 +39,7 @@ class Model_Signup extends ORM
     
     public function createIfHasEmail($email = null, $type = 1)
     {
-        if ($email)
-        {
+        if ($email) {
             $this->email    = $email;
             $this->type     = $type;
             
@@ -52,11 +51,8 @@ class Model_Signup extends ORM
     {
         $model  = new Model_Signup();
         $signup = $model->where('email', '=', $email)->limit(1)->find();
-        
-        if ($signup->loaded())
-        {
-            $signup->delete();
-        }
+
+        $signup->delete();
         
         return true;
     }
