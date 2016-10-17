@@ -11,8 +11,8 @@ class Project_Notification_Search_Factory_User implements Search_Factory
         $industryIds    = Arr::get($data, 'industries', []);
         $professionIds  = Arr::get($data, 'professions', []);
         $skillIds       = Arr::get($data, 'skills', []);
-        $skillRelation  = Arr::get($data, 'skill_relation', 1);
+        $skillRelation  = Auth::instance()->get_user()->skill_relation;
 
-        return new Search_Complex_User($industryIds, $professionIds, $skillIds, $skillRelation);
+        return new Project_Notification_Search_Complex_User($industryIds, $professionIds, $skillIds, $skillRelation);
     }
 }

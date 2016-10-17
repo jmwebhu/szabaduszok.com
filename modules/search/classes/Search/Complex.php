@@ -203,6 +203,10 @@ abstract class Search_Complex implements Search
         $matchedModels          = [];
 
         foreach ($this->_matchedModels as $model) {
+            if ($this->isDynamicSkillRelation()) {
+                $this->_skillRelation = $model->skill_relation;
+            }
+
             $this->_currentModel    = $model;
 
             $this->_searchRelation  = $this->makeSearchRelation();
@@ -287,4 +291,9 @@ abstract class Search_Complex implements Search
      * @return Model_Relation
      */
     abstract protected function getSkillRelationModel();
+
+    /**
+     * @return bool
+     */
+    abstract protected function isDynamicSkillRelation();
 }

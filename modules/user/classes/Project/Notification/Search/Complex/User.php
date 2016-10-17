@@ -57,4 +57,12 @@ class Project_Notification_Search_Complex_User extends Search_Complex
     {
         return new Model_User_Skill();
     }
+
+    /**
+     * @return bool
+     */
+    protected function isDynamicSkillRelation()
+    {
+        return true;
+    }
 }

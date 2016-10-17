@@ -64,5 +64,11 @@ class Search_Complex_Project extends Search_Complex
         return new Model_Project_Skill();
     }
 
-
+    /**
+     * @return bool
+     */
+    protected function isDynamicSkillRelation()
+    {
+        return false;
+    }
 }
