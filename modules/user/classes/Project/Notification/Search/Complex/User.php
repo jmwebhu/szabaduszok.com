@@ -1,6 +1,6 @@
 <?php
 
-class Search_Complex_User extends Search_Complex
+class Project_Notification_Search_Complex_User extends Search_Complex
 {
     /**
      * @return Model_User
@@ -15,11 +15,7 @@ class Search_Complex_User extends Search_Complex
      */
     public function getInitModels()
     {
-        $withPicture	= AB::select()->from($this->createSearchModel())->where('profile_picture_path', '!=', '')->and_where('type', '=', Entity_User::TYPE_FREELANCER)->order_by('lastname')->execute()->as_array();
-        $withoutPicture	= AB::select()->from($this->createSearchModel())->where('profile_picture_path', '=', '')->and_where('type', '=', Entity_User::TYPE_FREELANCER)->order_by('lastname')->execute()->as_array();
-        $merged			= Arr::merge($withPicture, $withoutPicture);
-
-        return AB::select()->from($merged)->where('user_id', '!=', '');
+        return AB::select()->from($this->createSearchModel())->where('type', '=', Entity_User::TYPE_FREELANCER)->order_by('lastname')->execute()->as_array();
     }
 
     /**

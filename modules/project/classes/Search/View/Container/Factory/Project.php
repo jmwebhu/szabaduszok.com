@@ -26,10 +26,9 @@ class Search_View_Container_Factory_Project
      */
     private static function createComplex(array $data)
     {
-        self::$_relationContainer = new Search_View_Container_Relation_Project();
-
-        $industries             = Arr::get($data, 'industries', []);
-        $selectedIndustryIds    = Arr::get($data, 'selectedIndustryIds', []);
+        self::$_relationContainer   = new Search_View_Container_Relation_Project();
+        $industries                 = Arr::get($data, 'industries', []);
+        $selectedIndustryIds        = Arr::get($data, 'selectedIndustryIds', []);
 
         foreach ($industries as $industry) {
             $selected = (in_array($industry->industry_id, $selectedIndustryIds));
@@ -40,11 +39,8 @@ class Search_View_Container_Factory_Project
             self::$_relationContainer->addItem($industryItem, Search_View_Container_Relation_Item::TYPE_INDUSTRY);
         }
 
-        $professions = Arr::get($data, 'professions', []);
-        self::addItems($professions, Search_View_Container_Relation_Item::TYPE_PROFESSION);
-
-        $skills = Arr::get($data, 'skills', []);
-        self::addItems($skills, Search_View_Container_Relation_Item::TYPE_SKILL);
+        self::addItems(Arr::get($data, 'professions', []), Search_View_Container_Relation_Item::TYPE_PROFESSION);
+        self::addItems(Arr::get($data, 'skills', []), Search_View_Container_Relation_Item::TYPE_SKILL);
 
         self::$_relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
 

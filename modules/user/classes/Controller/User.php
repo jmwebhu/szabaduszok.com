@@ -568,8 +568,15 @@ class Controller_User extends Controller_DefaultTemplate
 				$this->context->industries  = Viewhelper_User::getIndustriesForProfile($user);
 				$this->context->professions = Viewhelper_User::getProfessionsForProfile($user);
 				$this->context->skills      = Viewhelper_User::getSkillsForProfile($user);
+
+                $this->context->container = Project_Notification_Search_View_Container_Factory_User::createContainer([
+                    'professions'           => $this->context->professions,
+                    'skills'                => $this->context->skills,
+                    'skill_relation'        => $user->skill_relation,
+                    'current'               => 'complex',
+                    'industries'            => $this->context->industries
+                ]);
 			}
-						
 		}		
 		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
 		{

@@ -23,7 +23,7 @@ abstract class Search_View_Container
      */
     public function __construct($currentType)
     {
-        $this->_currentType         = $currentType;
+        $this->_currentType = $currentType;
     }
 
     /**
