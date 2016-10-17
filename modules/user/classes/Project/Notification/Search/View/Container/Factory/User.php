@@ -28,7 +28,7 @@ class Project_Notification_Search_View_Container_Factory_User
         self::addItems(Arr::get($data, 'professions', []), Search_View_Container_Relation_Item::TYPE_PROFESSION);
         self::addItems(Arr::get($data, 'skills', []), Search_View_Container_Relation_Item::TYPE_SKILL);
 
-        self::$_relationContainer->setSkillRelation(Arr::get($data, 'skill_relation', 1));
+        self::$_relationContainer->setSkillRelation(Auth::instance()->get_user()->skill_relation);
 
         $container = new Project_Notification_Search_View_Container_User('complex');
         $container->setRelationContainer(self::$_relationContainer);

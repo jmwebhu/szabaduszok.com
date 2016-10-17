@@ -34,6 +34,8 @@ class Model_User_Freelancer extends Model_User_Abstract
         $this->skill_relation = Arr::get($post, 'skill_relation', 1);
         $this->save();
 
+        $this->updateSession();
+
         return ['error' => false];
     }
 
