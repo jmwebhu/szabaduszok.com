@@ -29,6 +29,11 @@ AssetCollection::instance()
  * AssetManager initialize
  */
 AssetManager::instance()
+
+    ->addController('user_create_freelancer')
+        ->addAction('index')
+            ->addJs(['freelancer-registration'])
+
     ->addController('user')
     
         ->addAction('login')

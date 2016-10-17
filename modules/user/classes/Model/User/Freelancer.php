@@ -23,13 +23,8 @@ class Model_User_Freelancer extends Model_User_Abstract
      */
     public function saveProjectNotification(array $post)
     {
-        $this->removeAll('users_project_notification_industries', $this->_primary_key);
-        $this->removeAll('users_project_notification_professions', $this->_primary_key);
-        $this->removeAll('users_project_notification_skills', $this->_primary_key);
-
-        Model_User_Project_Notification_Industry::createBy(Arr::get($post, 'industries', []));
-        Model_User_Project_Notification_Profession::createBy(Arr::get($post, 'professions', []));
-        Model_User_Project_Notification_Skill::createBy(Arr::get($post, 'skills', []));
+        $this->removeOldProjectNotifications();
+        $this->addNewProjectNotifications($post);
 
         $this->skill_relation = Arr::get($post, 'skill_relation', 1);
         $this->save();
@@ -37,6 +32,23 @@ class Model_User_Freelancer extends Model_User_Abstract
         $this->updateSession();
 
         return ['error' => false];
+    }
+
+    protected function removeOldProjectNotifications()
+    {
+        $this->removeAll('users_project_notification_industries', $this->_primary_key);
+        $this->removeAll('users_project_notification_professions', $this->_primary_key);
+        $this->removeAll('users_project_notification_skills', $this->_primary_key);
+    }
+
+    /**
+     * @param array $post
+     */
+    protected function addNewProjectNotifications(array $post)
+    {
+        ORM::factory('User_Project_Notification_Industry')->createBy(Arr::get($post, 'industries', []));
+        ORM::factory('User_Project_Notification_Profession')->createBy(Arr::get($post, 'professions', []));
+        ORM::factory('User_Project_Notification_Skill')->createBy(Arr::get($post, 'skills', []));
     }
 
     /**

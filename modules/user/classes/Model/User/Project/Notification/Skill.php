@@ -1,6 +1,6 @@
 <?php
 
-class Model_User_Project_Notification_Skill extends Model_Relation
+class Model_User_Project_Notification_Skill extends Model_User_Relation
 {
     protected $_table_name  = 'users_project_notification_skills';
     protected $_primary_key = 'users_project_notification_skill_id';
@@ -54,16 +54,18 @@ class Model_User_Project_Notification_Skill extends Model_Relation
     }
 
     /**
-     * @param array $ids
+     * @return string
      */
-    public static function createBy(array $ids)
+    public function getForeignKey()
     {
-        foreach ($ids as $id) {
-            $industry               = new Model_User_Project_Notification_Skill();
-            $industry->user_id      =  Auth::instance()->get_user()->user_id;
-            $industry->skill_id  = $id;
+        return 'user_id';
+    }
 
-            $industry->save();
-        }
+    /**
+     * @return Model_User_Project_Notification_Skill
+     */
+    protected function createModel()
+    {
+        return new Model_User_Project_Notification_Skill();
     }
 }

@@ -233,54 +233,16 @@ class Model_User extends Model_Auth_User
     	return $result;
     }
 
-    /**
-     * $skill		= $this->getOrCreateRelation('php', 'skill')		Letrehoz egy uj kepesseget php nevvel
-     * $profession	= $this->getOrCreateRelation(2, 'profession')		Visszaadja a letezo objektumot
-     *
-     * @param string $value			Letezo rekord azonositoja, vagy uj rekord neve
-     * @param string $relation		User kapcsolat neve EGYES SZAMBAN. skill, profession
-     * @param bool   $addRelation	true eseten hozzaadja a letrehozott, vagy lekerdezett rekordot a user kapcsolataihoz
-     *
-     * @return ORM $model			A letrehozott, vagy lekerdezett objektum
-     */
-    protected function getOrCreateRelation($value, $relation, $addRelation = true)
-    {
-    	$relation   = strtolower($relation);
-    	$class      = 'Model_' . ucfirst($relation);
-
-    	if (Text::isId($value)) {
-    		$intval = intval($value);
-    		$model = new $class($intval);
-    	} else {
-    		$model = new $class();
-    		$model->name = $value;
-    		$model->save();
-
-    		$model->saveSlug();
-    		$model->cacheToCollection();
-    	}
-
-    	if ($addRelation) {
-    		$plural =  $relation . 's';
-    		$this->add($plural, $model);
-    	}
-
-    	return $model;
-    }
-
 	/**
-	 * Visszaadja a felhasznalohoz kapcsolat kulso pfoilok url -jet
-	 *
-	 * @param Model_User_Profile $userProfile	Ures objektum
-	 * @return array							Azonositok ['id' => 'url', ...]
+	 * @param Model_User_Profile $userProfile
+	 * @return array
 	 */
 	public function getProfileUrls(Model_User_Profile $userProfile)
 	{
 		$data			= [];
 		$userProfiles	= $userProfile->where('user_id', '=', $this->pk())->find_all();
 		
-		foreach ($userProfiles as $profile)
-		{
+		foreach ($userProfiles as $profile) {
 			$data[$profile->profile->pk()] = $profile->url;
 		}
 		

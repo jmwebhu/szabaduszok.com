@@ -18,11 +18,6 @@ abstract class Entity_User extends Entity
     protected $_file;
 
     /**
-     * @var Mailinglist_User
-     */
-    protected $_mailinglist;
-
-    /**
      * @var int
      */
     protected $_user_id;
@@ -153,7 +148,6 @@ abstract class Entity_User extends Entity
     public function __construct()
     {
         $this->_stdObject   = new stdClass();
-        $this->_mailinglist = new Mailinglist_User($this);
     }
 
     /**
@@ -395,6 +389,8 @@ abstract class Entity_User extends Entity
         $data = $this->unsetPasswordFrom($data);
         $data = $this->fixPost($data);
 
+        $this->_model->updateSession();
+
         $this->_model->submit($data);
 
         $this->_file->uploadFiles();
@@ -403,7 +399,6 @@ abstract class Entity_User extends Entity
         $this->_model->save();
 
         $this->_model->cacheToCollection();
-        $this->_model->updateSession();
 
         $signupModel = new Model_Signup();
         $signupModel->deleteIfExists($this->_model->email);
@@ -483,15 +478,6 @@ abstract class Entity_User extends Entity
     public function getRelationString($relationName)
     {
         return $this->_model->getRelationString($relationName);
-    }
-
-    /**
-     * @param int|null $id
-     * @return bool
-     */
-    public function addToMailingList($id = null)
-    {
-        return $this->_mailinglist->add($id);
     }
 
     /**

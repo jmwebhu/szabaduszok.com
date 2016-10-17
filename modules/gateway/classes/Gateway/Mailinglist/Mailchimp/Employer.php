@@ -10,7 +10,7 @@ class Gateway_Mailinglist_Mailchimp_Employer extends Gateway_Mailinglist_Mailchi
     /**
      * @return bool
      */
-    public function subscribe()
+    protected function subscribe()
     {
         return $this->sendRequest($this->_url . 'lists/' . $this->_config->get('projectOwnerListId') . '/members',
             $this->getClearedUserData());
@@ -19,7 +19,7 @@ class Gateway_Mailinglist_Mailchimp_Employer extends Gateway_Mailinglist_Mailchi
     /**
      * @return bool
      */
-    public function update()
+    protected function update()
     {
         return $this->sendRequest(
             $this->_url . 'lists/' . $this->_config->get('projectOwnerListId') . '/members/' . md5(strtolower($this->_user->getEmail())),

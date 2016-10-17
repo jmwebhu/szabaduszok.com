@@ -10,7 +10,7 @@ class Gateway_Mailinglist_Mailchimp_Freelancer extends Gateway_Mailinglist_Mailc
     /**
      * @return bool
      */
-    public function subscribe()
+    protected function subscribe()
     {
         return $this->sendRequest($this->_url . 'lists/' . $this->_config->get('freelancerListId') . '/members',
             $this->getClearedUserData());
@@ -19,7 +19,7 @@ class Gateway_Mailinglist_Mailchimp_Freelancer extends Gateway_Mailinglist_Mailc
     /**
      * @return bool
      */
-    public function update()
+    protected function update()
     {
         return $this->sendRequest(
             $this->_url . 'lists/' . $this->_config->get('freelancerListId') . '/members/' . md5(strtolower($this->_user->getEmail())),

@@ -2,8 +2,8 @@
 
 Route::set('freelancerRegistration', 'szabaduszo-regisztracio')
 	->defaults(array(
-		'controller' => 'User',
-		'action'     => 'freelancerregistration',
+		'controller' => 'User_Create_Freelancer',
+		'action'     => 'index',
 ));
 
 Route::set('projectOwnerRegistration', 'megbizo-regisztracio')

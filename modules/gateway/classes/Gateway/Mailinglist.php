@@ -27,14 +27,27 @@ abstract class Gateway_Mailinglist
     }
 
     /**
-     * @return bool
+     * @param bool $isNew
+     * @return bool mixed
      */
-	abstract public function subscribe();
+    public function add($isNew)
+    {
+        if ($isNew) {
+            return $this->subscribe();
+        }
+
+        return $this->update();
+    }
 
     /**
      * @return bool
      */
-    abstract public function update();
+	abstract protected function subscribe();
+
+    /**
+     * @return bool
+     */
+    abstract protected function update();
 
     abstract protected function initConfig();
     abstract protected function initUrl();

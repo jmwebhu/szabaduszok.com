@@ -1,6 +1,6 @@
 <?php
 
-class Model_User_Project_Notification_Industry extends Model_Relation implements Project_Notification_Create_Behaviour
+class Model_User_Project_Notification_Industry extends Model_User_Relation
 {
     protected $_table_name  = 'users_project_notification_industries';
     protected $_primary_key = 'users_project_notification_industry_id';
@@ -54,16 +54,27 @@ class Model_User_Project_Notification_Industry extends Model_Relation implements
     }
 
     /**
-     * @param array $ids
+     * @return string
      */
-    public static function createBy(array $ids)
+    public function getForeignKey()
     {
-        foreach ($ids as $id) {
-            $industry               = new Model_User_Project_Notification_Industry();
-            $industry->user_id      =  Auth::instance()->get_user()->user_id;
-            $industry->industry_id  = $id;
+        return 'user_id';
+    }
 
-            $industry->save();
-        }
+    /**
+     * @return Model_User_Project_Notification_Industry
+     */
+    protected function createModel()
+    {
+        return new Model_User_Project_Notification_Industry();
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     */
+    public function getOrCreateBy($value)
+    {
+        return new Model_Industry($value);
     }
 }
