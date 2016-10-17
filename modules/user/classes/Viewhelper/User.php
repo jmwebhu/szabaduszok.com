@@ -2,178 +2,29 @@
 
 class Viewhelper_User
 {
-	public static function getEditUrl(Model_User $user)
-	{
-		return ($user->type == 1) ? Route::url('freelancerProfileEdit', ['slug' => $user->slug]) : Route::url('projectOwnerProfileEdit', ['slug' => $user->slug]); 
-	}
-	
-	public static function getPageTitleFreelancer($action = 'registration')
-	{
-		switch ($action)
-		{
-			case 'registration': return 'Szabadúszó Regisztráció'; break;
-			case 'edit': return 'Profil szerkesztése: '; break;
-		}
-	}
-	
-	public static function getPageTitleProjectowner($action = 'registration')
-	{
-		switch ($action)
-		{
-			case 'registration': return 'Megbízó Regisztráció'; break;
-			case 'edit': return 'Profil szerkesztése: '; break;
-		}
-	}
-	
-	public static function hasPrivacyCheckbox($action = 'registration')
-	{
-		switch ($action)
-		{
-			case 'registration': return true; break;
-			case 'edit': return false; break;
-		}
-	}
-	
-	public static function getPasswordText($action = 'registration')
-	{
-		switch ($action)
-		{
-			case 'registration': return 'Legalább 6 karakter'; break;
-			case 'edit': return 'Legalább 6 karakter. Ha nem módosítod, hagyd üresen!'; break;
-		}
-	}
-	
-	public static function hasIdInput($action = 'registration')
-	{
-		switch ($action)
-		{
-			case 'registration': return false; break;
-			case 'edit': return true; break;
-		}	
-	}
-	
-	public static function getFormActionFreelancer($action = 'registration', $user = null)
-	{
-		switch ($action)
-		{
-			case 'registration': return Route::url('freelancerRegistration') ; break;
-			case 'edit': return Route::url('freelancerProfileEdit', ['slug' => $user->slug]); break;
-		}
-	}
-	
-	public static function getFormActionProjectowner($action = 'registration', $user = null)
-	{
-		switch ($action)
-		{
-			case 'registration': return Route::url('projectOwnerRegistration') ; break;
-			case 'edit': return Route::url('projectOwnerProfileEdit', ['slug' => $user->slug]); break;
-		}
-	}
-	
-	public static function hasPasswordRules($action = 'registration')
-	{
-		switch ($action)
-		{
-			case 'registration': return true; break;
-			case 'edit': return false; break;
-		}
-	}
-	
-	public static function hasPicture(Model_User $user)
-	{
-		if ($user->loaded() && $user->profile_picture_path)
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public static function hasCv(Model_User $user)
-	{
-		if ($user->loaded() && $user->cv_path)
-		{
-			return true;
-		}
-	
-		return false;
-	}
-	
-	public static function getIndustriesForProfile(Model_User $user)
-	{
-		$industryModel = new Model_Industry();
-		$industries = $industryModel->getAll();
-		$result = [];
+    const ACTION_CREATE = 'create';
+    const ACTION_EDIT = 'edit';
 
-        $notifications = $user->project_notification_industries->find_all();
-        $ids = [];
+    /**
+     * @var Viewhelper_User_Type
+     */
+    protected $_type;
 
-        foreach ($notifications as $notification) {
-            $ids[] = $notification->industry_id;
-        }
+    /**
+     * Viewhelper_User constructor.
+     * @param Viewhelper_User_Type $_type
+     */
+    public function __construct(Viewhelper_User_Type $_type)
+    {
+        $this->_type = $_type;
+    }
 
-        foreach ($industries as $industry)
-        {
-            $result[] = [
-                'id'		=> $industry->industry_id,
-                'name'		=> $industry->name,
-                'selected'	=> (in_array($industry->industry_id, $ids)) ? 'selected' : '',
-            ];
-        }
-
-		
-		return $result;
-	}
-	
-	public static function getProfessionsForProfile(Model_User $user)
-	{
-		$professionModel = new Model_Profession();
-		$professions = $professionModel->getAll();
-		$result = [];
-
-        $notifications = $user->project_notification_professions->find_all();
-        $ids = [];
-
-        foreach ($notifications as $notification)
-        {
-            $ids[] = $notification->profession_id;
-        }
-
-        foreach ($professions as $profession)
-        {
-            $result[] = [
-                'id'		=> $profession->profession_id,
-                'name'		=> $profession->name,
-                'selected'	=> (in_array($profession->profession_id, $ids)) ? 'selected' : '',
-            ];
-        }
-	
-		return $result;
-	}
-	
-	public static function getSkillsForProfile(Model_User $user)
-	{
-		$skillModel = new Model_Skill();
-		$skills = $skillModel->getAll();
-		$result = [];
-
-        $notifications = $user->project_notification_skills->find_all();
-        $ids = [];
-
-        foreach ($notifications as $notification)
-        {
-            $ids[] = $notification->skill_id;
-        }
-
-        foreach ($skills as $skill)
-        {
-            $result[] = [
-                'id'		=> $skill->skill_id,
-                'name'		=> $skill->name,
-                'selected'	=> (in_array($skill->skill_id, $ids)) ? 'selected' : '',
-            ];
-        }
-	
-		return $result;
-	}
+    /**
+     * @param Entity_User $user
+     * @return string
+     */
+    public function getEditUrl(Entity_User $user)
+    {
+        return $this->_type->getEditUrl($user);
+    }
 }
