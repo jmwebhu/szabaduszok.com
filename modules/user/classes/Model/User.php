@@ -232,15 +232,15 @@ class Model_User extends Model_Auth_User
     
     	return $result;
     }
-    
+
     /**
      * $skill		= $this->getOrCreateRelation('php', 'skill')		Letrehoz egy uj kepesseget php nevvel
      * $profession	= $this->getOrCreateRelation(2, 'profession')		Visszaadja a letezo objektumot
-     * 
+     *
      * @param string $value			Letezo rekord azonositoja, vagy uj rekord neve
      * @param string $relation		User kapcsolat neve EGYES SZAMBAN. skill, profession
      * @param bool   $addRelation	true eseten hozzaadja a letrehozott, vagy lekerdezett rekordot a user kapcsolataihoz
-     * 
+     *
      * @return ORM $model			A letrehozott, vagy lekerdezett objektum
      */
     protected function getOrCreateRelation($value, $relation, $addRelation = true)
@@ -263,44 +263,14 @@ class Model_User extends Model_Auth_User
     	if ($addRelation) {
     		$plural =  $relation . 's';
     		$this->add($plural, $model);
-    	}    	    	
-    	
+    	}
+
     	return $model;
     }
 
-    /**
-     * Kikuldi az aktualis, tipushoz tartozo lead magnetet a kapott e-mail cimre
-     * 
-     * @param string $email     Amire kuldeni kell a lead magnetet
-     * @param integer $type     Amilyen tipusu lead magnetet kell kuldeni
-     * 
-     * @return void
-     */
-    public static function sendLeadMagnet($email, Model_Leadmagnet $leadMagnet, $type = 1)
-    {
-        $lead = $leadMagnet->getCurrentByType($type);
-        
-        if ($email && $lead->loaded())
-        {
-            $html = Twig::getHtmlFromTemplate('Templates/leadMagnet.twig', [
-                'leadmagnet'    => $lead,
-            ]);
-
-            // Csak PROD, vagy STAG -ben kuld tenlyegesen e-mail
-            if (Kohana::$environment == Kohana::PRODUCTION || Kohana::STAGING)
-            {
-                Email::send($email, '[ESETTANULMÁNY]', $html);
-            }
-            else    // Egyebkent csak egy file -t hoz letre
-            {
-                file_put_contents($email . '.html', $html);
-            }               
-        }                
-    }
-	
 	/**
 	 * Visszaadja a felhasznalohoz kapcsolat kulso pfoilok url -jet
-	 * 
+	 *
 	 * @param Model_User_Profile $userProfile	Ures objektum
 	 * @return array							Azonositok ['id' => 'url', ...]
 	 */

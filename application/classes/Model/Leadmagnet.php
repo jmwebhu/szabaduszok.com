@@ -55,4 +55,22 @@ class Model_Leadmagnet extends ORM
         
         return $this;
     }
+
+    /**
+     * @param string $email
+     * @param int $type
+     */
+    public static function sendTo($email, $type)
+    {
+        $model      = new Model_Leadmagnet();
+        $leadmagnet = $model->getCurrentByType($type);
+
+        if ($leadmagnet->loaded()) {
+            $html = Twig::getHtmlFromTemplate('Templates/leadMagnet.twig', [
+                'leadmagnet'    => $leadmagnet,
+            ]);
+
+            Email::send($email, '[ESETTANULMÁNY]', $html);
+        }
+    }
 }

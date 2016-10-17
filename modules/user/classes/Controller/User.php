@@ -27,8 +27,7 @@ class Controller_User extends Controller_DefaultTemplate
 			$signup = new Model_Signup();
 			$signup->createIfHasEmail($email);
 
-			$leadMagnet = new Model_Leadmagnet();
-			Model_User::sendLeadMagnet($email, $leadMagnet);
+			Model_Leadmagnet::sendTo($email, Entity_User::TYPE_FREELANCER);
 
 			$this->context->email           = $email;
 			$this->context->landingPageName = Input::get('landing_page_name');
@@ -110,8 +109,7 @@ class Controller_User extends Controller_DefaultTemplate
 			$signup = new Model_Signup();
 			$signup->createIfHasEmail($email, 2);
 
-			$leadMagnet = new Model_Leadmagnet();
-			Model_User::sendLeadMagnet($email, $leadMagnet, 2);
+            Model_Leadmagnet::sendTo($email, Entity_User::TYPE_EMPLOYER);
 
 			$this->context->email           = $email;
 			$this->context->landingPageName = Input::get('landing_page_name');
