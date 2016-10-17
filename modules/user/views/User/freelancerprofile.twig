@@ -175,7 +175,10 @@
 				</div>
 				
 				{% if canSeeProjectNotification %}
-				{{ searchPanel.build(container) }}
+                <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
+                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+				    {{ searchPanel.build(container) }}
+                </form>
 				{#<div class="panel">
 					<div class="panel-heading">
 						<h3 class="mg-clear tc-black">
@@ -186,7 +189,7 @@
 						<p>Csak azokról a projektekről szeretnék értesítést kapni, amik...</p>
 						<form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
 							<input type="hidden" name="user_id" value="{{ user.user_id }}">
-							
+
 							<span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
 							<p class="search-form-paragraph">
 								Az alábbi <strong>iparágakba</strong> tartoznak:

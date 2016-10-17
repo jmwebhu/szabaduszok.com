@@ -13,8 +13,26 @@ class Search_View_Container_Project extends Search_View_Container
     /**
      * @return string
      */
-    public function getEntityNameForHuman()
+    public function getHeadingText()
     {
-        return 'Projekt';
+        return 'Projekt kereső';
     }
+
+    /**
+     * @return string
+     */
+    public function getComplexFormAction()
+    {
+        return Route::url('projectList');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSimpleFormAction()
+    {
+        return $this->getComplexFormAction();
+    }
+
+
 }

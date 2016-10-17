@@ -13,8 +13,8 @@ class Search_View_Container_User extends Search_View_Container
     /**
      * @return string
      */
-    public function getEntityNameForHuman()
+    public function getHeadingText()
     {
-        return 'Szabadúszó';
+        return 'Szabadúszó kereső';
     }
 }

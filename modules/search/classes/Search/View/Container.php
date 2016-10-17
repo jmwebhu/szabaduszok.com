@@ -78,5 +78,53 @@ abstract class Search_View_Container
     /**
      * @return string
      */
-    abstract public function getEntityNameForHuman();
+    abstract public function getHeadingText();
+
+    /**
+     * @return mixed
+     */
+    abstract public function getComplexFormAction();
+
+    /**
+     * @return mixed
+     */
+    abstract public function getSimpleFormAction();
+
+    /**
+     * @return bool
+     */
+    public function needTabs()
+    {
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComplexButtonsHtml()
+    {
+        return "<button id=\"complex-submit\" class=\"mt bloc-button btn-block btn btn-lg btn-lime-green\" type=\"submit\">
+                        <span class=\"ion ion-search icon-spacer icon-white\"></span>Mehet
+                    </button>" . $this->getClearButtonHtml();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSimpleButtonsHtml()
+    {
+        return "<button id=\"simple-submit\" class=\"mt bloc-button btn-block btn btn-lg btn-lime-green\" type=\"submit\">
+                        <span class=\"ion ion-search icon-spacer icon-white\"></span>Mehet
+                    </button>" . $this->getClearButtonHtml();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getClearButtonHtml()
+    {
+        return "<a id=\"empty-form\" class=\"bloc-button btn-block btn btn-lg btn-gray btn-d\" href=\"" . Route::url('projectList') . "\">
+                        <span class=\"ion ion-android-cancel icon-spacer icon-white\"></span>Ürít
+                    </a>";
+    }
 }

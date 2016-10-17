@@ -1,121 +1,123 @@
 {% macro build(container) %}
+{% import _self as datatable %}
 <div class="panel">
     <div class="panel-heading">
         <h2 class="mg-clear tc-black">
-            {{ container.getEntityNameForHuman() }} kereső
+            {{ container.getHeadingText() }}
         </h2>
     </div>
 
     <div class="panel-body">
+        {% if container.needTabs() %}
         <ul class="nav nav-tabs" data-current="{{ container.getCurrentType() }}">
             <li data-content="complex" class="active"><span class="ion ion-settings icon-dark-gray hidden-xs"></span>Részletes</li>
             <li data-content="simple"><span class="ion ion-search icon-dark-gray hidden-xs"></span>Egyszerű</li>
         </ul>
+        {% endif %}
 
-        <div class="tab-content">
-            <div id="complex" class="tab-pane fade in active">
+        {% if container.needTabs() %}
+            <div class="tab-content">
+                <div id="complex" class="tab-pane fade in active">
+                    {{ _self.buildComplexForm(container) }}
+                </div>
 
-                <form id="complex-search-form" method="POST" action="{{ ROOT }}szabaduszo-projektek">
-
-                    <input type="hidden" name="complex" value="1">
-
-                    <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
-                    <p class="search-form-paragraph">
-                        {% autoescape false %}{{ container.getRelationContainer().getIndustrySubtitle() }}{% endautoescape %}
-                    </p>
-
-                    <div class="form-group">
-                        <select class="form-control" name="industries[]" id="industries" multiple>
-                            {% for industry in container.getRelationContainer().getIndustries() %}
-                                <option value="{{ industry.getId() }}" {% if industry.isSelected() %}selected{% endif %}>{{ industry.getName() }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
-                    <p class="search-form-paragraph">
-                        {% autoescape false %}{{ container.getRelationContainer().getProfessionSubtitle() }}{% endautoescape %}
-                    </p>
-                    <div class="form-group">
-                        <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                            {% for profession in container.getRelationContainer().getProfessions() %}
-                                <option value="{{ profession.getId() }}"
-                                    {% if container.getRelationContainer().isAllSelected() %}
-                                        selected
-                                    {% else %}
-                                        {% if profession.isSelected() %}selected{% endif %}
-                                    {% endif %}>
-                                    {{ profession.getName() }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
-                    <p class="search-form-paragraph">
-                        {% autoescape false %}{{ container.getRelationContainer().getSkillSubtitle() }}{% endautoescape %}
-                    </p>
-                    <div class="form-group">
-                        <select id="skills" class="form-control" name="skills[]" multiple="multiple">
-                            {% for skill in container.getRelationContainer().getSkills() %}
-                                <option value="{{ skill.getId() }}"
-                                    {% if container.getRelationContainer().isAllSelected() %}
-                                        selected
-                                    {% else %}
-                                        {% if skill.isSelected() %}selected{% endif %}
-                                    {% endif %}>
-                                    {{ skill.getName() }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <select class="form-control" name="skill_relation" id="skill-relation">
-                        <option value="1" {% if container.getRelationContainer().getSkillRelation() == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
-                        <option value="2" {% if container.getRelationContainer().getSkillRelation() == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
-                    </select>
-                    <p class="search-form-paragraph">
-                        igénylik.
-                    </p>
-
-                    <button id="complex-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
-                        <span class="ion ion-search icon-spacer icon-white"></span>Mehet
-                    </button>
-                    <a id="empty-form" class="bloc-button btn-block btn btn-lg btn-gray btn-d" href="{{ ROOT }}szabaduszo-projektek">
-                        <span class="ion ion-android-cancel icon-spacer icon-white"></span>Ürít
-                    </a>
-                </form>
+                <div id="simple" class="tab-pane fade">
+                    {{ _self.buildSimpleForm(container) }}
+                </div>
             </div>
-            <!-- complex END -->
-
-            <div id="simple" class="tab-pane fade">
-
-                <form id="simple-search-form" method="POST" action="{{ ROOT }}szabaduszo-projektek">
-
-                    <input type="hidden" name="simple" value="1">
-
-                    <p class="search-form-paragraph">
-                        {% autoescape false %}{{ container.getSimpleSubtitle() }}{% endautoescape %}
-                    </p>
-
-                    <div class="form-group">
-                        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ container.getSearchTerm() }}">
-                    </div>
-
-                    <button id="simple-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
-                        <span class="ion ion-search icon-spacer icon-white"></span>Mehet
-                    </button>
-                    <a id="empty-form" class="bloc-button btn-block btn btn-lg btn-gray btn-d" href="{{ ROOT }}szabaduszo-projektek">
-                        <span class="ion ion-android-cancel icon-spacer icon-white"></span>Ürít
-                    </a>
-                </form>
-
-            </div>
-            <!-- simple END -->
-        </div>
-        <!-- tab-content END -->
+        {% else %}
+            {{ _self.buildComplexForm(container) }}
+        {% endif %}
     </div>
     <!-- panel-body END -->
 </div>
 <!-- panel END -->
 
+{% endmacro %}
+
+{% macro buildSimpleForm(container) %}
+<form id="simple-search-form" method="POST" action="{{ container.getSimpleFormAction() }}">
+
+    <input type="hidden" name="simple" value="1">
+
+    <p class="search-form-paragraph">
+        {% autoescape false %}{{ container.getSimpleSubtitle() }}{% endautoescape %}
+    </p>
+
+    <div class="form-group">
+        <input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ container.getSearchTerm() }}">
+    </div>
+
+    {% autoescape false %}
+        {{ container.getSimpleButtonsHtml() }}
+    {% endautoescape %}
+</form>
+{% endmacro %}
+
+{% macro buildComplexForm(container) %}
+<form id="complex-search-form" method="POST" action="{{ container.getComplexFormAction() }}">
+    <input type="hidden" name="complex" value="1">
+
+    <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
+    <p class="search-form-paragraph">
+        {% autoescape false %}{{ container.getRelationContainer().getIndustrySubtitle() }}{% endautoescape %}
+    </p>
+
+    <div class="form-group">
+        <select class="form-control" name="industries[]" id="industries" multiple>
+            {% for industry in container.getRelationContainer().getIndustries() %}
+                <option value="{{ industry.getId() }}" {% if industry.isSelected() %}selected{% endif %}>{{ industry.getName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+    <p class="search-form-paragraph">
+        {% autoescape false %}{{ container.getRelationContainer().getProfessionSubtitle() }}{% endautoescape %}
+    </p>
+    <div class="form-group">
+        <select id="professions" class="form-control" name="professions[]" multiple="multiple">
+            {% for profession in container.getRelationContainer().getProfessions() %}
+                <option value="{{ profession.getId() }}"
+                        {% if container.getRelationContainer().isAllSelected() %}
+                selected
+                {% else %}
+                    {% if profession.isSelected() %}selected{% endif %}
+                        {% endif %}>
+                    {{ profession.getName() }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
+    <p class="search-form-paragraph">
+        {% autoescape false %}{{ container.getRelationContainer().getSkillSubtitle() }}{% endautoescape %}
+    </p>
+    <div class="form-group">
+        <select id="skills" class="form-control" name="skills[]" multiple="multiple">
+            {% for skill in container.getRelationContainer().getSkills() %}
+                <option value="{{ skill.getId() }}"
+                        {% if container.getRelationContainer().isAllSelected() %}
+                selected
+                {% else %}
+                    {% if skill.isSelected() %}selected{% endif %}
+                        {% endif %}>
+                    {{ skill.getName() }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <select class="form-control" name="skill_relation" id="skill-relation">
+        <option value="1" {% if container.getRelationContainer().getSkillRelation() == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
+        <option value="2" {% if container.getRelationContainer().getSkillRelation() == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
+    </select>
+    <p class="search-form-paragraph">
+        igénylik.
+    </p>
+
+    {% autoescape false %}
+        {{ container.getComplexButtonsHtml() }}
+    {% endautoescape %}
+</form>
 {% endmacro %}
