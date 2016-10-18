@@ -215,8 +215,7 @@ class Model_Auth_User extends ORM {
         $isLoggedIn = Auth::instance()->login(Input::post('email'), Input::post('password'));
 
         // Sikertelen belepes
-        if (!$isLoggedIn)
-        {
+        if (!$isLoggedIn) {
             // Kivetelt dob
             throw new Exception_UserLogin('Hibás e-mail vagy jelszó. Kérjük próbáld meg újra!');
         }
@@ -226,8 +225,7 @@ class Model_Auth_User extends ORM {
         $user = Auth::instance()->get_user();
 
         // Nem volt session -ben semmilyen url
-        if (!$url)
-        {
+        if (!$url) {
             // Profilra iranyitja
             $url = ($user->type == 1) ? Route::url('freelancerProfile', ['slug' => $user->slug]) : Route::url('projectOwnerProfile', ['slug' => $user->slug]);
         }

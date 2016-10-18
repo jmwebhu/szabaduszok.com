@@ -11,13 +11,14 @@ abstract class Viewhelper_User_Type_Freelancer extends Viewhelper_User_Type
     }
 
     /**
-     * @param ORM $relationModel
+     * @param Model_Project_Notification_Relation $relationModel
      * @return array
      */
-    public function getProjectNotificationRelationForProfile(ORM $relationModel)
+    public function getProjectNotificationRelationForProfile(Model_Project_Notification_Relation $relationModel)
     {
         $relations      = $relationModel->getAll();
-        $notifications  = $this->_user->project_notification_skills->find_all();
+        $notifications  = $this->_user->getRelation($relationModel->getUserProjectNotificationRelationName());
+
         $ids            = [];
         $result         = [];
 

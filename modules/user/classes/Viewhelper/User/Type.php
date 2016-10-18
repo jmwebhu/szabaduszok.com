@@ -51,10 +51,10 @@ abstract class Viewhelper_User_Type
     abstract public function hasPasswordRules();
 
     /**
-     * @param ORM $relationModel
+     * @param Model_Project_Notification_Relation $relationModel
      * @return array
      */
-    abstract public function getProjectNotificationRelationForProfile(ORM $relationModel);
+    abstract public function getProjectNotificationRelationForProfile(Model_Project_Notification_Relation $relationModel);
 
     /**
      * @return bool

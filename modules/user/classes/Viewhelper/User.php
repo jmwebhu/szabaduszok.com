@@ -20,12 +20,11 @@ class Viewhelper_User
     }
 
     /**
-     * @param Entity_User $user
      * @return string
      */
-    public function getEditUrl(Entity_User $user)
+    public function getEditUrl()
     {
-        return $this->_type->getEditUrl($user);
+        return $this->_type->getEditUrl();
     }
 
     /**
@@ -82,5 +81,14 @@ class Viewhelper_User
     public function hasPicture()
     {
         return $this->_type->hasPicture();
+    }
+
+    /**
+     * @param Model_Project_Notification_Relation $relationModel
+     * @return array
+     */
+    public function getProjectNotificationRelationForProfile(Model_Project_Notification_Relation $relationModel)
+    {
+        return $this->_type->getProjectNotificationRelationForProfile($relationModel);
     }
 }

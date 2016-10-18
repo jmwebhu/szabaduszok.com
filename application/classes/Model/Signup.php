@@ -52,7 +52,9 @@ class Model_Signup extends ORM
         $model  = new Model_Signup();
         $signup = $model->where('email', '=', $email)->limit(1)->find();
 
-        $signup->delete();
+        if ($signup->loaded()) {
+            $signup->delete();
+        }
         
         return true;
     }

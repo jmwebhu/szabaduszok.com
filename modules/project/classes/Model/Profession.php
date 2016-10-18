@@ -1,6 +1,6 @@
 <?php
 
-class Model_Profession extends ORM
+class Model_Profession extends Model_Project_Notification_Relation
 {
 	protected $_table_name = 'professions';
 	protected $_primary_key = 'profession_id';
@@ -19,4 +19,12 @@ class Model_Profession extends ORM
 		'name'			=> ['type' => 'string', 'null' => true],
 		'slug'			=> ['type' => 'string', 'null' => true],
 	];
+
+    /**
+     * @return string
+     */
+    public function getUserProjectNotificationRelationName()
+    {
+        return 'project_notification_professions';
+    }
 }

@@ -97,6 +97,15 @@ abstract class Entity
     }
 
     /**
+     * @param $name
+     * @return array
+     */
+    public function getRelation($name)
+    {
+        return $this->_model->{$name}->find_all();
+    }
+
+    /**
      * @return bool
      */
     public function save()
@@ -151,15 +160,6 @@ abstract class Entity
         $this->mapModelToThis();
 
         return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return array
-     */
-    public function getRelation($name)
-    {
-        return $this->_model->{$name}->find_all();
     }
 
     /**

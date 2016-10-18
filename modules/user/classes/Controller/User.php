@@ -391,21 +391,27 @@ class Controller_User extends Controller_DefaultTemplate
 			$this->context->canRate = (int) $authorization->canRate();
 			$this->context->canEdit = $canEdit = (int) $authorization->canEdit();
 			$this->context->canSeeProjectNotification = $canSeeProjectNotification = (int) $authorization->canSeeProjectNotification();			
-			
+
+            $entity = Entity_User::createUser(Entity_User::TYPE_FREELANCER, $user->user_id);
+            $viewhelper = Viewhelper_User_Factory::createViewhelper($entity, Viewhelper_User::ACTION_CREATE);
+
 			if ($canEdit)
 			{
-				$this->context->editUrl = Viewhelper_User::getEditUrl($user);
+				$this->context->editUrl = $viewhelper->getEditUrl();
 			}			
 			
 			$logged 					= Auth::instance()->get_user();
             $myRating                   = Model_User_Rating::getRating($logged, $this->context->user);
 			$this->context->myRating	= ($myRating) ? $myRating : '-';
 			
-			if ($canSeeProjectNotification) 
+			if ($canSeeProjectNotification)
 			{
-				$this->context->industries  = Viewhelper_User::getIndustriesForProfile($user);
+				/*$this->context->industries  = Viewhelper_User::getIndustriesForProfile($user);
 				$this->context->professions = Viewhelper_User::getProfessionsForProfile($user);
-				$this->context->skills      = Viewhelper_User::getSkillsForProfile($user);
+				$this->context->skills      = Viewhelper_User::getSkillsForProfile($user);*/
+                $this->context->industries = $viewhelper->getProjectNotificationRelationForProfile(new Model_Industry());
+                $this->context->professions = $viewhelper->getProjectNotificationRelationForProfile(new Model_Profession());
+                $this->context->skills = $viewhelper->getProjectNotificationRelationForProfile(new Model_Skill());
 
                 $this->context->container = Project_Notification_Search_View_Container_Factory_User::createContainer([
                     'professions'           => $this->context->professions,

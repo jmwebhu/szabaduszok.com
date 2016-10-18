@@ -1,0 +1,11 @@
+Cannot delete signup model because it is not loaded. Trace: #0 /Applications/MAMP/htdocs/szabaduszok.com/application/classes/Model/Signup.php(55): Kohana_ORM->delete()
+#1 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/Entity/User.php(420): Model_Signup->deleteIfExists('nagybela@szabad...')
+#2 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/Controller/User/Create.php(108): Entity_User->submit(Array)
+#3 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/Controller/User/Create.php(52): Controller_User_Create->handlePostRequest()
+#4 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Controller.php(84): Controller_User_Create->action_index()
+#5 [internal function]: Kohana_Controller->execute()
+#6 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request/Client/Internal.php(97): ReflectionMethod->invoke(Object(Controller_User_Create_Freelancer))
+#7 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request/Client.php(114): Kohana_Request_Client_Internal->execute_request(Object(Request), Object(Response))
+#8 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request.php(997): Kohana_Request_Client->execute(Object(Request))
+#9 /Applications/MAMP/htdocs/szabaduszok.com/index.php(132): Kohana_Request->execute()
+#10 {main}

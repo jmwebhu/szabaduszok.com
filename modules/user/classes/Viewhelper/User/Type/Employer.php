@@ -11,10 +11,10 @@ abstract class Viewhelper_User_Type_Employer extends Viewhelper_User_Type
     }
 
     /**
-     * @param ORM $relationModel
+     * @param Model_Project_Notification_Relation $relationModel
      * @return array
      */
-    public function getProjectNotificationRelationForProfile(ORM $relationModel)
+    public function getProjectNotificationRelationForProfile(Model_Project_Notification_Relation $relationModel)
     {
         return [];
     }

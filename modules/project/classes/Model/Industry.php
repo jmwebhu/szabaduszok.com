@@ -1,6 +1,6 @@
 <?php
 
-class Model_Industry extends ORM
+class Model_Industry extends Model_Project_Notification_Relation
 {
 	protected $_table_name = 'industries';
 	protected $_primary_key = 'industry_id';
@@ -18,5 +18,13 @@ class Model_Industry extends ORM
 		'industry_id'	=> ['type' => 'int', 'key' => 'PRI'],
 		'name'			=> ['type' => 'string', 'null' => true],
 		'slug'			=> ['type' => 'string', 'null' => true],                     
-	];        
+	];
+
+    /**
+     * @return string
+     */
+    public function getUserProjectNotificationRelationName()
+    {
+        return 'project_notification_industries';
+    }
 }
