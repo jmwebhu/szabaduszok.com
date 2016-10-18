@@ -92,4 +92,24 @@ abstract class Controller_User_Create extends Controller_DefaultTemplate
         $industry                           = new Model_Industry();
         $this->context->industries          = $industry->getAll();
     }
+
+    protected function handleSignup()
+    {
+        $signup         = new Model_Signup();
+        $signup->createIfHasEmail($this->_email, $this->getUserType());
+    }
+
+    protected function handlePostRequest()
+    {
+        if ($this->request->method() == Request::POST) {
+            Model_Database::trans_start();
+
+            $this->_user = Entity_User::createUser($this->getUserType());
+            $this->_user->submit(Input::post_all());
+
+            $this->_error = false;
+
+            Auth_ORM::instance()->force_login($this->_user->getModel());
+        }
+    }
 }
