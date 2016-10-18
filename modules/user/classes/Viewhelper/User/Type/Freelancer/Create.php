@@ -49,6 +49,4 @@ class Viewhelper_User_Type_Freelancer_Create extends Viewhelper_User_Type_Freela
     {
         return true;
     }
-
-
 }

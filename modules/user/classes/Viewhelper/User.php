@@ -75,4 +75,12 @@ class Viewhelper_User
     {
         return $this->_type->hasPasswordRules();
     }
+
+    /**
+     * @return bool
+     */
+    public function hasPicture()
+    {
+        return $this->_type->hasPicture();
+    }
 }

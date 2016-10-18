@@ -49,4 +49,34 @@ abstract class Viewhelper_User_Type
      * @return bool
      */
     abstract public function hasPasswordRules();
+
+    /**
+     * @param ORM $relationModel
+     * @return array
+     */
+    abstract public function getProjectNotificationRelationForProfile(ORM $relationModel);
+
+    /**
+     * @return bool
+     */
+    public function hasPicture()
+    {
+        if ($this->_user->loaded() && $this->_user->getProfilePicturePath()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasCv()
+    {
+        if ($this->_user->loaded() && $this->_user->getProfilePicturePath()) {
+            return true;
+        }
+
+        return false;
+    }
 }

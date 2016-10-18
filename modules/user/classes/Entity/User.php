@@ -375,6 +375,14 @@ abstract class Entity_User extends Entity
     }
 
     /**
+     * @param string $profile_picture_path
+     */
+    public function setProfilePicturePath($profile_picture_path)
+    {
+        $this->_profile_picture_path = $profile_picture_path;
+    }
+
+    /**
      * @param array $post
      * @return Entity_User
      * @throws Exception_UserRegistration
