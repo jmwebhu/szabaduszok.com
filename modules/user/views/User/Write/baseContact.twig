@@ -1,0 +1,23 @@
+<span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
+<div class="form-group">
+    <label>
+        Vezetéknév*
+    </label>
+    <input class="form-control" id="lastname" name="lastname" type="text" required autofocus data-rules='{"notEmpty": "true"}' value="{{ user.getLastname() }}">
+</div>
+
+<span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
+<div class="form-group">
+    <label>
+        Keresztnév*
+    </label>
+    <input class="form-control" id="firstname" name="firstname" type="text" required data-rules='{"notEmpty": "true"}' value="{{ user.getFirstname() }}">
+</div>
+
+<span class="ion ion-email pull-left icon-sm icon-dark-gray"></span>
+<div class="form-group">
+    <label>
+        E-mail*
+    </label>
+    <input class="form-control" id="email" name="email" type="email" required data-rules='{"notEmpty": "true", "email": "true"}' value="{% if user %}{{ user.getEmail() }}{% else %}{{ email }}{% endif %}" {% if user.getUserId() %}disabled{% endif %}>
+</div>

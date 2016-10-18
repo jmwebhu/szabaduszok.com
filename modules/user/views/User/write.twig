@@ -1,0 +1,61 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+    <div class="bloc bgc-anti-flash-white l-bloc tc-black" id="bloc-8">
+        <div class="container bloc-lg">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form action="{{ formAction }}" method="post" enctype="multipart/form-data">
+
+                        {% block formHeader %}
+                            {% if hasIdInput %}
+                                <input name="user_id" id="user-id" type="hidden" value="{{ user.getUserId() }}">
+                            {% endif %}
+
+                            <input name="landing_page_name" type="hidden" value="{{ landingPageName }}">
+
+                            <h1 class="mg-md text-center tc-black">
+                                {{ pageTitle }} {{ user.getName() }}
+                            </h1>
+                        {% endblock formHeader %}
+
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="mg-clear tc-black">
+                                    Személyes profil
+                                </h3>
+                            </div>
+                            <!-- end panel-heading -->
+
+                            <div class="panel-body">
+                                <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
+
+                                {% block personalProfile %}
+                                    {% include "User/Write/baseContact.twig" %}
+                                {% endblock personalProfile %}
+
+                                <span class="ion ion-image pull-left icon-dark-gray icon-sm"></span>
+                                <div class="form-group">
+                                    <label>
+                                        Profilkép
+                                    </label>
+                                    <input class="form-control" id="profile-picture" name="profile_picture" type="file" accept="image/*">
+                                    {% if hasPicture %}
+                                        <img src="{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}" class="img-rounded mt10" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                            <!-- end panel-body -->
+                        </div>
+                        <!-- end panel szemelyes profil -->
+                    </form>
+                </div>
+                <!-- end col-sm-12 -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </div>
+    <!-- end bloc-8 -->
+{% endblock content %}

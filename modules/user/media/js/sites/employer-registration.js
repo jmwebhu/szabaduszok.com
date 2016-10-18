@@ -19,7 +19,6 @@ var EmployerReg = {
 		}			
 	},
 	cacheElements: function () {
-		this.$form = $('form#projectowner-form');
 		this.$submit = $('button[type="submit"]');
 		
 		this.$industries = $('select#industries');
