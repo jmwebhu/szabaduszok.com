@@ -151,21 +151,6 @@ class Model_User extends Model_Auth_User
     }
 
     /**
-     * @todo csere
-     */
-    public function name()
-    {
-        $name = ($this->lastname && $this->firstname) ? $this->lastname . ' ' . $this->firstname : $this->company_name;
-        
-        if (!$name && $this->type == 1)
-        {
-            $name = 'Szabadúszó';
-        }
-        
-        return $name;
-    }
-
-    /**
      * @todo csere. Csak Model_User_Freelancer, es Entity_User_Freelancer
      * @return bool
      */

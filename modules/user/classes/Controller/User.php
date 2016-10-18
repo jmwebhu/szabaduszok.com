@@ -17,110 +17,7 @@ class Controller_User extends Controller_DefaultTemplate
 	
 	function action_projectownerprofileedit()
 	{
-		try
-		{
-			$result = ['error' => false];			
-			$slug = $this->request->param('slug');
-				
-			if (!$slug)
-			{
-				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
-			}
-			
-			$user = new Model_User();
-			$user = $user->getByColumn('slug', $slug);
-			
-			if (!$user->loaded())
-			{
-				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
-			}
-			
-			$authorization = new Authorization_User($user);
-			
-			if (!$authorization->canEdit())
-			{
-				throw new HTTP_Exception_403('Nincs jogosultságod a profil szerkesztéséhez');
-			}
-			
-			$industry = new Model_Industry();
-			
-			$this->context->title = 'Megbízó profil szerkesztés';
-			$this->context->hasCancel = (int) $authorization->hasCancel();
-			$this->context->user = $user;
-			$this->context->industries = $industry->getAll();
-			$this->context->hasPrivacyCheckbox = Viewhelper_User::hasPrivacyCheckbox('edit');
-			$this->context->pageTitle = Viewhelper_User::getPageTitleProjectowner('edit', $user);
-			$this->context->passwordText = Viewhelper_User::getPasswordText('edit');
-			$this->context->hasIdInput = Viewhelper_User::hasIdInput('edit');
-			$this->context->formAction = Viewhelper_User::getFormActionProjectowner('edit', $user);
-			$this->context->hasPasswordRules = Viewhelper_User::hasPasswordRules('edit');
-			$this->context->hasPicture = Viewhelper_User::hasPicture($user);			
-			
-			$userIndustries = $user->industries->find_all();
-			$industryIds = [];
-			foreach ($userIndustries as $userIndustry)
-			{
-				$industryIds[] = $userIndustry->industry_id;
-			}
-				
-			$this->context->industryIds = $industryIds;
-				
-			// Mentes
-			if ($this->request->method() == Request::POST)
-			{
-				//$user = new Model_User();
-				$post = Input::post_all();
-				//$user = $user->registerProjectowner($post);
-                $user = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $user->user_id);
-                $user->submit($post);
-			}
-		}
-		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
-		{						
-			Session::instance()->set('error', $exnf->getMessage());
-			$this->defaultExceptionRedirect($exnf);
-		}
-		catch (HTTP_Exception_403 $exforbidden)		// Forbidden, nincs jogosultsag
-		{
-			$exforbidden->setRedirectRoute($this->request->route());
-			$exforbidden->setRedirectSlug($this->request->param('slug'));
-			
-			Session::instance()->set('error', $exforbidden->getMessage());
-			$this->defaultExceptionRedirect($exforbidden);
-		}		
-		catch (Exception_UserRegistration $exur)		// Regisztracios hiba
-		{
-			// Visszaadja a view -nak
-			$this->context->error = $exur->getMessage();
-		
-			$result = ['error' => true];
-		}
-		catch (Exception $ex)
-		{
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
-				
-			$result = ['error' 	=> true];
-		}
-		finally
-		{
-			if ($this->request->method() == Request::POST)
-			{
-				Model_Database::trans_end([!Arr::get($result, 'error')]);
-	
-				// Sikeres regisztracio eseten
-				if (!Arr::get($result, 'error'))
-				{
-					$id = Arr::get($post, 'user_id');
-					$api = Api_Mailservice::instance();
 
-					$user->addToMailService($api, 1, $id);
-					
-					header('Location: ' . Route::url('projectOwnerProfile', ['slug' => $user->getSlug()]), true, 302);
-					die();
-				}
-			}
-		}
 	}
 	
 	public function action_login()
@@ -264,7 +161,7 @@ class Controller_User extends Controller_DefaultTemplate
 			}
 					
 			$this->context->user = $user;
-			$this->context->title = 'Szabadúszó profil ' . $user->name();
+			$this->context->title = 'Szabadúszó profil ' . $user->firstname;
 						
 			$authorization = new Authorization_User($user);
 			

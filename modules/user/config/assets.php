@@ -38,8 +38,16 @@ AssetManager::instance()
         ->addAction('index')
             ->addJs(['employer-registration'])
 
+    ->addController('user_update_freelancer')
+        ->addAction('index')
+            ->addJs(['freelancer-registration'])
+
+    ->addController('user_update_employer')
+        ->addAction('index')
+            ->addJs(['employer-registration'])
+
+
     ->addController('user')
-    
         ->addAction('login')
             ->addJs(['login'])
         	
@@ -47,15 +55,9 @@ AssetManager::instance()
         	->addJs(['barrating', 'freelancer-profile'])
         	->addCss(['font-awesome-stars'])
         	
-        ->addAction('freelancerprofileedit')
-        	->addJs(['freelancer-registration'])
-        	
         ->addAction('projectownerprofile')
         	->addJs(['barrating', 'employer-profile'])
         	->addCss(['font-awesome-stars'])
-        	
-        ->addAction('projectownerprofileedit')
-        	->addJs(['projectowner-registration'])
         	
         ->addAction('freelancers')        	
         	->addJs(['barrating', 'freelancers'])

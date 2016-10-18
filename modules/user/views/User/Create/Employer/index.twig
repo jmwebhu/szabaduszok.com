@@ -129,7 +129,7 @@
                                     </label>
                                     <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
                                         {% for industry in industries %}
-                                            <option value="{{ industry.industry_id }}" {% if industry.industry_id in industryIds %}selected{% endif %}>{{ industry.name }}</option>
+                                            <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

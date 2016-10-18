@@ -163,6 +163,16 @@ abstract class Entity
     }
 
     /**
+     * @param string $alias
+     * @param mixed $farKeys
+     * @return bool
+     */
+    public function has($alias, $farKeys = null)
+    {
+        return $this->_model->has($alias, $farKeys);
+    }
+
+    /**
      * @return string
      */
     protected function getEntityName()

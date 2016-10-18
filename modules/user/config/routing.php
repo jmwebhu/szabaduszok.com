@@ -11,6 +11,18 @@ Route::set('projectOwnerRegistration', 'megbizo-regisztracio')
 		'controller' => 'User_Create_Employer',
 		'action'     => 'index',
 ));
+
+Route::set('freelancerProfileEdit', 'szabaduszo-profil-szerkesztes/<slug>')
+    ->defaults(array(
+        'controller' => 'User_Update_Freelancer',
+        'action'     => 'index',
+    ));
+
+Route::set('projectOwnerProfileEdit', 'megbizo-profil-szerkesztes/<slug>')
+    ->defaults(array(
+        'controller' => 'User_Update_Employer',
+        'action'     => 'index',
+    ));
 	
 Route::set('projectOwnerProfile', 'megbizo/<slug>')
 	->defaults([
@@ -29,18 +41,6 @@ Route::set('freelancers', 'szabaduszok(/<page>)')
 		'controller'    => 'User',
 		'action'        => 'freelancers'
 ]);
-	
-Route::set('freelancerProfileEdit', 'szabaduszo-profil-szerkesztes/<slug>')
-	->defaults(array(
-		'controller' => 'User',
-		'action'     => 'freelancerprofileedit',
-	));
-	
-Route::set('projectOwnerProfileEdit', 'megbizo-profil-szerkesztes/<slug>')
-	->defaults(array(
-		'controller' => 'User',
-		'action'     => 'projectownerprofileedit',
-	));
 
 Route::set('login', 'szabaduszok-belepes')
 	->defaults(array(

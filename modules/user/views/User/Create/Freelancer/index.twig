@@ -9,13 +9,13 @@
                     <form action="{{ formAction }}" method="post" enctype="multipart/form-data" id="freelancer-form">
 
                         {% if hasIdInput %}
-                            <input name="user_id" id="user-id" type="hidden" value="{{ user.user_id }}">
+                            <input name="user_id" id="user-id" type="hidden" value="{{ user.getUserId() }}">
                         {% endif %}
 
                         <input name="landing_page_name" type="hidden" value="{{ landingPageName }}">
 
                         <h1 class="mg-md text-center tc-black">
-                            {{ pageTitle }} {{ user.name() }}
+                            {{ pageTitle }} {{ user.getName() }}
                         </h1>
 
                         <div class="panel">
@@ -34,7 +34,7 @@
                                     <label>
                                         Vezetéknév*
                                     </label>
-                                    <input class="form-control" id="lastname" name="lastname" type="text" required autofocus data-rules='{"notEmpty": "true"}' value="{{ user.lastname }}">
+                                    <input class="form-control" id="lastname" name="lastname" type="text" required autofocus data-rules='{"notEmpty": "true"}' value="{{ user.getLastname() }}">
                                 </div>
 
                                 <span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
@@ -42,7 +42,7 @@
                                     <label>
                                         Keresztnév*
                                     </label>
-                                    <input class="form-control" id="firstname" name="firstname" type="text" required data-rules='{"notEmpty": "true"}' value="{{ user.firstname }}">
+                                    <input class="form-control" id="firstname" name="firstname" type="text" required data-rules='{"notEmpty": "true"}' value="{{ user.getFirstname() }}">
                                 </div>
 
                                 <span class="ion ion-email pull-left icon-sm icon-dark-gray"></span>
@@ -50,7 +50,7 @@
                                     <label>
                                         E-mail*
                                     </label>
-                                    <input class="form-control" id="email" name="email" type="email" required data-rules='{"notEmpty": "true", "email": "true"}' value="{% if user %}{{ user.email }}{% else %}{{ email }}{% endif %}" {% if user.user_id %}disabled{% endif %}>
+                                    <input class="form-control" id="email" name="email" type="email" required data-rules='{"notEmpty": "true", "email": "true"}' value="{% if user %}{{ user.getEmail() }}{% else %}{{ email }}{% endif %}" {% if user.getUserId() %}disabled{% endif %}>
                                 </div>
 
                                 <span class="ion ion-image pull-left icon-dark-gray icon-sm"></span>
@@ -60,7 +60,7 @@
                                     </label>
                                     <input class="form-control" id="profile-picture" name="profile_picture" type="file" accept="image/*">
                                     {% if hasPicture %}
-                                        <img src="{{ ROOT }}uploads/picture/{{ user.profile_picture_path }}" class="img-rounded mt10" alt="Szabaduszok.com - A magyar freelancer platform {{ user.name() }}">
+                                        <img src="{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}" class="img-rounded mt10" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
                                     {% endif %}
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                                     </label>
 
                                     <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                                        {% for profession in user.professions.find_all() %}
+                                        {% for profession in user.getRelation('professions') %}
                                             <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
                                         {% endfor %}
                                     </select>
@@ -116,7 +116,7 @@
                                     </label>
 
                                     <select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
-                                        {% for skill in user.skills.find_all() %}
+                                        {% for skill in user.getRelation('skills') %}
                                             <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
                                         {% endfor %}
                                     </select>
@@ -130,7 +130,7 @@
                                     <label>
                                         Weboldal
                                     </label>
-                                    <input class="form-control" id="webpage" name="webpage" type="text" data-rules='{"url": "true"}' value="{{ user.webpage }}">
+                                    <input class="form-control" id="webpage" name="webpage" type="text" data-rules='{"url": "true"}' value="{{ user.getWebpage() }}">
                                 </div>
 
                                 <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
@@ -138,7 +138,7 @@
                                     <label>
                                         Minimum nettó órabér*
                                     </label>
-                                    <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control" data-rules='{"notEmpty": "true", "number": "true"}' value="{{ user.min_net_hourly_wage }}">
+                                    <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control" data-rules='{"notEmpty": "true", "number": "true"}' value="{{ user.getMinNetHourlyWage() }}">
                                 </div>
 
                                 <span class="ion ion-android-attach pull-left icon-sm icon-dark-gray"></span>
@@ -149,7 +149,7 @@
                                     {% if hasCv %}
                                         <p>Feltöltött file formátuma: <span class="bold">.{{ cvExt }}</span>. Csak akkor válassz újat, ha módosítani akarod.</p>
                                     {% else %}
-                                        {% if user.user_id %}
+                                        {% if user.getUserId() %}
                                             <p>Még nem töltöttél fel önéletrajzot.</p>
                                         {% endif %}
                                     {% endif %}
@@ -164,7 +164,7 @@
                                     <label>
                                         Rövid szakmai bemutatkozás
                                     </label>
-                                    <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{{ user.short_description }}</textarea>
+                                    <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{{ user.getShortDescription() }}</textarea>
                                 </div>
                             </div>
                             <!-- end panel-body szakmai profil -->
@@ -188,7 +188,7 @@
                                     <label>
                                         Irányítószám
                                     </label>
-                                    <input class="form-control" id="address-postal-code" name="address_postal_code" type="text" placeholder="Számlázási" data-rules='{"number": "true"}' value="{{ user.address_postal_code }}">
+                                    <input class="form-control" id="address-postal-code" name="address_postal_code" type="text" placeholder="Számlázási" data-rules='{"number": "true"}' value="{{ user.getAddressPostalCode() }}">
                                 </div>
 
                                 <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
@@ -196,7 +196,7 @@
                                     <label>
                                         Város
                                     </label>
-                                    <input class="form-control" id="address-city" name="address_city" type="text" placeholder="Számlázási" value="{{ user.address_city }}">
+                                    <input class="form-control" id="address-city" name="address_city" type="text" placeholder="Számlázási" value="{{ user.getAddressCity() }}">
                                 </div>
 
                                 <span class="ion ion-location pull-left icon-dark-gray icon-sm"></span>
@@ -204,7 +204,7 @@
                                     <label>
                                         Utca és házszám
                                     </label>
-                                    <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{{ user.address_street }}">
+                                    <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{{ user.getAddressStreet() }}">
                                 </div>
                             </div>
                         </div>
@@ -245,7 +245,7 @@
                         {% endif %}
 
                         {% if hasCancel %}
-                            <a href="{{ ROOT }}szabaduszo/{{ user.slug }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+                            <a href="{{ ROOT }}szabaduszo/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
                         {% endif %}
                         <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
                             <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
