@@ -112,4 +112,20 @@ class Model_User_Freelancer extends Model_User_Abstract
             }
         }
     }
+
+    /**
+     * @param Model_User_Profile $userProfile
+     * @return array
+     */
+    public function getProfileUrls(Model_User_Profile $userProfile)
+    {
+        $data			= [];
+        $userProfiles	= $userProfile->where('user_id', '=', $this->pk())->find_all();
+
+        foreach ($userProfiles as $profile) {
+            $data[$profile->profile->pk()] = $profile->url;
+        }
+
+        return $data;
+    }
 }

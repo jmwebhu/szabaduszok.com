@@ -84,6 +84,14 @@ class Viewhelper_User
     }
 
     /**
+     * @return bool
+     */
+    public function hasCv()
+    {
+        return $this->_type->hasCv();
+    }
+
+    /**
      * @param Model_Project_Notification_Relation $relationModel
      * @return array
      */

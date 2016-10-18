@@ -108,4 +108,13 @@ class Entity_User_Freelancer extends Entity_User
     {
         return $this->_model->hasProjectNotification();
     }
+
+    /**
+     * @param Model_User_Profile $userProfile
+     * @return array
+     */
+    public function getProfileUrls(Model_User_Profile $userProfile)
+    {
+        return $this->_model->getProfileUrls($userProfile);
+    }
 }
