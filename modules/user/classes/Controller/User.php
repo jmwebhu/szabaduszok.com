@@ -226,13 +226,15 @@ class Controller_User extends Controller_DefaultTemplate
 				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
 			}
 				
-			$user = new Model_User();
+			$user = new Model_User_Employer();
 			$user = $user->getByColumn('slug', $slug);
 
             if (!$user->loaded())
 			{
 				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
 			}
+
+			$user = new Model_User_Employer($user->user_id);
 
             $entity = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $user->user_id);
             $viewhelper = Viewhelper_User_Factory::createViewhelper($entity, Viewhelper_User::ACTION_CREATE);
@@ -249,7 +251,7 @@ class Controller_User extends Controller_DefaultTemplate
 			
 			$project	= new Model_Project();
 			$industry	= new Model_Industry();
-			
+
 			$projects 	= $user->getProjects();
 			$relations	= [];
 			$salaries	= [];

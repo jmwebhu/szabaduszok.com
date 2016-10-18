@@ -1,4 +1,20 @@
-{% extends "Templates/default.twig" %}
+{% extends "User/write.twig" %}
+
+{% block personalProfile %}
+    {% include "User/Write/company.twig" %}
+    {{ parent() }}
+
+    <span class="ion ion-android-phone-portrait pull-left icon-sm icon-dark-gray"></span>
+    <div class="form-group">
+        <label>
+            Telefonszám*
+        </label>
+        <input class="form-control" id="phonenumber" name="phonenumber" type="tel" required data-rules='{"notEmpty": "true"}' value="{{ user.getPhonenumber() }}">
+    </div>
+
+    {% include "User/Write/address.twig" %}
+
+{% endblock personalProfile %}
 
 {% block content %}
 
@@ -7,112 +23,6 @@
             <div class="row">
                 <div class="col-sm-12">
                     <form action="{{ formAction }}" method="post" enctype="multipart/form-data">
-
-                        {% if hasIdInput %}
-                            <input name="user_id" id="user-id" type="hidden" value="{{ user.user_id }}">
-                        {% endif %}
-
-                        <input name="landing_page_name" type="hidden" value="{{ landingPageName }}">
-
-                        <h1 class="mg-md text-center tc-black">
-                            {{ pageTitle }} {{ user.name() }}
-                        </h1>
-
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="mg-clear tc-black">
-                                    Személyes profil
-                                </h3>
-                            </div>
-                            <!-- end panel-heading -->
-
-                            <div class="panel-body">
-                                <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="is-company" name="is_company" {% if user.is_company %}checked{% endif %}>Céges?
-                                    </label>
-                                </div>
-
-                                <span class="fa fa-building pull-left icon-sm icon-dark-gray hidden"></span>
-                                <div class="form-group hidden">
-                                    <label>
-                                        Cégnév*
-                                    </label>
-                                    <input class="form-control" id="company-name" name="company_name" type="text" value="{{ user.company_name }}">
-                                </div>
-
-                                <span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Vezetéknév*
-                                    </label>
-                                    <input class="form-control" id="lastname" name="lastname" type="text" required data-rules='{"notEmpty": "true"}' value="{{ user.lastname }}" autofocus>
-                                </div>
-
-                                <span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Keresztnév*
-                                    </label>
-                                    <input class="form-control" id="firstname" name="firstname" type="text" required data-rules='{"notEmpty": "true"}' value="{{ user.firstname }}">
-                                </div>
-
-                                <span class="ion ion-email pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        E-mail*
-                                    </label>
-                                    <input class="form-control" id="email" name="email" type="email" required data-rules='{"notEmpty": "true", "email": "true"}' value="{% if user %}{{ user.email }}{% else %}{{ email }}{% endif %}" {% if user.user_id %}disabled{% endif %}>
-                                </div>
-
-                                <span class="ion ion-android-phone-portrait pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Telefonszám*
-                                    </label>
-                                    <input class="form-control" id="phonenumber" name="phonenumber" type="tel" required data-rules='{"notEmpty": "true"}' value="{{ user.phonenumber }}">
-                                </div>
-
-                                <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Irányítószám*
-                                    </label>
-                                    <input class="form-control" id="address-postal-code" name="address_postal_code" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ user.address_postal_code }}">
-                                </div>
-
-                                <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Város*
-                                    </label>
-                                    <input class="form-control" id="address-city" name="address_city" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true"}' value="{{ user.address_city }}">
-                                </div>
-
-                                <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Utca és házszám
-                                    </label>
-                                    <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{{ user.address_street }}">
-                                </div>
-
-                                <span class="ion ion-image pull-left icon-dark-gray icon-sm"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Profilkép
-                                    </label>
-                                    <input class="form-control" id="profile-picture" name="profile_picture" type="file" accept="image/*">
-                                    {% if hasPicture %}
-                                        <img src="{{ ROOT }}uploads/picture/{{ user.profile_picture_path }}" class="img-rounded mt10" alt="Szabaduszok.com - A magyar freelancer platform {{ user.name() }}">
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <!-- end panel-body szemelyes profil -->
-
-                        </div>
-                        <!-- end panel szemelyes profil -->
 
                         <div class="panel">
                             <div class="panel-heading">
@@ -144,7 +54,7 @@
                                         Szakterületek
                                     </label>
                                     <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                                        {% for profession in user.professions.find_all() %}
+                                        {% for profession in user.getRelation("professions") %}
                                             <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
                                         {% endfor %}
                                     </select>
@@ -202,13 +112,11 @@
                         {% endif %}
 
                         {% if hasCancel %}
-                            <a href="{{ ROOT }}megbizo/{{ user.slug }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+                            <a href="{{ ROOT }}megbizo/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
                         {% endif %}
                         <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
                             <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
                         </button>
-
-
                     </form>
                 </div>
                 <!-- end col-sm-12 -->
@@ -218,9 +126,4 @@
         <!-- end container -->
     </div>
     <!-- end bloc-8 -->
-
-    </form>
-
-
-
 {% endblock content %}
