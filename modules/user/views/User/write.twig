@@ -49,6 +49,52 @@
                             <!-- end panel-body -->
                         </div>
                         <!-- end panel szemelyes profil -->
+
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="mg-clear tc-black">
+                                    Szakmai profil
+                                </h3>
+                            </div>
+
+                            <div class="panel-body">
+                                {% block professionalProfile %}
+                                    <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
+                                    <div class="form-group">
+                                        <label>
+                                            Iparágak*
+                                        </label>
+                                        <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
+                                            {% for industry in industries %}
+                                                <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <p class="text-justify">
+                                        Általános iparág, pl.: informatika. Többet is választhatsz.
+                                    </p>
+
+                                    <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+                                    <div class="form-group">
+                                        <label>
+                                            Szakterületek
+                                        </label>
+
+                                        <select id="professions" class="form-control" name="professions[]" multiple="multiple">
+                                            {% for profession in user.getRelation('professions') %}
+                                                <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <p class="text-justify">
+                                        Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat. Nem kötelező, de kérlek próbáld meg besorolni a tevékenységedet, a jobb keresés érdekében.
+                                    </p>
+                                {% endblock professionalProfile %}
+                            </div>
+                            <!-- end panel-body szakmai profil -->
+                        </div>
+                        <!-- end panel szakmai profil -->
                     </form>
                 </div>
                 <!-- end col-sm-12 -->

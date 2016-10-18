@@ -1,6 +1,25 @@
 {% extends "User/write.twig" %}
 
-{% block content %}
+{% block professionalProfile %}
+    {{ parent() }}
+    <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
+    <div class="form-group">
+        <label>
+            Képességek*
+        </label>
+
+        <select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
+            {% for skill in user.getRelation('skills') %}
+                <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <p class="text-justify">
+        Szakterületen belüli konkrét képességek, pl.: php. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat. Kérlek próbáld meg minél pontosabban megadni, a mennyiség korlátlan.
+    </p>
+{% endblock professionalProfile %}
+
+{% block adf %}
 
     <div class="bloc bgc-anti-flash-white l-bloc tc-black" id="bloc-8">
         <div class="container bloc-lg">
@@ -26,54 +45,6 @@
                             </div>
 
                             <div class="panel-body">
-                                <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Iparágak*
-                                    </label>
-                                    <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
-                                        {% for industry in industries %}
-                                            <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-
-                                <p class="text-justify">
-                                    Általános iparág, pl.: informatika. Többet is választhatsz.
-                                </p>
-
-                                <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Szakterületek
-                                    </label>
-
-                                    <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                                        {% for profession in user.getRelation('professions') %}
-                                            <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <p class="text-justify">
-                                    Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat. Nem kötelező, de kérlek próbáld meg besorolni a tevékenységedet, a jobb keresés érdekében.
-                                </p>
-
-                                <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Képességek*
-                                    </label>
-
-                                    <select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
-                                        {% for skill in user.getRelation('skills') %}
-                                            <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <p class="text-justify">
-                                    Szakterületen belüli konkrét képességek, pl.: php. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat. Kérlek próbáld meg minél pontosabban megadni, a mennyiség korlátlan.
-                                </p>
-
                                 <span class="fa fa-chrome pull-left icon-sm icon-dark-gray"></span>
                                 <div class="form-group">
                                     <label>
@@ -208,4 +179,4 @@
         <!-- end container -->
     </div>
     <!-- end bloc-8 -->
-{% endblock content %}
+{% endblock adf %}
