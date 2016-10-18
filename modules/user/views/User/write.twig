@@ -90,11 +90,75 @@
                                     <p class="text-justify">
                                         Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat. Nem kötelező, de kérlek próbáld meg besorolni a tevékenységedet, a jobb keresés érdekében.
                                     </p>
+
+                                    {% block professionalProfileMisc %}
+                                    {% endblock professionalProfileMisc %}
+
+                                    <span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
+                                    <div class="form-group">
+                                        <label>
+                                            Rövid szakmai bemutatkozás
+                                        </label>
+                                        <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{{ user.getShortDescription() }}</textarea>
+                                    </div>
+
                                 {% endblock professionalProfile %}
                             </div>
                             <!-- end panel-body szakmai profil -->
                         </div>
                         <!-- end panel szakmai profil -->
+
+                        {% block externalProfiles %}
+                        {% endblock externalProfiles %}
+
+                        {% block address %}
+                        {% endblock address %}
+
+                        {% block credentials %}
+                            <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+                            <div class="form-group">
+                                <label class="password-label">
+                                    Jelszó*
+                                </label>
+                                <input id="password" name="password" type="password" class="form-control"
+
+                                        {% if hasPasswordRules %}
+                                            required data-rules='{"notEmpty": "true", "longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                        {% else %}
+                                            data-rules='{"longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                        {% endif %}
+                                >
+
+                            </div>
+                            <p class="text-justify">
+                                {{ passwordText }}
+                            </p>
+
+                            <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+                            <div class="form-group">
+                                <label class="password-label">
+                                    Jelszó mégegyszer*
+                                </label>
+                                <input class="form-control" type="password" id="password-confirm" name="password_confirm" {% if hasPasswordRules %}required{% endif %}>
+                            </div>
+
+                            {% if hasPrivacyCheckbox %}
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="accept-conditions" required checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
+                                    </label>
+                                </div>
+                            {% endif %}
+                        {% endblock credentials %}
+
+                        {% block buttons %}
+                            {% if hasCancel %}
+                                <a href="{{ ROOT }}szabaduszo/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+                            {% endif %}
+                            <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
+                                <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
+                            </button>
+                        {% endblock buttons %}
                     </form>
                 </div>
                 <!-- end col-sm-12 -->

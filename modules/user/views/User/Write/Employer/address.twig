@@ -1,0 +1,33 @@
+<div class="panel">
+    <div class="panel-heading">
+        <h3 class="mg-clear tc-black">
+            Cím
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
+        <div class="form-group">
+            <label>
+                Irányítószám*
+            </label>
+            <input class="form-control" id="address-postal-code" name="address_postal_code" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ user.getAddressPostalCode() }}">
+        </div>
+
+        <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
+        <div class="form-group">
+            <label>
+                Város*
+            </label>
+            <input class="form-control" id="address-city" name="address_city" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true"}' value="{{ user.getAddressCity() }}">
+        </div>
+
+        <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
+        <div class="form-group">
+            <label>
+                Utca és házszám
+            </label>
+            <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{{ user.getAddressStreet() }}">
+        </div>
+    </div>
+</div>
