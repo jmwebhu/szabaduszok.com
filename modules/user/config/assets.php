@@ -11,11 +11,11 @@ AssetCollection::instance()
     
     // Regisztraciok
     ->setJs('freelancer-registration', 'sites/freelancer-registration.js')
-    ->setJs('projectowner-registration', 'sites/projectowner-registration.js')
+    ->setJs('employer-registration', 'sites/employer-registration.js')
     
     // Profilok
     ->setJs('freelancer-profile', 'sites/freelancer-profile.js')
-    ->setJs('projectowner-profile', 'sites/projectowner-profile.js')
+    ->setJs('employer-profile', 'sites/employer-profile.js')
     
     // Szabaduszo lista
     ->setJs('freelancers', 'sites/freelancers.js')
@@ -34,16 +34,14 @@ AssetManager::instance()
         ->addAction('index')
             ->addJs(['freelancer-registration'])
 
+    ->addController('user_create_employer')
+        ->addAction('index')
+            ->addJs(['employer-registration'])
+
     ->addController('user')
     
         ->addAction('login')
-            ->addJs(['login'])                      
-            
-        ->addAction('freelancerregistration')
-        	->addJs(['freelancer-registration'])
-        	
-        ->addAction('projectownerregistration')
-        	->addJs(['projectowner-registration'])
+            ->addJs(['login'])
         	
         ->addAction('freelancerprofile')
         	->addJs(['barrating', 'freelancer-profile'])
@@ -53,7 +51,7 @@ AssetManager::instance()
         	->addJs(['freelancer-registration'])
         	
         ->addAction('projectownerprofile')
-        	->addJs(['barrating', 'projectowner-profile'])
+        	->addJs(['barrating', 'employer-profile'])
         	->addCss(['font-awesome-stars'])
         	
         ->addAction('projectownerprofileedit')

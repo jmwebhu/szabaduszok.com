@@ -8,8 +8,8 @@ Route::set('freelancerRegistration', 'szabaduszo-regisztracio')
 
 Route::set('projectOwnerRegistration', 'megbizo-regisztracio')
 	->defaults(array(
-		'controller' => 'User',
-		'action'     => 'projectownerregistration',
+		'controller' => 'User_Create_Employer',
+		'action'     => 'index',
 ));
 	
 Route::set('projectOwnerProfile', 'megbizo/<slug>')

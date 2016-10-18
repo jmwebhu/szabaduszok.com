@@ -10,16 +10,6 @@ class Controller_User extends Controller_DefaultTemplate
 		die();
 	}
 	
-	public function action_freelancerregistration()
-	{		    
-
-	}
-	
-	public function action_projectownerregistration()
-	{
-
-	}
-	
 	function action_freelancerprofileedit()
 	{				    
 		try 
@@ -465,6 +455,9 @@ class Controller_User extends Controller_DefaultTemplate
 			{
 				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
 			}
+
+            $entity = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $user->user_id);
+            $viewhelper = Viewhelper_User_Factory::createViewhelper($entity, Viewhelper_User::ACTION_CREATE);
 			
 			$authorization = new Authorization_User($user);						
 				
@@ -472,7 +465,7 @@ class Controller_User extends Controller_DefaultTemplate
 				
 			$this->context->canRate = (int) $authorization->canRate();
 			$this->context->canEdit = (int) $authorization->canEdit();
-			$this->context->editUrl = Viewhelper_User::getEditUrl($user);
+			$this->context->editUrl = $viewhelper->getEditUrl();
 				
 			$logged = Auth::instance()->get_user();
 			

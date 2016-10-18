@@ -1,4 +1,4 @@
-var ProjectownerReg = {
+var EmployerReg = {
 	init: function () {
 		this.cacheElements();
 		this.bindEvents();
@@ -8,9 +8,9 @@ var ProjectownerReg = {
 		 * private.szabaduszok.com launch elott az assetmerger Parse error -t dobott, ha 
 		 * egy if volt, es benne && operator
 		 */		
-		if (typeof ProjectownerReg.$userId !== 'undefined') {
+		if (typeof EmployerReg.$userId !== 'undefined') {
 			
-			if (typeof ProjectownerReg.$userId.val() != 'undefined') {
+			if (typeof EmployerReg.$userId.val() != 'undefined') {
 				
 				if (this.$isCompany.prop('checked') == true) {
 					this.isCompanyChange();
@@ -38,7 +38,7 @@ var ProjectownerReg = {
 	bindEvents: function () {
 		this.$submit.click(Default.submitClick);
 		
-		this.$isCompany.change(ProjectownerReg.isCompanyChange);
+		this.$isCompany.change(EmployerReg.isCompanyChange);
 	},
 	addWidgets: function () {
 		
@@ -52,14 +52,14 @@ var ProjectownerReg = {
         this.$professions.select2(professionObj);                
 	},
 	isCompanyChange: function () {			
-		ProjectownerReg.$companyNameContainer.toggleClass('hidden');
-		ProjectownerReg.$companyNameSpan.toggleClass('hidden');
+		EmployerReg.$companyNameContainer.toggleClass('hidden');
+		EmployerReg.$companyNameSpan.toggleClass('hidden');
 		
-		ProjectownerReg.$contactNameContainer.toggleClass('hidden');
-		ProjectownerReg.$contactNameSpan.toggleClass('hidden');
+		EmployerReg.$contactNameContainer.toggleClass('hidden');
+		EmployerReg.$contactNameSpan.toggleClass('hidden');
 	}
 };
 
 $(document).ready(function () {
-	ProjectownerReg.init();
+	EmployerReg.init();
 });

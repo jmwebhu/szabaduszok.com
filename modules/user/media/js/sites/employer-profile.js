@@ -1,4 +1,4 @@
-var ProjectownerProfile = {
+var EmployerProfile = {
 		
 	init: function () {		
 		this.cacheElements();
@@ -18,13 +18,13 @@ var ProjectownerProfile = {
 		this.$canRate = $('input#can-rate');
 	},
 	bindEvents: function () {			
-		this.$rateButton.click(ProjectownerProfile.rateClick);
+		this.$rateButton.click(EmployerProfile.rateClick);
 	},
 	addWidgets: function () {		
-		ProjectownerProfile.$rating.barrating({
+		EmployerProfile.$rating.barrating({
 	        theme: 			'fontawesome-stars',
-	        initialRating:	(ProjectownerProfile.$initialRating.val().length == 0) ? 0 : ProjectownerProfile.$initialRating.val(),
-	        readonly: 		(ProjectownerProfile.$canRate.val() == '0') ? true : false, 
+	        initialRating:	(EmployerProfile.$initialRating.val().length == 0) ? 0 : EmployerProfile.$initialRating.val(),
+	        readonly: 		(EmployerProfile.$canRate.val() == '0') ? true : false, 
 	    });		
 	},	
 	/**
@@ -35,14 +35,14 @@ var ProjectownerProfile = {
 		var $this = $(this);
 		$this.prop('disabled', true);
 		
-		var ratingValue = ProjectownerProfile.$rating.val();		
+		var ratingValue = EmployerProfile.$rating.val();		
 		
 		$.confirm({
 			icon: 'fa fa-question-circle',
 		    title: 'Megerősítés',
 		    content: 'Biztosan <strong>' + ratingValue + '</strong> ponttal értékeled a felhasználót?',
 		    confirm: function () {
-		        ProjectownerProfile.sendRateAjax($this, ratingValue);
+		        EmployerProfile.sendRateAjax($this, ratingValue);
 		    },
 		    cancel: function () {
 		        $this.prop('disabled', false);
@@ -60,20 +60,20 @@ var ProjectownerProfile = {
 				$button.prop('disabled', false);
 			} else {
 				
-				ProjectownerProfile.$yourRatingPoint.text(data.rating);
-				ProjectownerProfile.$ratingAvgPoint.text(data.avg);
-				ProjectownerProfile.$ratersCount.text(data.raters_count);
+				EmployerProfile.$yourRatingPoint.text(data.rating);
+				EmployerProfile.$ratingAvgPoint.text(data.avg);
+				EmployerProfile.$ratersCount.text(data.raters_count);
 				
-				ProjectownerProfile.$ratingInstruction.fadeOut(function () {
-					ProjectownerProfile.$ratingInstruction.hide();
+				EmployerProfile.$ratingInstruction.fadeOut(function () {
+					EmployerProfile.$ratingInstruction.hide();
 				});
 				
-				ProjectownerProfile.$rateButton.fadeOut(function () {
-					ProjectownerProfile.$rateButton.hide();
+				EmployerProfile.$rateButton.fadeOut(function () {
+					EmployerProfile.$rateButton.hide();
 				});								
 				
-				ProjectownerProfile.$rating.barrating('set', parseInt(data.avg));
-				ProjectownerProfile.$rating.barrating('readonly', true);
+				EmployerProfile.$rating.barrating('set', parseInt(data.avg));
+				EmployerProfile.$rating.barrating('readonly', true);
 			}
 		};
 		
@@ -82,5 +82,5 @@ var ProjectownerProfile = {
 };
 
 $(document).ready(function () {
-	ProjectownerProfile.init();
+	EmployerProfile.init();
 });
