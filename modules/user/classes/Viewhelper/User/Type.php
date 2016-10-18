@@ -29,4 +29,24 @@ abstract class Viewhelper_User_Type
      * @return bool
      */
     abstract public function hasPrivacyCheckbox();
+
+    /**
+     * @return string
+     */
+    abstract public function getPasswordText();
+
+    /**
+     * @return bool
+     */
+    abstract public function hasIdInput();
+
+    /**
+     * @return string
+     */
+    abstract public function getFormAction();
+
+    /**
+     * @return bool
+     */
+    abstract public function hasPasswordRules();
 }

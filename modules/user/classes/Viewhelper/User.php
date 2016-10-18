@@ -43,4 +43,36 @@ class Viewhelper_User
     {
         return $this->_type->hasPrivacyCheckbox();
     }
+
+    /**
+     * @return string
+     */
+    public function getPasswordText()
+    {
+        return $this->_type->getPasswordText();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasIdInput()
+    {
+        return $this->_type->hasIdInput();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormAction()
+    {
+        return $this->_type->getFormAction();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPasswordRules()
+    {
+        return $this->_type->hasPasswordRules();
+    }
 }
