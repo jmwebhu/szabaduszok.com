@@ -9,17 +9,7 @@ class Controller_User extends Controller_DefaultTemplate
 		header('Location: ', Route::url('home'));
 		die();
 	}
-	
-	function action_freelancerprofileedit()
-	{				    
 
-	}
-	
-	function action_projectownerprofileedit()
-	{
-
-	}
-	
 	public function action_login()
 	{		    
 		try 

@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller_User_Create extends Controller_DefaultTemplate
+abstract class Controller_User_Create extends Controller_User_Write
 {
     /**
      * @var string
@@ -8,38 +8,13 @@ abstract class Controller_User_Create extends Controller_DefaultTemplate
     protected $_email;
 
     /**
-     * @var bool
+     * @param Request $request
+     * @param Response $response
      */
-    protected $_error;
-
-    /**
-     * @var Entity_User
-     */
-    protected $_user;
-
-    /**
-     * @var
-     */
-    protected $_viewhelper;
-
-    /**
-     * @return int
-     */
-    abstract protected function getUserType();
-
-    /**
-     * @return string
-     */
-    abstract protected function getProfileUrl();
-
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
-
-        $this->_email       = Input::get('email');
-        $this->_error       = false;
-        $this->_user        = Entity_User::createUser($this->getUserType());
-        $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
+        $this->_email = Input::get('email');
     }
 
     public function action_index()
