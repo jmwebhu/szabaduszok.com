@@ -13,9 +13,11 @@ abstract class Controller_User_Update extends Controller_User_Write
             $slug = $this->request->param('slug');
             $this->throwNotFoundExceptionIfNot($slug);
 
-            $userModel = AB::select()->from(new Model_User())->where('slug', '=', $slug)->limit(1)->execute()->current();
-            $this->_user = Entity_User::createUser($this->getUserType(), $userModel->user_id);
+            $userModel      = new Model_User();
+            $userModel      = $userModel->getBySlug($slug);
             $this->throwNotFoundExceptionIfNot($this->_user->loaded());
+
+            $this->_user    = Entity_User::createUser($this->getUserType(), $userModel->user_id);
 
             $this->_authorization = new Authorization_User($userModel);
             $this->throwForbiddenExceptionIfNot($this->_authorization->canEdit());
@@ -56,17 +58,6 @@ abstract class Controller_User_Update extends Controller_User_Write
                     die();
                 }
             }
-        }
-    }
-
-    /**
-     * @param bool $expression
-     * @throws HTTP_Exception_404
-     */
-    protected function throwNotFoundExceptionIfNot($expression)
-    {
-        if (!$expression) {
-            throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
         }
     }
 
