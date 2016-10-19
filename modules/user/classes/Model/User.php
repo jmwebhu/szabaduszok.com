@@ -161,6 +161,14 @@ class Model_User extends Model_Auth_User
     }
 
     /**
+     * @return string
+     */
+    public function name()
+    {
+        return $this->lastname . ' ' . $this->firstname;
+    }
+
+    /**
      * @param array $data
      * @return Model_User
      */

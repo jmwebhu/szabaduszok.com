@@ -3,70 +3,32 @@
 class Controller_User_Profile_Freelancer extends Controller_User_Profile
 {
     /**
-     * @var Viewhelper_User
+     * @return int
      */
-    protected $_viewhelper;
-
-    public function action_index()
+    protected function getUserType()
     {
-        try {
-            $this->handleSessionError();
-            $slug = $this->request->param('slug');
-
-            $this->throwNotFoundExceptionIfNot($slug);
-
-            $userModel = new Model_User();
-            $userModel = $userModel->getBySlug($slug);
-            $this->throwNotFoundExceptionIfNot($userModel->loaded());
-
-            $this->_user        = Entity_User::createUser($this->getUserType(), $userModel->user_id);
-
-            $this->setContext();
-
-            $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
-
-            if ($this->context->canEdit) {
-                $this->context->editUrl = $this->_viewhelper->getEditUrl();
-            }
-
-            $loggedUser 				= Auth::instance()->get_user();
-            $myRating                   = Model_User_Rating::getRating($loggedUser, $this->_user->getModel());
-            $this->context->myRating	= ($myRating) ? $myRating : '-';
-
-            $this->setContextProjectNotification();
-
-        } catch (HTTP_Exception_404 $exnf) {
-            Session::instance()->set('error', $exnf->getMessage());
-            $this->defaultExceptionRedirect($exnf);
-
-        } catch (Exception $ex) {
-            Session::instance()->set('error', __('defaultErrorMessage'));
-            Log::instance()->addException($ex);
-        }
+        return Entity_User::TYPE_FREELANCER;
     }
 
-    protected function handleSessionError()
+    /**
+     * @return string
+     */
+    protected function getTitle()
     {
-        if (Session::instance()->get('error')) {
-            $this->context->session_error = Session::instance()->get('error');
-            Session::instance()->delete('error');
-        }
+        return 'Szabadúszó profil ' . $this->_user->getName();
     }
 
     protected function setContext()
     {
-        $this->context->user    = $this->_user;
-        $this->context->title   = 'Szabadúszó profil ' . $this->_user->getName();
-
-        $authorization = new Authorization_User($this->_user->getModel());
-
-        $this->context->canRate                     = (int)$authorization->canRate();
-        $this->context->canEdit                     = (int)$authorization->canEdit();
-        $this->context->canSeeProjectNotification   = (int)$authorization->canSeeProjectNotification();
+        parent::setContext();
+        $this->setContextProjectNotification();
     }
 
-    protected function setContextProjectNotification()
+    private function setContextProjectNotification()
     {
+        $authorization                              = new Authorization_User($this->_user->getModel());
+        $this->context->canSeeProjectNotification   = (int)$authorization->canSeeProjectNotification();
+
         if ($this->context->canSeeProjectNotification) {
             $this->context->industries  = $this->_viewhelper->getProjectNotificationRelationForProfile(new Model_Industry());
             $this->context->professions = $this->_viewhelper->getProjectNotificationRelationForProfile(new Model_Profession());
@@ -81,14 +43,4 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
             ]);
         }
     }
-
-    /**
-     * @return int
-     */
-    public function getUserType()
-    {
-        return Entity_User::TYPE_FREELANCER;
-    }
-
-
 }

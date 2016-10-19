@@ -124,30 +124,25 @@ class Controller_User extends Controller_DefaultTemplate
 		}		 
 	}
 	
-	function action_freelancerprofile()
-	{
-
-	}
-	
 	function action_projectownerprofile()
 	{
 		try
-		{	
+		{
 			if (Session::instance()->get('error'))
 			{
 				$this->context->session_error = Session::instance()->get('error');
 				Session::instance()->delete('error');
 			}
-			
+
 			$this->context->title = 'Megbízó profil';
-			$result = ['error' => false];				
+			$result = ['error' => false];
 			$slug = $this->request->param('slug');
-			
+
 			if (!$slug)
 			{
 				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
 			}
-				
+
 			$user = new Model_User_Employer();
 			$user = $user->getByColumn('slug', $slug);
 
@@ -160,17 +155,17 @@ class Controller_User extends Controller_DefaultTemplate
 
             $entity = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $user->user_id);
             $viewhelper = Viewhelper_User_Factory::createViewhelper($entity, Viewhelper_User::ACTION_CREATE);
-			
-			$authorization = new Authorization_User($user);						
-				
-			$this->context->user = $user;										
-				
+
+			$authorization = new Authorization_User($user);
+
+			$this->context->user = $user;
+
 			$this->context->canRate = (int) $authorization->canRate();
 			$this->context->canEdit = (int) $authorization->canEdit();
 			$this->context->editUrl = $viewhelper->getEditUrl();
-				
+
 			$logged = Auth::instance()->get_user();
-			
+
 			$project	= new Model_Project();
 			$industry	= new Model_Industry();
 
@@ -178,7 +173,7 @@ class Controller_User extends Controller_DefaultTemplate
 			$relations	= [];
 			$salaries	= [];
 			$users 		= [];
-			 
+
 			foreach ($projects as $pr)
 			{
                 /**
@@ -198,20 +193,20 @@ class Controller_User extends Controller_DefaultTemplate
 
             $ownRating = Model_User_Rating::getRating($logged, $user);
 			$this->context->myRating = ($ownRating) ? $ownRating : '-';
-		}		
+		}
 		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
 		{
 			Session::instance()->set('error', $exnf->getMessage());
 			$this->defaultExceptionRedirect($exnf);
-		}		
+		}
 		catch (Exception $ex)		// Altalanos hiba
 		{
 			$this->context->error = __('defaultErrorMessage');
-	
+
 			// Logbejegyzest keszit
 			$errorLog = new Model_Errorlog();
 			$errorLog->log($ex);
-	
+
 			$result = ['error' => true];
 		}
 	}	
