@@ -239,14 +239,9 @@ class Model_Auth_User extends ORM {
         return $url;
     }
 
-    /**
-     * @param string $email
-     * @return array
-     */
-    public function passwordReminder($email)
+    public static function passwordReminder($email)
     {
-        $user = new Model_User();
-        $user = $user->getByColumn('email', $email);
+        $user = AB::select()->from(new Model_User())->where('email', '=', $email)->limit(1)->execute()->current();
 
         if ($user && $user->loaded()) {
             $password = Text::generatePassword();
@@ -256,13 +251,12 @@ class Model_Auth_User extends ORM {
 
             $html = Twig::getHtmlFromTemplate('Templates/newPasswordEmail.twig', ['email' => $email, 'password' => $password, 'user' => $user->firstname]);
 
-            Email::send($email, __('newPasswordSubject'), $html, __('newPasswordEmailType'));
-        } else {
-            $result['error'] = true;
-            $result['message'] = 'noUserWithThisEmail';
+            Email::send($email, __('newPasswordSubject'), $html);
+
+            return true;
         }
 
-        return $result;
+        throw new Exception_UserNotFound('Sajnáljuk, nincs ilyen e-mail cím. Kérjük róbáld meg egy másikkal.');
     }
 
 } // End Auth User Model

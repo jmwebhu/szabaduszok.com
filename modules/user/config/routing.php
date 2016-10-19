@@ -44,20 +44,20 @@ Route::set('freelancers', 'szabaduszok(/<page>)')
 
 Route::set('login', 'szabaduszok-belepes')
 	->defaults(array(
-		'controller' => 'User',
+		'controller' => 'User_Auth',
 		'action'     => 'login',
 	));
 	
 Route::set('logout', 'szabaduszok-kilepes')
 	->defaults(array(
-		'controller' => 'User',
+		'controller' => 'User_Auth',
 		'action'     => 'logout',
 	));
 	
 
 Route::set('passwordReminder', 'szabaduszok-elfelejtett-jelszo')
 	->defaults(array(
-		'controller' => 'User',
+		'controller' => 'User_Auth',
 		'action'     => 'passwordreminder',
 	));
 

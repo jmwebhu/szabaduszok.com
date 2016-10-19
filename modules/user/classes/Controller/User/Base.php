@@ -26,7 +26,6 @@ abstract class Controller_User_Base extends Controller_DefaultTemplate
         parent::__construct($request, $response);
 
         $this->_error       = false;
-        $this->_user        = Entity_User::createUser($this->getUserType());
     }
 
     /**

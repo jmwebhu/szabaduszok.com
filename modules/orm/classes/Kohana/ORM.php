@@ -2604,7 +2604,7 @@ class Kohana_ORM extends Model implements serializable {
 		
 		if (!$model || !$model->loaded())
 		{
-			$model = ORM::factory($this->_object_name)->where($this->_object_name . '.' . $col, '=', $vlaue)->limit(1)->find();
+			$model = ORM::factory($this->_object_name)->where($this->_object_name . '.' . $col, '=', $value)->limit(1)->find();
 			$collection[] = $model;
 		}
 		

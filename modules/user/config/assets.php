@@ -57,7 +57,7 @@ AssetManager::instance()
             ->addCss(['font-awesome-stars'])
 
 
-    ->addController('user')
+    ->addController('user_auth')
         ->addAction('login')
             ->addJs(['login'])
         	
