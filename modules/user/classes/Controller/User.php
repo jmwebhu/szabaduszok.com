@@ -2,8 +2,6 @@
 
 class Controller_User extends Controller_DefaultTemplate
 {
-
-
 	public function action_freelancers()
 	{
 		try
@@ -163,60 +161,4 @@ class Controller_User extends Controller_DefaultTemplate
         // Atiranyitas kezdooldalra
         HTTP::redirect(Route::url('home'));
     }
-    
-    public function action_ajax()
-    {        	    
-    	try 
-    	{
-    		$result = ['error' => false];
-    		
-    		//Model_Database::trans_start();      		
-    		
-    		if (!$this->request->is_ajax())
-    		{
-    			throw new HTTP_Exception_400('Only Ajax');
-    		}
-    		 
-    		$this->auto_render = false;
-    		$user = new Model_User();
-    		 
-    		switch ($this->request->param('actiontarget'))
-    		{
-    			// Felhasznalo ertekeles
-    			case 'rate':
-    				$user = $user->getById(Input::post('user_id'));
-    				$data = $user->rate(Input::post('rating'));
-    				$json = json_encode($data);
-    				
-    				break;
-    		
-    			// Porjekt ertesito beallitasa
-    			case 'saveProjectNotification':
-    			    $user = Entity_User::createUser(Entity_User::TYPE_FREELANCER, Input::post('user_id'));
-    				//$user = $user->getById(Input::post('user_id'));
-    				$data = $user->saveProjectNotification(Input::post_all());
-    				$json = json_encode($data);
-    				
-    				break;
-    		
-    			default:
-    				throw new HTTP_Exception_400('Action target not found');
-    		}
-    		
-    		$this->response->body($json);
-    		
-    	}
-    	catch (Exception $ex)		// Altalanos hiba
-		{			
-			// Logbejegyzest keszit
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
-				
-			$result = ['error' => true];
-		}
-		finally
-		{
-			Model_Database::trans_end([!Arr::get($result, 'error')]);
-		}		     	    	        
-	}
 }

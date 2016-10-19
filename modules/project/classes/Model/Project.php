@@ -130,7 +130,6 @@ class Model_Project extends ORM implements Subject
             $this->is_active = 0;
             $this->save();
 
-            $this->clearCache();
             $this->notifyObservers(self::EVENT_INACTIVATE);
 
         } catch (Exception $ex) {
@@ -144,6 +143,10 @@ class Model_Project extends ORM implements Subject
 
         } finally {
             Model_Database::trans_end([!$error]);
+
+            if (!$error) {
+                $this->clearCache();
+            }
         }
     	
     	return ['error' => $error, 'message' => $message];

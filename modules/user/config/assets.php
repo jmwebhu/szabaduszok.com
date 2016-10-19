@@ -60,7 +60,8 @@ AssetManager::instance()
     ->addController('user_auth')
         ->addAction('login')
             ->addJs(['login'])
-        	
+
+    ->addController('user')
         ->addAction('freelancers')        	
         	->addJs(['barrating', 'freelancers'])
         	->addCss(['font-awesome-stars'])

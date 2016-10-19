@@ -61,7 +61,6 @@
 {% block bottomContainer %}
     {% if canSeeProjectNotification %}
         <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
-            <input type="hidden" name="user_id" value="{{ user.user_id }}">
             {{ searchPanel.build(container) }}
         </form>
     {% endif %}

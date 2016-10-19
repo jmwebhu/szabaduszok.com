@@ -69,6 +69,6 @@ Route::set('userPasswordreminder', 'szabaduszok-jelszo-emlekezteto')
 
 Route::set('userAjax', 'user/ajax/<actiontarget>(/<maintarget>)')
     ->defaults([
-        'controller'    => 'User',
-        'action'        => 'ajax'
+        'controller'    => 'User_Ajax',
+        'action'        => 'index'
     ]);
