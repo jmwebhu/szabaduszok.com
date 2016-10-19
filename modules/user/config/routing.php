@@ -23,18 +23,18 @@ Route::set('projectOwnerProfileEdit', 'megbizo-profil-szerkesztes/<slug>')
         'controller' => 'User_Update_Employer',
         'action'     => 'index',
     ));
+
+Route::set('freelancerProfile', 'szabaduszo/<slug>')
+    ->defaults([
+        'controller'    => 'User_Profile_Freelancer',
+        'action'        => 'index'
+    ]);
 	
 Route::set('projectOwnerProfile', 'megbizo/<slug>')
 	->defaults([
 		'controller'    => 'User',
 		'action'        => 'projectownerprofile'
 	]);
-
-Route::set('freelancerProfile', 'szabaduszo/<slug>')
-->defaults([
-		'controller'    => 'User',
-		'action'        => 'freelancerprofile'
-]);
 
 Route::set('freelancers', 'szabaduszok(/<page>)')
 	->defaults([

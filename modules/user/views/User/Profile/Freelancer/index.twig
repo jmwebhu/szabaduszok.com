@@ -14,10 +14,10 @@
 					
 			<div class="col-sm-12">
 				<h1 class="mg-md text-center">
-					{{ user.name() }}
+					{{ user.getName() }}
 				</h1>								
 				
-				<input type="hidden" value="{{ user.rating_points_avg }}" id="initial-rating">
+				<input type="hidden" value="{{ user.getRatingPointsAvg() }}" id="initial-rating">
 				<input type="hidden" value="{{ canRate }}" id="can-rate">
 				<div class="panel">
 					<div class="panel-heading">
@@ -27,11 +27,11 @@
 					</div>
 					<div class="panel-body">
 						<div class="col-sm-3 text-center img-container">
-							<img src="{% if user.profile_picture_path %}{{ ROOT }}uploads/picture/{{ user.profile_picture_path }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.name() }}">
+							<img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
 							
 							<div class="external-profile-container">
-								{% for userProfile in user.profiles.find_all() %}
-									<a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.name() }} - {{ userProfile.profile.name }} profil">
+								{% for userProfile in user.getRelation("profiles") %}
+									<a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.getName() }} - {{ userProfile.profile.name }} profil">
 										<span class="{{ userProfile.profile.icon_type }} {{ userProfile.profile.icon }} icon-sm icon-blue fs24"></span>
 									</a>									
 								{% endfor %}
@@ -44,8 +44,8 @@
 									<span class="ion ion-location icon-dark-gray"></span>
 								</div>
 								<div class="col-95 fs18">
-									{% if user.address_city %}
-										{{ user.address_city }}
+									{% if user.getAddressCity() %}
+										{{ user.getAddressCity() }}
 									{% else %}
 										Nincs adat
 									{% endif %}
@@ -55,8 +55,8 @@
 									<span class="ion ion-social-usd icon-sm project-dollar-sign icon-dark-gray"></span>
 								</div>
 								<div class="col-95 fs18">
-									{% if user.min_net_hourly_wage is not null %}
-										{{ user.min_net_hourly_wage|number_format(0, '.', ' ') }} Ft /óra
+									{% if user.getMinNetHourlyWage() is not null %}
+										{{ user.getMinNetHourlyWage()|number_format(0, '.', ' ') }} Ft /óra
 									{% else %}
 										Nincs adat
 									{% endif %}									
@@ -66,7 +66,7 @@
 									<span class="ion ion-email icon-dark-gray"></span>
 								</div>
 								<div class="col-95 fs18 profile-email-container">
-									<a href="mailto:{{ user.email }}">E-mail küldése</a>
+									<a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
 								</div>
 								
 								{% if user.webpage %}
@@ -74,7 +74,7 @@
 									<span class="fa fa-chrome icon-dark-gray"></span>
 								</div>
 								<div class="col-95 fs18 profile-webpage-container">
-									<a href="{{ user.webpage }}" target="_blank">Weboldal megtekintése</a>
+									<a href="{{ user.getWebpage() }}" target="_blank">Weboldal megtekintése</a>
 								</div>
 								{% endif %}
                                                                 
@@ -83,7 +83,7 @@
 									<span class="ion ion-android-attach icon-sm icon-dark-gray"></span>
 								</div>
 								<div class="col-95 fs18">																										
-									<a href="{{ ROOT }}uploads/cv/{{ user.cv_path }}" download title="Szabaduszok.com - {{ user.name() }}">Önéletrajz letöltése</a>									
+									<a href="{{ ROOT }}uploads/cv/{{ user.getCvPath() }}" download title="Szabaduszok.com - {{ user.getName() }}">Önéletrajz letöltése</a>
 								</div>
 								{% endif %}
 																																
@@ -94,7 +94,7 @@
 								<span class="ion ion-briefcase icon-dark-gray project-details-profeesion-sign"></span>
 							</div>
 							<div class="col-95 fs18">
-								{% for industry in user.industries.find_all() %}
+								{% for industry in user.getRelation("industries") %}
 								<span id="{{ industry.industry_id }}" class="tag">{{ industry.name }}</span>
 								{% else %}
 								<span class="tag">Még nincs adat</span>
@@ -105,7 +105,7 @@
 								<span class="ion ion-university icon-dark-gray project-details-profeesion-sign"></span>
 							</div>
 							<div class="col-95 fs18">
-								{% for profession in user.professions.find_all() %}
+								{% for profession in user.getRelation("professions") %}
 								<span id="{{ profession.profession_id }}" class="tag">{{ profession.name }}</span>
 								{% else %}
 								<span class="tag">Még nincs adat</span>
@@ -116,7 +116,7 @@
 								<span class="ion ion-wrench icon-dark-gray project-details-profeesion-sign"></span>
 							</div>
 							<div class="col-95 fs18">
-								{% for skill in user.skills.find_all() %}
+								{% for skill in user.getRelation("skills") %}
 								<span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
 								{% else %}
 								<span class="tag">Még nincs adat</span>
@@ -134,14 +134,14 @@
 								<option value="5">5</option>
 							</select>
 							
-							<p class="rating-avg">Átlag: <span id="rating-avg-point">{{ user.rating_points_avg|number_format(1, '.', ' ') }}</span></p>
-							<p class="rating-avg">Értékelők száma: <span id="raters-count">{{ user.raters_count|number_format(0, '.', ' ') }}</span></p>
+							<p class="rating-avg">Átlag: <span id="rating-avg-point">{{ user.getRatingPointsAvg()|number_format(1, '.', ' ') }}</span></p>
+							<p class="rating-avg">Értékelők száma: <span id="raters-count">{{ user.getRatersCount()|number_format(0, '.', ' ') }}</span></p>
 							<p class="your-rating">Te értékelésed: <span id="your-rating-point">{{ myRating }}</span></p>
 							
 							{% if canRate %}
 							<p class="rating-instruction">Kattints a csillagra, és nyomd meg az 'Értékel' gombot</p>
 							
-							<button class="btn btn-lg btn-block btn-lime-green rating" data-user_id="{{ user.user_id }}" id="rate">
+							<button class="btn btn-lg btn-block btn-lime-green rating" data-user_id="{{ user.getUserId() }}" id="rate">
 								<span class="fa fa-star icon-spacer icon-white"></span>
 								Értékel
 							</button>
@@ -154,15 +154,15 @@
 								Rövid bemutatkozás
 							</h3>
 							<p class="text-justify">
-								{% if user.short_description %}
-									{{ user.short_description }}
+								{% if user.getShortDescription() %}
+									{{ user.getShortDescription() }}
 								{% else %}
 									Nem adott meg bemutatkozást
 								{% endif %}						
 							</p>
 							
 							<p class="text-left text-right project-share-date">
-								Utolsó belépés: {{ user.last_login() }}
+								Utolsó belépés: {{ user.getLastLoginFormatted() }}
 							</p>
 							
 							{% if canEdit %}
@@ -176,80 +176,12 @@
 				
 				{% if canSeeProjectNotification %}
                 <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
-                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                    <input type="hidden" name="user_id" value="{{ user.getUserId() }}">
 				    {{ searchPanel.build(container) }}
                 </form>
-				{#<div class="panel">
-					<div class="panel-heading">
-						<h3 class="mg-clear tc-black">
-							Projekt értesítő beállításai
-						</h3>
-					</div>
-					<div class="panel-body">
-						<p>Csak azokról a projektekről szeretnék értesítést kapni, amik...</p>
-						<form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
-							<input type="hidden" name="user_id" value="{{ user.user_id }}">
-
-							<span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
-							<p class="search-form-paragraph">
-								Az alábbi <strong>iparágakba</strong> tartoznak:
-							</p>													
-							<div class="form-group">							
-								<select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
-									{% for industry in industries %}
-									<option value="{{ industry.id }}" {{ industry.selected }}>{{ industry.name }}</option>
-									{% endfor %}									
-								</select>
-							</div>
-						
-							<span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
-							<p class="search-form-paragraph">
-								ÉS a következő <strong>szakterületeken</strong> futnak:
-							</p>
-							<div class="form-group">								
-	 							<select id="professions" class="form-control" name="professions[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
-									{% for profession in professions %}
-									<option value="{{ profession.id }}" {{ profession.selected }}>{{ profession.name }}</option>
-									{% endfor %}	
-	 							</select>
-							</div>
-							
-							<span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
-							<p class="search-form-paragraph">
-								ÉS az alábbi <strong>képességek</strong>:
-							</p>
-							
-							<div class="form-group">								
-	 							<select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
-									{% for skill in skills %}
-									<option value="{{ skill.id }}" {{ skill.selected }}>{{ skill.name }}</option>
-									{% endfor %}
-	 							</select>
-							</div>
-							
-							<select class="form-control" name="skill_relation" id="skill-relation">
-								<option value="1" {% if user.skill_relation == 1 %}selected{% endif %}>Bármelyikét (VAGY kapcsolat)</option>
-								<option value="2" {% if user.skill_relation == 2 %}selected{% endif %}>Mindegyikét (ÉS kapcsolat)</option>
-							</select>
-							<p class="search-form-paragraph mb10">
-								igénylik.
-							</p>
-							
-							<button class="btn btn-lg btn-block btn-lime-green" id="save-project-notification">
-								<span class="ion ion-checkmark icon-spacer icon-white"></span>
-								Rögzít
-							</button>
-							
-							<span class="loading text-center"></span>
-						</form>
-					</div>
-				</div>	#}
-				{% endif %}	
-												
+				{% endif %}
 			</div>
-			
 			{% endif %}
-			
 		</div>
 	</div>
 </div>

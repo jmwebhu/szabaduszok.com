@@ -46,14 +46,15 @@ AssetManager::instance()
         ->addAction('index')
             ->addJs(['employer-registration'])
 
+    ->addController('user_profile_freelancer')
+        ->addAction('index')
+            ->addJs(['barrating', 'freelancer-profile'])
+            ->addCss(['font-awesome-stars'])
+
 
     ->addController('user')
         ->addAction('login')
             ->addJs(['login'])
-        	
-        ->addAction('freelancerprofile')
-        	->addJs(['barrating', 'freelancer-profile'])
-        	->addCss(['font-awesome-stars'])
         	
         ->addAction('projectownerprofile')
         	->addJs(['barrating', 'employer-profile'])

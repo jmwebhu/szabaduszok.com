@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller_User_Write extends Controller_User
+abstract class Controller_User_Write extends Controller_User_Base
 {
     /**
      * @var bool

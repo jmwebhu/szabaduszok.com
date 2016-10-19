@@ -20,15 +20,17 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
             $this->throwNotFoundExceptionIfNot($userModel->loaded());
 
             $this->_user        = Entity_User::createUser($this->getUserType(), $userModel->user_id);
-            $entity             = Entity_User::createUser(Entity_User::TYPE_FREELANCER, $userModel->user_id);
-            $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($entity, Viewhelper_User::ACTION_CREATE);
+
+            $this->setContext();
+
+            $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
 
             if ($this->context->canEdit) {
                 $this->context->editUrl = $this->_viewhelper->getEditUrl();
             }
 
-            $logged 					= Auth::instance()->get_user();
-            $myRating                   = Model_User_Rating::getRating($logged, $this->context->user);
+            $loggedUser 				= Auth::instance()->get_user();
+            $myRating                   = Model_User_Rating::getRating($loggedUser, $this->_user->getModel());
             $this->context->myRating	= ($myRating) ? $myRating : '-';
 
             $this->setContextProjectNotification();
@@ -40,8 +42,6 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
         } catch (Exception $ex) {
             Session::instance()->set('error', __('defaultErrorMessage'));
             Log::instance()->addException($ex);
-
-            $this->_error = true;
         }
     }
 
@@ -81,4 +81,14 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
             ]);
         }
     }
+
+    /**
+     * @return int
+     */
+    public function getUserType()
+    {
+        return Entity_User::TYPE_FREELANCER;
+    }
+
+
 }

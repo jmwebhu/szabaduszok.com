@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller_User_Profile extends Controller_User
+abstract class Controller_User_Profile extends Controller_User_Base
 {
     /**
      * @var bool
@@ -11,6 +11,11 @@ abstract class Controller_User_Profile extends Controller_User
      * @var Entity_User
      */
     protected $_user;
+
+    /**
+     * @return int
+     */
+    abstract public function getUserType();
 
     /**
      * @param Request $request
