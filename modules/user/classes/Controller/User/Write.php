@@ -37,6 +37,5 @@ abstract class Controller_User_Write extends Controller_DefaultTemplate
 
         $this->_error       = false;
         $this->_user        = Entity_User::createUser($this->getUserType());
-        $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_EDIT);
     }
 }

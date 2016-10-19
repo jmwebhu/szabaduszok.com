@@ -54,12 +54,13 @@ abstract class Controller_User_Create extends Controller_User_Write
 
     protected function setContext()
     {
-        $this->context->pageTitle			= $this->context->title = $this->_viewhelper->getPageTitle();
-        $this->context->hasPrivacyCheckbox	= $this->_viewhelper->hasPrivacyCheckbox();
-        $this->context->passwordText		= $this->_viewhelper->getPasswordText();
-        $this->context->hasIdInput			= $this->_viewhelper->hasIdInput();
-        $this->context->formAction			= $this->_viewhelper->getFormAction();
-        $this->context->hasPasswordRules	= $this->_viewhelper->hasPasswordRules();
+        $viewhelper = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
+        $this->context->pageTitle			= $this->context->title = $viewhelper->getPageTitle();
+        $this->context->hasPrivacyCheckbox	= $viewhelper->hasPrivacyCheckbox();
+        $this->context->passwordText		= $viewhelper->getPasswordText();
+        $this->context->hasIdInput			= $viewhelper->hasIdInput();
+        $this->context->formAction			= $viewhelper->getFormAction();
+        $this->context->hasPasswordRules	= $viewhelper->hasPasswordRules();
 
         $this->context->email               = $this->_email;
         $this->context->landingPageName     = Input::get('landing_page_name');

@@ -151,7 +151,7 @@ class Controller_User extends Controller_DefaultTemplate
 			}
 					
 			$this->context->user = $user;
-			$this->context->title = 'Szabadúszó profil ' . $user->firstname;
+			$this->context->title = 'Szabadúszó profil ' . $user->lastname . ' ' . $user->firstname;
 						
 			$authorization = new Authorization_User($user);
 			

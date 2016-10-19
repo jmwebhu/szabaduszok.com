@@ -83,20 +83,19 @@ abstract class Controller_User_Update extends Controller_User_Write
 
     protected function setContext()
     {
-        $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_EDIT);
-
+        $viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_EDIT);
         $industry                           = new Model_Industry();
-        $this->context->title               = $this->_viewhelper->getPageTitle();
+        $this->context->title               = $viewhelper->getPageTitle();
         $this->context->hasCancel           = (int)$this->_authorization->hasCancel();
         $this->context->user                = $this->_user;
         $this->context->industries          = $industry->getAll();
-        $this->context->hasPrivacyCheckbox	= $this->_viewhelper->hasPrivacyCheckbox();
-        $this->context->pageTitle			= $this->_viewhelper->getPageTitle();
-        $this->context->passwordText		= $this->_viewhelper->getPasswordText();
-        $this->context->hasIdInput			= $this->_viewhelper->hasIdInput();
-        $this->context->formAction			= $this->_viewhelper->getFormAction();
-        $this->context->hasPasswordRules	= $this->_viewhelper->hasPasswordRules();
-        $this->context->hasPicture			= $this->_viewhelper->hasPicture();
+        $this->context->hasPrivacyCheckbox	= $viewhelper->hasPrivacyCheckbox();
+        $this->context->pageTitle			= $viewhelper->getPageTitle();
+        $this->context->passwordText		= $viewhelper->getPasswordText();
+        $this->context->hasIdInput			= $viewhelper->hasIdInput();
+        $this->context->formAction			= $viewhelper->getFormAction();
+        $this->context->hasPasswordRules	= $viewhelper->hasPasswordRules();
+        $this->context->hasPicture			= $viewhelper->hasPicture();
     }
 
     protected function handlePostRequest()
