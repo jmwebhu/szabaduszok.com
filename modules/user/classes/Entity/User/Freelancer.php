@@ -28,6 +28,14 @@ class Entity_User_Freelancer extends Entity_User
     protected $_webpage;
 
     /**
+     * @return string
+     */
+    public function getTypeSlug()
+    {
+        return Entity_User::TYPE_SLUG_FREELANCER;
+    }
+
+    /**
      * @return int
      */
     public function getMinNetHourlyWage()

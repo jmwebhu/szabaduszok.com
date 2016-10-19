@@ -1,42 +1,7 @@
 <?php
 
-abstract class Controller_User_Profile extends Controller_User_Base
+abstract class Controller_User_Profile extends Controller_User_Base implements Controller_User_Polymorph_Behaviour_Profile
 {
-    /**
-     * @var bool
-     */
-    protected $_error;
-
-    /**
-     * @var Entity_User
-     */
-    protected $_user;
-
-    /**
-     * @var Viewhelper_User
-     */
-    protected $_viewhelper;
-
-    /**
-     * @return int
-     */
-    abstract protected function getUserType();
-
-    /**
-     * @return string
-     */
-    abstract protected function getTitle();
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     */
-    public function __construct(Request $request, Response $response)
-    {
-        parent::__construct($request, $response);
-        $this->_error = false;
-    }
-
     public function action_index()
     {
         try {
@@ -61,14 +26,6 @@ abstract class Controller_User_Profile extends Controller_User_Base
         } catch (Exception $ex) {
             $this->context->error = __('defaultErrorMessage');
             Log::instance()->addException($ex);
-        }
-    }
-
-    protected function handleSessionError()
-    {
-        if (Session::instance()->get('error')) {
-            $this->context->session_error = Session::instance()->get('error');
-            Session::instance()->delete('error');
         }
     }
 

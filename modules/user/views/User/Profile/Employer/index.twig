@@ -1,12 +1,12 @@
 {% extends "User/profile.twig" %}
 
 {% block detailsContainerContact %}
-    {% if user.is_company and user.company_name %}
+    {% if user.getIsCompany() and user.getCompanyName() %}
         <div class="col-5 fs18">
             <span class="fa fa-building icon-sm icon-dark-gray"></span>
         </div>
         <div class="col-95 fs18 mt2">
-            {{ user.company_name }}
+            {{ user.getCompanyName }}
         </div>
     {% endif %}
 

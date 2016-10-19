@@ -5,7 +5,7 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
     /**
      * @return int
      */
-    protected function getUserType()
+    public function getUserType()
     {
         return Entity_User::TYPE_FREELANCER;
     }
@@ -13,7 +13,7 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
     /**
      * @return string
      */
-    protected function getTitle()
+    public function getTitle()
     {
         return 'Szabadúszó profil';
     }

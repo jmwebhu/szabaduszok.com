@@ -153,7 +153,7 @@
 
                         {% block buttons %}
                             {% if hasCancel %}
-                                <a href="{{ ROOT }}szabaduszo/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+                                <a href="{{ ROOT }}{{ user.getTypeSlug() }}/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
                             {% endif %}
                             <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
                                 <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít

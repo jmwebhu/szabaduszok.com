@@ -2,6 +2,22 @@
 
 class Controller_User_Update_Freelancer extends Controller_User_Update
 {
+    /**
+     * @return int
+     */
+    public function getUserType()
+    {
+        return Entity_User::TYPE_FREELANCER;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfileUrl()
+    {
+        return Route::url('freelancerProfile', ['slug' => $this->_user->getSlug()]);
+    }
+
     protected function setContext()
     {
         parent::setContext();
@@ -16,21 +32,5 @@ class Controller_User_Update_Freelancer extends Controller_User_Update
             $parts                  = explode('.', $this->_user->getCvPath());
             $this->context->cvExt   = $parts[count($parts) - 1];
         }
-    }
-
-    /**
-     * @return int
-     */
-    protected function getUserType()
-    {
-        return Entity_User::TYPE_FREELANCER;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getProfileUrl()
-    {
-        return Route::url('freelancerProfile', ['slug' => $this->_user->getSlug()]);
     }
 }

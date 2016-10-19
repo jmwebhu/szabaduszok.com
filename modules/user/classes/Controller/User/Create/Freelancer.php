@@ -5,7 +5,7 @@ class Controller_User_Create_Freelancer extends Controller_User_Create
     /**
      * @return int
      */
-    protected function getUserType()
+    public function getUserType()
     {
         return Entity_User::TYPE_FREELANCER;
     }
@@ -13,7 +13,7 @@ class Controller_User_Create_Freelancer extends Controller_User_Create
     /**
      * @return string
      */
-    protected function getProfileUrl()
+    public function getProfileUrl()
     {
         return Route::url('freelancerProfile', ['slug' => $this->_user->getSlug()]);
     }

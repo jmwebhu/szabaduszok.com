@@ -12,46 +12,46 @@ class Controller_User extends Controller_DefaultTemplate
 
 	public function action_login()
 	{		    
-		try 
-		{			    		    					
+		try
+		{
 			$this->context->title = 'Belépés';
 			$sessionError = Session::instance()->get('error');
-			
+
 			if ($sessionError)
 			{
 				$this->context->error = $sessionError;
 				Session::instance()->delete('error');
-			}			
-			
+			}
+
 			$result = ['error' => false];
-			
+
 			// Vannak POST adatok, tehat belepes tortenik
 			if ($this->request->method() == Request::POST)
 			{
 				Model_Database::trans_start();
-				
+
 				// POST adatok
-				$post = Input::post_all();		
-				
+				$post = Input::post_all();
+
 				$user = new Model_User();
-				$url = $user->login($post);								
-			}			
+				$url = $user->login($post);
+			}
 		}
 		catch (Exception_UserLogin $exul)		// Belepesi hiba
 		{
 			// Visszaadja a view -nak
 			$this->context->error = $exul->getMessage();
-		
+
 			$result = ['error' => true];
-		}	
+		}
 		catch (Exception $ex)		// Altalanos hiba
 		{
 			$this->context->error = __('defaultErrorMessage');
-			
+
 			// Logbejegyzest keszit
 			$errorLog = new Model_Errorlog();
 			$errorLog->log($ex);
-			
+
 			$result = ['error' => true];
 		}
 		finally
@@ -59,23 +59,23 @@ class Controller_User extends Controller_DefaultTemplate
 			if ($this->request->method() == Request::POST)
 			{
 				Model_Database::trans_end([!Arr::get($result, 'error')]);
-					
+
 				// Sikeres regisztracio eseten
 				if (!Arr::get($result, 'error'))
 				{
-					$redirectUrl = Session::instance()->get('redirect_url'); 
+					$redirectUrl = Session::instance()->get('redirect_url');
 					if ($redirectUrl)
 					{
 						Session::instance()->delete('redirect_url');
 						$url = $redirectUrl;
 					}
-					
+
 					// Atiranyitas a megfelelo url -re
 					header('Location: ' . $url, true, 302);
 					die();
 				}
 			}
-		}						
+		}
 	}
 	
 	public function action_passwordreminder()
@@ -123,93 +123,6 @@ class Controller_User extends Controller_DefaultTemplate
 			}
 		}		 
 	}
-	
-	function action_projectownerprofile()
-	{
-		try
-		{
-			if (Session::instance()->get('error'))
-			{
-				$this->context->session_error = Session::instance()->get('error');
-				Session::instance()->delete('error');
-			}
-
-			$this->context->title = 'Megbízó profil';
-			$result = ['error' => false];
-			$slug = $this->request->param('slug');
-
-			if (!$slug)
-			{
-				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
-			}
-
-			$user = new Model_User_Employer();
-			$user = $user->getByColumn('slug', $slug);
-
-            if (!$user->loaded())
-			{
-				throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
-			}
-
-			$user = new Model_User_Employer($user->user_id);
-
-            $entity = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $user->user_id);
-            $viewhelper = Viewhelper_User_Factory::createViewhelper($entity, Viewhelper_User::ACTION_CREATE);
-
-			$authorization = new Authorization_User($user);
-
-			$this->context->user = $user;
-
-			$this->context->canRate = (int) $authorization->canRate();
-			$this->context->canEdit = (int) $authorization->canEdit();
-			$this->context->editUrl = $viewhelper->getEditUrl();
-
-			$logged = Auth::instance()->get_user();
-
-			$project	= new Model_Project();
-			$industry	= new Model_Industry();
-
-			$projects 	= $user->getProjects();
-			$relations	= [];
-			$salaries	= [];
-			$users 		= [];
-
-			foreach ($projects as $pr)
-			{
-                /**
-                 * @var $pr ORM
-                 */
-				$relations[$pr->project_id]	= $pr->getRelations();
-				$salaries[$pr->project_id]	= Viewhelper_Project::getSalary(new Entity_Project($pr->project_id));
-				$users[$pr->project_id]		= $user;
-			}
-
-			$entity = new Entity_Project();
-			$this->context->projects 	= $entity->getEntitiesFromModels($projects);
-			$this->context->relations	= $relations;
-			$this->context->salaries	= $salaries;
-			$this->context->users		= $users;
-			$this->context->industries	= $industry->getAll();
-
-            $ownRating = Model_User_Rating::getRating($logged, $user);
-			$this->context->myRating = ($ownRating) ? $ownRating : '-';
-		}
-		catch (HTTP_Exception_404 $exnf)	// 404 Nof found
-		{
-			Session::instance()->set('error', $exnf->getMessage());
-			$this->defaultExceptionRedirect($exnf);
-		}
-		catch (Exception $ex)		// Altalanos hiba
-		{
-			$this->context->error = __('defaultErrorMessage');
-
-			// Logbejegyzest keszit
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
-
-			$result = ['error' => true];
-		}
-	}	
 
 	public function action_freelancers()
 	{

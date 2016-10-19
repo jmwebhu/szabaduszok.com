@@ -20,6 +20,14 @@ class Entity_User_Employer extends Entity_User
     /**
      * @return string
      */
+    public function getTypeSlug()
+    {
+        return Entity_User::TYPE_SLUG_EMPLOYER;
+    }
+
+    /**
+     * @return string
+     */
     public function getPhonenumber()
     {
         return $this->_phonenumber;

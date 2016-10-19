@@ -15,9 +15,9 @@ abstract class Controller_User_Update extends Controller_User_Write
 
             $userModel      = new Model_User();
             $userModel      = $userModel->getBySlug($slug);
-            $this->throwNotFoundExceptionIfNot($this->_user->loaded());
-
             $this->_user    = Entity_User::createUser($this->getUserType(), $userModel->user_id);
+
+            $this->throwNotFoundExceptionIfNot($this->_user->loaded());
 
             $this->_authorization = new Authorization_User($userModel);
             $this->throwForbiddenExceptionIfNot($this->_authorization->canEdit());

@@ -2,15 +2,10 @@
 
 abstract class Entity_User extends Entity
 {
-    /**
-     * @var int
-     */
-    const TYPE_FREELANCER   = 1;
-
-    /**
-     * @var int
-     */
-    const TYPE_EMPLOYER     = 2;
+    const TYPE_FREELANCER       = 1;
+    const TYPE_EMPLOYER         = 2;
+    const TYPE_SLUG_FREELANCER  = 'szabaduszo';
+    const TYPE_SLUG_EMPLOYER    = 'megbizo';
 
     /**
      * @var File_User
@@ -149,6 +144,11 @@ abstract class Entity_User extends Entity
     {
         $this->_stdObject   = new stdClass();
     }
+
+    /**
+     * @return string
+     */
+    abstract public function getTypeSlug();
 
     /**
      * @return int
