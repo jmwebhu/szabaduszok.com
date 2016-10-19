@@ -152,13 +152,4 @@ class Controller_User extends Controller_DefaultTemplate
 			}
 		}
 	}
-    
-    public function action_logout()
-    {
-        // Kijelentkeztetes
-        Auth::instance()->logout(true, true);
-
-        // Atiranyitas kezdooldalra
-        HTTP::redirect(Route::url('home'));
-    }
 }
