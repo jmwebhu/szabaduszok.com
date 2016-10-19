@@ -14,7 +14,6 @@ var FreelancerProfile = {
 		this.$skills = this.$form.find('select#skills');
 		this.$skillRelation = this.$form.find('select#skill-relation');
 		this.$saveProjectNotification = this.$form.find('button#save-project-notification');
-		this.$intelligentFill = this.$form.find('button#intelligent-fill');
 		this.$loading = $('span.loading');
 		
 		this.$initialRating = $('input#initial-rating');
@@ -35,7 +34,7 @@ var FreelancerProfile = {
 		FreelancerProfile.$rating.barrating({
 	        theme: 'fontawesome-stars',
 	        initialRating: FreelancerProfile.$initialRating.val(),
-	        readonly: (FreelancerProfile.$canRate.val() == '0') ? true : false
+	        readonly: (FreelancerProfile.$canRate.val() == '0')
 	    });
 
 		this.$industries.select2({
@@ -72,12 +71,11 @@ var FreelancerProfile = {
 		
 		var ajax = new AjaxBuilder();
 		var success = function(data) {						
-			
+
 			setTimeout(function() {
 				FreelancerProfile.$loading.isLoading('hide');
 			}, 500);
-			
-			
+
 			if (data.error) {
 				setTimeout(function () {
 					FreelancerProfile.$loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
