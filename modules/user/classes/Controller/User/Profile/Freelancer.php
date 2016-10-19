@@ -15,7 +15,7 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
      */
     protected function getTitle()
     {
-        return 'Szabadúszó profil ' . $this->_user->getName();
+        return 'Szabadúszó profil';
     }
 
     protected function setContext()

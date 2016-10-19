@@ -32,8 +32,8 @@ Route::set('freelancerProfile', 'szabaduszo/<slug>')
 	
 Route::set('projectOwnerProfile', 'megbizo/<slug>')
 	->defaults([
-		'controller'    => 'User',
-		'action'        => 'projectownerprofile'
+		'controller'    => 'User_Profile_Employer',
+		'action'        => 'index'
 	]);
 
 Route::set('freelancers', 'szabaduszok(/<page>)')

@@ -1,7 +1,18 @@
 {% extends "Templates/default.twig" %}
 {% import "Search/panel.twig" as searchPanel %}
 
-{% block content %}
+{% block imageContainer %}
+    {{ parent() }}
+    <div class="external-profile-container">
+        {% for userProfile in user.getRelation("profiles") %}
+            <a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.getName() }} - {{ userProfile.profile.name }} profil">
+                <span class="{{ userProfile.profile.icon_type }} {{ userProfile.profile.icon }} icon-sm icon-blue fs24"></span>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock imageContainer %}
+
+{% block asdf %}
 
 <!-- bloc-11 -->
 <div class="bloc tc-black bgc-anti-flash-white" id="bloc-11">
@@ -19,6 +30,7 @@
 				
 				<input type="hidden" value="{{ user.getRatingPointsAvg() }}" id="initial-rating">
 				<input type="hidden" value="{{ canRate }}" id="can-rate">
+
 				<div class="panel">
 					<div class="panel-heading">
 						<h2 class="mg-clear tc-black">
@@ -28,14 +40,6 @@
 					<div class="panel-body">
 						<div class="col-sm-3 text-center img-container">
 							<img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
-							
-							<div class="external-profile-container">
-								{% for userProfile in user.getRelation("profiles") %}
-									<a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.getName() }} - {{ userProfile.profile.name }} profil">
-										<span class="{{ userProfile.profile.icon_type }} {{ userProfile.profile.icon }} icon-sm icon-blue fs24"></span>
-									</a>									
-								{% endfor %}
-							</div>								
 						</div>					
 						
 						<div class="col-sm-3 details-container">
@@ -176,7 +180,7 @@
 				
 				{% if canSeeProjectNotification %}
                 <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
-                    <input type="hidden" name="user_id" value="{{ user.getUserId() }}">
+                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
 				    {{ searchPanel.build(container) }}
                 </form>
 				{% endif %}
@@ -187,4 +191,4 @@
 </div>
 <!-- bloc-11 END -->
 
-{% endblock content %}
+{% endblock asdf %}

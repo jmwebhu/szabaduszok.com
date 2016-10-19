@@ -74,8 +74,9 @@ abstract class Controller_User_Profile extends Controller_User_Base
 
     protected function setContext()
     {
-        $this->context->user        = $this->_user;
-        $this->context->title       = $this->getTitle();
+        $this->context->user            = $this->_user;
+        $this->context->title           = $this->getTitle() . ' ' . $this->_user->getName();
+        $this->context->profileTitle    = $this->getTitle();
 
         $authorization              = new Authorization_User($this->_user->getModel());
 

@@ -15,7 +15,7 @@ class Controller_User_Profile_Employer extends Controller_User_Profile
      */
     protected function getTitle()
     {
-        return 'Megbízó profil ' . $this->_user->getName();
+        return 'Megbízó profil';
     }
 
     protected function setContext()
