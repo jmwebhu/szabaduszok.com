@@ -134,33 +134,6 @@ class Model_User extends Model_Auth_User
     }
 
     /**
-     * @todo csere
-     */
-    public function last_login($format = null)
-    {
-    	$format = ($format) ? $format : 'Y-m-d';
-    	
-    	if (!$this->last_login)
-    	{
-    		return 'Még nem lépett be';
-    	}
-    	
-    	$date = $this->last_login; 
-    	
-    	return date($format, $date);
-    }
-
-    /**
-     * @todo csere. Csak Model_User_Freelancer, es Entity_User_Freelancer
-     * @return bool
-     */
-    public function hasProjectNotification()
-    {
-    	$notifications = $this->project_notifications->find_all();
-    	return !empty($notifications);
-    }
-
-    /**
      * @return string
      */
     public function name()
@@ -226,6 +199,11 @@ class Model_User extends Model_Auth_User
     	return $result;
     }
 
+    /**
+     * @param int $type
+     * @param int|null $id
+     * @return Model_User
+     */
     public static function createUser($type, $id = null)
     {
         switch ($type) {

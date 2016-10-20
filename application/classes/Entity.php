@@ -117,9 +117,9 @@ abstract class Entity
     public function getEntitiesFromModels(array $models)
     {
         $entities = [];
-        foreach ($models as $model) {
+        foreach ($models as $i => $model) {
             $class      = 'Entity_' . $this->getEntityName();
-            $entities[] = new $class($model);
+            $entities[$i] = new $class($model);
         }
 
         return $entities;

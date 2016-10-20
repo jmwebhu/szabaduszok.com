@@ -154,10 +154,11 @@ class Controller_Project_List extends Controller_Project
             $users[$project->project_id]		= Arr::get($cacheUsers, $project->user_id);
         }
 
+        $entity = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
         return [
             'relations'     => $relations,
             'salaries'      => $salaries,
-            'users'         => $users
+            'users'         => $entity->getEntitiesFromModels($users)
         ];
     }
 
