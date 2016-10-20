@@ -4,16 +4,16 @@
             <nav class="col-sm-12 text-center" id="pager">
                 <ul class="pagination">
                     <li>
-                        <a href="{{ pager.getBaseUrl() }}{{ pager.getPreviousPage() }}" aria-label="Előző">
+                        <a href="{{ pager.getBaseUrl() }}/{{ pager.getPreviousPage() }}" aria-label="Előző">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     {% for page in pager.getPagesArray() %}
-                        <li><a href="{{ pager.getBaseUrl() }}{{ page }}" {% if pager.getCurrentPage() == page %}class="bold"{% endif %}>{{ page }}</a></li>
+                        <li><a href="{{ pager.getBaseUrl() }}/{{ page }}" {% if pager.getCurrentPage() == page %}class="bold"{% endif %}>{{ page }}</a></li>
                     {% endfor %}
 
                     <li>
-                        <a href="{{ pager.getBaseUrl() }}{{ pager.getNextPage() }}" aria-label="Következő">
+                        <a href="{{ pager.getBaseUrl() }}/{{ pager.getNextPage() }}" aria-label="Következő">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>

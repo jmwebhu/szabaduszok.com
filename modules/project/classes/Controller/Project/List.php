@@ -46,7 +46,7 @@ class Controller_Project_List extends Controller_Project
             AB::select()->from(new Model_Project())->where('is_active', '=', 1)->execute()->as_array(),
             $currentPage,
             $limit,
-            URL::base(null, true) . 'szabaduszo-projektek/'
+            Route::url('projectList')
         );
 
         $this->_offset = (($currentPage - 1) * $limit);
