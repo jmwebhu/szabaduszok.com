@@ -155,6 +155,7 @@ Kohana::modules(array(
 	'flexiblemigrations'	=> MODPATH.'flexiblemigrations',
 	'landing'	=> MODPATH.'landing',
     'search'    => MODPATH.'search',
+    'listview'    => MODPATH.'listview',
 
 	));
 

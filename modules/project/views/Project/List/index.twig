@@ -1,5 +1,6 @@
 {% extends "Templates/default.twig" %}
 {% import "Search/panel.twig" as searchPanel %}
+{% import "Pager/panel.twig" as pagerPanel %}
 
 {% block content %}
 
@@ -26,10 +27,10 @@
 						{% endif %}
 					</div>					
 				</div>
-				
-				{% include 'Project/parts/_pager.twig' %}					
-				{% include 'Project/parts/_list.twig' %}				
-				{% include 'Project/parts/_pager.twig' %}
+
+                {{ pagerPanel.build(pager, needPager) }}
+				{% include 'Project/parts/_list.twig' %}
+                {{ pagerPanel.build(pager, needPager) }}
 				
 			</div>
 		</div>

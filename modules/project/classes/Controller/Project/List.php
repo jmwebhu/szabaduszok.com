@@ -8,17 +8,13 @@
 class Controller_Project_List extends Controller_Project
 {
     private $_matchedProjects   = [];
-    private $_pagerData         = [];
     private $_needPager         = false;
-    private $_pagesCount;
+    private $_offset;
 
     /**
-     * @param array $pagerData
+     * @var Pager
      */
-    public function setPagerData($pagerData)
-    {
-        $this->_pagerData = $pagerData;
-    }
+    private $_pager;
 
     /**
      * @param Request $request
@@ -32,7 +28,7 @@ class Controller_Project_List extends Controller_Project
     public function action_index()
     {
         try {
-            $this->setPagerDataByRequest();
+            $this->setPagerByRequest();
             $this->handleRequest();
             $this->setContext();
 
@@ -41,16 +37,19 @@ class Controller_Project_List extends Controller_Project
         }
     }
 
-    protected function setPagerDataByRequest()
+    protected function setPagerByRequest()
     {
         $limit 			= Kohana::$config->load('projects')->get('pagerLimit');
         $currentPage 	= $this->request->param('page') ? $this->request->param('page') : 1;
 
-        $this->_pagerData = [
-            'limit'         => $limit,
-            'currentPage'   => $currentPage,
-            'offset'        => (($currentPage - 1) * $limit)
-        ];
+        $this->_pager = new Pager(
+            AB::select()->from(new Model_Project())->where('is_active', '=', 1)->execute()->as_array(),
+            $currentPage,
+            $limit,
+            URL::base(null, true) . 'szabaduszo-projektek/'
+        );
+
+        $this->_offset = (($currentPage - 1) * $limit);
     }
 
     protected function handleRequest()
@@ -101,7 +100,7 @@ class Controller_Project_List extends Controller_Project
     protected function handleGetRequest()
     {
         $this->_needPager       = true;
-        $this->_matchedProjects = $this->_project->getOrderedAndLimited($this->_pagerData['limit'], $this->_pagerData['offset']);
+        $this->_matchedProjects = $this->_project->getOrderedAndLimited($this->_pager->getLimit(), $this->_offset);
     }
 
     protected function setContainerToComplexSearch(array $postProfessions, array $postSkills)
@@ -122,7 +121,6 @@ class Controller_Project_List extends Controller_Project
         $this->setContextRelations();
 
         $this->context->title 		= 'Szabadúszó projektek, munkák';
-
         $this->context->projects	= $this->_project->getEntitiesFromModels($this->_matchedProjects);
         $this->context->needPager   = $this->_needPager;
 
@@ -170,68 +168,9 @@ class Controller_Project_List extends Controller_Project
 
     protected function setContextPager()
     {
-        $this->setPagesCount();
-        $this->setContextPages();
+        $this->context->pager = $this->_pager;
 
-        $this->context->pagesCount			= $this->_pagesCount;
-        $this->context->currentPage			= $this->_pagerData['currentPage'];
         $this->context->countProjects		= count($this->_matchedProjects);
         $this->context->countAllProjects	= $this->_project->getCount();
-
-        $this->setContextPrevNextPage();
-    }
-
-    protected function setPagesCount()
-    {
-        $pagesCountFloat            = $this->_project->getCount() / $this->_pagerData['limit']; // Pl.: 33 / 10 = 3.3
-        $pagesCountInt 			    = floor($pagesCountFloat);				                    // 3.3 => 3
-        $pagesCountDecimalRemainder	= $pagesCountFloat - $pagesCountInt;		                // 3.3 - 3 = 0.3
-
-        // Ha van tizedes maradek, akkor egyel tobb lap kell
-        if ($pagesCountDecimalRemainder != 0) {
-            $pagesCountInt++;
-        }
-
-        $this->_pagesCount = $pagesCountInt;
-    }
-
-    protected function setContextPages()
-    {
-        $pages = [];
-        for ($i = 1; $i <= $this->_pagesCount; $i++) {
-            $pages[] = $i;
-        }
-
-        $this->context->pages = $pages;
-    }
-
-    protected function setContextPrevNextPage()
-    {
-        $this->context->nextPage = $this->getNextPage();
-        $this->context->prevPage = $this->getPrevPage();
-    }
-
-    /**
-     * @return int
-     */
-    protected function getNextPage()
-    {
-        if ($this->_pagerData['currentPage'] == $this->_pagesCount) {
-            return $this->_pagesCount;
-        }
-
-        return $this->_pagerData['currentPage'] + 1;
-    }
-
-    /**
-     * @return int
-     */
-    protected function getPrevPage()
-    {
-        if ($this->_pagerData['currentPage'] == 1) {
-            return 1;
-        }
-
-        return $this->_pagerData['currentPage'] - 1;
     }
 }
