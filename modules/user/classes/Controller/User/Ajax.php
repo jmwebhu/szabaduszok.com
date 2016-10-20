@@ -20,7 +20,7 @@ class Controller_User_Ajax extends Controller_Ajax
 
     protected function rate()
     {
-        $user = AB::select()->from(new Model_Project())->where('user_id', '=', Input::post('user_id'))->limit(1)->execute()->current();
+        $user = AB::select()->from(new Model_User())->where('user_id', '=', Input::post('user_id'))->limit(1)->execute()->current();
         $this->_jsonResponse = json_encode($user->rate(Input::post('rating')));
     }
 

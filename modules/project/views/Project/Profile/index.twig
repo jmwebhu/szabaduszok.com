@@ -18,7 +18,43 @@
 				<h1 class="mg-md text-center tc-black">
 					{{ project.getName() }}
 				</h1>
-				{% include "User/parts/_profilePanel.twig" %}
+				{% embed "User/parts/_profilePanel.twig" %}
+                    {% block imageContainer %}
+                        <a href="{{ ROOT }}megbizo/{{ user.getSlug() }}">
+                            <img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
+                        </a>
+                    {% endblock imageContainer %}
+
+                    {% block detailsContainerContact %}
+                        {% if user.getIsCompany() and user.getCompanyName() %}
+                            <div class="col-5 fs18">
+                                <span class="fa fa-building icon-sm icon-dark-gray"></span>
+                            </div>
+                            <div class="col-95 fs18 mt2">
+                                {{ user.getCompanyName }}
+                            </div>
+                        {% endif %}
+
+                        {{ parent() }}
+
+                        <div class="col-5 fs18">
+                            <span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
+                        </div>
+                        <div class="col-95 fs18">
+                            {{ user.getPhonenumber() }}
+                        </div>
+
+                        <div class="col-5 fs18">
+                            <span class="ion ion-email icon-dark-gray"></span>
+                        </div>
+                        <div class="col-95 fs18 profile-email-container">
+                            <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
+                        </div>
+
+                    {% endblock detailsContainerContact %}
+                    {% block descriptionContainer %}
+                    {% endblock descriptionContainer %}
+                {% endembed %}
 
 				<div class="panel">
 					<div class="panel-heading">

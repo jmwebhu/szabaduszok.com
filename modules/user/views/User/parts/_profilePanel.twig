@@ -80,8 +80,8 @@
             {% endblock ratingContainer %}
         </div>
 
-        <div class="bottom-container">
-            {% block descriptionContainer %}
+        {% block descriptionContainer %}
+            <div class="bottom-container">
                 <h3 class="mg-md tc-black">
                     Rövid bemutatkozás
                 </h3>
@@ -102,8 +102,8 @@
                         <a href="{{ editUrl }}" class="btn btn-lg btn-block btn-ultramarine-blue"><span class="ion ion-edit icon-spacer icon-white"></span>Szerkeszt</a>
                     </div>
                 {% endif %}
-            {% endblock descriptionContainer %}
-        </div>
+            </div>
+        {% endblock descriptionContainer %}
     </div>
     <!-- panel-body END -->
 </div>
