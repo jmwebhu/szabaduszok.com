@@ -225,4 +225,17 @@ class Model_User extends Model_Auth_User
     
     	return $result;
     }
+
+    public static function createUser($type, $id = null)
+    {
+        switch ($type) {
+            case Entity_User::TYPE_FREELANCER:
+                return new Model_User_Freelancer($id);
+
+            case Entity_User::TYPE_EMPLOYER:
+                return new Model_User_Employer($id);
+        }
+
+        Assert::neverShouldReachHere();
+    }
 }

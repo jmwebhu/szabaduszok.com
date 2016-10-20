@@ -19,5 +19,5 @@
     <label>
         E-mail*
     </label>
-    <input class="form-control" id="email" name="email" type="email" required data-rules='{"notEmpty": "true", "email": "true"}' value="{% if user %}{{ user.getEmail() }}{% else %}{{ email }}{% endif %}" {% if user.getUserId() %}disabled{% endif %}>
+    <input class="form-control" id="email" name="email" type="email" required data-rules='{"notEmpty": "true", "email": "true"}' value="{% if user %}{{ user.getEmail() }}{% else %}{{ email }}{% endif %}" {% if user.getUserId() %}readonly{% endif %}>
 </div>

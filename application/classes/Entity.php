@@ -46,19 +46,24 @@ abstract class Entity
     private $_targetObject      = null;
 
     /**
-     * @param null|int $id
+     * @param null|ORM|int $value
      */
-    public function __construct($id = null)
+    public function __construct($value = null)
     {
         $entity             = $this->getEntityName();
-        $modelClass         = 'Model_' . $entity;
         $businessClass      = 'Business_' . $entity;
 
-        $this->_model       = new $modelClass($id);
+        if (is_object($value)) {
+            $this->_model       = $value;
+        } else {
+            $modelClass         = 'Model_' . $entity;
+            $this->_model       = new $modelClass($value);
+        }
+
         $this->_business    = new $businessClass($this->_model);
         $this->_stdObject   = new stdClass();
 
-        if ($id) {
+        if ($value) {
             $this->mapModelToThis();
         }
     }
@@ -102,7 +107,7 @@ abstract class Entity
      */
     public function getRelation($name)
     {
-        return $this->_model->{$name}->find_all();
+        return $this->_model->getRelationBy($name);
     }
 
     /**
@@ -114,7 +119,7 @@ abstract class Entity
         $entities = [];
         foreach ($models as $model) {
             $class      = 'Entity_' . $this->getEntityName();
-            $entities[] = new $class($model->{$model->primary_key()});
+            $entities[] = new $class($model);
         }
 
         return $entities;

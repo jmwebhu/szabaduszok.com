@@ -96,7 +96,7 @@ class Business
     {
         $object = $model->object();
 
-        if (!Arr::get($object, $primaryKey)) {
+        if (!array_key_exists($primaryKey, $object)) {
             throw new Exception('Trying to get non-existing property ' . $primaryKey . ' in class ' . Variable::getTypeOf($model));
         }
 

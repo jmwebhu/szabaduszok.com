@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller_User_Profile extends Controller_User_Base implements Controller_User_Polymorph_Behaviour_Profile
+abstract class Controller_User_Profile extends Controller_User implements Controller_User_Polymorph_Behaviour_Profile
 {
     public function action_index()
     {
@@ -10,11 +10,11 @@ abstract class Controller_User_Profile extends Controller_User_Base implements C
 
             $this->throwNotFoundExceptionIfNot($slug);
 
-            $userModel = new Model_User();
+            $userModel = $this->getUserModel();
             $userModel = $userModel->getBySlug($slug);
             $this->throwNotFoundExceptionIfNot($userModel->loaded());
 
-            $this->_user        = Entity_User::createUser($this->getUserType(), $userModel->user_id);
+            $this->_user        = Entity_User::createUser($this->getUserType(), $userModel);
             $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
 
             $this->setContext();

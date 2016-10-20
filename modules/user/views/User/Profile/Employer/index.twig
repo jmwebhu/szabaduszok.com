@@ -1,28 +1,39 @@
 {% extends "User/profile.twig" %}
 
-{% block detailsContainerContact %}
-    {% if user.getIsCompany() and user.getCompanyName() %}
-        <div class="col-5 fs18">
-            <span class="fa fa-building icon-sm icon-dark-gray"></span>
-        </div>
-        <div class="col-95 fs18 mt2">
-            {{ user.getCompanyName }}
-        </div>
-    {% endif %}
+{% block profilePanel %}
+    {% embed "User/parts/_profilePanel.twig" %}
+        {% block detailsContainerContact %}
+            {% if user.getIsCompany() and user.getCompanyName() %}
+                <div class="col-5 fs18">
+                    <span class="fa fa-building icon-sm icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18 mt2">
+                    {{ user.getCompanyName }}
+                </div>
+            {% endif %}
 
-    {{ parent() }}
+            {{ parent() }}
 
-    <div class="col-5 fs18">
-        <span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
-    </div>
-    <div class="col-95 fs18">
-        {{ user.getPhonenumber() }}
-    </div>
-{% endblock detailsContainerContact %}
+            <div class="col-5 fs18">
+                <span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
+            </div>
+            <div class="col-95 fs18">
+                {{ user.getPhonenumber() }}
+            </div>
 
-{% block bottomContainer %}
-    <h2 class="text-center">Projektjei</h2>
-    <div class="col-sm-12 list">
-        {% include 'Project/parts/_list.twig' %}
-    </div>
-{% endblock bottomContainer %}
+            <div class="col-5 fs18">
+                <span class="ion ion-email icon-dark-gray"></span>
+            </div>
+            <div class="col-95 fs18 profile-email-container">
+                <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
+            </div>
+        {% endblock detailsContainerContact %}
+
+        {% block bottomContainer %}
+            <h2 class="text-center">Projektjei</h2>
+            <div class="col-sm-12 list">
+                {% include 'Project/parts/_list.twig' %}
+            </div>
+        {% endblock bottomContainer %}
+    {% endembed %}
+{% endblock profilePanel %}

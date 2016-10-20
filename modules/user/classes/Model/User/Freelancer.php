@@ -128,4 +128,14 @@ class Model_User_Freelancer extends Model_User_Abstract
 
         return $data;
     }
+
+    /**
+     * @param $slug
+     * @return Model_User_Freelancer
+     */
+    public function getBySlug($slug)
+    {
+        $model = parent::getBySlug($slug);
+        return new Model_User_Freelancer($model->user_id);
+    }
 }

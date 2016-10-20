@@ -11,6 +11,14 @@ class Controller_User_Profile_Employer extends Controller_User_Profile
     }
 
     /**
+     * @return Model_User_Employer
+     */
+    public function getUserModel()
+    {
+        return new Model_User_Employer();
+    }
+
+    /**
      * @return string
      */
     public function getTitle()
@@ -27,7 +35,6 @@ class Controller_User_Profile_Employer extends Controller_User_Profile
     private function setContextRelations()
     {
         $industry	= new Model_Industry();
-
         $projects 	= $this->_user->getProjects();
         $relations	= [];
         $salaries	= [];

@@ -76,7 +76,8 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
     protected function setContext()
     {
         $this->_user                = $this->_user->getById($this->_project->getUserId());
-        $this->context->user        = $this->_user;
+        $this->context->user        = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $this->_user);
+        $this->context->profileTitle = 'Megbízó: ' . $this->context->user->getName();
 
         $myRating                   = Model_User_Rating::getRating(Auth::instance()->get_user(), $this->_user);
         $this->context->myRating	= $myRating;

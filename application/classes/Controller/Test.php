@@ -4,8 +4,13 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $path = Kohana_Core::auto_load('Pager\X');
-        echo Debug::vars($path);
+        $array = [
+            'skill_id' => null,
+            'name' => null,
+            'slug' => null
+        ];
+
+        echo Debug::vars(array_key_exists('skill_id', $array));
     }
 
     public function action_clearcache()

@@ -1,67 +1,79 @@
 {% extends "User/profile.twig" %}
 {% import "Search/panel.twig" as searchPanel %}
 
-{% block imageContainer %}
-    {{ parent() }}
-    <div class="external-profile-container">
-        {% for userProfile in user.getRelation("profiles") %}
-            <a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.getName() }} - {{ userProfile.profile.name }} profil">
-                <span class="{{ userProfile.profile.icon_type }} {{ userProfile.profile.icon }} icon-sm icon-blue fs24"></span>
-            </a>
-        {% endfor %}
-    </div>
-{% endblock imageContainer %}
+{% block profilePanel %}
+    {% embed "User/parts/_profilePanel.twig" %}
+        {% block imageContainer %}
+            {{ parent() }}
+            <div class="external-profile-container">
+                {% for userProfile in user.getRelation("profiles") %}
+                    <a class="external-profile-anchor" href="{{ userProfile.url }}" target="_blank" title="{{ user.getName() }} - {{ userProfile.profile.name }} profil">
+                        <span class="{{ userProfile.profile.icon_type }} {{ userProfile.profile.icon }} icon-sm icon-blue fs24"></span>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endblock imageContainer %}
 
-{% block detailsContainerContact %}
-    {{ parent() }}
-    <div class="col-5 fs18">
-        <span class="ion ion-social-usd icon-sm project-dollar-sign icon-dark-gray"></span>
-    </div>
-    <div class="col-95 fs18">
-        {% if user.getMinNetHourlyWage() is not null %}
-            {{ user.getMinNetHourlyWage()|number_format(0, '.', ' ') }} Ft /óra
-        {% else %}
-            Nincs adat
-        {% endif %}
-    </div>
-    {% if user.webpage %}
-        <div class="col-5 fs16 profile-webpage-icon-container">
-            <span class="fa fa-chrome icon-dark-gray"></span>
-        </div>
-        <div class="col-95 fs18 profile-webpage-container">
-            <a href="{{ user.getWebpage() }}" target="_blank">Weboldal megtekintése</a>
-        </div>
-    {% endif %}
+        {% block detailsContainerContact %}
+            {{ parent() }}
+            <div class="col-5 fs18">
+                <span class="ion ion-social-usd icon-sm project-dollar-sign icon-dark-gray"></span>
+            </div>
+            <div class="col-95 fs18">
+                {% if user.getMinNetHourlyWage() is not null %}
+                    {{ user.getMinNetHourlyWage()|number_format(0, '.', ' ') }} Ft /óra
+                {% else %}
+                    Nincs adat
+                {% endif %}
+            </div>
 
-    {% if user.cv_path %}
-        <div class="col-5 fs18">
-            <span class="ion ion-android-attach icon-sm icon-dark-gray"></span>
-        </div>
-        <div class="col-95 fs18">
-            <a href="{{ ROOT }}uploads/cv/{{ user.getCvPath() }}" download title="Szabaduszok.com - {{ user.getName() }}">Önéletrajz letöltése</a>
-        </div>
-    {% endif %}
+            <div class="col-5 fs18">
+                <span class="ion ion-email icon-dark-gray"></span>
+            </div>
+            <div class="col-95 fs18 profile-email-container">
+                <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
+            </div>
 
-{% endblock detailsContainerContact %}
+            {% if user.webpage %}
+                <div class="col-5 fs16 profile-webpage-icon-container">
+                    <span class="fa fa-chrome icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18 profile-webpage-container">
+                    <a href="{{ user.getWebpage() }}" target="_blank">Weboldal megtekintése</a>
+                </div>
+            {% endif %}
 
-{% block detailsContainerRelations %}
-    {{ parent() }}
-    <div class="col-5 fs18">
-        <span class="ion ion-wrench icon-dark-gray project-details-profeesion-sign"></span>
-    </div>
-    <div class="col-95 fs18">
-        {% for skill in user.getRelation("skills") %}
-            <span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
-        {% else %}
-            <span class="tag">Még nincs adat</span>
-        {% endfor %}
-    </div>
-{% endblock detailsContainerRelations %}
+            {% if user.cv_path %}
+                <div class="col-5 fs18">
+                    <span class="ion ion-android-attach icon-sm icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18">
+                    <a href="{{ ROOT }}uploads/cv/{{ user.getCvPath() }}" download title="Szabaduszok.com - {{ user.getName() }}">Önéletrajz letöltése</a>
+                </div>
+            {% endif %}
 
-{% block bottomContainer %}
-    {% if canSeeProjectNotification %}
-        <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
-            {{ searchPanel.build(container) }}
-        </form>
-    {% endif %}
-{% endblock bottomContainer %}
+        {% endblock detailsContainerContact %}
+
+        {% block detailsContainerRelations %}
+            {{ parent() }}
+            <div class="col-5 fs18">
+                <span class="ion ion-wrench icon-dark-gray project-details-profeesion-sign"></span>
+            </div>
+            <div class="col-95 fs18">
+                {% for skill in user.getRelation("skills") %}
+                    <span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
+                {% else %}
+                    <span class="tag">Még nincs adat</span>
+                {% endfor %}
+            </div>
+        {% endblock detailsContainerRelations %}
+
+        {% block bottomContainer %}
+            {% if canSeeProjectNotification %}
+                <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
+                    {{ searchPanel.build(container) }}
+                </form>
+            {% endif %}
+        {% endblock bottomContainer %}
+    {% endembed %}
+{% endblock profilePanel %}

@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller_User_Create extends Controller_User_Base implements Controller_User_Polymorph_Behaviour_Write
+abstract class Controller_User_Create extends Controller_User implements Controller_User_Polymorph_Behaviour_Write
 {
     /**
      * @var string

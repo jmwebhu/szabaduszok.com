@@ -2520,11 +2520,10 @@ class Kohana_ORM extends Model implements serializable {
 	
 	public function getAll()
 	{					            
-		$cache = Cache::instance();		
-		$collection = $cache->get($this->_table_name);		
+		$cache      = Cache::instance();
+		$collection = $cache->get($this->_table_name);
 		
-		if (!$collection)
-		{				
+		if (!$collection) {
 			$orm = ORM::factory($this->_object_name);
 			$collection = $orm->cacheAll();
 		}		

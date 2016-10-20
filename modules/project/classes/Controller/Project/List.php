@@ -150,7 +150,7 @@ class Controller_Project_List extends Controller_Project
              * @var $project Model_Project
              */
             $relations[$project->project_id]    = $project->getRelations();
-            $salaries[$project->project_id]     = Viewhelper_Project::getSalary(new Entity_Project($project->project_id));
+            $salaries[$project->project_id]     = Viewhelper_Project::getSalary(new Entity_Project($project));
             $users[$project->project_id]		= Arr::get($cacheUsers, $project->user_id);
         }
 

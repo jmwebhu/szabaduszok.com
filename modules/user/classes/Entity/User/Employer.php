@@ -58,16 +58,22 @@ class Entity_User_Employer extends Entity_User
     }
 
     /**
-     * @param int|null $id
+     * @param int|ORM|null $value
      */
-    public function __construct($id = null)
+    public function __construct($value = null)
     {
         parent::__construct();
-        $this->_model       = new Model_User_Employer($id);
+
+        if (is_object($value)) {
+            $this->_model       = $value;
+        } else {
+            $this->_model       = new Model_User_Employer($value);
+        }
+
         $this->_file        = new File_User_Employer($this->_model);
         $this->_business    = new Business_User_Employer($this->_model);
 
-        if ($id) {
+        if ($value) {
             $this->mapModelToThis();
         }
     }

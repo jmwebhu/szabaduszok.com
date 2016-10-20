@@ -31,4 +31,14 @@ class Model_User_Employer extends Model_User_Abstract
 
         return $result;
     }
+
+    /**
+     * @param $slug
+     * @return Model_User_Employer
+     */
+    public function getBySlug($slug)
+    {
+        $model = parent::getBySlug($slug);
+        return new Model_User_Employer($model->user_id);
+    }
 }

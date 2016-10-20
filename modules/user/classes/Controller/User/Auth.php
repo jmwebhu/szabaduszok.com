@@ -1,6 +1,6 @@
 <?php
 
-class Controller_User_Auth extends Controller_User_Base
+class Controller_User_Auth extends Controller_User
 {
     /**
      * @var string

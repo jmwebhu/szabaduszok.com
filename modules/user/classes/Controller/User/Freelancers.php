@@ -1,6 +1,6 @@
 <?php
 
-class Controller_User_Freelancers extends Controller_User_Base
+class Controller_User_Freelancers extends Controller_User
 {
     /**
      * @var Pager
@@ -27,6 +27,26 @@ class Controller_User_Freelancers extends Controller_User_Base
         $this->_user = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
     }
 
+    public function action_index()
+    {
+        try
+        {
+            $this->setPagerByRequest();
+            $this->handleRequest();
+            $this->setContext();
+
+        } catch (HTTP_Exception_403 $exforbidden) {
+            $exforbidden->setRedirectRoute($this->request->route());
+            $exforbidden->setRedirectSlug($this->request->param('slug'));
+
+            Session::instance()->set('error', $exforbidden->getMessage());
+            $this->defaultExceptionRedirect($exforbidden);
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+        }
+    }
+
     protected function setPagerByRequest()
     {
         $limit 			= Kohana::$config->load('users')->get('pagerLimit');
@@ -39,6 +59,8 @@ class Controller_User_Freelancers extends Controller_User_Base
             $limit,
             Route::url('freelancers')
         );
+
+
     }
 
     protected function handleRequest()
@@ -151,25 +173,5 @@ class Controller_User_Freelancers extends Controller_User_Base
         $this->context->pager                   = $this->_pager;
         $this->context->countMatchedFreelancers	= count($this->_matchedUsers);
         $this->context->countAllFreelancers	    = $this->_user->getCount();
-    }
-
-    public function action_index()
-    {
-        try
-        {
-            $this->setPagerByRequest();
-            $this->handleRequest();
-            $this->setContext();
-
-        } catch (HTTP_Exception_403 $exforbidden) {
-            $exforbidden->setRedirectRoute($this->request->route());
-            $exforbidden->setRedirectSlug($this->request->param('slug'));
-
-            Session::instance()->set('error', $exforbidden->getMessage());
-            $this->defaultExceptionRedirect($exforbidden);
-
-        } catch (Exception $ex) {
-            Log::instance()->addException($ex);
-        }
     }
 }

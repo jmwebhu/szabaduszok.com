@@ -1,6 +1,6 @@
 <?php
 
-abstract class Controller_User_Update extends Controller_User_Base implements Controller_User_Polymorph_Behaviour_Write
+abstract class Controller_User_Update extends Controller_User implements Controller_User_Polymorph_Behaviour_Write
 {
     /**
      * @var Authorization_User
@@ -13,9 +13,9 @@ abstract class Controller_User_Update extends Controller_User_Base implements Co
             $slug = $this->request->param('slug');
             $this->throwNotFoundExceptionIfNot($slug);
 
-            $userModel      = new Model_User();
+            $userModel      = Model_User::createUser($this->getUserType());
             $userModel      = $userModel->getBySlug($slug);
-            $this->_user    = Entity_User::createUser($this->getUserType(), $userModel->user_id);
+            $this->_user    = Entity_User::createUser($this->getUserType(), $userModel);
 
             $this->throwNotFoundExceptionIfNot($this->_user->loaded());
 

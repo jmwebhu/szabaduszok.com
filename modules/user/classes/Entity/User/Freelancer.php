@@ -76,16 +76,22 @@ class Entity_User_Freelancer extends Entity_User
     }
 
     /**
-     * @param int|null $id
+     * @param null|int|ORM $value
      */
-    public function __construct($id = null)
+    public function __construct($value = null)
     {
         parent::__construct();
-        $this->_model       = new Model_User_Freelancer($id);
+
+        if (is_object($value)) {
+            $this->_model       = $value;
+        } else {
+            $this->_model       = new Model_User_Freelancer($value);
+        }
+
         $this->_file        = new File_User_Freelancer($this->_model);
         $this->_business    = new Business_User_Freelancer($this->_model);
 
-        if ($id) {
+        if ($value) {
             $this->mapModelToThis();
         }
     }

@@ -167,4 +167,42 @@ class ORM extends Kohana_ORM
 
         return $sb->get('');
     }
+
+    public function getRelationBy($name)
+    {
+        if ($this->isRelationHasMany($name)) {
+            $through = $this->getHasManyThrough($name);
+
+            if ($through) {
+                $cache = Cache::instance()->get($through);
+
+                if (empty($cache)) {
+                    return $this->{$name}->find_all();
+                }
+
+                return Arr::get($cache, $this->{$this->_primary_key});
+
+            } else {
+                return $this->{$name}->find_all();
+            }
+
+        } else {
+            return $this->{$name};
+        }
+    }
+
+    protected function isRelationHasMany($relation)
+    {
+        if (Arr::get($this->has_many(), $relation)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getHasManyThrough($relation)
+    {
+        $hasMany = Arr::get($this->has_many(), $relation);
+        return Arr::get($hasMany, 'through');
+    }
 }

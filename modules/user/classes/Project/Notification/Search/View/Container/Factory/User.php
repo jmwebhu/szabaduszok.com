@@ -18,7 +18,7 @@ class Project_Notification_Search_View_Container_Factory_User
 
         foreach ($industries as $industry) {
             $industryItem = new Search_View_Container_Relation_Item(
-                new Model_Industry($industry['id']),
+                Cache::instance()->get('industries')[$industry['id']],
                 Search_View_Container_Relation_Item::TYPE_INDUSTRY,
                 $industry['selected']);
 
@@ -46,8 +46,14 @@ class Project_Notification_Search_View_Container_Factory_User
         $class = 'Model_' . ucfirst($name);
 
         foreach ($items as $item) {
+            $itemModel = Cache::instance()->get(lcfirst($name) . 's')[$item['id']];
+
+            if (!$itemModel || !$itemModel->loaded()) {
+                $itemModel = new $class($item['id']);
+            }
+
             $containerItem = new Search_View_Container_Relation_Item(
-                new $class($item['id']), $type, !empty($item['selected']));
+                $itemModel, $type, !empty($item['selected']));
 
             self::$_relationContainer->addItem($containerItem, $type);
         }

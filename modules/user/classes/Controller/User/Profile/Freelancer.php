@@ -11,6 +11,14 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
     }
 
     /**
+     * @return Model_User_Freelancer
+     */
+    public function getUserModel()
+    {
+        return new Model_User_Freelancer();
+    }
+
+    /**
      * @return string
      */
     public function getTitle()
