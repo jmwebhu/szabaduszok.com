@@ -13,7 +13,7 @@
 interface Search
 {
     /**
-     * @return array
+     * return array
      */
     public function search();
 

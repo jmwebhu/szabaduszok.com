@@ -34,7 +34,7 @@ class Controller_User_Freelancers extends Controller_User_Base
         $this->_offset  = (($currentPage - 1) * $limit);
 
         $this->_pager = new Pager(
-            AB::select()->from(new Model_User())->where('type', '=', Entity_User::TYPE_FREELANCER)->where('is_active', '=', 1)->execute()->as_array(),
+            AB::select()->from(new Model_User())->where('type', '=', Entity_User::TYPE_FREELANCER)->execute()->as_array(),
             $currentPage,
             $limit,
             Route::url('freelancers')
@@ -148,9 +148,9 @@ class Controller_User_Freelancers extends Controller_User_Base
 
     protected function setContextPager()
     {
-        $this->context->pager               = $this->_pager;
-        $this->context->countProjects		= count($this->_matchedUsers);
-        $this->context->countAllProjects	= $this->_user->getCount();
+        $this->context->pager                   = $this->_pager;
+        $this->context->countMatchedFreelancers	= count($this->_matchedUsers);
+        $this->context->countAllFreelancers	    = $this->_user->getCount();
     }
 
     public function action_index()

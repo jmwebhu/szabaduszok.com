@@ -123,7 +123,7 @@ abstract class Search_View_Container
      */
     protected function getClearButtonHtml()
     {
-        return "<a id=\"empty-form\" class=\"bloc-button btn-block btn btn-lg btn-gray btn-d\" href=\"" . Route::url('projectList') . "\">
+        return "<a id=\"empty-form\" class=\"bloc-button btn-block btn btn-lg btn-gray btn-d\" href=\"" . $this->getComplexFormAction() . "\">
                         <span class=\"ion ion-android-cancel icon-spacer icon-white\"></span>Ürít
                     </a>";
     }

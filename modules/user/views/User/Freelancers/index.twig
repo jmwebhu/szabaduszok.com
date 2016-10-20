@@ -16,19 +16,19 @@
 				<div class="row">
 					<div class="col-sm-12 text-center" id="list-results">
 						<p class=" project-count-paragraph">
-							Összes Szabadúszó: <span class="bold">{{ countAllUsers }}</span>
+							Összes Szabadúszó: <span class="bold">{{ countAllFreelancers }}</span>
 						</p>
-						{% if current %}
+                        {% if needPager == false %}
 						<p class=" project-count-paragraph">
-							Keresési találatok száma: <span class="bold">{{ countUsers }}</span>
+							Keresési találatok száma: <span class="bold">{{ countMatchedFreelancers }}</span>
 						</p>
 						{% endif %}
 					</div>					
 				</div>
 				
-				{% include 'User/parts/_pager.twig' %}
+				{{ pagerPanel.build(pager, needPager) }}
 				{% include 'User/parts/_list.twig' %}
-				{% include 'User/parts/_pager.twig' %}					
+                {{ pagerPanel.build(pager, needPager) }}
 			</div>
 		</div>
 	</div>

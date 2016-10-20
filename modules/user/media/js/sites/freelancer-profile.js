@@ -30,7 +30,9 @@ var FreelancerProfile = {
 		this.$rateButton.click(FreelancerProfile.rateClick);
 		this.$saveProjectNotification.click(FreelancerProfile.saveProjectNotificationClick);
 	},
-	addWidgets: function () {		
+	addWidgets: function () {
+		console.log(FreelancerProfile.$initialRating.val());
+
 		FreelancerProfile.$rating.barrating({
 	        theme: 'fontawesome-stars',
 	        initialRating: FreelancerProfile.$initialRating.val(),

@@ -517,4 +517,12 @@ abstract class Entity_User extends Entity
     {
         return $this->_model->saveProjectNotification($data);
     }
+
+    /**
+     * @return Search
+     */
+    public function search()
+    {
+        return $this->_search->search();
+    }
 }

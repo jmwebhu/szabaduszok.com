@@ -13,7 +13,7 @@
                     {{ user.getName() }}
                 </h1>
 
-                <input type="hidden" value="{{ user.rating_points_avg }}" id="initial-rating">
+                <input type="hidden" value="{{ user.getRatingPointsAvg()|number_format(0) }}" id="initial-rating">
                 <input type="hidden" value="{{ canRate }}" id="can-rate">
 
                 <div class="panel">
