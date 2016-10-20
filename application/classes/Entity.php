@@ -106,6 +106,21 @@ abstract class Entity
     }
 
     /**
+     * @param array $models
+     * @return array
+     */
+    public function getEntitiesFromModels(array $models)
+    {
+        $entities = [];
+        foreach ($models as $model) {
+            $class      = 'Entity_' . $this->getEntityName();
+            $entities[] = new $class($model->project_id);
+        }
+
+        return $entities;
+    }
+
+    /**
      * @return bool
      */
     public function save()
@@ -177,17 +192,13 @@ abstract class Entity
      */
     protected function getEntityName()
     {
-        $class = get_class($this);
-        $parts = explode('_', $class);
+        $class  = get_class($this);
+        $parts  = explode('_', $class);
 
-        switch (count($parts)) {
-            case 2: default:
-                $name = Arr::get($parts, 1, '');
-                break;
-
-            case 4:     // Mock_Entity_Project_d0f10a18
-                $name = Arr::get($parts, 2, '');
-                break;
+        if (strpos($class, 'Mock')) {
+            $name = implode('_', array_slice($parts, 1, count($parts) - 2));
+        } else {
+            $name = implode('_', array_slice($parts, 1));
         }
 
         return $name;

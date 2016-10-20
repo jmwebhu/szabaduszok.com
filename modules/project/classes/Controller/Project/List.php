@@ -16,15 +16,6 @@ class Controller_Project_List extends Controller_Project
      */
     private $_pager;
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     */
-    public function __construct(Request $request, Response $response)
-    {
-        parent::__construct($request, $response);
-    }
-
     public function action_index()
     {
         try {
@@ -103,6 +94,10 @@ class Controller_Project_List extends Controller_Project
         $this->_matchedProjects = $this->_project->getOrderedAndLimited($this->_pager->getLimit(), $this->_offset);
     }
 
+    /**
+     * @param array $postProfessions
+     * @param array $postSkills
+     */
     protected function setContainerToComplexSearch(array $postProfessions, array $postSkills)
     {
         $industry = new Model_Industry();
@@ -168,8 +163,7 @@ class Controller_Project_List extends Controller_Project
 
     protected function setContextPager()
     {
-        $this->context->pager = $this->_pager;
-
+        $this->context->pager               = $this->_pager;
         $this->context->countProjects		= count($this->_matchedProjects);
         $this->context->countAllProjects	= $this->_project->getCount();
     }

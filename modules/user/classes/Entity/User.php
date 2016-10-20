@@ -13,6 +13,11 @@ abstract class Entity_User extends Entity
     protected $_file;
 
     /**
+     * @var Search
+     */
+    protected $_search;
+
+    /**
      * @var int
      */
     protected $_user_id;
@@ -380,6 +385,14 @@ abstract class Entity_User extends Entity
     public function setProfilePicturePath($profile_picture_path)
     {
         $this->_profile_picture_path = $profile_picture_path;
+    }
+
+    /**
+     * @param Search $search
+     */
+    public function setSearch(Search $search)
+    {
+        $this->_search = $search;
     }
 
     /**

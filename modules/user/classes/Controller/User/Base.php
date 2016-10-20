@@ -40,6 +40,18 @@ abstract class Controller_User_Base extends Controller_DefaultTemplate
     }
 
     /**
+     * @param bool $expression
+     * @param string $message
+     * @throws HTTP_Exception_403
+     */
+    protected function throwForbiddenExceptionIfNot($expression, $message)
+    {
+        if (!$expression) {
+            throw new HTTP_Exception_403($message);
+        }
+    }
+
+    /**
      * @param string $contextError
      */
     protected function handleSessionError($contextError = 'session_error')

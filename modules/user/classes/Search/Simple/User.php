@@ -6,7 +6,7 @@
  * Felelosseg: Egyszeru kereses
  */
 
-class Search_Simple_Project extends Search_Simple
+class Search_Simple_User extends Search_Simple
 {
     /**
      * @return Model_User

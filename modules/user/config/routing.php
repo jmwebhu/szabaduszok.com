@@ -38,8 +38,8 @@ Route::set('projectOwnerProfile', 'megbizo/<slug>')
 
 Route::set('freelancers', 'szabaduszok(/<page>)')
 	->defaults([
-		'controller'    => 'User',
-		'action'        => 'freelancers'
+		'controller'    => 'User_Freelancers',
+		'action'        => 'index'
 ]);
 
 Route::set('login', 'szabaduszok-belepes')
@@ -63,7 +63,7 @@ Route::set('passwordReminder', 'szabaduszok-elfelejtett-jelszo')
 
 Route::set('userPasswordreminder', 'szabaduszok-jelszo-emlekezteto')
     ->defaults([
-        'controller'    => 'User',
+        'controller'    => 'User_Auth',
         'action'        => 'passwordreminder'
     ]);
 

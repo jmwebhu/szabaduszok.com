@@ -103,11 +103,7 @@ class Authorization_User extends Authorization
 	 */
 	public function canSeeFreelancers()
 	{
-		if (Auth::instance()->get_user())
-		{
-			return true;
-		}
-		
-		return false;
+	    $user = Auth::instance()->get_user();
+		return $user->loaded();
 	}
 }

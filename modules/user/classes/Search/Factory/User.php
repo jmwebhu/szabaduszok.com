@@ -10,7 +10,6 @@ class Search_Factory_User implements Search_Factory
     {
         // Reszletes kereses
         if (Arr::get($data, 'complex')) {
-
             $industryIds    = Arr::get($data, 'industries', []);
             $professionIds  = Arr::get($data, 'professions', []);
             $skillIds       = Arr::get($data, 'skills', []);

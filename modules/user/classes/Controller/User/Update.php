@@ -20,7 +20,7 @@ abstract class Controller_User_Update extends Controller_User_Base implements Co
             $this->throwNotFoundExceptionIfNot($this->_user->loaded());
 
             $this->_authorization = new Authorization_User($userModel);
-            $this->throwForbiddenExceptionIfNot($this->_authorization->canEdit());
+            $this->throwForbiddenExceptionIfNot($this->_authorization->canEdit(), 'Nincs jogosultságod a profil szerkesztéséhez');
 
             $this->setContext();
             $this->handlePostRequest();
@@ -58,17 +58,6 @@ abstract class Controller_User_Update extends Controller_User_Base implements Co
                     die();
                 }
             }
-        }
-    }
-
-    /**
-     * @param bool $expression
-     * @throws HTTP_Exception_403
-     */
-    protected function throwForbiddenExceptionIfNot($expression)
-    {
-        if (!$expression) {
-            throw new HTTP_Exception_403('Nincs jogosultságod a profil szerkesztéséhez');
         }
     }
 

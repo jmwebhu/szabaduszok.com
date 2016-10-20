@@ -437,20 +437,6 @@ class Entity_Project extends Entity
     }
 
     /**
-     * @param array $models
-     * @return array
-     */
-    public function getEntitiesFromModels(array $models)
-    {
-        $entities = [];
-        foreach ($models as $model) {
-            $entities[] = new Entity_Project($model->project_id);
-        }
-
-        return $entities;
-    }
-
-    /**
      * @param array $data
      * @return Entity_Project
      */
