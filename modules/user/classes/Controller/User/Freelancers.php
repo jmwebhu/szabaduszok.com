@@ -139,6 +139,11 @@ class Controller_User_Freelancers extends Controller_User_Base
         $this->context->users	    = $this->_user->getEntitiesFromModels($this->_matchedUsers);
 
         $this->setContextPager();
+        $industry = new Model_Industry();
+
+        if (!isset($this->context->container)) {
+            $this->context->container = Search_View_Container_Factory_User::createContainer(['current' => 'complex', 'industries' => $industry->getAll()]);
+        }
     }
 
     protected function setContextPager()
@@ -152,36 +157,19 @@ class Controller_User_Freelancers extends Controller_User_Base
     {
         try
         {
-            try {
-                $this->setPagerByRequest();
-                $this->handleRequest();
-                $this->setContext();
+            $this->setPagerByRequest();
+            $this->handleRequest();
+            $this->setContext();
 
-            } catch (Exception $ex) {
-                Log::instance()->addException($ex);
-            }
-        }
-        catch (HTTP_Exception_403 $exforbidden)		// Forbidden, nincs jogosultsag
-        {
+        } catch (HTTP_Exception_403 $exforbidden) {
             $exforbidden->setRedirectRoute($this->request->route());
             $exforbidden->setRedirectSlug($this->request->param('slug'));
 
             Session::instance()->set('error', $exforbidden->getMessage());
             $this->defaultExceptionRedirect($exforbidden);
-        }
-        catch (Exception $ex)
-        {
-            $errorLog = new Model_Errorlog();
-            $errorLog->log($ex);
 
-            $result = ['error' 	=> true];
-        }
-        finally
-        {
-            if ($this->request->method() == Request::POST)
-            {
-                Model_Database::trans_end([!Arr::get($result, 'error')]);
-            }
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
         }
     }
 }

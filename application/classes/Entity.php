@@ -114,7 +114,7 @@ abstract class Entity
         $entities = [];
         foreach ($models as $model) {
             $class      = 'Entity_' . $this->getEntityName();
-            $entities[] = new $class($model->project_id);
+            $entities[] = new $class($model->{$model->primary_key()});
         }
 
         return $entities;

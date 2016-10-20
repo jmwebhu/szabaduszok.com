@@ -1,4 +1,6 @@
 {% extends "Templates/default.twig" %}
+{% import "Search/panel.twig" as searchPanel %}
+{% import "Pager/panel.twig" as pagerPanel %}
 
 {% block content %}
 <div class="bloc tc-black bgc-anti-flash-white l-bloc" id="bloc-13">
@@ -8,109 +10,8 @@
 				<h1 class="mg-md text-center tc-black">
 					Szabadúszók
 				</h1>
-				
-				<div class="panel">
-					<div class="panel-heading">
-						<h2 class="mg-clear tc-black">
-							Szabadúszó kereső
-						</h2>
-					</div>
-					<div class="panel-body">
-							<ul class="nav nav-tabs" data-current="{{ current }}">
-								<li data-content="complex" class="active"><span class="ion ion-settings icon-dark-gray hidden-xs"></span>Részletes</li>
-								<li data-content="simple"><span class="ion ion-search icon-dark-gray hidden-xs"></span>Egyszerű</li>								
-							</ul>						
-							
-							<div class="tab-content">
-								<div id="complex" class="tab-pane fade in active">
-								
-									<form id="complex-search-form" method="POST" action="{{ ROOT }}szabaduszok">
-										
-										<input type="hidden" name="complex" value="1">
 
-										<span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
-										<p class="search-form-paragraph">
-											Mutasd azokat a Szabadúszókat, akik az alábbi <span class="bold">iparágakban</span> dolgoznak:
-										</p>
-										
-										<div class="form-group">
-											<select class="form-control" name="industries[]" id="industries" multiple>
-											{% for industry in industries %}
-											<option value="{{ industry.industry_id }}" {% if industry.industry_id in postIndustries %}selected{% endif %}>{{ industry.name }}</option>
-											{% endfor %}
-											</select>
-										</div>
-										
-										<span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
-										<p class="search-form-paragraph">
-											ÉS a következő <span class="bold">szakterületekhez</span> értenek:
-										</p>
-										<div class="form-group">									
-				 							<select id="professions" class="form-control" name="professions[]" multiple="multiple">
-				 							{% for profession in postProfessions %}
-											<option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
-											{% endfor %}
-				 							</select>
-										</div>
-										
-										<span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
-										<p class="search-form-paragraph">
-											ÉS az alábbi <span class="bold">képességek:</span>
-										</p>
-										<div class="form-group">										
-											<select id="skills" class="form-control" name="skills[]" multiple="multiple">
-											{% for skill in postSkills %}
-											<option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
-											{% endfor %}
-											</select>																								
-										</div>
-										<select class="form-control" name="skill_relation" id="skill-relation">
-											<option value="1" {% if postSkillRelation == 1 %}selected{% endif %}>Bármelyikében (VAGY kapcsolat)</option>
-											<option value="2" {% if postSkillRelation == 2 %}selected{% endif %}>Mindegyikében (ÉS kapcsolat)</option>
-										</select>
-										<p class="search-form-paragraph">
-											jártasak.
-										</p>
-										
-										<button id="complex-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
-											<span class="ion ion-search icon-spacer icon-white"></span>Mehet
-										</button>
-										<a id="empty-form" class="bloc-button btn-block btn btn-lg btn-gray btn-d" href="{{ ROOT }}szabaduszok">
-											<span class="ion ion-android-cancel icon-spacer icon-white"></span>Ürít
-										</a>														
-									</form>																		
-								</div>
-								<!-- complex END -->								
-								
-								<div id="simple" class="tab-pane fade">
-								
-									<form id="simple-search-form" method="POST" action="{{ ROOT }}szabaduszok">
-									
-										<input type="hidden" name="simple" value="1">
-										
-										<p class="search-form-paragraph">
-											Mutasd azokat a Szabadúszókat, akiknek a profiljábam megtalálható az alábbi <span class="bold">kifejezés</span>:
-										</p>
-										
-										<div class="form-group">
-											<input class="form-control" id="search-term" name="search_term" placeholder="Keresett kifejezés" value="{{ searchTerm }}">
-										</div>
-										
-										<button id="simple-submit" class="mt bloc-button btn-block btn btn-lg btn-lime-green" type="submit">
-											<span class="ion ion-search icon-spacer icon-white"></span>Mehet
-										</button>
-										<a id="empty-form" class="bloc-button btn-block btn btn-lg btn-gray btn-d" href="{{ ROOT }}szabaduszok">
-											<span class="ion ion-android-cancel icon-spacer icon-white"></span>Ürít
-										</a>														
-									</form>
-									
-								</div>
-								<!-- simple END -->		
-																
-							</div>														
-						
-					</div>
-				</div>				
+				{{ searchPanel.build(container) }}
 				
 				<div class="row">
 					<div class="col-sm-12 text-center" id="list-results">

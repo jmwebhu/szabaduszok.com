@@ -17,4 +17,17 @@ class Search_View_Container_User extends Search_View_Container
     {
         return 'Szabadúszó kereső';
     }
+
+    /**
+     * @return string
+     */
+    public function getComplexFormAction()
+    {
+        return Route::url('freelancers');
+    }
+
+    public function getSimpleFormAction()
+    {
+        return $this->getComplexFormAction();
+    }
 }

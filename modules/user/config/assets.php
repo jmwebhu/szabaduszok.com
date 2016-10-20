@@ -61,8 +61,8 @@ AssetManager::instance()
         ->addAction('login')
             ->addJs(['login'])
 
-    ->addController('user')
-        ->addAction('freelancers')        	
+    ->addController('user_freelancers')
+        ->addAction('index')
         	->addJs(['barrating', 'freelancers'])
         	->addCss(['font-awesome-stars'])
 ;
