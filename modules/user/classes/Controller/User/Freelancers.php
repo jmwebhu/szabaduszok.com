@@ -12,6 +12,26 @@ class Controller_User_Freelancers extends Controller_List
         $this->_entity = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
     }
 
+    public function action_index()
+    {
+        try
+        {
+            $authorization = new Authorization_User();
+            $this->throwForbiddenExceptionIfNot($authorization->canSeeFreelancers(), 'Szabadúszóink megtekintéséhez, kérjük először lépj be.');
+
+            $this->tryBody();
+
+        } catch (HTTP_Exception_403 $exforbidden) {
+            $exforbidden->setRedirectRoute($this->request->route());
+
+            Session::instance()->set('error', $exforbidden->getMessage());
+            $this->defaultExceptionRedirect($exforbidden);
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+        }
+    }
+
     protected function doSearch()
     {
         $this->_entity->setSearch(Search_Factory_User::makeSearch(Input::post_all()));
@@ -42,26 +62,14 @@ class Controller_User_Freelancers extends Controller_List
         return Search_View_Container_Factory_User::class;
     }
 
-    public function action_index()
+    /**
+     * @return string
+     */
+    protected function getPagerLimitConfig()
     {
-        try
-        {
-            $authorization = new Authorization_User();
-            $this->throwForbiddenExceptionIfNot($authorization->canSeeFreelancers(), 'Szabadúszóink megtekintéséhez, kérjük először lépj be.');
-
-            $this->tryBody();
-
-        } catch (HTTP_Exception_403 $exforbidden) {
-            $exforbidden->setRedirectRoute($this->request->route());
-            $exforbidden->setRedirectSlug($this->request->param('slug'));
-
-            Session::instance()->set('error', $exforbidden->getMessage());
-            $this->defaultExceptionRedirect($exforbidden);
-
-        } catch (Exception $ex) {
-            Log::instance()->addException($ex);
-        }
+        return Kohana::$config->load('users')->get('pagerLimit');
     }
+
 
     protected function handleGetRequest()
     {

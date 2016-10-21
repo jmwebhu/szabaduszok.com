@@ -52,6 +52,11 @@ abstract class Controller_List extends Controller_DefaultTemplate
      */
     abstract protected function setContext();
 
+    /**
+     * @return string
+     */
+    abstract protected function getPagerLimitConfig();
+
     protected function tryBody()
     {
         $this->setPagerByRequest();
@@ -61,7 +66,7 @@ abstract class Controller_List extends Controller_DefaultTemplate
 
     protected function setPagerByRequest()
     {
-        $limit 			= Kohana::$config->load('users')->get('pagerLimit');
+        $limit 			= $this->getPagerLimitConfig();
         $currentPage 	= $this->request->param('page') ? $this->request->param('page') : 1;
         $this->_offset  = (($currentPage - 1) * $limit);
 

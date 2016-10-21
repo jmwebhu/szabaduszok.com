@@ -17,6 +17,16 @@ class Controller_Project_List extends Controller_List
         $this->_entity = new Entity_Project();
     }
 
+    public function action_index()
+    {
+        try {
+            $this->tryBody();
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+        }
+    }
+
     protected function doSearch()
     {
         $this->_entity->setSearch(Search_Factory_Project::makeSearch(Input::post_all()));
@@ -47,15 +57,14 @@ class Controller_Project_List extends Controller_List
         return Search_View_Container_Factory_Project::class;
     }
 
-    public function action_index()
+    /**
+     * @return string
+     */
+    protected function getPagerLimitConfig()
     {
-        try {
-            $this->tryBody();
-
-        } catch (Exception $ex) {
-            Log::instance()->addException($ex);
-        }
+        return Kohana::$config->load('projects')->get('pagerLimit');
     }
+
 
     protected function handleGetRequest()
     {
