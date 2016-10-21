@@ -24,7 +24,6 @@ abstract class Controller_User extends Controller_DefaultTemplate
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
-
         $this->_error       = false;
     }
 
@@ -44,7 +43,7 @@ abstract class Controller_User extends Controller_DefaultTemplate
      * @param string $message
      * @throws HTTP_Exception_403
      */
-    protected function throwForbiddenExceptionIfNot($expression, $message)
+    protected function throwForbiddenExceptionIfNot($expression, $message = 'Nincs jogosultságod az odal megtekintéséhez')
     {
         if (!$expression) {
             throw new HTTP_Exception_403($message);

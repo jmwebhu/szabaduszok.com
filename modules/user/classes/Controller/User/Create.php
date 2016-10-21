@@ -14,7 +14,8 @@ abstract class Controller_User_Create extends Controller_User implements Control
     public function __construct(Request $request, Response $response)
     {
         parent::__construct($request, $response);
-        $this->_email = Input::get('email');
+        $this->_email   = Input::get('email');
+        $this->_user    = Entity_User::createUser($this->getUserType());
     }
 
     public function action_index()
@@ -54,7 +55,7 @@ abstract class Controller_User_Create extends Controller_User implements Control
 
     protected function setContext()
     {
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
+        $viewhelper                         = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
         $this->context->pageTitle			= $this->context->title = $viewhelper->getPageTitle();
         $this->context->hasPrivacyCheckbox	= $viewhelper->hasPrivacyCheckbox();
         $this->context->passwordText		= $viewhelper->getPasswordText();

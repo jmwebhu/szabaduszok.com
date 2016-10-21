@@ -6,17 +6,17 @@
  * Felelosseg: Projekt profil keres kiszolgalasa
  */
 
-class Controller_Project_Profile extends Controller_DefaultTemplate
+class Controller_Project_Profile extends Controller_User
 {
     /**
      * @var Entity_Project
      */
-    private $_project;
+    protected $_project;
 
     /**
      * @var Model_User
      */
-    private $_user;
+    protected $_user;
 
     /**
      * @param Request $request
@@ -34,11 +34,17 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
     public function action_index()
     {
         try {
+            $loggedIn = Auth::instance()->get_user();
+            $this->throwForbiddenExceptionIfNot($loggedIn->loaded());
+
             $this->throwExceptionIfNotVisible();
             $this->setContext();
 
+        } catch (HTTP_Exception_403 $exforbidden) {
+            $this->handleException400($exforbidden);
+
         } catch (HTTP_Exception_404 $exnf) {
-            $this->handleNotFoundException($exnf);
+            $this->handleException400($exnf);
 
         } catch (Exception $ex) {
             $this->handleException($ex);
@@ -56,12 +62,12 @@ class Controller_Project_Profile extends Controller_DefaultTemplate
     }
 
     /**
-     * @param HTTP_Exception_404 $exnf
+     * @param HTTP_Exception
      */
-    protected function handleNotFoundException(HTTP_Exception_404 $exnf)
+    protected function handleException400(HTTP_Exception $ex)
     {
-        Session::instance()->set('error', $exnf->getMessage());
-        $this->defaultExceptionRedirect($exnf);
+        Session::instance()->set('error', $ex->getMessage());
+        $this->defaultExceptionRedirect($ex);
     }
 
     /**

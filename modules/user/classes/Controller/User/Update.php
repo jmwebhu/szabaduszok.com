@@ -7,6 +7,16 @@ abstract class Controller_User_Update extends Controller_User implements Control
      */
     protected $_authorization;
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     */
+    public function __construct(Request $request, Response $response)
+    {
+        parent::__construct($request, $response);
+        $this->_user = Entity_User::createUser($this->getUserType());
+    }
+
     public function action_index()
     {
         try {
