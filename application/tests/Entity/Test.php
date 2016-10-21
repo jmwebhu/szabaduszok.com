@@ -36,6 +36,53 @@ class Entity_Test extends Unittest_TestCase
     }
 
     /**
+     * @covers Entity::mapModelToThis()
+     */
+    public function testMapModelToThis()
+    {
+        $this->givenTestModelWithId(1);
+        $entity = new Entity_Project();
+
+        $this->invokeMethod($entity, 'mapModelToThis');
+        $this->_model = $this->_entity->getModel();
+
+        $this->thenEntityShouldEqualsTo();
+    }
+
+    /**
+     * @covers Entity::map()
+     */
+    public function testMapOk()
+    {
+        $this->givenTestEntityWithId(1);
+        $project = new Model_Project();
+
+        $this->invokeMethod($this->_entity, 'setDestinationObject', [$project]);
+        $this->invokeMethod($this->_entity, 'setTargetObject', [$this->_entity]);
+
+        $result = $this->invokeMethod($this->_entity, 'map');
+        $this->_model = $this->_entity->getModel();
+
+        $this->thenEntityShouldEqualsTo();
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @covers Entity::map()
+     */
+    public function testMapNotOk()
+    {
+        $this->givenTestEntityWithId(1);
+
+        $this->invokeMethod($this->_entity, 'setDestinationObject', ['adf']);
+        $this->invokeMethod($this->_entity, 'setTargetObject', [$this->_entity]);
+
+        $result = $this->invokeMethod($this->_entity, 'map');
+
+        $this->assertFalse($result);
+    }
+
+    /**
      * @covers Entity::mapThisToStdObject
      */
     public function testMapThisToStdObject()
@@ -180,6 +227,84 @@ class Entity_Test extends Unittest_TestCase
         $this->invokeMethod($entity, 'setPrimaryKeyFromModel', []);
 
         $this->assertEquals(1, $entity->getProjectId());
+    }
+
+    /**
+     * @covers Entity::mapProperties()
+     */
+    public function testMapPropertiesFromModelToEntity()
+    {
+        $this->givenTestModelWithId(10);
+        $this->_entity = new Entity_Project();
+
+        $this->invokeMethod($this->_entity, 'setDestinationObject', [$this->_model]);
+        $this->invokeMethod($this->_entity, 'setTargetObject', [$this->_entity]);
+
+        $this->invokeMethod($this->_entity, 'mapProperties', []);
+
+        $this->thenEntityShouldEqualsTo($this->_model);
+    }
+
+    /**
+     * @covers Entity::mapProperties()
+     */
+    public function testMapPropertiesFromEntityToModel()
+    {
+        $this->givenTestEntityWithId(10);
+        $this->_model = new Model_Project();
+
+        $this->invokeMethod($this->_entity, 'setDestinationObject', [$this->_entity]);
+        $this->invokeMethod($this->_entity, 'setTargetObject', [$this->_model]);
+
+        $this->invokeMethod($this->_entity, 'mapProperties', []);
+
+        $this->thenEntityShouldEqualsTo($this->_model);
+    }
+
+    /**
+     * @covers Entity::__construct()
+     */
+    public function testConstructEmptyOk()
+    {
+        $entity = new Entity_Project();
+
+        $this->invokeMethod($entity, '__construct', []);
+
+        $this->assertTrue($entity->getModel() instanceof Model_Project);
+        $this->assertTrue($entity->getBusiness() instanceof Business_Project);
+        $this->assertEmpty($entity->getProjectId());
+    }
+
+    /**
+     * @covers Entity::__construct()
+     */
+    public function testConstructModelOk()
+    {
+        $entity = new Entity_Project();
+        $model = new Model_Project();
+        $model->project_id = 1;
+
+        $this->invokeMethod($entity, '__construct', [$model]);
+
+        $this->assertTrue($entity->getModel() instanceof Model_Project);
+        $this->assertTrue($entity->getBusiness() instanceof Business_Project);
+        $this->assertEquals(1, $entity->getProjectId());
+        $this->assertEquals($model, $entity->getModel());
+    }
+
+    /**
+     * @covers Entity::__construct()
+     */
+    public function testConstructIdOk()
+    {
+        $entity = new Entity_Project();
+        $project = new Model_Project(1);
+
+        $this->invokeMethod($entity, '__construct', [1]);
+
+        $this->assertTrue($entity->getModel() instanceof Model_Project);
+        $this->assertTrue($entity->getBusiness() instanceof Business_Project);
+        $this->assertEquals($project->project_id, $entity->getProjectId());
     }
 
     protected function givenTestEntityWithId($id)
