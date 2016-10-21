@@ -60,8 +60,8 @@ class Text_User
      */
     protected static function addHttpTo($url)
     {
-        $urlWithHttp = $url;
-        $hasHttp = !(stripos($url, 'http://') === false && stripos($url, 'https://') === false);
+        $urlWithHttp    = $url;
+        $hasHttp        = !(stripos($url, 'http://') === false && stripos($url, 'https://') === false);
 
         if (!$hasHttp) {
             $urlWithHttp = 'http://' . $url;

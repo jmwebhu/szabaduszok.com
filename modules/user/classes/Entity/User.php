@@ -463,6 +463,7 @@ abstract class Entity_User extends Entity
 
     /**
      * @param int $type
+     * @param int|null $id
      * @return Entity_User
      */
     public static function createUser($type, $id = null)
@@ -474,6 +475,8 @@ abstract class Entity_User extends Entity
             case self::TYPE_EMPLOYER:
                 return new Entity_User_Employer($id);
         }
+
+        Assert::neverShouldReachHere();
     }
 
     /**
