@@ -28,29 +28,6 @@ abstract class Controller_User extends Controller_DefaultTemplate
     }
 
     /**
-     * @param bool $expression
-     * @throws HTTP_Exception_404
-     */
-    protected function throwNotFoundExceptionIfNot($expression)
-    {
-        if (!$expression) {
-            throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
-        }
-    }
-
-    /**
-     * @param bool $expression
-     * @param string $message
-     * @throws HTTP_Exception_403
-     */
-    protected function throwForbiddenExceptionIfNot($expression, $message = 'Nincs jogosultságod az odal megtekintéséhez')
-    {
-        if (!$expression) {
-            throw new HTTP_Exception_403($message);
-        }
-    }
-
-    /**
      * @param string $contextError
      */
     protected function handleSessionError($contextError = 'session_error')

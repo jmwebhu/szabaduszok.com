@@ -104,4 +104,27 @@ class Controller_DefaultTemplate extends Controller_Twig
     	header('Location: ' . $url, true, 302);
     	die();
     }
+
+    /**
+     * @param bool $expression
+     * @throws HTTP_Exception_404
+     */
+    protected function throwNotFoundExceptionIfNot($expression)
+    {
+        if (!$expression) {
+            throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
+        }
+    }
+
+    /**
+     * @param bool $expression
+     * @param string $message
+     * @throws HTTP_Exception_403
+     */
+    protected function throwForbiddenExceptionIfNot($expression, $message = 'Nincs jogosultságod az odal megtekintéséhez')
+    {
+        if (!$expression) {
+            throw new HTTP_Exception_403($message);
+        }
+    }
 }
