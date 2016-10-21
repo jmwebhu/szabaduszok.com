@@ -87,6 +87,101 @@ class Entity_Test extends Unittest_TestCase
         $this->assertEquals('ProjectMock', $nameOwnMock);
     }
 
+    /**
+     * @covers Entity::getEntitiesFromModels(
+     */
+    public function testGetEntitiesFromModels()
+    {
+        $project1 = new Model_Project();
+        $project1->project_id = 1;
+
+        $project2 = new Model_Project();
+        $project2->project_id = 2;
+
+        $projects = [
+            $project1, $project2
+        ];
+
+        $entity = new Entity_Project();
+        $entities = $entity->getEntitiesFromModels($projects);
+
+        $this->assertEquals(1, $entities[0]->getProjectId());
+        $this->assertEquals(2, $entities[1]->getProjectId());
+    }
+
+    /**
+     * @covers Entity::validateObjects()
+     */
+    public function testValidateObjectsOk()
+    {
+        $entity = new Entity_Project();
+        $this->invokeMethod($entity, 'setDestinationObject', [new Model_Project()]);
+        $this->invokeMethod($entity, 'setTargetObject', [new Entity_Project()]);
+
+        $valid = $this->invokeMethod($entity, 'validateObjects', []);
+        $this->assertTrue($valid);
+    }
+
+    /**
+     * @covers Entity::validateObjects()
+     * @expectedException Exception
+     */
+    public function testValidateObjectsNotOk()
+    {
+        $entity = new Entity_Project();
+        $this->invokeMethod($entity, 'setDestinationObject', [new Model_Project()]);
+        $this->invokeMethod($entity, 'setTargetObject', [12]);
+
+        $this->invokeMethod($entity, 'validateObjects', []);
+    }
+
+    /**
+     * @covers Entity::setStdObjectUnprefixedProperty()
+     */
+    public function testSetStdObjectUnprefixedPropertyOk()
+    {
+        $entity = new Entity_Project();
+        $this->invokeMethod($entity, 'setStdObjectUnprefixedProperty', ['_project_id', '1']);
+        $this->invokeMethod($entity, 'setStdObjectUnprefixedProperty', ['name', 'teszt']);
+
+        $stdObject = $this->invokeMethod($entity, 'getStdObject', []);
+
+        $this->assertEquals('1', $stdObject->project_id);
+        $this->assertEquals('teszt', $stdObject->name);
+    }
+
+    /**
+     * @covers Entity::mapOnePropertyToStdObject()
+     */
+    public function testMapOnePropertyToStdObject()
+    {
+        $entity = new Entity_Project();
+        $this->invokeMethod($entity, 'mapOnePropertyToStdObject', ['_project_id', '1']);
+        $this->invokeMethod($entity, 'mapOnePropertyToStdObject', ['short_description', 'rövid leírás']);
+        $this->invokeMethod($entity, 'mapOnePropertyToStdObject', ['_search', 'search']);
+
+        $stdObject = $this->invokeMethod($entity, 'getStdObject', []);
+
+        $this->assertEquals('1', $stdObject->project_id);
+        $this->assertEquals('rövid leírás', $stdObject->short_description);
+        $this->assertFalse(property_exists($stdObject, 'search'));
+        $this->assertFalse(property_exists($stdObject, '_search'));
+    }
+
+    /**
+     * @covers Entity::setPrimaryKeyFromModel()
+     */
+    public function testSetPrimaryKeyFromModel()
+    {
+        $model = new Model_Project();
+        $model->project_id = 1;
+
+        $entity = new Entity_Project($model);
+        $this->invokeMethod($entity, 'setPrimaryKeyFromModel', []);
+
+        $this->assertEquals(1, $entity->getProjectId());
+    }
+
     protected function givenTestEntityWithId($id)
     {
         $entity = new Entity_Project();

@@ -46,6 +46,51 @@ abstract class Entity
     private $_targetObject      = null;
 
     /**
+     * Csak unit teszthez kell
+     * @param $object
+     */
+    protected function setDestinationObject($object)
+    {
+        $this->_destinationObject = $object;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @param $object
+     */
+    protected function setTargetObject($object)
+    {
+        $this->_targetObject = $object;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @return Object
+     */
+    protected function getDestinationObject()
+    {
+        return $this->_destinationObject;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @return Object
+     */
+    protected function getTargerObject()
+    {
+        return $this->_targetObject;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @return Object
+     */
+    protected function getStdObject()
+    {
+        return $this->_stdObject;
+    }
+
+    /**
      * @param null|ORM|int $value
      */
     public function __construct($value = null)
@@ -338,6 +383,6 @@ abstract class Entity
     {
         $primaryKey         = $this->_model->primary_key();
         $prefixed           = '_' . $primaryKey;
-        $this->{$prefixed}  = $this->_model->pk();
+        $this->{$prefixed}  = $this->_model->{$this->_model->primary_key()};
     }
 }
