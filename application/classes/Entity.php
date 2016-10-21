@@ -193,15 +193,16 @@ abstract class Entity
     }
 
     /**
+     * @param null $class   Unittest miatt
      * @return string
      */
-    protected function getEntityName()
+    protected function getEntityName($class = null)
     {
-        $class  = get_class($this);
+        $class = ($class) ? $class : get_class($this);
         $parts  = explode('_', $class);
 
-        if (strpos($class, 'Mock')) {
-            $name = implode('_', array_slice($parts, 1, count($parts) - 2));
+        if (in_array('Mock', $parts)) {
+            $name = implode('_', array_slice($parts, 2, count($parts) - 3));
         } else {
             $name = implode('_', array_slice($parts, 1));
         }

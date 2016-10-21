@@ -1,6 +1,6 @@
 <?php
 
-class StringBuilderTest extends Unittest_TestCase
+class StringBuilder_Test extends Unittest_TestCase
 {
     /**
      * @covers StringBuilder::append

@@ -1,6 +1,6 @@
 <?php
 
-class ViewhelperProjectTest extends Unittest_TestCase
+class Viewhelper_Project_Test extends Unittest_TestCase
 {       
     /**
      * @covers Viewhelper_Project::testGetSalary

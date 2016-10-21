@@ -1,6 +1,6 @@
 <?php
 
-class BusinessTest extends Unittest_TestCase
+class Business_Test extends Unittest_TestCase
 {
     private $_projectsSingle    = [];
     private $_projectsMulti     = [];

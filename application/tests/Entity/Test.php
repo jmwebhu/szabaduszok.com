@@ -1,6 +1,6 @@
 <?php
 
-class EntityTest extends Unittest_TestCase
+class Entity_Test extends Unittest_TestCase
 {
     /**
      * @var Entity_Project
@@ -58,6 +58,33 @@ class EntityTest extends Unittest_TestCase
 
         $this->assertEquals('project_id', $id);
         $this->assertEquals('name', $name);
+    }
+
+    /**
+     * @covers Entity::getEntityName()
+     */
+    public function testGetEntityName()
+    {
+        $entity                 = new Entity_Project();
+        $classMockStandard      = 'Mock_Entity_Project_d2f09e';
+        $classStandard          = 'Entity_Project';
+        $classMoreSyllables     = 'Entity_User_Freelancer';
+        $classMockMoreSyllables = 'Mock_Entity_User_Employer_e90a13';
+        $classOwnMock           = 'Entity_ProjectMock';
+
+        $nameMockStandard       = $this->invokeMethod($entity, 'getEntityName', [$classMockStandard]);
+        $nameStandard           = $this->invokeMethod($entity, 'getEntityName', [$classStandard]);
+        $nameMoreSyllables      = $this->invokeMethod($entity, 'getEntityName', [$classMoreSyllables]);
+        $nameMockMoreSyllables  = $this->invokeMethod($entity, 'getEntityName', [$classMockMoreSyllables]);
+        $nameDefault            = $this->invokeMethod($entity, 'getEntityName', []);
+        $nameOwnMock            = $this->invokeMethod($entity, 'getEntityName', [$classOwnMock]);
+
+        $this->assertEquals('Project', $nameMockStandard);
+        $this->assertEquals('Project', $nameStandard);
+        $this->assertEquals('User_Freelancer', $nameMoreSyllables);
+        $this->assertEquals('User_Employer', $nameMockMoreSyllables);
+        $this->assertEquals('Project', $nameDefault);
+        $this->assertEquals('ProjectMock', $nameOwnMock);
     }
 
     protected function givenTestEntityWithId($id)

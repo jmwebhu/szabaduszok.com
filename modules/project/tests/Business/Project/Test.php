@@ -1,6 +1,6 @@
 <?php
 
-class BusinessProjectTest extends Unittest_TestCase
+class Business_Project_Test extends Unittest_TestCase
 {
     /**
      * @var ORM

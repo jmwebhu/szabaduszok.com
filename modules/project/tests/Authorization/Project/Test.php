@@ -1,6 +1,6 @@
 <?php
 
-class AuthorozationProjectTest extends Unittest_TestCase
+class Authorization_Project_Test extends Unittest_TestCase
 {
     /**
      * @var Authorization_Project

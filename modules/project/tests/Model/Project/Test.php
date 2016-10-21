@@ -1,6 +1,6 @@
 <?php
 
-class ProjectTest extends Unittest_TestCase
+class Model_Project_Test extends Unittest_TestCase
 {
     private $_projects              = [];
 
