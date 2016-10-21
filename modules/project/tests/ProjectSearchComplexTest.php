@@ -25,6 +25,8 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     private $_skillRelation         = 1;
 
+    private $_searchMock;
+
     // -------- Iparagak --------
 
     /**
@@ -460,6 +462,7 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     protected function whenSearch()
     {
+        $this->markTestSkipped('UJRA IRNI TESZTEKET AZ UJ SEARCH MODULHOZ 2016.10.21');
         $this->setSearch();
         $this->invokeMethod($this->_searchMock, 'search');
         $this->setMatchedProjectIdsFromSearch();
