@@ -307,6 +307,75 @@ class Entity_Test extends Unittest_TestCase
         $this->assertEquals($project->project_id, $entity->getProjectId());
     }
 
+    /**
+     * @covers Entity::save()
+     */
+    public function testSaveOk()
+    {
+        $this->givenTestEntityWithId(9999);
+        $this->_entity->setSlug('teszt-9999');
+
+        $result = $this->invokeMethod($this->_entity, 'save', []);
+
+        $this->assertTrue($result);
+        $this->assertEquals(9999, $this->_entity->getModel()->project_id);
+
+        $this->_entity->getModel()->delete();
+    }
+
+    /**
+     * @covers Entity::save()
+     */
+    public function testSaveNotOk()
+    {
+        $this->givenTestEntityWithId(9999);
+        $this->_entity->setSlug('teszt-9999');
+
+        $result = $this->invokeMethod($this->_entity, 'save', []);
+
+        $this->assertTrue($result);
+        $this->assertEquals(9999, $this->_entity->getModel()->project_id);
+        $entity = $this->_entity;
+
+        $this->givenTestEntityWithId(9999);
+        $this->_entity->setSlug('teszt-9999');
+
+        $result = $this->invokeMethod($this->_entity, 'save', []);
+
+        $this->assertFalse($result);
+
+        $entity->getModel()->delete();
+    }
+
+    /**
+     * @covers Entity::submit()
+     */
+    public function testSubmitOk()
+    {
+        $data = [
+            'project_id'        => 9999,
+            'name'              => 'Teszt',
+            'short_description' => 'Rövid leírás',
+            'long_description'  => 'Hosszú leírás',
+            'email'             => 'joomartin@jmweb.hu',
+            'phonenumber'       => '06301923380',
+            'search_text'       => 'Teszt kereső szöveg',
+            'expiration_date'   => '2016-12-12',
+            'salary_type'       => 1,
+            'salary_low'        => 2000,
+            'salary_high'       => 2500,
+            'slug'              => 'teszt',
+        ];
+
+        $entity = new Entity_Project();
+        $entity->submit($data);
+
+        $this->assertEquals(9999, $entity->getProjectId());
+        $this->assertEquals(9999, $entity->getModel()->project_id);
+
+        $entity->getModel()->delete();
+    }
+
     protected function givenTestEntityWithId($id)
     {
         $entity = new Entity_Project();

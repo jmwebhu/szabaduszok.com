@@ -438,7 +438,7 @@ class Entity_Project extends Entity
 
     /**
      * @param array $data
-     * @return Entity_Project
+     * @return Entity_Project|bool
      */
     public function submit(array $data)
     {
