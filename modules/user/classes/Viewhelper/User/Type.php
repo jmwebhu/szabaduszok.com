@@ -72,6 +72,4 @@ abstract class Viewhelper_User_Type
 
         return false;
     }
-
-
 }

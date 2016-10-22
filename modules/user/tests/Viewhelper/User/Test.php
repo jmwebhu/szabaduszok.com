@@ -38,38 +38,8 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $this->assertEquals(Route::url('projectOwnerProfileEdit', ['slug' => $user->getSlug()]), $viewhelper->getEditUrl($user));
     }
 
-    /**
-     * @covers Viewhelper_User::getPageTitle()
-     */
-    public function testGetPageTitleFreelancerCreate()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
 
-        $this->assertEquals('Szabadúszó Regisztráció', $viewhelper->getPageTitle());
-    }
 
-    /**
-     * @covers Viewhelper_User::getPageTitle()
-     */
-    public function testGetPageTitleFreelancerEdit()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_EDIT);
-
-        $this->assertEquals('Profil szerkesztése: ', $viewhelper->getPageTitle());
-    }
-
-    /**
-     * @covers Viewhelper_User::getPageTitle()
-     */
-    public function testGetPageTitleEmployerCreate()
-    {
-        $user       = new Entity_User_Employer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
-
-        $this->assertEquals('Megbízó Regisztráció', $viewhelper->getPageTitle());
-    }
 
     /**
      * @covers Viewhelper_User::getPageTitle()
@@ -82,27 +52,6 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $this->assertEquals('Profil szerkesztése: ', $viewhelper->getPageTitle());
     }
 
-    /**
-     * @covers Viewhelper_User::hasPrivacyCheckbox()
-     */
-    public function testHasPrivacyCheckboxFreelancerCreate()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
-
-        $this->assertTrue($viewhelper->hasPrivacyCheckbox());
-    }
-
-    /**
-     * @covers Viewhelper_User::hasPrivacyCheckbox()
-     */
-    public function testHasPrivacyCheckboxFreelancerEdit()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_EDIT);
-
-        $this->assertFalse($viewhelper->hasPrivacyCheckbox());
-    }
 
     /**
      * @covers Viewhelper_User::hasPrivacyCheckbox()
@@ -126,27 +75,6 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $this->assertFalse($viewhelper->hasPrivacyCheckbox());
     }
 
-    /**
-     * @covers Viewhelper_User::getPasswordText()
-     */
-    public function testGetPasswordTextFreelancerCreate()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
-
-        $this->assertEquals('Legalább 6 karakter', $viewhelper->getPasswordText());
-    }
-
-    /**
-     * @covers Viewhelper_User::getPasswordText()
-     */
-    public function testGetPasswordTextFreelancerEdit()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_EDIT);
-
-        $this->assertEquals('Legalább 6 karakter. Ha nem módosítod, hagyd üresen!', $viewhelper->getPasswordText());
-    }
 
     /**
      * @covers Viewhelper_User::getPasswordText()
@@ -170,16 +98,7 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $this->assertEquals('Legalább 6 karakter. Ha nem módosítod, hagyd üresen!', $viewhelper->getPasswordText());
     }
 
-    /**
-     * @covers Viewhelper_User::hasIdInput()
-     */
-    public function testHasIdInputFreelancerCreate()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
 
-        $this->assertFalse($viewhelper->hasIdInput());
-    }
 
     /**
      * @covers Viewhelper_User::hasIdInput()
@@ -214,16 +133,7 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $this->assertTrue($viewhelper->hasIdInput());
     }
 
-    /**
-     * @covers Viewhelper_User::getFormAction()
-     */
-    public function testGetFormActionFreelancerCreate()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
 
-        $this->assertEquals(Route::url('freelancerRegistration'), $viewhelper->getFormAction());
-    }
 
     /**
      * @covers Viewhelper_User::getFormAction()
@@ -260,28 +170,9 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $this->assertEquals(Route::url('projectOwnerProfileEdit', ['slug' => $user->getSlug()]), $viewhelper->getFormAction());
     }
 
-    /**
-     * @covers Viewhelper_User::hasPasswordRules()
-     */
-    public function testHasPasswordRulesFreelancerCreate()
-    {
-        $user       = new Entity_User_Freelancer();
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_CREATE);
 
-        $this->assertTrue($viewhelper->hasPasswordRules());
-    }
 
-    /**
-     * @covers Viewhelper_User::hasPasswordRules()
-     */
-    public function testHasPasswordRulesFreelancerEdit()
-    {
-        $user       = new Entity_User_Freelancer();
-        $user->setSlug('freelancer-1');
-        $viewhelper = Viewhelper_User_Factory::createViewhelper($user, Viewhelper_User::ACTION_EDIT);
 
-        $this->assertFalse($viewhelper->hasPasswordRules());
-    }
 
     /**
      * @covers Viewhelper_User::hasPasswordRules()
@@ -425,7 +316,7 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $freelancer->user_id = 1847;
         $freelancer->lastname = 'Teszt';
         $freelancer->firstname = 'Szabadúszó';
-        $freelancer->email = 'teszt1847@szabaduszok.com';
+        $freelancer->email = 'teszt' . $freelancer->user_id . '@szabaduszok.com';
         $freelancer->password = 'pass';
         $freelancer->min_net_hourly_wage = '2500';
         $freelancer->save();
@@ -436,7 +327,7 @@ class Viewhelper_User_Test extends Unittest_TestCase
         $employer->user_id = 1848;
         $employer->lastname = 'Teszt';
         $employer->firstname = 'Megbízó';
-        $employer->email = 'teszt1848@szabaduszok.com';
+        $employer->email = 'teszt' . $employer->user_id . '@szabaduszok.com';
         $employer->phonenumber = '063012345678';
         $employer->password = 'pass';
         $employer->address_postal_code = '9700';
