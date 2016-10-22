@@ -224,8 +224,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserIdExistsInSession($employer->getUserId());
         $this->assertUserIdExistsInCache($employer->getUserId());
         $this->assertEmailNotExistsInSignup($employer->getEmail());
-        $this->assertUserRelationContainsIds('industry', [1], $employer->getUserId());
-        $this->assertUserRelationContainsIds('profession', [2, 3], $employer->getUserId());
+        $this->assertUserRelationExistsInDatabase('industry', [1], $employer->getUserId());
+        $this->assertUserRelationExistsInDatabase('profession', [2, 3], $employer->getUserId());
         $this->assertEquals(0, $employer->getIsCompany());
         $this->assertEquals('', $employer->getCompanyName());
         $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
@@ -306,13 +306,106 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
 
-        $this->assertUserRelationContainsIds('industry', [1], $freelancer->getUserId());
-        $this->assertUserRelationContainsIds('profession', [1, 2, 3], $freelancer->getUserId());
-        $this->assertUserRelationContainsIds('skill', [3, 4, 6, 7, 8, 9], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('industry', [1], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('skill', [3, 4, 6, 7, 8, 9], $freelancer->getUserId());
 
-        /**
-         * projekt ertesitok
-         */
+        $this->assertUserProjectNotoficationExistsInDatabase('industry', [1], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('skill', [3, 4, 6, 7, 8, 9], $freelancer->getUserId());
+    }
+
+    /**
+     * @covers Entity_User::submit()
+     */
+    public function testSubmitFreelancerWithProfiles()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
+
+        $data = [
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => 'joomartin@szabaduszok.com',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'min_net_hourly_wage'   => '2500',
+            'webpage'               => 'szabaduszok.com',
+            'profiles'              => $profiles
+        ];
+
+        $freelancer->submit($data);
+
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
+        $this->assertUserIdExistsInSession($freelancer->getUserId());
+        $this->assertUserIdExistsInCache($freelancer->getUserId());
+        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
+        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertEquals('joo-martin', $freelancer->getSlug());
+        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
+        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
+        $this->assertEquals('1', $freelancer->getSkillRelation());
+        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+
+        $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
+    }
+
+    /**
+     * @covers Entity_User::submit()
+     */
+    public function testSubmitFreelancerWithRelationsAndProfiles()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
+
+        $data = [
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => 'joomartin@szabaduszok.com',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'min_net_hourly_wage'   => '2500',
+            'webpage'               => 'szabaduszok.com',
+            'industries'            => [1],
+            'professions'           => [1, 2, 3],
+            'skills'                => [3, 4, 6, 7, 8, 9],
+            'profiles'              => $profiles
+        ];
+
+        $freelancer->submit($data);
+
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
+        $this->assertUserIdExistsInSession($freelancer->getUserId());
+        $this->assertUserIdExistsInCache($freelancer->getUserId());
+        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
+        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertEquals('joo-martin', $freelancer->getSlug());
+        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
+        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
+        $this->assertEquals('1', $freelancer->getSkillRelation());
+        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+
+        $this->assertUserRelationExistsInDatabase('industry', [1], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('skill', [3, 4, 6, 7, 8, 9], $freelancer->getUserId());
+
+        $this->assertUserProjectNotoficationExistsInDatabase('industry', [1], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('skill', [3, 4, 6, 7, 8, 9], $freelancer->getUserId());
+
+        $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
     }
 
     public function assertUserIdExistsInDatabase($id)
@@ -343,7 +436,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEmpty($signup);
     }
 
-    public function assertUserRelationContainsIds($relationSingularName, array $relationIds, $userId)
+    public function assertUserRelationExistsInDatabase($relationSingularName, array $relationIds, $userId)
     {
         $class = 'Model_' . ucfirst($relationSingularName);
         $model = new $class();
@@ -358,6 +451,36 @@ class Entity_User_Test extends Unittest_TestCase
 
         foreach ($relations as $relation) {
             $this->assertTrue(in_array($relation[$model->primary_key()], $relationIds));
+        }
+    }
+
+    public function assertUserProjectNotoficationExistsInDatabase($relationSingularName, array $relationIds, $userId)
+    {
+        $class = 'Model_' . ucfirst($relationSingularName);
+        $model = new $class();
+
+        $notifications = DB::select()
+            ->from('users_project_notification_' . $model->object_plural())
+            ->where('user_id', '=', $userId)
+            ->and_where($model->primary_key(), 'IN', $relationIds)
+            ->execute()->as_array();
+
+        $this->assertEquals(count($relationIds), count($notifications));
+
+        foreach ($notifications as $notification) {
+            $this->assertTrue(in_array($notification[$model->primary_key()], $relationIds));
+        }
+    }
+
+    public function assertUserProfilesExistInDatabase(array $profiles, $userId)
+    {
+        $userProfiles = DB::select()
+            ->from('users_profiles')
+            ->where('user_id', '=', $userId)
+            ->execute()->as_array();
+
+        foreach ($userProfiles as $userProfile) {
+            $this->assertTrue(in_array($userProfile['url'], $profiles));
         }
     }
 
