@@ -263,6 +263,30 @@ class Kohana_ORM extends Model implements serializable {
     {
         return $this->_table_columns;
     }
+
+    /**
+     * @param Database $db
+     */
+    public function setDb($db)
+    {
+        $this->_db = $db;
+    }
+
+    /**
+     * @param String $db_group
+     */
+    public function setDbGroup($db_group)
+    {
+        $this->_db_group = $db_group;
+    }
+
+    /**
+     * @return Database
+     */
+    public function getDb()
+    {
+        return $this->_db;
+    }
 	
 	/**
 	 * Constructs a new model and loads a record if given

@@ -2,13 +2,6 @@
 
 class ORM extends Kohana_ORM 
 {
-    public function setDb($db)
-    {
-        if (is_string($db)) {
-            $this->_db_group = $db;
-        }                                      
-    }
-    
     /**
      * Torol minden adatot a tablabol
      */

@@ -64,27 +64,10 @@ class Viewhelper_User_Type_Freelancer_Test extends Unittest_TestCase
      */
     public function testGetProjectNotificationRelationForProfileIndustry()
     {
-        $industryMock  = $this->getMockBuilder('\Model_Industry')
-            ->setMethods(['getAll', 'object_name'])
-            ->getMock();
+        $industryMock = $this->getRelationMock('industry');
+        $notifications = $this->getNotificationArray('industry', [0, 3]);
 
-        $industryMock->expects($this->any())
-            ->method('getAll')
-            ->will($this->returnValue($this->_industries));
-
-        $industryMock->expects($this->any())
-            ->method('object_name')
-            ->will($this->returnValue('Model_Industry'));
-
-        $notification1 = new Model_User_Project_Notification_Industry();
-        $notification1->industry_id = $this->_industries[0]->industry_id;
-        $notification1->user_id = 1;
-
-        $notification2 = new Model_User_Project_Notification_Industry();
-        $notification2->industry_id = $this->_industries[3]->industry_id;
-        $notification2->user_id = 1;
-
-        $this->setMockAny('\Entity_User_Freelancer', 'getRelation', [$notification1, $notification2]);
+        $this->setMockAny('\Entity_User_Freelancer', 'getRelation', $notifications);
 
         $type               = new Viewhelper_User_Type_Freelancer_Create();
         $type->setUser($this->_mock);
@@ -99,11 +82,111 @@ class Viewhelper_User_Type_Freelancer_Test extends Unittest_TestCase
         $this->assertEmpty($result[4]['selected']);
     }
 
+    /**
+     * @covers Viewhelper_User_Type_Freelancer::getProjectNotificationRelationForProfile()
+     */
+    public function testGetProjectNotificationRelationForProfileProfession()
+    {
+        $industryMock = $this->getRelationMock('profession');
+        $notifications = $this->getNotificationArray('profession', [1, 2, 3]);
+
+        $this->setMockAny('\Entity_User_Freelancer', 'getRelation', $notifications);
+
+        $type               = new Viewhelper_User_Type_Freelancer_Create();
+        $type->setUser($this->_mock);
+
+        $result = $type->getProjectNotificationRelationForProfile($industryMock);
+
+        $this->assertEquals('selected', $result[1]['selected']);
+        $this->assertEquals('selected', $result[2]['selected']);
+        $this->assertEquals('selected', $result[3]['selected']);
+
+        $this->assertEmpty($result[0]['selected']);
+        $this->assertEmpty($result[4]['selected']);
+    }
+
+    /**
+     * @covers Viewhelper_User_Type_Freelancer::getProjectNotificationRelationForProfile()
+     */
+    public function testGetProjectNotificationRelationForProfileSkill()
+    {
+        $industryMock = $this->getRelationMock('skill');
+        $notifications = $this->getNotificationArray('skill', [1, 2, 3, 6, 9]);
+
+        $this->setMockAny('\Entity_User_Freelancer', 'getRelation', $notifications);
+
+        $type               = new Viewhelper_User_Type_Freelancer_Create();
+        $type->setUser($this->_mock);
+
+        $result = $type->getProjectNotificationRelationForProfile($industryMock);
+
+        $this->assertEquals('selected', $result[1]['selected']);
+        $this->assertEquals('selected', $result[2]['selected']);
+        $this->assertEquals('selected', $result[3]['selected']);
+        $this->assertEquals('selected', $result[6]['selected']);
+        $this->assertEquals('selected', $result[9]['selected']);
+
+        $this->assertEmpty($result[0]['selected']);
+        $this->assertEmpty($result[4]['selected']);
+        $this->assertEmpty($result[5]['selected']);
+        $this->assertEmpty($result[7]['selected']);
+        $this->assertEmpty($result[8]['selected']);
+    }
+
+    /**
+     * @param string $relation
+     * @param array $indexes
+     * @return array
+     */
+    protected function getNotificationArray($relation, array $indexes)
+    {
+        $class              = 'Model_' . ucfirst($relation);
+        $model              = new $class();
+        $notificationClass  = 'Model_User_Project_Notification_' . ucfirst($relation);
+        $property           = '_' . $model->object_plural();
+        $notifications      = [];
+
+        foreach ($indexes as $index) {
+            $notification = new $notificationClass();
+            $notification->{$model->primary_key()} = $this->{$property}[$index]->{$model->primary_key()};
+            $notification->user_id = 1;
+
+            $notifications[] = $notification;
+        }
+
+        return $notifications;
+    }
+
+    /**
+     * @param string $relation
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getRelationMock($relation)
+    {
+        $class      = 'Model_' . ucfirst($relation);
+        $object     = new $class();
+        $property   = '_' . $object->object_plural();
+
+        $relationMock  = $this->getMockBuilder('\\' . $class)
+            ->setMethods(['getAll', 'object_name'])
+            ->getMock();
+
+        $relationMock->expects($this->any())
+            ->method('getAll')
+            ->will($this->returnValue($this->{$property}));
+
+        $relationMock->expects($this->any())
+            ->method('object_name')
+            ->will($this->returnValue($class));
+
+        return $relationMock;
+    }
+
     public function setUp()
     {
         $this->setUpRelation('industry', 5);
         $this->setUpRelation('profession', 5);
-        $this->setUpRelation('skill', 5);
+        $this->setUpRelation('skill', 10);
     }
 
     /**

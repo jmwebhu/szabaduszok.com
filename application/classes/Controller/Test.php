@@ -4,13 +4,9 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $array = [
-            'skill_id' => null,
-            'name' => null,
-            'slug' => null
-        ];
+        $signup = DB::select()->from('signups')->where('email', '=', 'heroldtamas1992@gmail.com')->execute()->current();
+        echo Debug::vars($signup);
 
-        echo Debug::vars(array_key_exists('skill_id', $array));
     }
 
     public function action_clearcache()

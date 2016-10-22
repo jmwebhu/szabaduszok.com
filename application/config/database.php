@@ -30,22 +30,22 @@ return array
 		'charset'      => 'utf8',
 		'caching'      => FALSE,
 	),
-        'test' => array
+    'testing' => array
 	(
 		/**
 		 * Unittest teszt adatbazis
 		 */
-                'type'       => 'MySQL',
-                'connection' => array(
-                    'hostname'   => '127.0.0.1',
-                    'database'   => 'test.' . $baseconfig['db'],
-                    'username'   => 'root',
-                    'password'   => '',
-                    'persistent' => FALSE,
-                ),
-                'table_prefix' => '',
-                'charset'      => 'utf8',
-                'caching'      => FALSE,
+        'type'       => 'MySQL',
+        'connection' => array(
+            'hostname'   => '127.0.0.1',
+            'database'   => 'testing.' . $baseconfig['db'],
+            'username'   => 'root',
+            'password'   => '',
+            'persistent' => FALSE,
+        ),
+        'table_prefix' => '',
+        'charset'      => 'utf8',
+        'caching'      => FALSE,
 	),
 	'v1' => array
 	(
