@@ -3,12 +3,14 @@
 class Authorization_User extends Authorization
 {
 	/**
+     * @param Auth $auth Unittest dependency injection
 	 * @return bool
 	 */
-	public function canRate()
+	public function canRate($auth = null)
 	{
+	    $auth = ($auth) ? $auth : Auth::instance();
 		if ($this->_model->type == $this->_user->type || $this->_model->user_id == $this->_user->user_id
-            || !Auth::instance()->logged_in() || $this->_model->has('ratings', $this->_user)) {
+            || !$auth->logged_in() || $this->_model->has('ratings', $this->_user)) {
 			return false;
 		}
 		
