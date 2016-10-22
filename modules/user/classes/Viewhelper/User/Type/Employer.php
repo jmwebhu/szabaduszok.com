@@ -18,4 +18,12 @@ abstract class Viewhelper_User_Type_Employer extends Viewhelper_User_Type
     {
         return [];
     }
+
+    /**
+     * @return bool
+     */
+    public function hasCv()
+    {
+        return false;
+    }
 }

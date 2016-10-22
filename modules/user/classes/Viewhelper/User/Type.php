@@ -59,6 +59,11 @@ abstract class Viewhelper_User_Type
     /**
      * @return bool
      */
+    abstract public function hasCv();
+
+    /**
+     * @return bool
+     */
     public function hasPicture()
     {
         if ($this->_user->loaded() && $this->_user->getProfilePicturePath()) {
@@ -68,15 +73,5 @@ abstract class Viewhelper_User_Type
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasCv()
-    {
-        if ($this->_user->loaded() && $this->_user->getProfilePicturePath()) {
-            return true;
-        }
 
-        return false;
-    }
 }

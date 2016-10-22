@@ -20,6 +20,14 @@ class Viewhelper_User
     }
 
     /**
+     * @return Viewhelper_User_Type
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+    /**
      * @return string
      */
     public function getEditUrl()

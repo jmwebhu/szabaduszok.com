@@ -165,7 +165,6 @@ class Authorization_User_Test extends Unittest_TestCase
         $this->assertTrue($authorization->canEdit());
     }
 
-
     /**
      * @return PHPUnit_Framework_MockObject_MockObject
      */

@@ -36,4 +36,16 @@ abstract class Viewhelper_User_Type_Freelancer extends Viewhelper_User_Type
 
         return $result;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasCv()
+    {
+        if ($this->_user->loaded() && $this->_user->getCvPath()) {
+            return true;
+        }
+
+        return false;
+    }
 }

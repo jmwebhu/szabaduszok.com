@@ -76,6 +76,14 @@ class Entity_User_Freelancer extends Entity_User
     }
 
     /**
+     * @param string $cvPath
+     */
+    public function setCvPath($cvPath)
+    {
+        $this->_cv_path = $cvPath;
+    }
+
+    /**
      * @param null|int|ORM $value
      */
     public function __construct($value = null)
