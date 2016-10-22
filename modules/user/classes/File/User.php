@@ -63,20 +63,14 @@ abstract class File_User
      */
     protected function uploadProfilePicture()
     {
-        if (!$this->validateImageFile()) {
-            throw new Exception_UserRegistration('Hibás kép formátum. Kérjük próbáld meg újra.');
-        }
-
+        $this->throwException($this->validateImageFile(), 'Hibás kép formátum. Kérjük próbáld meg újra.');
         $extension = Upload::getExt($this->_profilePictureFile);
 
         $this->setProfilePictureFilenameWith($extension);
         $this->setProfilePictureListFilenameWith($extension);
 
         $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, self::PATH_PROFILE_PICTURE);
-
-        if (!$sourceFilename) {
-            throw new Exception_UserRegistration('Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
-        }
+        $this->throwException($sourceFilename, 'Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
 
         $this->saveImagesFrom($sourceFilename);
 
@@ -84,6 +78,18 @@ abstract class File_User
             'profile' 	=> $this->_relativeProfilePictureFilename,
             'list'		=> $this->_relativeProfilePictureListFilename
         ];
+    }
+
+    /**
+     * @param mixed $expression
+     * @param string $message
+     * @throws Exception_UserRegistration
+     */
+    protected function throwException($expression, $message)
+    {
+        if (!$expression) {
+            throw new Exception_UserRegistration($message);
+        }
     }
 
     /**

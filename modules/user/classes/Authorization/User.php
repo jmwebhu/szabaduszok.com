@@ -8,13 +8,12 @@ class Authorization_User extends Authorization
 	 */
 	public function canRate($auth = null)
 	{
-	    $auth = ($auth) ? $auth : Auth::instance();
-		if ($this->_model->type == $this->_user->type || $this->_model->user_id == $this->_user->user_id
-            || !$auth->logged_in() || $this->_model->has('ratings', $this->_user)) {
-			return false;
-		}
-		
-		return true;
+	    if ($auth == null) {
+	        $auth = Auth::instance();
+        }
+
+        return !($this->_model->type == $this->_user->type || $this->_model->user_id == $this->_user->user_id
+            || !$auth->logged_in() || $this->_model->has('ratings', $this->_user));
 	}
 	
 	/**
@@ -22,11 +21,7 @@ class Authorization_User extends Authorization
 	 */
 	public function canEdit()
 	{
-		if ($this->_model->user_id == $this->_user->user_id) {
-			return true;
-		}
-		
-		return false;
+		return $this->_model->user_id == $this->_user->user_id;
 	}
 	
 	/**
@@ -34,11 +29,7 @@ class Authorization_User extends Authorization
 	 */
 	public function canSeeProjectNotification()
 	{
-		if ($this->_model->user_id == $this->_user->user_id) {
-			return true;
-		}
-		
-		return false;
+		return $this->_model->user_id == $this->_user->user_id;
 	}
 	
 	/**
