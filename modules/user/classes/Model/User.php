@@ -158,6 +158,7 @@ class Model_User extends Model_Auth_User
         $this->saveSlug();
         $this->addRelations($data);
 
+        $this->need_project_notification = 1;
         $this->last_login = time();
         $this->save();
 
