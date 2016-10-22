@@ -356,6 +356,22 @@ abstract class Entity_User extends Entity
     }
 
     /**
+     * @return File_User
+     */
+    public function getFile()
+    {
+        return $this->_file;
+    }
+
+    /**
+     * @return Search
+     */
+    public function getSearch()
+    {
+        return $this->_search;
+    }
+
+    /**
      * @param string $lastname
      */
     public function setLastname($lastname)
