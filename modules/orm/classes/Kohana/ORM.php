@@ -2503,7 +2503,7 @@ class Kohana_ORM extends Model implements serializable {
 		$cache = Cache::instance();
 		$cache->delete($this->_table_name);	
 		
-		$orm = ORM::factory($this->_object_name);
+		$orm = ORM::factory($this->object_name());
 		$models = $orm->find_all();
 		
 		$collection = [];
@@ -2519,12 +2519,12 @@ class Kohana_ORM extends Model implements serializable {
 	}
 	
 	public function getAll()
-	{					            
+	{
 		$cache      = Cache::instance();
 		$collection = $cache->get($this->_table_name);
 		
 		if (!$collection) {
-			$orm = ORM::factory($this->_object_name);
+			$orm = ORM::factory($this->object_name());
 			$collection = $orm->cacheAll();
 		}		
 		
