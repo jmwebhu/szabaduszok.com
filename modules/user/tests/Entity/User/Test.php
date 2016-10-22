@@ -4,7 +4,11 @@ class Entity_User_Test extends Unittest_TestCase
 {
     private static $_db;
 
-    private static $_insertedIds = [];
+    private static $_insertedUserIds = [];
+
+    public static $_industries = [];
+    public static $_professions = [];
+    public static $_skills = [];
 
     /**
      * @covers Entity_User::getName()
@@ -155,7 +159,10 @@ class Entity_User_Test extends Unittest_TestCase
         Entity_User::createUser(9912);
     }
 
-    public function testSubmitWithoutRelations()
+    /**
+     * @covers Entity_User::submit()
+     */
+    public function testSubmitEmployerWithoutRelations()
     {
         $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
 
@@ -178,28 +185,70 @@ class Entity_User_Test extends Unittest_TestCase
 
         $employer->submit($data);
 
-        self::$_insertedIds[] = $employer->getUserId();
+        self::$_insertedUserIds[] = $employer->getUserId();
 
-        $this->thenUserIdShouldExistsInDatabase($employer->getUserId());
-        $this->thenUserIdShouldExistsInSession($employer->getUserId());
-        $this->thenUserIdShouldExistsInCache($employer->getUserId());
-        $this->thenEmailShouldNotExistsInSignup($employer->getEmail());
+        $this->assertUserIdExistsInDatabase($employer->getUserId());
+        $this->assertUserIdExistsInSession($employer->getUserId());
+        $this->assertUserIdExistsInCache($employer->getUserId());
+        $this->assertEmailNotExistsInSignup($employer->getEmail());
+        $this->assertEquals(1, $employer->getIsCompany());
+        $this->assertEquals('Szabaduszok.com Zrt.', $employer->getCompanyName());
     }
 
-    public function thenUserIdShouldExistsInDatabase($id)
+    /**
+     * @covers Entity_User::submit()
+     */
+    public function testSubmitEmployerWithRelations()
+    {
+        $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
+
+        // FONTOS!
+        $employer->getModel()->setDb('testing');
+
+        $data = [
+            'is_company'            => '',
+            'company_name'          => '',
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => 'joomartin@jmweb.hu',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'industries'            => [1],
+            'professions'           => [2, 3]
+        ];
+
+        $employer->submit($data);
+
+        self::$_insertedUserIds[] = $employer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($employer->getUserId());
+        $this->assertUserIdExistsInSession($employer->getUserId());
+        $this->assertUserIdExistsInCache($employer->getUserId());
+        $this->assertEmailNotExistsInSignup($employer->getEmail());
+        $this->assertUserRelationContainsIds('industry', [1], $employer->getUserId());
+        $this->assertUserRelationContainsIds('profession', [2, 3], $employer->getUserId());
+        $this->assertEquals(0, $employer->getIsCompany());
+        $this->assertEquals('', $employer->getCompanyName());
+    }
+
+    public function assertUserIdExistsInDatabase($id)
     {
         $user = DB::select()->from('users')->where('user_id', '=', $id)->execute(self::$_db)->current();
         $this->assertEquals($id, Arr::get($user, 'user_id'));
     }
 
-    public function thenUserIdShouldExistsInSession($id)
+    public function assertUserIdExistsInSession($id)
     {
         $sessionUser = Session::instance()->get('auth_user');
         $this->assertTrue($sessionUser->loaded());
         $this->assertEquals($id, $sessionUser->user_id);
     }
 
-    public function thenUserIdShouldExistsInCache($id)
+    public function assertUserIdExistsInCache($id)
     {
         $cacheUsers = Cache::instance()->get('users');
         $cacheUser = Arr::get($cacheUsers, $id);
@@ -208,25 +257,85 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals($id, $cacheUser->user_id);
     }
 
-    public function thenEmailShouldNotExistsInSignup($email)
+    public function assertEmailNotExistsInSignup($email)
     {
         $signup = DB::select()->from('signups')->where('email', '=', $email)->execute()->current();
         $this->assertEmpty($signup);
     }
 
-    public static function setUpBeforeClass()
+    public function assertUserRelationContainsIds($relationSingularName, array $relationIds, $userId)
     {
-        self::$_db = Database::instance('testing');
+        $class = 'Model_' . ucfirst($relationSingularName);
+        $model = new $class();
+
+        $relations = DB::select()
+            ->from('users_' . $model->object_plural())
+            ->where('user_id', '=', $userId)
+            ->and_where($model->primary_key(), 'IN', $relationIds)
+            ->execute(self::$_db)->as_array();
+
+        $this->assertEquals(count($relationIds), count($relations));
+
+        foreach ($relations as $relation) {
+            $this->assertTrue(in_array($relation[$model->primary_key()], $relationIds));
+        }
     }
 
-    public static function tearDownAfterClass()
+    public function setUp()
     {
-        $users = Cache::instance()->get('users');
-        foreach (self::$_insertedIds as $insertedId) {
-            DB::delete('users')->where('user_id', '=', $insertedId)->execute(self::$_db);
-            unset($users[$insertedId]);
-        }
+        self::$_db = Database::instance('testing');
+        self::truncateUsers();
+        self::truncateRelations();
+        self::initRelation('industry', 3);
+        self::initRelation('profession', 5);
+        self::initRelation('skill', 10);
+    }
 
-        Cache::instance()->set('users', $users);
+    public function tearDown()
+    {
+        self::truncateUsers();
+        self::truncateRelations();
+    }
+
+    protected static function truncateUsers()
+    {
+        DB::delete('users')->execute(self::$_db);
+        Cache::instance()->set('users', []);
+    }
+
+    protected static function truncateRelations()
+    {
+        DB::delete('industries')->execute(self::$_db);
+        DB::delete('professions')->execute(self::$_db);
+        DB::delete('skills')->execute(self::$_db);
+
+        Cache::instance()->set('industries', []);
+        Cache::instance()->set('professions', []);
+        Cache::instance()->set('skills', []);
+    }
+
+    /**
+     * @param string $relation
+     * @param int $count
+     */
+    protected static function initRelation($relation, $count)
+    {
+        $class = 'Model_' . ucfirst($relation);
+
+        for ($i = 0; $i < $count; $i++) {
+            $relationModel = new $class();
+            $relationModel->setDb('testing');
+
+            $relationModel->{$relationModel->primary_key()} = $i + 1;
+            $relationModel->name = $relation . '-' . ($i + 1);
+
+            $relationModel->save();
+
+            $classReflection = new ReflectionClass('Entity_User_Test');
+            $ids = $classReflection->getStaticPropertyValue('_' . $relationModel->object_plural());
+            $ids[] = $i + 1;
+
+            $classReflection->setStaticPropertyValue('_' . $relationModel->object_plural(), $ids);
+        }
     }
 }

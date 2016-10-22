@@ -10,7 +10,7 @@ class ORM extends Kohana_ORM
         $models = $this->find_all();        
         
         foreach ($models as $model) {
-            DB::delete($this->_table_name)->where($this->_primary_key, '=', $model->pk())->execute();
+            $model->delete();
             Cache::instance()->delete($this->_table_name);
         }
     }    
@@ -67,11 +67,12 @@ class ORM extends Kohana_ORM
      * @return void
      */
     protected function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
-    {                 	
+    {
+        $thisPk                         = $this->primary_key();
         $relationIds                    = [];    			
 		$cache                          = Cache::instance();   
 		$cacheRelations                 = $relationModel->getAll();    	
-		$cacheRelations[$this->pk()]    = [];      
+		$cacheRelations[$this->{$thisPk}]    = [];
         
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
@@ -79,12 +80,13 @@ class ORM extends Kohana_ORM
 		if (!empty($postData)) {
 			foreach ($postData as $value) {
 				$relation       = $this->getOrCreate($value, $relationEndModel);
-				
-				if (!$this->has($relationEndModel->object_plural(), $relation->pk())) {
-					$relationIds[]  = $relation->pk();
+				$relationPk     = $relation->primary_key();
+
+				if (!$this->has($relationEndModel->object_plural(), $relation->{$relationPk})) {
+					$relationIds[]  = $relation->{$relationPk};
 				}				
 
-				$cacheRelations[$this->pk()][] = $relation;
+				$cacheRelations[$this->{$thisPk}][] = $relation;
 			}                
 
 			$this->add($relationEndModel->object_plural(), $relationIds);       
