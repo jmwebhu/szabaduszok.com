@@ -17,6 +17,8 @@ class users_project_notification_industries extends Migration
         'user_project_notification_industry_id'
      );
 
+      $this->add_index('users_project_notification_industries', 'user_id_industry_id', ['user_id', 'industry_id'], 'unique');
+
       $this->sql("ALTER TABLE `users_project_notification_industries` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
       $this->sql("ALTER TABLE `users_project_notification_industries` ADD FOREIGN KEY (`industry_id`) REFERENCES `industries`(`industry_id`) ON DELETE CASCADE ON UPDATE CASCADE");
   }

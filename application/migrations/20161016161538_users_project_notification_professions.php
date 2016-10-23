@@ -17,6 +17,8 @@ class users_project_notification_professions extends Migration
             'user_project_notification_profession_id'
         );
 
+        $this->add_index('users_project_notification_professions', 'user_id_profession_id', ['user_id', 'profession_id'], 'unique');
+
         $this->sql("ALTER TABLE `users_project_notification_professions` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
         $this->sql("ALTER TABLE `users_project_notification_professions` ADD FOREIGN KEY (`profession_id`) REFERENCES `professions`(`profession_id`) ON DELETE CASCADE ON UPDATE CASCADE");
     }

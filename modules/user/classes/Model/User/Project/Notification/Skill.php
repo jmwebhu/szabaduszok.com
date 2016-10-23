@@ -1,6 +1,6 @@
 <?php
 
-class Model_User_Project_Notification_Skill extends Model_User_Relation
+class Model_User_Project_Notification_Skill extends Model_User_Project_Notification
 {
     protected $_table_name  = 'users_project_notification_skills';
     protected $_primary_key = 'users_project_notification_skill_id';
@@ -24,9 +24,9 @@ class Model_User_Project_Notification_Skill extends Model_User_Relation
 
     protected $_table_columns = [
         'user_project_notification_skill_id'	=> ['type' => 'int', 'key' => 'PRI'],
-        'user_id'						=> ['type' => 'int', 'null' => true],
-        'skill_id' 					=> ['type' => 'int', 'null' => true],
-        'created_at' 					=> ['type' => 'datetime', 'null' => true]
+        'user_id'						        => ['type' => 'int', 'null' => true],
+        'skill_id' 					            => ['type' => 'int', 'null' => true],
+        'created_at' 					        => ['type' => 'datetime', 'null' => true]
     ];
 
     /**

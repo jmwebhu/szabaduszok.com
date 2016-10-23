@@ -10,6 +10,63 @@
  */
 class Migrate
 {
+    public static function updateUserProjectNotifications()
+    {
+        self::truncateNotificationTables();
+        $notifications = DB::select()->from('users_project_notification')->execute()->as_array();
+
+        foreach ($notifications as $notification) {
+            $tableData = self::getTableDataFrom($notification);
+
+            try {
+                DB::insert($tableData['table'], ['user_id', $tableData['column'], 'created_at'])->values([
+                    'user_id'               => $notification['user_id'],
+                    $tableData['column']    => Arr::get($notification, $tableData['column']),
+                    'created_at'            => $notification['created_at'],
+                ])->execute();
+            } catch (Database_Exception $ex) {
+                Log::instance()->addException($ex);
+                continue;
+            } catch (Exception $ex) {
+                echo Debug::vars($ex);
+                exit;
+            }
+        }
+    }
+
+    protected static function truncateNotificationTables()
+    {
+        Database::instance()->query(Database::DELETE, 'TRUNCATE TABLE users_project_notification_industries');
+        Database::instance()->query(Database::DELETE, 'TRUNCATE TABLE users_project_notification_professions');
+        Database::instance()->query(Database::DELETE, 'TRUNCATE TABLE users_project_notification_skills');
+    }
+
+    /**
+     * @param array $notification
+     * @return array
+     * @throws Exception
+     */
+    protected static function getTableDataFrom(array $notification)
+    {
+        if (Arr::get($notification, 'industry_id')) {
+            $table  = 'users_project_notification_industries';
+            $column = 'industry_id';
+        } elseif (Arr::get($notification, 'profession_id')) {
+            $table  = 'users_project_notification_professions';
+            $column = 'profession_id';
+        } elseif (Arr::get($notification, 'skill_id')) {
+            $table  = 'users_project_notification_skills';
+            $column = 'skill_id';
+        } else {
+            throw new Exception('Invalid notification type');
+        }
+
+        return [
+            'table'     => $table,
+            'column'    => $column
+        ];
+    }
+
 	public static function mergeTags()
 	{
 		self::mergeTagsSkills();

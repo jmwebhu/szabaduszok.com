@@ -17,6 +17,8 @@ class users_project_notification_skills extends Migration
             'user_project_notification_skill_id'
         );
 
+        $this->add_index('users_project_notification_skills', 'user_id_skill_id', ['user_id', 'skill_id'], 'unique');
+
         $this->sql("ALTER TABLE `users_project_notification_skills` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
         $this->sql("ALTER TABLE `users_project_notification_skills` ADD FOREIGN KEY (`skill_id`) REFERENCES `skills`(`skill_id`) ON DELETE CASCADE ON UPDATE CASCADE");
     }

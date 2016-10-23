@@ -8,7 +8,7 @@ class Assert
             return true;
         }
 
-        throw new \Exception('Never should reach here');
+        throw new \Exception('Failed asserting thtat never should reach here');
     }
 
     public static function notNull($object)
@@ -18,7 +18,18 @@ class Assert
         }
 
         if ($object == null) {
-            throw new Exception('Value is null');
+            throw new Exception('Failed asserting that ' . Variable::getTypeOf($object) . ' is NULL');
+        }
+    }
+
+    public static function isTrue($condition)
+    {
+        if (self::before()) {
+            return true;
+        }
+
+        if (!$condition) {
+            throw new Exception('Failed asserting that ' . $condition . ' is TRUE');
         }
     }
 
@@ -33,5 +44,4 @@ class Assert
 
         return false;
     }
-
 }
