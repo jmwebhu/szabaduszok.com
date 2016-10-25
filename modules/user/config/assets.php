@@ -11,11 +11,11 @@ AssetCollection::instance()
     
     // Regisztraciok
     ->setJs('freelancer-registration', 'sites/freelancer-registration.js')
-    ->setJs('projectowner-registration', 'sites/projectowner-registration.js')
+    ->setJs('employer-registration', 'sites/employer-registration.js')
     
     // Profilok
     ->setJs('freelancer-profile', 'sites/freelancer-profile.js')
-    ->setJs('projectowner-profile', 'sites/projectowner-profile.js')
+    ->setJs('employer-profile', 'sites/employer-profile.js')
     
     // Szabaduszo lista
     ->setJs('freelancers', 'sites/freelancers.js')
@@ -29,32 +29,40 @@ AssetCollection::instance()
  * AssetManager initialize
  */
 AssetManager::instance()
-    ->addController('user')
-    
+
+    ->addController('user_create_freelancer')
+        ->addAction('index')
+            ->addJs(['freelancer-registration'])
+
+    ->addController('user_create_employer')
+        ->addAction('index')
+            ->addJs(['employer-registration'])
+
+    ->addController('user_update_freelancer')
+        ->addAction('index')
+            ->addJs(['freelancer-registration'])
+
+    ->addController('user_update_employer')
+        ->addAction('index')
+            ->addJs(['employer-registration'])
+
+    ->addController('user_profile_freelancer')
+        ->addAction('index')
+            ->addJs(['barrating', 'freelancer-profile'])
+            ->addCss(['font-awesome-stars'])
+
+    ->addController('user_profile_employer')
+        ->addAction('index')
+            ->addJs(['barrating', 'employer-profile'])
+            ->addCss(['font-awesome-stars'])
+
+
+    ->addController('user_auth')
         ->addAction('login')
-            ->addJs(['login'])                      
-            
-        ->addAction('freelancerregistration')
-        	->addJs(['freelancer-registration'])
-        	
-        ->addAction('projectownerregistration')
-        	->addJs(['projectowner-registration'])
-        	
-        ->addAction('freelancerprofile')
-        	->addJs(['barrating', 'freelancer-profile'])
-        	->addCss(['font-awesome-stars'])
-        	
-        ->addAction('freelancerprofileedit')
-        	->addJs(['freelancer-registration'])
-        	
-        ->addAction('projectownerprofile')
-        	->addJs(['barrating', 'projectowner-profile'])
-        	->addCss(['font-awesome-stars'])
-        	
-        ->addAction('projectownerprofileedit')
-        	->addJs(['projectowner-registration'])
-        	
-        ->addAction('freelancers')        	
+            ->addJs(['login'])
+
+    ->addController('user_freelancers')
+        ->addAction('index')
         	->addJs(['barrating', 'freelancers'])
         	->addCss(['font-awesome-stars'])
 ;

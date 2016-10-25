@@ -12,10 +12,10 @@
 							<div class="col-sm-2 project-img mobile-hide">
 								<img src="{{ ROOT }}media/img/szabaduszo-projekt.png" class="img-responsive project-image center-block hidden-xs" alt="Szabadúszó projekt, munka {{ project.getName() }}">
 								<h4 class="mg-md text-center hidden-xs project-owner-name">
-									{% if users[project.getProjectId()].is_company %}
-										{{ users[project.getProjectId()].company_name }}
+									{% if users[project.getProjectId()].getIsCompany() %}
+										{{ users[project.getProjectId()].getCompanyName() }}
 									{% else %}
-										{{ users[project.getProjectId()].name() }}
+										{{ users[project.getProjectId()].getName() }}
 									{% endif %}
 								</h4>
 							</div>

@@ -1,0 +1,36 @@
+{% extends "Templates/default.twig" %}
+{% import "Search/panel.twig" as searchPanel %}
+{% import "Pager/panel.twig" as pagerPanel %}
+
+{% block content %}
+<div class="bloc tc-black bgc-anti-flash-white l-bloc" id="bloc-13">
+	<div class="container bloc-lg">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1 class="mg-md text-center tc-black">
+					Szabadúszók
+				</h1>
+
+				{{ searchPanel.build(container) }}
+				
+				<div class="row">
+					<div class="col-sm-12 text-center" id="list-results">
+						<p class=" project-count-paragraph">
+							Összes Szabadúszó: <span class="bold">{{ countAllFreelancers }}</span>
+						</p>
+                        {% if needPager == false %}
+						<p class=" project-count-paragraph">
+							Keresési találatok száma: <span class="bold">{{ countMatchedFreelancers }}</span>
+						</p>
+						{% endif %}
+					</div>					
+				</div>
+				
+				{{ pagerPanel.build(pager, needPager) }}
+				{% include 'User/parts/_list.twig' %}
+                {{ pagerPanel.build(pager, needPager) }}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "Templates/default.twig" %}
+
+{% block content %}
+<div class="bloc tc-black bgc-anti-flash-white" id="bloc-11">
+    <div class="container bloc-lg">
+        <div class="row">
+            <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
+            <span class='error-label has-error general-error-label block mb10 text-center'>{{ session_error }}</span>
+
+            {% if not error %}
+            <div class="col-sm-12">
+                <h1 class="mg-md text-center">
+                    {{ user.getName() }}
+                </h1>
+
+                <input type="hidden" value="{{ user.getRatingPointsAvg()|number_format(0) }}" id="initial-rating">
+                <input type="hidden" value="{{ canRate }}" id="can-rate">
+
+                {% block profilePanel %}
+                {% endblock profilePanel %}
+            </div>
+            <!-- col-sm-12 END -->
+            {% endif %}
+        </div>
+        <!-- row END -->
+    </div>
+    <!-- container END -->
+</div>
+<!-- bloc-11 END -->
+{% endblock content %}

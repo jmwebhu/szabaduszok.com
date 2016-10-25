@@ -1,0 +1,14 @@
+<span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
+<div class="checkbox">
+    <label>
+        <input type="checkbox" id="is-company" name="is_company" {% if user.getIsCompany() %}checked{% endif %}>Céges?
+    </label>
+</div>
+
+<span class="fa fa-building pull-left icon-sm icon-dark-gray hidden"></span>
+<div class="form-group hidden">
+    <label>
+        Cégnév*
+    </label>
+    <input class="form-control" id="company-name" name="company_name" type="text" value="{{ user.getCompanyName() }}">
+</div>

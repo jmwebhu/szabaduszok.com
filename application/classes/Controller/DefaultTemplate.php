@@ -75,42 +75,56 @@ class Controller_DefaultTemplate extends Controller_Twig
     public function defaultExceptionRedirect(Exception $ex)
     {
     	$user = Auth::instance()->get_user();
-    	
-    	/*
-    	 * Nincs belepett felhasznalo. Ilyenkor belepesre iranyitjuk, es Session -be eltesszuk a jelenlegi url -t,
-    	 * belepes utan pedig vissza iranyitjuk ide. Ez a redirect_url
-    	 */
-    	if (!$user->loaded())
-    	{
-    		$url = Route::url('login');    
+    	if (!$user->loaded()) {
+    		$url        = Route::url('login');
+            $message    = 'Az oldal megtekintéséhez kérjük lépj be';
     		
     		// Csak Forbidden hiba eseten
-    		if ($ex instanceof HTTP_Exception_403)
-    		{
+    		if ($ex instanceof HTTP_Exception_403) {
     			/**
     			 * @var $ex HTTP_Exception_403	A kiveletben benne van az URL, ami dobta
     			 */
     			$route = $ex->getRedirectRoute();    			
     			
     			// Ha be van allitva az url -hez tartozo route
-    			if ($route)
-    			{
+    			if ($route) {
     				Session::instance()->set('redirect_url', Route::url(Route::name($route), ['slug' => $ex->getRedirectSlug()]));
     			}
+
+                $message = $ex->getMessage();
     		}
-    		
-    		Session::instance()->set('error', 'Az oldal megtekintéséhez kérjük lépj be');
-    	}
-    	else		// Belepett felhasznalo, olyan oldalt akart megnezni, amihez nincsen jogosultsaga. Profilra iranyitunk, altalanos hiba uzenettel
-    	{
+
+    		Session::instance()->set('error', $message);
+
+    	} else {
     		Session::instance()->set('error', $ex->getMessage());
-    	
-    		// Szabaduszo, vagy pt profil
     		$url = ($user->type == 1) ? Route::url('freelancerProfile', ['slug' => $user->slug]) : Route::url('projectOwnerProfile', ['slug' => $user->slug]);
     	}
-    	
-    	// Atiranyitas
+
     	header('Location: ' . $url, true, 302);
     	die();
+    }
+
+    /**
+     * @param bool $expression
+     * @throws HTTP_Exception_404
+     */
+    protected function throwNotFoundExceptionIfNot($expression)
+    {
+        if (!$expression) {
+            throw new HTTP_Exception_404('Sajnáljuk, de nincs ilyen felhasználó');
+        }
+    }
+
+    /**
+     * @param bool $expression
+     * @param string $message
+     * @throws HTTP_Exception_403
+     */
+    protected function throwForbiddenExceptionIfNot($expression, $message = 'Nincs jogosultságod az odal megtekintéséhez')
+    {
+        if (!$expression) {
+            throw new HTTP_Exception_403($message);
+        }
     }
 }

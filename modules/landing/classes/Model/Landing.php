@@ -44,36 +44,28 @@ class Model_Landing extends ORM
             'foreign_key'   => 'landing_page_id',
         ],
     ];
-    
+
     /**
-     * Landing oldal megnyitasakor hivodik meg. Noveli megnyitasok szamat.
-     * Ha nincs meg ilyen landing oldal, akkor letrehozza
-     *
-     * @param string $name   _POST nev
+     * @param string $name
+     * @return array
      */
     public function open($name)
-    {        
-        // Nincs ilyen landing oldal
-        if (!$this->loaded())
-        {
+    {
+        if (!$this->loaded()) {
             $post = [
                 'name'  => $name
             ];
-            
-            // Letrehoz egy ujat
+
             $submit = $this->submit($post);
 
-            if (Arr::get($submit, 'error'))
-            {
+            if (Arr::get($submit, 'error')) {
                 return ['error' => true];
             }
         }
 
-        // Szamlalo noveles
         $this->counter++;
-        $save = $this->save();        
+        $this->save();
 
-        // Megnyitas log
         $opening = new Model_Landing_Page_Opening();
         $opening->landing   = $this;
         $opening->datetime  = date('Y-m-d H:i', time());
@@ -81,5 +73,11 @@ class Model_Landing extends ORM
         $opening->save();
 
         return ['error' => false];
+    }
+
+    public static function byName($name)
+    {
+        $model = new Model_Landing();
+        return $model->where('name', '=', $name)->limit(1)->find();
     }
 }

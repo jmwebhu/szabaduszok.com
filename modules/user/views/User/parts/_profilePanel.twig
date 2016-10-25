@@ -1,0 +1,113 @@
+<div class="panel">
+    <div class="panel-heading">
+        <h2 class="mg-clear tc-black">
+            {{ profileTitle }}
+        </h2>
+    </div>
+
+    <div class="panel-body">
+        <div class="col-sm-3 text-center img-container">
+            {% block imageContainer %}
+                <img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
+            {% endblock imageContainer %}
+        </div>
+
+        <div class="col-sm-3 details-container">
+            {% block detailsContainerContact %}
+                <div class="col-5 fs18">
+                    <span class="ion ion-location icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18">
+                    {% if user.getAddressCity() %}
+                        {{ user.getAddressCity() }}
+                    {% else %}
+                        Nincs adat
+                    {% endif %}
+                </div>
+
+            {% endblock detailsContainerContact %}
+        </div>
+
+        <div class="col-sm-3 details-container">
+            {% block detailsContainerRelations %}
+                <div class="col-5 fs18">
+                    <span class="ion ion-briefcase icon-dark-gray project-details-profeesion-sign"></span>
+                </div>
+                <div class="col-95 fs18">
+                    {% for industry in user.getRelation("industries") %}
+                        <span id="{{ industry.industry_id }}" class="tag">{{ industry.name }}</span>
+                    {% else %}
+                        <span class="tag">Még nincs adat</span>
+                    {% endfor %}
+                </div>
+
+                <div class="col-5 fs18">
+                    <span class="ion ion-university icon-dark-gray project-details-profeesion-sign"></span>
+                </div>
+                <div class="col-95 fs18">
+                    {% for profession in user.getRelation("professions") %}
+                        <span id="{{ profession.profession_id }}" class="tag">{{ profession.name }}</span>
+                    {% else %}
+                        <span class="tag">Még nincs adat</span>
+                    {% endfor %}
+                </div>
+            {% endblock detailsContainerRelations %}
+        </div>
+
+        <div class="col-sm-3 text-center rating-container">
+            {% block ratingContainer %}
+                <h3>Értékelés</h3>
+                <select id="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+
+                <p class="rating-avg">Átlag: <span id="rating-avg-point">{{ user.getRatingPointsAvg()|number_format(1, '.', ' ') }}</span></p>
+                <p class="rating-avg">Értékelők száma: <span id="raters-count">{{ user.getRatersCount()|number_format(0, '.', ' ') }}</span></p>
+                <p class="your-rating">Te értékelésed: <span id="your-rating-point">{{ myRating }}</span></p>
+
+                {% if canRate %}
+                    <p class="rating-instruction">Kattints a csillagra, és nyomd meg az 'Értékel' gombot</p>
+
+                    <button class="btn btn-lg btn-block btn-lime-green rating" data-user_id="{{ user.getUserId() }}" id="rate">
+                        <span class="fa fa-star icon-spacer icon-white"></span>
+                        Értékel
+                    </button>
+                {% endif %}
+            {% endblock ratingContainer %}
+        </div>
+
+        {% block descriptionContainer %}
+            <div class="bottom-container">
+                <h3 class="mg-md tc-black">
+                    Rövid bemutatkozás
+                </h3>
+                <p class="text-justify">
+                    {% if user.getShortDescription() %}
+                        {{ user.getShortDescription() }}
+                    {% else %}
+                        Nem adott meg bemutatkozást
+                    {% endif %}
+                </p>
+
+                <p class="text-left text-right project-share-date">
+                    Utolsó belépés: {{ user.getLastLoginFormatted() }}
+                </p>
+
+                {% if canEdit %}
+                    <div class="text-center">
+                        <a href="{{ editUrl }}" class="btn btn-lg btn-block btn-ultramarine-blue"><span class="ion ion-edit icon-spacer icon-white"></span>Szerkeszt</a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endblock descriptionContainer %}
+    </div>
+    <!-- panel-body END -->
+</div>
+<!-- panel profil    END -->
+
+{% block bottomContainer %}
+{% endblock bottomContainer %}

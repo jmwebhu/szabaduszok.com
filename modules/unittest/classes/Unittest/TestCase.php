@@ -48,4 +48,15 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
 
         $this->_mock = $mock;
     }
+
+    public function createMock($class, $method, $return)
+    {
+        $mock  = $this->getMockBuilder($class)->getMock();
+
+        $mock->expects($this->any())
+            ->method($method)
+            ->will($this->returnValue($return));
+
+        return $mock;
+    }
 }

@@ -255,6 +255,38 @@ class Kohana_ORM extends Model implements serializable {
 	 * @var string
 	 */
 	protected $_errors_filename = NULL;
+
+    /**
+     * @return array
+     */
+    public function getTableColumns()
+    {
+        return $this->_table_columns;
+    }
+
+    /**
+     * @param Database $db
+     */
+    public function setDb($db)
+    {
+        $this->_db = $db;
+    }
+
+    /**
+     * @param String $db_group
+     */
+    public function setDbGroup($db_group)
+    {
+        $this->_db_group = $db_group;
+    }
+
+    /**
+     * @return Database
+     */
+    public function getDb()
+    {
+        return $this->_db;
+    }
 	
 	/**
 	 * Constructs a new model and loads a record if given
@@ -2471,13 +2503,13 @@ class Kohana_ORM extends Model implements serializable {
 	
 	public function saveSlug()
 	{
-            if ($this->_slugField)
-            {
-                $slug = $this->getUniqueSlug();
-		$this->{$this->_slugField} = $slug;
-		
-		$this->save();	
-            }		
+        if ($this->_slugField)
+        {
+            $slug = $this->getUniqueSlug();
+            $this->{$this->_slugField} = $slug;
+
+            $this->save();
+        }
 	}
 	
 	public function removeAll($table, $key)
@@ -2487,15 +2519,6 @@ class Kohana_ORM extends Model implements serializable {
 	
 	public function cacheToCollection()
 	{
-		$cache = Cache::instance();
-		$collection = $cache->get($this->_table_name, []);
-	
-		if (empty($collection))
-		{
-			$orm = ORM::factory($this->_object_name);
-			$collection = $orm->getAll();
-		}		
-		
 		AB::insert($this->_table_name)->set($this->pk())->values($this)->execute();
 	}
 	
@@ -2504,7 +2527,7 @@ class Kohana_ORM extends Model implements serializable {
 		$cache = Cache::instance();
 		$cache->delete($this->_table_name);	
 		
-		$orm = ORM::factory($this->_object_name);
+		$orm = ORM::factory($this->object_name());
 		$models = $orm->find_all();
 		
 		$collection = [];
@@ -2520,13 +2543,12 @@ class Kohana_ORM extends Model implements serializable {
 	}
 	
 	public function getAll()
-	{					            
-		$cache = Cache::instance();		
-		$collection = $cache->get($this->_table_name);		
+	{
+		$cache      = Cache::instance();
+		$collection = $cache->get($this->_table_name);
 		
-		if (!$collection)
-		{				
-			$orm = ORM::factory($this->_object_name);
+		if (!$collection) {
+			$orm = ORM::factory($this->object_name());
 			$collection = $orm->cacheAll();
 		}		
 		
@@ -2605,7 +2627,7 @@ class Kohana_ORM extends Model implements serializable {
 		
 		if (!$model || !$model->loaded())
 		{
-			$model = ORM::factory($this->_object_name)->where($this->_object_name . '.' . $col, '=', $vlaue)->limit(1)->find();
+			$model = ORM::factory($this->_object_name)->where($this->_object_name . '.' . $col, '=', $value)->limit(1)->find();
 			$collection[] = $model;
 		}
 		

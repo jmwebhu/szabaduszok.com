@@ -1,0 +1,18 @@
+{% extends "User/write.twig" %}
+
+{% block personalProfile %}
+    {% include "User/Write/company.twig" %}
+    {{ parent() }}
+
+    <span class="ion ion-android-phone-portrait pull-left icon-sm icon-dark-gray"></span>
+    <div class="form-group">
+        <label>
+            Telefonszám*
+        </label>
+        <input class="form-control" id="phonenumber" name="phonenumber" type="tel" required data-rules='{"notEmpty": "true"}' value="{{ user.getPhonenumber() }}">
+    </div>
+{% endblock personalProfile %}
+
+{% block address %}
+    {% include "User/Write/Employer/address.twig" %}
+{% endblock address %}

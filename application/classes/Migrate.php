@@ -10,178 +10,66 @@
  */
 class Migrate
 {
-	public static function users()
-	{
-		exit;
-		// v1 adatbazis kapcsolat hasznalata
-		$v1 = Database::instance('v1');
-		
-		$users = DB::select()
-			->from('users')
-			->execute($v1)->as_array();				
-		
-		foreach ($users as $user)			
-		{		
-			$values = [
-				'email'					=> Arr::get($user, 'email'),
-				'password'				=> Arr::get($user, 'password'),
-				'address_postal_code'	=> Arr::get($user, 'address_postal_code'),
-				'address_city'			=> Arr::get($user, 'address_city'),
-				'address_street'		=> Arr::get($user, 'address_street'),
-				'phonenumber'			=> Arr::get($user, 'phonenumber'),
-				'slug'					=> Arr::get($user, 'slug'),
-				'type'					=> 2,
-				'is_company'			=> 0,
-				'created_at'			=> Arr::get($user, 'created_at'),
-				'old_user_id'			=> Arr::get($user, 'id'),
-				'company_name'			=> Arr::get($user, 'name')
-			];
-			
-			$insert = DB::insert('users', array_keys($values))->values($values)->execute();
-		}		
-		
-		$userModel 	= new Model_User();
-		$users 		= $userModel->where('type', '=', 2)->find_all();
-		
-		foreach ($users as $user)
-		{
-			/**
-			 * $user Model_User
-			 */
-			$user->saveSearchText();
-		}				
-	}
-	
-	public static function signups()
-	{
-		exit;
-		// v1 adatbazis kapcsolat hasznalata
-		$v1 = Database::instance('v1');
-		
-		$signups = DB::select()
-			->from('signups')
-			->where('su_is_active', '=', 1)
-			->execute($v1)->as_array();
-						
-		foreach ($signups as $signup)
-		{			
-			$userModel = new Model_User();
-			$user = $userModel->where('email', '=', Arr::get($signup, 'su_email'))->limit(1)->find();
-			
-			if (!$user->loaded())
-			{
-				$password = Model_User::generatePassword();
-				$values = [
-					'email'					=> Arr::get($signup, 'su_email'),
-					'password_plain'		=> $password,
-					'password'				=> Auth::instance()->hash($password),
-					'type'					=> 1,
-					'created_at'			=> Arr::get($signup, 'su_created_at'),
-					'old_user_id'			=> Arr::get($signup, 'su_id'),
-				];
-				
-				$insert = DB::insert('users', array_keys($values))->values($values)->execute();
-			}						
-		}
-		
-		if (!$user->loaded())
-		{
-			$userModel 	= new Model_User();
-			$users 		= $userModel->where('type', '=', 1)->find_all();
-			
-			foreach ($users as $user)
-			{
-				/**
-				 * $user Model_User
-				 */
-				$user->slug = 'szabaduszo-' . $user->user_id;
-				$user->save();
-			}	
-		}			
-	}
-	
-	public static function setNames()
-	{
-		$migrates = DB::select()
-			->from('users_migrate')
-			->where('type', '=', 2)
-			->execute()->as_array();		
-		
-		foreach ($migrates as $user)
-		{
-			$normalUser = DB::select()->from('users')->where('old_user_id', '=', $user['old_user_id'])->limit(1)->execute()->current();
-			
-			$values = [
-				'lastname' 		=> $user['lastname'],
-				'firstname' 	=> $user['firstname'],
-				'company_name'	=> $user['company_name'],
-				'is_company' 	=> $user['is_company']
-			];
-			
-			$update = DB::update('users')->set($values)->where('user_id', '=', $normalUser['user_id'])->execute();
-		}
-	}
-	
-	public static function searchText()
-	{
-		$projectModel	= new Model_Project();
-		$projects		= $projectModel->find_all();
-		
-		foreach ($projects as $project)
-		{
-			/**
-			 * @var $project Model_Project
-			 */
-			$project->search_text = $project->getSearchText();
-			$project->save();
-		}
-	}
-	
-	public static function userpassword()
-	{
-		$user	= new Model_User();
-		$users  = $user->where('password', 'IS', null)->find_all();
-		
-		foreach ($users as $user)
-		{
-			/**
-			 * @var $user Model_User
-			 */
-			
-			$password 				= Model_User::generatePassword();			
-			$user->password 		= Auth::instance()->hash($password);
-			$user->password_plain	= $password;
-			
-			$user->save();
-		}
-	}
-	
-	public static function slug()
-	{
-		$user 	= new Model_User();
-		$users 	= $user->find_all();	
-		
-		foreach ($users as $user)
-		{
-		 	/**
-		 	 * @var $user Model_User
-			 */
-			
-			if ($user->type == 1)
-			{
-				$user->slug = 'szabaduszo-' . $user->user_id;
-				$user->save();
-			}
-			else 
-			{
-				$user->saveSlug();
-			}
-		}
-	}
-	
+    public static function updateUserProjectNotifications()
+    {
+        self::truncateNotificationTables();
+        $notifications = DB::select()->from('users_project_notification')->execute()->as_array();
+
+        foreach ($notifications as $notification) {
+            $tableData = self::getTableDataFrom($notification);
+
+            try {
+                DB::insert($tableData['table'], ['user_id', $tableData['column'], 'created_at'])->values([
+                    'user_id'               => $notification['user_id'],
+                    $tableData['column']    => Arr::get($notification, $tableData['column']),
+                    'created_at'            => $notification['created_at'],
+                ])->execute();
+            } catch (Database_Exception $ex) {
+                Log::instance()->addException($ex);
+                continue;
+            } catch (Exception $ex) {
+                echo Debug::vars($ex);
+                exit;
+            }
+        }
+    }
+
+    protected static function truncateNotificationTables()
+    {
+        Database::instance()->query(Database::DELETE, 'TRUNCATE TABLE users_project_notification_industries');
+        Database::instance()->query(Database::DELETE, 'TRUNCATE TABLE users_project_notification_professions');
+        Database::instance()->query(Database::DELETE, 'TRUNCATE TABLE users_project_notification_skills');
+    }
+
+    /**
+     * @param array $notification
+     * @return array
+     * @throws Exception
+     */
+    protected static function getTableDataFrom(array $notification)
+    {
+        if (Arr::get($notification, 'industry_id')) {
+            $table  = 'users_project_notification_industries';
+            $column = 'industry_id';
+        } elseif (Arr::get($notification, 'profession_id')) {
+            $table  = 'users_project_notification_professions';
+            $column = 'profession_id';
+        } elseif (Arr::get($notification, 'skill_id')) {
+            $table  = 'users_project_notification_skills';
+            $column = 'skill_id';
+        } else {
+            throw new Exception('Invalid notification type');
+        }
+
+        return [
+            'table'     => $table,
+            'column'    => $column
+        ];
+    }
+
 	public static function mergeTags()
 	{
-		//self::mergeTagsSkills();
+		self::mergeTagsSkills();
 		self::mergeTagsProfessions();
 	}	
 	

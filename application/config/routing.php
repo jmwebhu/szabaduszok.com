@@ -48,47 +48,17 @@ Route::set('test', 'main/test')
 		'action'     => 'test',
 ));
 
-Route::set('migrateUsers', 'migrate/users')
-	->defaults(array(
-		'controller' => 'Migrate',
-		'action'     => 'users',
-));
-	
-Route::set('migrateSignups', 'migrate/signups')
-	->defaults(array(
-		'controller' => 'Migrate',
-		'action'     => 'signups',
-));
-	
-Route::set('migrateSetNames', 'migrate/setnames')
-	->defaults(array(
-		'controller' => 'Migrate',
-		'action'     => 'setnames',
-));
-	
-Route::set('migrateSearchtext', 'migrate/searchtext')
-->defaults(array(
-		'controller' => 'Migrate',
-		'action'     => 'searchtext',
-));
-
-Route::set('migrateUserpassword', 'migrate/userpassword')
-->defaults(array(
-		'controller' => 'Migrate',
-		'action'     => 'userpassword',
-));
-
-Route::set('migrateSlug', 'migrate/slug')
-->defaults(array(
-		'controller' => 'Migrate',
-		'action'     => 'slug',
-));
-
 Route::set('migrateMergeTags', 'migrate/mergetags')
 ->defaults(array(
 		'controller' => 'Migrate',
 		'action'     => 'mergetags',
 ));
+
+Route::set('migrateUserProjectNotifications', 'migrate/updateuserprojectnotifications')
+    ->defaults(array(
+        'controller' => 'Migrate',
+        'action'     => 'update_user_project_notifications',
+    ));
 
 Route::set('testIndex', 'test/index')
 ->defaults(array(

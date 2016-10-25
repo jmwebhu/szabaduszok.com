@@ -9,7 +9,7 @@
 class Entity_Project extends Entity
 {
     /**
-     * @var Project_Search
+     * @var Search
      */
     private $_search;
 
@@ -355,7 +355,7 @@ class Entity_Project extends Entity
     }
 
     /**
-     * @return Project_Search
+     * @return Search
      */
     public function getSearch()
     {
@@ -363,9 +363,9 @@ class Entity_Project extends Entity
     }
 
     /**
-     * @param Project_Search $search
+     * @param Search $search
      */
-    public function setSearch(Project_Search $search)
+    public function setSearch(Search $search)
     {
         $this->_search = $search;
     }
@@ -437,28 +437,14 @@ class Entity_Project extends Entity
     }
 
     /**
-     * @param array $models
-     * @return array
-     */
-    public function getEntitiesFromModels(array $models)
-    {
-        $entities = [];
-        foreach ($models as $model) {
-            $entities[] = new Entity_Project($model->project_id);
-        }
-
-        return $entities;
-    }
-
-    /**
      * @param array $data
-     * @return Entity_Project
+     * @return Entity_Project|bool
      */
     public function submit(array $data)
     {
         parent::submit($data);
 
-        $this->setSearchText($this->_business->getSearchTextFromFields());
+        $this->_search_text = $this->_business->getSearchTextFromFields();
         $this->save();
 
         $this->_model->cacheToCollection();

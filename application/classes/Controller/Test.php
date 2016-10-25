@@ -4,11 +4,10 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $ind = new Model_Project_Industry();
-        $model = $ind->getEndRelationModel();
+        $signup = DB::select()->from('signups')->where('email', '=', 'heroldtamas1992@gmail.com')->execute()->current();
+        echo Debug::vars($signup);
 
-        echo Debug::vars($model->primary_key());
-    }	
+    }
 
     public function action_clearcache()
     {

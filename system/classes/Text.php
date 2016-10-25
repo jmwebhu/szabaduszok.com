@@ -20,4 +20,13 @@ class Text extends Kohana_Text
 
 		return $cmp;
 	}
+
+    /**
+     * @param int $length
+     * @return string
+     */
+    public static function generatePassword($length = 6)
+    {
+        return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+    }
 }

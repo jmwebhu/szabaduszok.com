@@ -23,16 +23,6 @@ class Business_Project extends Business
     }
 
     /**
-     * @param Model_Project_Relation $relation
-     * @return string
-     */
-    public static function getRelationIdField(Model_Project_Relation $relation)
-    {
-        $model = $relation->getEndRelationModel();
-        return $model->primary_key();
-    }
-
-    /**
      * @param string $field
      * @param int $maxChars
      * @return mixed|string
@@ -52,5 +42,15 @@ class Business_Project extends Business
     public function getSearchTextFromFields()
     {
         return $this->_searchText->getSearchTextFromFields();
+    }
+
+    /**
+     * @param Model_Relation $relation
+     * @return string
+     */
+    public static function getRelationIdField(Model_Relation $relation)
+    {
+        $model = $relation->getEndRelationModel();
+        return $model->primary_key();
     }
 }

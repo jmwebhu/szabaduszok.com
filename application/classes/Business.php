@@ -23,17 +23,17 @@ class Business
     public static function getIdsFromModelsSingle(array $models, $primaryKey = null)
     {
         $ids = [];
-        foreach ($models as $model) {
 
-            try {
+        try {
+            foreach ($models as $model) {
                 self::checkModel($model);
                 $ids[] = self::getIdFromModel($model, $primaryKey);
-
-            } catch (Exception $ex) {
-                Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
-
-                return [];
             }
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+
+            return [];
         }
 
         return $ids;
@@ -49,7 +49,8 @@ class Business
         $ids = [];
         foreach ($models as $i => $array) {
             if (!is_array($array)) {
-                return [];
+                $ids[$i] = [];
+                continue;
             }
 
             $ids[$i] = self::getIdsFromModelsSingle($array, $primaryKey);
@@ -83,7 +84,7 @@ class Business
             return $model->{$primaryKey};
         }
 
-        return $model->pk();
+        return $model->{$model->primary_key()};
     }
 
     /**
@@ -94,10 +95,8 @@ class Business
      */
     protected static function checkPrimaryKey(ORM $model, $primaryKey)
     {
-        $object = $model->object();
-
-        if (!Arr::get($object, $primaryKey)) {
-            throw new Exception('Trying to get non-existing property ' . $primaryKey . ' in class ' . Variable::getTypeOf($model));
+        if ($model->primary_key() != $primaryKey ) {
+            throw new Exception('Invalid primary key: ' . $primaryKey . ' for object type of ' . Variable::getTypeOf($model));
         }
 
         return true;

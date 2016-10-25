@@ -2,13 +2,6 @@
 
 class ORM extends Kohana_ORM 
 {
-    public function setDb($db)
-    {
-        if (is_string($db)) {
-            $this->_db_group = $db;
-        }                                      
-    }
-    
     /**
      * Torol minden adatot a tablabol
      */
@@ -17,7 +10,7 @@ class ORM extends Kohana_ORM
         $models = $this->find_all();        
         
         foreach ($models as $model) {
-            DB::delete($this->_table_name)->where($this->_primary_key, '=', $model->pk())->execute();
+            $model->delete();
             Cache::instance()->delete($this->_table_name);
         }
     }    
@@ -74,11 +67,12 @@ class ORM extends Kohana_ORM
      * @return void
      */
     protected function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
-    {                 	
+    {
+        $thisPk                         = $this->primary_key();
         $relationIds                    = [];    			
 		$cache                          = Cache::instance();   
 		$cacheRelations                 = $relationModel->getAll();    	
-		$cacheRelations[$this->pk()]    = [];      
+		$cacheRelations[$this->{$thisPk}]    = [];
         
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
@@ -86,12 +80,13 @@ class ORM extends Kohana_ORM
 		if (!empty($postData)) {
 			foreach ($postData as $value) {
 				$relation       = $this->getOrCreate($value, $relationEndModel);
-				
-				if (!$this->has($relationEndModel->object_plural(), $relation->pk())) {
-					$relationIds[]  = $relation->pk();
+				$relationPk     = $relation->primary_key();
+
+				if (!$this->has($relationEndModel->object_plural(), $relation->{$relationPk})) {
+					$relationIds[]  = $relation->{$relationPk};
 				}				
 
-				$cacheRelations[$this->pk()][] = $relation;
+				$cacheRelations[$this->{$thisPk}][] = $relation;
 			}                
 
 			$this->add($relationEndModel->object_plural(), $relationIds);       
@@ -146,5 +141,63 @@ class ORM extends Kohana_ORM
     public function clearCache()
     {
         AB::delete($this->_table_name, $this->pk())->execute();
+    }
+
+    /**
+     * @param string $relationName
+     * @return string
+     */
+    public function getRelationString($relationName)
+    {
+        $items  = $this->{$relationName}->find_all();
+        $sb     = SB::create();
+
+        foreach ($items as $i => $item) {
+            $sb->append($item->name);
+
+            if ($i == count($items) - 1) {
+                $sb->append(', ');
+            }
+        }
+
+        return $sb->get('');
+    }
+
+    public function getRelationBy($name)
+    {
+        if ($this->isRelationHasMany($name)) {
+            $through = $this->getHasManyThrough($name);
+
+            if ($through) {
+                $cache = Cache::instance()->get($through);
+
+                if (empty($cache)) {
+                    return $this->{$name}->find_all();
+                }
+
+                return Arr::get($cache, $this->{$this->_primary_key});
+
+            } else {
+                return $this->{$name}->find_all();
+            }
+
+        } else {
+            return $this->{$name};
+        }
+    }
+
+    protected function isRelationHasMany($relation)
+    {
+        if (Arr::get($this->has_many(), $relation)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getHasManyThrough($relation)
+    {
+        $hasMany = Arr::get($this->has_many(), $relation);
+        return Arr::get($hasMany, 'through');
     }
 }

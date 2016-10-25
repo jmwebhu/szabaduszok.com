@@ -86,7 +86,7 @@ class Model_Project extends ORM implements Subject
 
     /**
      * @param array $post
-     * @return Model_Project
+     * @return ORM
      * @throws Exception
      */
     public function submit(array $post)
@@ -110,8 +110,7 @@ class Model_Project extends ORM implements Subject
         $this->addRelations($post);
         
         if (!$id) {
-            $user = new Model_User();
-            $user->addToProjectNotification($this);
+            Model_Project_Notification::addProject($this);
         }
 
         return $this;
@@ -131,7 +130,6 @@ class Model_Project extends ORM implements Subject
             $this->is_active = 0;
             $this->save();
 
-            $this->clearCache();
             $this->notifyObservers(self::EVENT_INACTIVATE);
 
         } catch (Exception $ex) {
@@ -145,6 +143,10 @@ class Model_Project extends ORM implements Subject
 
         } finally {
             Model_Database::trans_end([!$error]);
+
+            if (!$error) {
+                $this->clearCache();
+            }
         }
     	
     	return ['error' => $error, 'message' => $message];
@@ -212,28 +214,6 @@ class Model_Project extends ORM implements Subject
         $this->addRelation($post, new Model_Project_Industry(), new Model_Industry());
         $this->addRelation($post, new Model_Project_Profession(), new Model_Profession());
         $this->addRelation($post, new Model_Project_Skill(), new Model_Skill());
-    }
-    
-    /**
-     * A projekthez tartozo osszes kapcsolat (iparagak, szakterulat, kepesseg) nevet osszefuzi egy stringbe
-     *
-     * @param string $relationName
-     * @return string
-     */
-    public function getRelationString($relationName)
-    {
-    	$items  = $this->{$relationName}->find_all();
-        $sb     = SB::create();
-
-    	foreach ($items as $i => $item) {
-            $sb->append($item->name);
-
-            if ($i == count($items) - 1) {
-                $sb->append(', ');
-            }
-    	}
-    
-    	return $sb->get('');
     }
 
     /**

@@ -21,4 +21,19 @@ class Model_User_Rating extends ORM
 		'rater_user_id'		=> ['type' => 'int', 'null' => true],
 		'rating_point' 		=> ['type' => 'int', 'null' => true],
 	];
+
+    /**
+     * @param Model_User $rater
+     * @param Model_User $rated
+     * @return int
+     */
+    public static function getRating(Model_User $rater, Model_User $rated)
+    {
+        return DB::select('rating_point')
+            ->from('users_ratings')
+            ->where('user_id', '=', $rated->user_id)
+            ->and_where('rater_user_id', '=', $rater->user_id)
+            ->limit(1)
+            ->execute()->get('rating_point');
+    }
 }

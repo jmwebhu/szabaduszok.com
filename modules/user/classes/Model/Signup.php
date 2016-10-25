@@ -21,5 +21,5 @@ class Model_Signup extends Model_Auth_User
 		'created_at'			=> ['type' => 'datetime', 'null' => true],
 		'updated_at'			=> ['type' => 'datetime', 'null' => true],
 		'type'					=> ['type' => 'int'],
-	];	          
-} // End Signup Model
+	];
+}

@@ -19,16 +19,22 @@ abstract class Entity
     /**
      * @var array Azok az adattagok, amiket nem kell self::map() -nak masolni
      */
-    private static $_disabledPropertiesInMap = ['_model', '_business', '_destinationObject', '_targetObject', '_stdObject'];
+    private static $_disabledPropertiesInMap = ['_model', '_business', '_destinationObject', '_targetObject', '_stdObject', '_file', '_search', '_mailinglist'];
 
     /**
      * @var ORM
      */
     protected $_model;
+
     /**
      * @var Business
      */
     protected $_business;
+
+    /**
+     * @var stdClass Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
+     */
+    protected $_stdObject;
 
     /**
      * @var Object
@@ -40,24 +46,69 @@ abstract class Entity
     private $_targetObject      = null;
 
     /**
-     * @var stdClass Ugyanazt tartalmazza, mint az Entity, csak a property -k, "_" prefix nelkul vannak, igy "ORM-kompatibilis"
+     * Csak unit teszthez kell
+     * @param $object
      */
-    private $_stdObject;
+    protected function setDestinationObject($object)
+    {
+        $this->_destinationObject = $object;
+    }
 
     /**
-     * @param null|int $id
+     * Csak unit teszthez kell
+     * @param $object
      */
-    public function __construct($id = null)
+    protected function setTargetObject($object)
+    {
+        $this->_targetObject = $object;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @return Object
+     */
+    protected function getDestinationObject()
+    {
+        return $this->_destinationObject;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @return Object
+     */
+    protected function getTargerObject()
+    {
+        return $this->_targetObject;
+    }
+
+    /**
+     * Csak unit teszthez kell
+     * @return Object
+     */
+    protected function getStdObject()
+    {
+        return $this->_stdObject;
+    }
+
+    /**
+     * @param null|ORM|int $value
+     */
+    public function __construct($value = null)
     {
         $entity             = $this->getEntityName();
-        $modelClass         = 'Model_' . $entity;
         $businessClass      = 'Business_' . $entity;
 
-        $this->_model       = new $modelClass($id);
+        if (is_object($value)) {
+            $this->_model       = $value;
+        } else {
+            $modelClass         = 'Model_' . $entity;
+            $this->_model       = new $modelClass($value);
+        }
+
         $this->_business    = new $businessClass($this->_model);
         $this->_stdObject   = new stdClass();
 
-        if ($id) {
+        if ($value) {
             $this->mapModelToThis();
         }
     }
@@ -90,6 +141,38 @@ abstract class Entity
     /**
      * @return bool
      */
+    public function loaded()
+    {
+        return $this->_model->loaded();
+    }
+
+    /**
+     * @param $name
+     * @return array
+     */
+    public function getRelation($name)
+    {
+        return $this->_model->getRelationBy($name);
+    }
+
+    /**
+     * @param array $models
+     * @return array
+     */
+    public function getEntitiesFromModels(array $models)
+    {
+        $entities = [];
+        foreach ($models as $i => $model) {
+            $class      = 'Entity_' . $this->getEntityName();
+            $entities[$i] = new $class($model);
+        }
+
+        return $entities;
+    }
+
+    /**
+     * @return bool
+     */
     public function save()
     {
         try {
@@ -102,7 +185,7 @@ abstract class Entity
             $this->setPrimaryKeyFromModel();
         } catch (Exception $ex) {
             $result = false;
-            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            Log::instance()->addException($ex);
         } finally {
             Model_Database::trans_end([$result]);
         }
@@ -124,7 +207,7 @@ abstract class Entity
             $this->mapModelToThis();
         } catch (Exception $ex) {
             $result = false;
-            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            Log::instance()->addException($ex);
         } finally {
             Model_Database::trans_end([$result]);
         }
@@ -145,30 +228,28 @@ abstract class Entity
     }
 
     /**
-     * @param string $name
-     * @return array
+     * @param string $alias
+     * @param mixed $farKeys
+     * @return bool
      */
-    public function getRelation($name)
+    public function has($alias, $farKeys = null)
     {
-        return $this->_model->{$name}->find_all();
+        return $this->_model->has($alias, $farKeys);
     }
 
     /**
+     * @param null $class   Unittest miatt
      * @return string
      */
-    protected function getEntityName()
+    protected function getEntityName($class = null)
     {
-        $class = get_class($this);
-        $parts = explode('_', $class);
+        $class = ($class) ? $class : get_class($this);
+        $parts  = explode('_', $class);
 
-        switch (count($parts)) {
-            case 2: default:
-                $name = Arr::get($parts, 1, '');
-                break;
-
-            case 4:     // Mock_Entity_Project_d0f10a18
-                $name = Arr::get($parts, 2, '');
-                break;
+        if (in_array('Mock', $parts)) {
+            $name = implode('_', array_slice($parts, 2, count($parts) - 3));
+        } else {
+            $name = implode('_', array_slice($parts, 1));
         }
 
         return $name;
@@ -207,7 +288,7 @@ abstract class Entity
             $this->mapProperties();
 
         } catch (Exception $ex) {
-            Log::instance()->add(Log::ERROR, $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString());
+            Log::instance()->addException($ex);
             $result = false;
         }
 
@@ -302,6 +383,6 @@ abstract class Entity
     {
         $primaryKey         = $this->_model->primary_key();
         $prefixed           = '_' . $primaryKey;
-        $this->{$prefixed}  = $this->_model->pk();
+        $this->{$prefixed}  = $this->_model->{$this->_model->primary_key()};
     }
 }

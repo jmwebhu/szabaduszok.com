@@ -5,7 +5,7 @@ var FreelancerReg = {
 		this.addWidgets();				
 	},
 	cacheElements: function () {
-		this.$form = $('form#freelancer-form');
+		this.$form = $('form');
 		this.$submit = this.$form.find('button[type="submit"]');
 		
 		this.$industries = this.$form.find('select#industries');
