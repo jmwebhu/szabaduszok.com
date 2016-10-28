@@ -9,7 +9,7 @@ class Notifier_Email extends Notifier
      */
     protected function sendTo($target, $context)
     {
-        return Email::send($target, '[' . $this->_notification->getEvent()->getNotificationSubject() . ']', $context);
+        return Email::send($target, '[' . strtoupper($this->_notification->getEvent()->getName()) . ']', $context);
     }
 
     /**

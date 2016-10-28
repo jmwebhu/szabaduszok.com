@@ -13,6 +13,11 @@ interface Notification
     public function getEvent();
 
     /**
+     * @return string
+     */
+    public function getUrl();
+
+    /**
      * @return array
      */
     public function submit();

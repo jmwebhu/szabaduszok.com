@@ -10,5 +10,10 @@ interface Event
     /**
      * @return string
      */
-    public function getNotificationSubject();
+    public function getName();
+
+    /**
+     * @return string
+     */
+    public function getSubjectName();
 }

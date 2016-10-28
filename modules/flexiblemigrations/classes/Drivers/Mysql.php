@@ -50,7 +50,7 @@ class Drivers_Mysql extends Drivers_Driver
 			$sql .= ')';
 		}
 
-		$sql .= ")";
+		$sql .= ") DEFAULT CHARSET=utf8";
 
 		return $this->run_query($sql);
 	}
