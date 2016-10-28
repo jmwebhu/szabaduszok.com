@@ -18,6 +18,11 @@ interface Notification
     public function getUrl();
 
     /**
+     * @return int
+     */
+    public function getId();
+
+    /**
      * @param array
      * @return array
      */

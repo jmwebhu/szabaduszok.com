@@ -11,10 +11,19 @@ abstract class Notifier
     protected $_notification;
 
     /**
+     * @return Notification
+     */
+    public function getNotification()
+    {
+        return $this->_notification;
+    }
+
+    /**
+     * @param Notifiable $target
      * @param string $context
      * @return bool
      */
-    abstract protected function sendTo($target, $context);
+    abstract protected function sendTo(Notifiable $target, $context);
 
     /**
      * @return string
@@ -30,10 +39,10 @@ abstract class Notifier
     }
 
     /**
-     * @param string $target
+     * @param Notifiable $target
      * @return bool
      */
-    public function sendNotificationTo($target)
+    public function sendNotificationTo(Notifiable $target)
     {
         $formatter  = new Notification_Formatter($this->_notification, $this);
         $context    = $formatter->getFormattedData();

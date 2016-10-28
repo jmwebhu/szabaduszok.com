@@ -139,6 +139,9 @@ class Model_Project extends ORM implements Subject
             $notification->setUrl(Route::url('projectProfile', ['slug' => $this->slug]));
 
             $notification->save();
+            $entity = new Entity_User_Freelancer($user);
+            $entity->setNotification($notification);
+            $entity->sendNotification();
         }
     }
 

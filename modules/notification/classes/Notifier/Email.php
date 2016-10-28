@@ -3,13 +3,13 @@
 class Notifier_Email extends Notifier
 {
     /**
-     * @param $target
+     * @param Notifiable $target
      * @param string $context
      * @return bool
      */
-    protected function sendTo($target, $context)
+    protected function sendTo(Notifiable $target, $context)
     {
-        return Email::send($target, '[' . strtoupper($this->_notification->getEvent()->getName()) . ']', $context);
+        return Email::send($target->getEmail(), '[' . strtoupper($this->_notification->getEvent()->getName()) . ']', $context);
     }
 
     /**

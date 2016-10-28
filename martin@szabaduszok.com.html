@@ -1,0 +1,13 @@
+Notificaion not sent. Notification: 7 Notifiable: 1 Notifier: json Trace: #0 /Applications/MAMP/htdocs/szabaduszok.com/modules/project/classes/Model/Project.php(144): Entity_User->sendNotification()
+#1 /Applications/MAMP/htdocs/szabaduszok.com/modules/project/classes/Model/Project.php(114): Model_Project->createNotification()
+#2 /Applications/MAMP/htdocs/szabaduszok.com/application/classes/Entity.php(209): Model_Project->submit(Array)
+#3 /Applications/MAMP/htdocs/szabaduszok.com/modules/project/classes/Entity/Project.php(445): Entity->submit(Array)
+#4 /Applications/MAMP/htdocs/szabaduszok.com/modules/project/classes/Controller/Project/Create.php(77): Entity_Project->submit(Array)
+#5 /Applications/MAMP/htdocs/szabaduszok.com/modules/project/classes/Controller/Project/Create.php(38): Controller_Project_Create->handlePostRequest()
+#6 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Controller.php(84): Controller_Project_Create->action_index()
+#7 [internal function]: Kohana_Controller->execute()
+#8 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request/Client/Internal.php(97): ReflectionMethod->invoke(Object(Controller_Project_Create))
+#9 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request/Client.php(114): Kohana_Request_Client_Internal->execute_request(Object(Request), Object(Response))
+#10 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request.php(997): Kohana_Request_Client->execute(Object(Request))
+#11 /Applications/MAMP/htdocs/szabaduszok.com/index.php(132): Kohana_Request->execute()
+#12 {main}

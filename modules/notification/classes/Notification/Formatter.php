@@ -2,7 +2,7 @@
 
 class Notification_Formatter
 {
-    const EXTENSION_TWIG = 'tiwg';
+    const EXTENSION_TWIG = 'twig';
     const TEMPLATE_BASE_PATH = 'Templates';
 
     /**
@@ -43,7 +43,7 @@ class Notification_Formatter
 
         // Templates/new_project.html.twig
         return $this->getTemplateBasePath() . DIRECTORY_SEPARATOR . $event->getTemplateName() .
-            '.' . $this->_notifier->getTemplateFormat() . $this->getTemplateExtension();
+            '.' . $this->_notifier->getTemplateFormat() . '.' . $this->getTemplateExtension();
     }
 
     /**

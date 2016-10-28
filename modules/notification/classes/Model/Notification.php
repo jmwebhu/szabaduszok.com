@@ -67,4 +67,12 @@ class Model_Notification extends ORM implements Notification
     {
         return $this->url;
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->notification_id;
+    }
 }

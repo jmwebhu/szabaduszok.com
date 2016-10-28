@@ -4,7 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        EntityFieldGenerator::generateFromModel(new Model_Notification());
+        $content = Twig::getHtmlFromTemplate('Templates/project_new.html.twig', []);
+        var_dump($content);
     }
 
     public function action_clearcache()

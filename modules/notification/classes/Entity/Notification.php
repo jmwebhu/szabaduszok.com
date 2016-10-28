@@ -240,4 +240,12 @@ class Entity_Notification extends Entity implements Notification
     {
         return $this->_model->getUrl();
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_notification_id;
+    }
 }
