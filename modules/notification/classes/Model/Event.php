@@ -7,6 +7,14 @@ class Model_Event extends ORM implements Event
     protected $_table_name      = 'events';
     protected $_primary_key     = 'event_id';
 
+    protected $_table_columns = [
+        'event_id'      => ['type' => 'int',        'key' => 'PRI'],
+        'user_id'       => ['type' => 'int',        'null' => true],
+        'name'          => ['type' => 'string',     'null' => true],
+        'template_name' => ['type' => 'string',     'null' => true],
+        'subject_name'  => ['type' => 'string',     'null' => true]
+    ];
+
     /**
      * @return string
      */

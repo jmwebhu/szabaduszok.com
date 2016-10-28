@@ -18,7 +18,8 @@ interface Notification
     public function getUrl();
 
     /**
+     * @param array
      * @return array
      */
-    public function submit();
+    public function submit(array $data);
 }

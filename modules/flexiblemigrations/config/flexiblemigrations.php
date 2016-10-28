@@ -3,7 +3,7 @@
 return array(
 
 	//Enable Web frontend
-	'web_frontend' => TRUE,
+	'web_frontend' => false,
 
 	//Route path to web frontend
 	'web_frontend_route' => 'migrations',

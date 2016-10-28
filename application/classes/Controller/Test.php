@@ -4,8 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $signup = DB::select()->from('signups')->where('email', '=', 'heroldtamas1992@gmail.com')->execute()->current();
-        echo Debug::vars($signup);
+        $notification = new Model_Notification();
+        echo Debug::vars($notification->find_all());
 
     }
 
