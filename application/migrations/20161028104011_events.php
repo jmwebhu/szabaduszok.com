@@ -17,8 +17,8 @@ class events extends Migration
         'event_id'
      );
 
-      $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Új projekt', 'new_project', 'project')");
-      $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Új jelentkező', 'new_candidate', 'user')");
+      $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Új projekt', 'project_new', 'project')");
+      $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Új jelentkező', 'candidate_new', 'user')");
       $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Jelentkezés visszavonása', 'candidate_undo', 'user')");
       $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Jelentkezés jóváhagyása', 'candidate_accept', 'user')");
       $this->sql("INSERT INTO `events` (`event_id`, `name`,`template_name`, `subject_name`) VALUES(NULL, 'Jelentkezés elutasítása', 'candidate_reject', 'user')");
