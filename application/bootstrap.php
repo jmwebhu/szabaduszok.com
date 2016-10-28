@@ -156,6 +156,7 @@ Kohana::modules(array(
 	'landing'	=> MODPATH.'landing',
     'search'    => MODPATH.'search',
     'listview'    => MODPATH.'listview',
+    'notification'    => MODPATH.'notification',
 
 	));
 
