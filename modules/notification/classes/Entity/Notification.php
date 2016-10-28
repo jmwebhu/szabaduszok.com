@@ -283,4 +283,20 @@ class Entity_Notification extends Entity implements Notification
         $class = $this->getEvent()->getNotifiedClass();
         return new $class($this->getNotifiedUserId());
     }
+
+    public function archive()
+    {
+        $this->_model->is_archived = true;
+        $this->_model->save();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArchived()
+    {
+        return (bool)$this->_model->is_archived;
+    }
+
+
 }

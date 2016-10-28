@@ -581,6 +581,15 @@ abstract class Entity_User extends Entity implements Notifiable
                         . $notifier->getNotification()->getId() . ' Notifiable: ' . $this->getId() . ' Notifier: ' . $notifier->getTemplateFormat());
                 }
             }
+
+            foreach ($this->_notifiers as $notifier) {
+                /**
+                 * @var Notifier $notifier
+                 */
+                if (!$notifier->getNotification()->isArchived()) {
+                    $notifier->getNotification()->archive();
+                }
+            }
         } catch (Exception $ex) {
             $result = false;
             Log::instance()->addException($ex);

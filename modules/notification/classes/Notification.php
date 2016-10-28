@@ -38,6 +38,16 @@ interface Notification
     public function getNotified();
 
     /**
+     * @return void
+     */
+    public function archive();
+
+    /**
+     * @return bool
+     */
+    public function isArchived();
+
+    /**
      * @param array
      * @return array
      */
