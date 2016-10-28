@@ -24,20 +24,34 @@ class Notification_Formatter
         $this->_notification    = $_notification;
         $this->_notifier        = $_notifier;
     }
-    /**
-     * @return string
-     */
-    protected function getTemplateBasePath()
-    {
-        self::TEMPLATE_BASE_PATH;
-    }
 
     /**
      * @return string
      */
     public function getFormattedData()
     {
-        return 'Formatted data';
+        $data = $this->_notification->getData();
+        return Twig::getHtmlFromTemplate($this->getFullTemplatePath(), $data);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFullTemplatePath()
+    {
+        $event = $this->_notification->getEvent();
+
+        // Templates/new_project.html.twig
+        return $this->getTemplateBasePath() . DIRECTORY_SEPARATOR . $event->getTemplateName() .
+            '.' . $this->_notifier->getTemplateFormat() . $this->getTemplateExtension();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getTemplateBasePath()
+    {
+        return self::TEMPLATE_BASE_PATH;
     }
 
     /**

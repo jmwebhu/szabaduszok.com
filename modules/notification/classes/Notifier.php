@@ -16,7 +16,7 @@ abstract class Notifier
     /**
      * @return string
      */
-    abstract protected function getTemplateFormat();
+    abstract public function getTemplateFormat();
 
     /**
      * @param Notification $notification
