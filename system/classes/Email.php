@@ -11,7 +11,7 @@ class Email extends Kohana_Email
     public static function send($to, $subject, $message)
     {
     	try {
-    	    $mail = true;
+            $mail = true;
             $headers   = array();
             $headers[] = "MIME-Version: 1.0";
             $headers[] = "Content-type: text/html; charset=UTF-8";
@@ -33,6 +33,7 @@ class Email extends Kohana_Email
             }
     	} catch (Exception $ex) {
     	    Log::instance()->addException($ex);
+            $mail = false;
     	}          
 
         return $mail;

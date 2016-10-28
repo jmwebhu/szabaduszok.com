@@ -2,6 +2,9 @@
 
 abstract class Notifier
 {
+    const TEMPLATE_FORMAT_HTML = 'html';
+    const TEMPLATE_FORMAT_JSON = 'json';
+
     /**
      * @var Notification
      */
@@ -11,7 +14,7 @@ abstract class Notifier
      * @param string $context
      * @return bool
      */
-    abstract protected function send($context);
+    abstract protected function sendTo($target, $context);
 
     /**
      * @return string
@@ -27,13 +30,14 @@ abstract class Notifier
     }
 
     /**
+     * @param string $target
      * @return bool
      */
-    public function sendNotification()
+    public function sendNotificationTo($target)
     {
         $formatter  = new Notification_Formatter($this->_notification, $this);
         $context    = $formatter->getFormattedData();
 
-        return $this->send($context);
+        return $this->sendTo($target, $context);
     }
 }
