@@ -1,6 +1,6 @@
 <?php
 
-class Model_Notification extends ORM implements Notification
+class Model_Notification extends ORM
 {
     protected $_table_name  = 'notifications';
     protected $_primary_key = 'notification_id';
@@ -43,36 +43,4 @@ class Model_Notification extends ORM implements Notification
             'foreign_key'   => 'event_id'
         ]
     ];
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->object();
-    }
-
-    /**
-     * @return Event
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->notification_id;
-    }
 }

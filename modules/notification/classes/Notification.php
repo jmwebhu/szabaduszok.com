@@ -23,6 +23,21 @@ interface Notification
     public function getId();
 
     /**
+     * @return Notification_Subject
+     */
+    public function getSubject();
+
+    /**
+     * @return Notifiable
+     */
+    public function getNotifier();
+
+    /**
+     * @return Notifiable
+     */
+    public function getNotified();
+
+    /**
      * @param array
      * @return array
      */

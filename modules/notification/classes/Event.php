@@ -15,5 +15,15 @@ interface Event
     /**
      * @return string
      */
+    public function getNotifierClass();
+
+    /**
+     * @return string
+     */
+    public function getNotifiedClass();
+
+    /**
+     * @return string
+     */
     public function getSubjectName();
 }

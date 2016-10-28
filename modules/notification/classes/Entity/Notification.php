@@ -222,7 +222,7 @@ class Entity_Notification extends Entity implements Notification
      */
     public function getData()
     {
-        return $this->_model->getData();
+        return $this->_model->object();
     }
 
     /**
@@ -230,7 +230,7 @@ class Entity_Notification extends Entity implements Notification
      */
     public function getEvent()
     {
-        return $this->_model->getEvent();
+        return Model_Event_Factory::createEvent($this->_model->event_id);
     }
 
     /**
@@ -238,7 +238,7 @@ class Entity_Notification extends Entity implements Notification
      */
     public function getUrl()
     {
-        return $this->_model->getUrl();
+        return $this->_model->url;
     }
 
     /**
@@ -247,5 +247,40 @@ class Entity_Notification extends Entity implements Notification
     public function getId()
     {
         return $this->_notification_id;
+    }
+
+    /**
+     * @return Notification_Subject
+     */
+    public function getSubject()
+    {
+        $class = strtoupper($this->getSubjectName());
+        $entityClass = 'Entity_' . $class;
+
+        if (class_exists($entityClass)) {
+            return new $entityClass($this->getSubjectId());
+        }
+
+        $modelClass = 'Model_' . $class;
+
+        return new $modelClass($this->getSubjectId());
+    }
+
+    /**
+     * @return Notifiable
+     */
+    public function getNotifier()
+    {
+        $class = $this->getEvent()->getNotifierClass();
+        return new $class($this->getNotifierUserId());
+    }
+
+    /**
+     * @return Notifiable
+     */
+    public function getNotified()
+    {
+        $class = $this->getEvent()->getNotifiedClass();
+        return new $class($this->getNotifiedUserId());
     }
 }

@@ -30,7 +30,13 @@ class Notification_Formatter
      */
     public function getFormattedData()
     {
-        $data = $this->_notification->getData();
+        $data = [
+            'notification'  => $this->_notification,
+            'subject'       => $this->_notification->getSubject(),
+            'notifier'      => $this->_notification->getNotifier(),
+            'notified'      => $this->_notification->getNotified()
+        ];
+
         return Twig::getHtmlFromTemplate($this->getFullTemplatePath(), $data);
     }
 

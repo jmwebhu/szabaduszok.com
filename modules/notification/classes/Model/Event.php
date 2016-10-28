@@ -52,4 +52,14 @@ class Model_Event extends ORM implements Event
     {
         return $this->object();
     }
+
+    public function getNotifierClass()
+    {
+
+    }
+
+    public function getNotifiedClass()
+    {
+
+    }
 }

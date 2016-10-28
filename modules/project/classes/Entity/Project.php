@@ -6,7 +6,7 @@
  * Felelosseg: Projekt model mappelese, Facade biztositasa Projekt kulonbozo szolgaltatsaihoz
  */
 
-class Entity_Project extends Entity
+class Entity_Project extends Entity implements Notification_Subject
 {
     /**
      * @var Search
@@ -458,5 +458,13 @@ class Entity_Project extends Entity
     public function isSalariesEqual()
     {
         return $this->getSalaryLow() == $this->getSalaryHigh() || !$this->getSalaryHigh();
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->_model->object();
     }
 }
