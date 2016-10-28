@@ -4,13 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        //$event = Model_Event_Factory::createEvent(Model_Event::TYPE_PROJECT_NEW);
-        $event = new Model_Event_Project_New(1);
-        $user = new Model_User_Freelancer();
-        //echo Debug::vars($user);
-
-        echo Debug::vars($event->object_name());
-        echo Debug::vars($user->object_name());
+        EntityFieldGenerator::generateFromModel(new Model_Notification());
     }
 
     public function action_clearcache()

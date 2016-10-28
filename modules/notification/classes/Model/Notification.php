@@ -18,8 +18,8 @@ class Model_Notification extends ORM implements Notification
     protected $_table_columns = [
         'notification_id'       => ['type' => 'int',        'key' => 'PRI'],
         'notifier_user_id'      => ['type' => 'int',        'null' => true],
-        'notified_user_id'      => ['type' => 'string',     'null' => true],
-        'subject_id'            => ['type' => 'string',     'null' => true],
+        'notified_user_id'      => ['type' => 'int',        'null' => true],
+        'subject_id'            => ['type' => 'int',        'null' => true],
         'subject_name'          => ['type' => 'string',     'null' => true],
         'event_id'              => ['type' => 'string',     'null' => true],
         'url'                   => ['type' => 'string',     'null' => true],
