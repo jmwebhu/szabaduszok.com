@@ -110,39 +110,10 @@ class Model_Project extends ORM implements Subject
         $this->addRelations($post);
         
         if (!$id) {
-            //Model_Project_Notification::addProject($this);
-            $this->createNotification();
+            Entity_Notification::createForProjectNew($this);
         }
 
         return $this;
-    }
-
-    protected function createNotification()
-    {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_PROJECT_NEW);
-
-        $search = Project_Notification_Search_Factory_User::makeSearch([
-            'industries'    => $this->getRelationIds('industries'),
-            'professions'   => $this->getRelationIds('professions'),
-            'skills'        => $this->getRelationIds('skills'),
-        ]);
-
-        $users = $search->search();
-
-        foreach ($users as $user) {
-            $notification = new Entity_Notification();
-            $notification->setNotifierUserId($this->user_id);
-            $notification->setNotifiedUserId($user->user_id);
-            $notification->setEventId($event->event_id);
-            $notification->setSubjectId($this->project_id);
-            $notification->setSubjectName($this->object_name());
-            $notification->setUrl(Route::url('projectProfile', ['slug' => $this->slug]));
-
-            $notification->save();
-            $entity = new Entity_User_Freelancer($user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
-        }
     }
 
     /**

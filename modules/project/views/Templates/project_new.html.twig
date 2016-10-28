@@ -12,6 +12,8 @@
 <p class="skills">Szükséges képességek:</p>
 {% for skill in subject.getModel().skills.find_all() %}
 <span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
+{% else %}
+    <p class="skills">Nincs megadva</p>
 {% endfor %}
 <br><br>								
 
