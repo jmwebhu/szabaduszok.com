@@ -20,6 +20,11 @@ class Email extends Kohana_Email
             $headers[] = "X-Mailer: PHP/" . phpversion();
 
             if ($to) {
+
+                if (defined('UNITTEST') && UNITTEST == true) {
+                    return true;
+                }
+
                 if (Kohana::$environment == Kohana::DEVELOPMENT) {
                     file_put_contents($to . '.html', $message);
                     return true;

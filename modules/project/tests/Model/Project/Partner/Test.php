@@ -18,9 +18,9 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     private static $_project;
 
     /**
-     * @var int
+     * @var Model_Project_Partner
      */
-    private static $_partnerId;
+    private static $_partner;
 
     /**
      * @covers Model_Project_Partner::apply()
@@ -34,7 +34,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
 
         $partner = new Model_Project_Partner();
         $partner->apply($data);
-        self::$_partnerId = $partner->project_partner_id;
+        self::$_partner = $partner;
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_freelancer->user_id,
@@ -44,6 +44,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         ]);
 
         $this->assertPartnerExistsInDatabaseByData($data);
+        $this->assertPartnerTypeIs(Model_Project_Partner::TYPE_CANDIDATE);
     }
 
     /**
@@ -53,8 +54,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     {
         $this->assertPartnerExistsInDatabase();
 
-        $partner = new Model_Project_Partner(self::$_partnerId);
-        $partner->undoApplication();
+        self::$_partner->undoApplication();
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_freelancer->user_id,
@@ -64,6 +64,38 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         ]);
 
         $this->assertPartnerNotExistsInDatabase();
+    }
+
+    /**
+     * @covers Model_Project_Partner::approveApplication()
+     */
+    public function testApproveApplication()
+    {
+        $this->givenApplication();
+        $this->assertPartnerExistsInDatabase();
+
+        self::$_partner->approveApplication();
+
+        $this->assertNotificationExistsInDatabaseWith([
+            'notifier_user_id'  => self::$_employer->user_id,
+            'notified_user_id'  => self::$_freelancer->user_id,
+            'subject_id'        => self::$_project->project_id,
+            'event_id'          => Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_ACCEPT)->event_id
+        ]);
+
+        $this->assertApprovedPartnerExistsInDatabase();
+    }
+
+    protected function givenApplication()
+    {
+        $data = [
+            'user_id'       => self::$_freelancer->user_id,
+            'project_id'    => self::$_project->project_id
+        ];
+
+        $partner = new Model_Project_Partner();
+        $partner->apply($data);
+        self::$_partner = $partner;
     }
 
 
@@ -76,18 +108,25 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $partner    = $model->getByUserProject($data);
 
         $this->assertTrue($partner->loaded());
+        $this->assertPartnerTypeIs(Model_Project_Partner::TYPE_CANDIDATE);
     }
 
     protected function assertPartnerExistsInDatabase()
     {
-        $partner = new Model_Project_Partner(self::$_partnerId);
-        $this->assertTrue($partner->loaded());
+        $this->assertTrue(self::$_partner->loaded());
     }
 
     protected function assertPartnerNotExistsInDatabase()
     {
-        $partner = new Model_Project_Partner(self::$_partnerId);
-        $this->assertFalse($partner->loaded());
+        $this->assertFalse(self::$_partner->loaded());
+    }
+
+    protected function assertApprovedPartnerExistsInDatabase()
+    {
+        $this->assertPartnerExistsInDatabase();
+
+        $this->assertEquals(date('Y-m-d H:i', time()), self::$_partner->approved_at);
+        $this->assertPartnerTypeIs(Model_Project_Partner::TYPE_PARTICIPANT);
     }
 
     /**
@@ -107,6 +146,11 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->assertNotNull($notification['notification_id']);
         $this->assertNotEmpty($notification['notification_id']);
         $this->assertTrue($notification['is_archived'] != 1);
+    }
+
+    protected function assertPartnerTypeIs($type)
+    {
+        $this->assertEquals($type, self::$_partner->type);
     }
 
     /**
