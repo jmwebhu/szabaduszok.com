@@ -15,7 +15,7 @@ class projects_partners extends Migration
            'type'               => ['integer', 'default' => null, 'unsigned' => true],
            'updated_at'         => array('datetime'),
            'created_at'         => array('datetime'),
-           'accepted_at'        => array('datetime'),
+           'approved_at'        => array('datetime'),
        ),
         'project_partner_id'
      );

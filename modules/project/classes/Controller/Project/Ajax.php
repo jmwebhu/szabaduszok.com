@@ -13,6 +13,7 @@ class Controller_Project_Ajax extends Controller_Ajax
         try {
             Model_Database::trans_start();
             $this->callMethod();
+            $this->throwExceptionIfErrorInResponse();
 
         } catch (Exception $ex) {
             $this->handleException($ex);

@@ -29,3 +29,9 @@ Route::set('projectAjax', 'project/ajax/<actiontarget>(/<maintarget>)')
         'controller'    => 'Project_Ajax',
         'action'        => 'index'
     ]);
+
+Route::set('projectPartnerAjax', 'projectpartner/ajax/<actiontarget>(/<maintarget>)')
+    ->defaults([
+        'controller'    => 'Project_Partner_Ajax',
+        'action'        => 'index'
+    ]);
