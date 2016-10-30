@@ -150,7 +150,6 @@ Kohana::modules(array(
 	'assets'	=> MODPATH.'assets',       // Basic authentication
 	//'martian'       => MODPATH.'martian',       // Basic authentication	
 	'gateway'		=> MODPATH.'gateway',		// Kulso szolgaltatasokhoz tartozo API. pl MailMaster
-	'cron'		=> MODPATH.'cron',		// Szerver CRON hivasok modulja
 	'arraybuilder'		=> MODPATH.'arraybuilder',		// ArrayBuilder osztalyok
 	'flexiblemigrations'	=> MODPATH.'flexiblemigrations',
 	'landing'	=> MODPATH.'landing',

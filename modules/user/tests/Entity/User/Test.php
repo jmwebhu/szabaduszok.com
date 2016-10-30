@@ -2,8 +2,6 @@
 
 class Entity_User_Test extends Unittest_TestCase
 {
-    private static $_db;
-
     private static $_insertedUserIds = [];
 
     public static $_industries = [];
