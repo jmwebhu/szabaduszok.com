@@ -4,9 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $signup = DB::select()->from('signups')->where('email', '=', 'heroldtamas1992@gmail.com')->execute()->current();
-        echo Debug::vars($signup);
-
+        $content = Twig::getHtmlFromTemplate('Templates/project_new.html.twig', []);
+        var_dump($content);
     }
 
     public function action_clearcache()

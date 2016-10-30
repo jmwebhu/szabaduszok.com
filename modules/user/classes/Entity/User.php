@@ -1,6 +1,6 @@
 <?php
 
-abstract class Entity_User extends Entity
+abstract class Entity_User extends Entity implements Notifiable 
 {
     const TYPE_FREELANCER       = 1;
     const TYPE_EMPLOYER         = 2;
@@ -16,6 +16,11 @@ abstract class Entity_User extends Entity
      * @var Search
      */
     protected $_search;
+
+    /**
+     * @var array
+     */
+    protected $_notifiers = [];
 
     /**
      * @var int
@@ -148,6 +153,8 @@ abstract class Entity_User extends Entity
     public function __construct()
     {
         $this->_stdObject   = new stdClass();
+        $this->_notifiers[] = new Notifier_Email();
+        $this->_notifiers[] = new Notifier_Socket();
     }
 
     /**
@@ -543,5 +550,67 @@ abstract class Entity_User extends Entity
     public function search()
     {
         return $this->_search->search();
+    }
+
+    /**
+     * @param Notification $notification
+     */
+    public function setNotification(Notification $notification)
+    {
+        foreach ($this->_notifiers as $notifier) {
+            /**
+             * @var Notifier $notifier
+             */
+            $notifier->setNotification($notification);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function sendNotification()
+    {
+        $result = true;
+        try {
+            foreach ($this->_notifiers as $notifier) {
+                /**
+                 * @var Notifier $notifier
+                 */
+                if (!$notifier->sendNotificationTo($this)) {
+                    throw new Exception('Notificaion not sent. Notification: '
+                        . $notifier->getNotification()->getId() . ' Notifiable: ' . $this->getId() . ' Notifier: ' . $notifier->getTemplateFormat());
+                }
+            }
+
+            foreach ($this->_notifiers as $notifier) {
+                /**
+                 * @var Notifier $notifier
+                 */
+                if (!$notifier->getNotification()->isArchived()) {
+                    $notifier->getNotification()->archive();
+                }
+            }
+        } catch (Exception $ex) {
+            $result = false;
+            Log::instance()->addException($ex);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNotifiers()
+    {
+        return $this->_notifiers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_user_id;
     }
 }

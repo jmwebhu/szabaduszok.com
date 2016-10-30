@@ -2,21 +2,23 @@
 
 {% block content %}
 
-<h1>Hello {{ user.getFirstname() }}!</h1>
+<h1>Hello {{ notified.getFirstname() }}!</h1>
 
 <p>Van egy új projektünk számodra! A részleteket itt olvashatod:</p>
 
-<h2>{{ project.getName() }}</h2>
-<p>{{ project.getShortDescription() }}</p>
+<h2>{{ subject.getName() }}</h2>
+<p>{{ subject.getShortDescription() }}</p>
 
 <p class="skills">Szükséges képességek:</p>
-{% for skill in project.getModel().skills.find_all() %}
+{% for skill in subject.getModel().skills.find_all() %}
 <span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
+{% else %}
+    <p class="skills">Nincs megadva</p>
 {% endfor %}
 <br><br>								
 
 <p>Ha érdekel, kattints az alábbi gombra, és nézd meg a részleteket!</p>
 
-<a class="cta text-center center" target="_blank" href="{{ root }}szabaduszo-projekt/{{ project.getSlug() }}">Érdekel</a>
+<a class="cta text-center center" target="_blank" href="{{ notification.getUrl() }}">Érdekel</a>
 
 {% endblock content %}

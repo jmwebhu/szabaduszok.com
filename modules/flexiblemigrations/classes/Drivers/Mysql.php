@@ -50,7 +50,7 @@ class Drivers_Mysql extends Drivers_Driver
 			$sql .= ')';
 		}
 
-		$sql .= ")";
+		$sql .= ") DEFAULT CHARSET=utf8";
 
 		return $this->run_query($sql);
 	}
@@ -263,6 +263,7 @@ class Drivers_Mysql extends Drivers_Driver
 					case 'big':    return 'bigint';
 					case 'normal': return 'int';
 					case 'small':  return 'smallint';
+
 					default: break;
 				}
 				throw new Kohana_Exception('migrations.unknown_type :type', array(':type' => $type));

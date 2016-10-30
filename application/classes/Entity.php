@@ -105,7 +105,10 @@ abstract class Entity
             $this->_model       = new $modelClass($value);
         }
 
-        $this->_business    = new $businessClass($this->_model);
+        if (class_exists($businessClass)) {
+            $this->_business    = new $businessClass($this->_model);
+        }
+
         $this->_stdObject   = new stdClass();
 
         if ($value) {

@@ -18,7 +18,7 @@ class Assert
         }
 
         if ($object == null) {
-            throw new Exception('Failed asserting that ' . Variable::getTypeOf($object) . ' is NULL');
+            throw new Exception('Failed asserting that ' . Variable::getTypeOf($object) . ' is not NULL');
         }
     }
 
