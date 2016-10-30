@@ -11,6 +11,16 @@ abstract class Notifier
     protected $_notification;
 
     /**
+     * Notifier constructor.
+     * @param Notification $_notification
+     */
+    public function __construct(Notification $_notification)
+    {
+        $this->_notification = $_notification;
+    }
+
+
+    /**
      * @return Notification
      */
     public function getNotification()

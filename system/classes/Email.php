@@ -28,7 +28,7 @@ class Email extends Kohana_Email
                 $mail = mail($to, $subject, $message, implode("\r\n", $headers));
 
                 if (!$mail) {
-                    throw new Exception(__('emailSendError. to: ' . $to . ' subject: ' . $subject . ' message: ' . $message));
+                    throw new Exception('E-mail hiba. to: ' . $to . ' subject: ' . $subject . ' message: ' . $message);
                 }
             }
     	} catch (Exception $ex) {

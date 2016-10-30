@@ -45,10 +45,8 @@ class Notification_Formatter
      */
     protected function getFullTemplatePath()
     {
-        $event = $this->_notification->getEvent();
-
         // Templates/new_project.html.twig
-        return $this->getTemplateBasePath() . DIRECTORY_SEPARATOR . $event->getTemplateName() .
+        return $this->getTemplateBasePath() . DIRECTORY_SEPARATOR . $this->_notification->getEvent()->getTemplateName() .
             '.' . $this->_notifier->getTemplateFormat() . '.' . $this->getTemplateExtension();
     }
 
