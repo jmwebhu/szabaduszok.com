@@ -1,0 +1,10 @@
+{% extends "Templates/emailDefault.twig" %}
+
+{% block content %}
+
+<h1>Hello {{ notified.getFirstname() }}!</h1>
+
+    {% block eventText %}
+    {% endblock eventText %}
+
+{% endblock content %}

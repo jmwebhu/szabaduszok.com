@@ -4,8 +4,13 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $pp = new Model_Project_Partner();
-        echo Debug::vars($pp->find_all());
+        $data = [
+            'user_id'       => 2020,
+            'project_id'    => 10023
+        ];
+
+        $partner = new Model_Project_Partner();
+        $partner->apply($data);
     }
 
     public function action_clearcache()

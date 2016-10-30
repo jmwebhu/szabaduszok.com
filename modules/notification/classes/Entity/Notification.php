@@ -319,4 +319,26 @@ class Entity_Notification extends Entity implements Notification
 
         return $notification;
     }
+
+    /**
+     * @param Model_Project $project
+     * @param Model_User $applier
+     * @return Entity_Notification
+     */
+    public static function createForApply(Model_Project $project, Model_User $applier)
+    {
+        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_NEW);
+
+        $notification = new Entity_Notification();
+        $notification->setNotifierUserId($applier->user_id);
+        $notification->setNotifiedUserId($project->user_id);
+        $notification->setEventId($event->event_id);
+        $notification->setSubjectId($project->project_id);
+        $notification->setSubjectName($project->object_name());
+        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+
+        $notification->save();
+
+        return $notification;
+    }
 }

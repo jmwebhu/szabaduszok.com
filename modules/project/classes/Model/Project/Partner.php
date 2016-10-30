@@ -46,8 +46,13 @@ class Model_Project_Partner extends ORM
     public function apply(array $data)
     {
         $this->submit($data);
+        $project = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
 
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_NEW);
+        $notification = Entity_Notification::createForApply($project, Auth::instance()->get_user());
+
+        $entity = new Entity_User_Employer($project->user);
+        $entity->setNotification($notification);
+        $entity->sendNotification();
     }
 
     /**
