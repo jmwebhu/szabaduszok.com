@@ -67,6 +67,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
 
         $this->assertNotNull($notification['notification_id']);
         $this->assertNotEmpty($notification['notification_id']);
+        $this->assertTrue($notification['is_archived'] != 1);
     }
 
     /**
