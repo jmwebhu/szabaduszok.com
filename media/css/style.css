@@ -1507,7 +1507,7 @@ div.br-wrapper {
 .vcenter {
   position: relative;
   top: 50%;
-  transform: translateY(+10%);
+  transform: translateY(+15%);
 }
 .list-image {
 	
@@ -1560,4 +1560,12 @@ img.freelancer-placeholder-img {
 .profile-webpage-icon-container {
 	margin-top: 2px;
 	margin-right: 1px;
+}
+
+.w33 {
+	width: 33.33% !important;
+}
+
+.translateY50 {
+	transform: translateY(+62%);
 }

@@ -32,6 +32,16 @@ var ProjectProfile = {
 	        initialRating: ProjectProfile.$initialRating.val(),
 	        readonly: (ProjectProfile.$canRate.val() == '0')
 	    });
+
+		$('select.rating').each(function() {
+			var $this = $(this);
+
+			$this.barrating({
+				theme: 'fontawesome-stars',
+				initialRating: $this.data('init'),
+				readonly: true
+			});
+		});
     },
 	delClick: function () {
 	    

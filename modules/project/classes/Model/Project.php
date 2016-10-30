@@ -72,7 +72,13 @@ class Model_Project extends ORM implements Subject
         'notifications' => [
             'model'         => 'Project_Notification',
             'foreign_key'   => 'project_id',
-        ]      	
+        ],
+        'partners'      => [
+            'model'     	=> 'User',
+            'through'		=> 'projects_partners',
+            'far_key'		=> 'user_id',
+            'foreign_key'	=> 'project_id',
+        ],
     ];
 
     /**
@@ -277,6 +283,17 @@ class Model_Project extends ORM implements Subject
     		'professions'	=> $this->getRelation(new Model_Project_Profession()),
     		'skills'		=> $this->getRelation(new Model_Project_Skill())
     	];
+    }
+
+    /**
+     * @return array
+     */
+    public function getPartners()
+    {
+        return [
+            'candidates'    => $this->partners->where('projects_partners.type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all(),
+            'participants'  => $this->partners->where('projects_partners.type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all(),
+        ];
     }
 
     /**

@@ -1,0 +1,95 @@
+<div class="col-sm-12">
+    <div class="panel">
+        <div class="panel-heading">
+            <h2 class="mg-clear tc-black">
+                Projekt profil
+            </h2>
+        </div>
+        <div class="panel-body">
+            <div class="col-sm-5">
+                <div class="col-5">
+                    <span class="ion ion-briefcase icon-sm project-details-profeesion-sign icon-dark-gray"></span>
+                </div>
+                <div class="col-95 project-profession">
+                    {% for industry in industries %}
+                        <span id="{{ industry.industry_id }}" class="tag">{{ industry.name }}</span>
+                    {% else %}
+                        <span class="tag">Nincs adat</span>
+                    {% endfor %}
+                </div>
+
+                <div class="col-5">
+                    <span class="ion ion-university icon-sm project-details-profeesion-sign icon-dark-gray"></span>
+                </div>
+                <div class="col-95 project-profession">
+                    {% for profession in professions %}
+                        <span id="{{ profession.profession_id }}" class="tag">{{ profession.name }}</span>
+                    {% else %}
+                        <span class="tag">Nincs adat</span>
+                    {% endfor %}
+                </div>
+
+                <div class="col-5 fs18 project-profession">
+                    <span class="ion ion-wrench icon-dark-gray project-details-profeesion-sign"></span>
+                </div>
+                <div class="col-95 fs18">
+                    {% for skill in skills %}
+                        <span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
+                    {% else %}
+                        <span class="tag">Nincs adat</span>
+                    {% endfor %}
+                </div>
+
+                <div class="col-5">
+                    <span class="ion ion-social-usd icon-sm project-details-dollar-sign icon-dark-gray"></span>
+                </div>
+                <div class="col-95 project-details-pay-paragraph">
+                    <span class="bold">{{ salary.salary }}</span> {{ salary.postfix }}
+                </div>
+
+                <div class="col-5">
+                    <span class="ion ion-email icon-sm icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18">
+                    <a href="mailto:{{ project.getEmail() }}" target="_top">{{ project.getEmail() }}</a>
+                </div>
+
+                <div class="col-5">
+                    <span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18">
+                    {{ project.getPhonenumber() }}
+                </div>
+
+            </div>
+
+            <div class="project-details-long-description text-justify col-sm-7">
+                <p class="project-profile-short">
+                    {{ project.getShortDescription() }}
+                </p>
+                {% autoescape false %}
+                    {{ project.getLongDescription() }}
+                {% endautoescape %}
+            </div>
+
+
+            <p class="text-right project-share-date cb">
+                Megosztva: {{ project.getCreatedAt()|date("Y-m-d") }}
+            </p>
+
+            {% if canEdit %}
+                <div class="text-center">
+                    <a href="{{ ROOT }}szabaduszo-projekt-szerkesztes/{{ project.getSlug() }}" class="btn btn-block btn-lg btn-ultramarine-blue"><span class="ion ion-edit icon-spacer"></span>Szerkeszt</a>
+                </div>
+            {% endif %}
+
+            {% if canDelete %}
+                <div class="text-center">
+                    <button class="btn btn-block btn-lg btn-tomato" id="del" data-id="{{ project.getProjectId() }}"><span class="ion ion-trash-b icon-white icon-spacer"></span>Töröl</button>
+                </div>
+            {% endif %}
+            <span class="loading text-center"></span>
+        </div>
+    </div>
+
+</div>
