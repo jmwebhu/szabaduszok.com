@@ -18,6 +18,11 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     private static $_project;
 
     /**
+     * @var int
+     */
+    private static $_partnerId;
+
+    /**
      * @covers Model_Project_Partner::apply()
      */
     public function testApply()
@@ -29,6 +34,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
 
         $partner = new Model_Project_Partner();
         $partner->apply($data);
+        self::$_partnerId = $partner->project_partner_id;
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_freelancer->user_id,
@@ -37,18 +43,51 @@ class Model_Project_Partner_Test extends Unittest_TestCase
             'event_id'          => Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_NEW)->event_id
         ]);
 
-        $this->assertPartnerExistsInDatabaseAfterApply($data);
+        $this->assertPartnerExistsInDatabaseByData($data);
     }
+
+    /**
+     * @covers Model_Project_Partner::undoApplication()
+     */
+    public function testUndoApplication()
+    {
+        $this->assertPartnerExistsInDatabase();
+
+        $partner = new Model_Project_Partner(self::$_partnerId);
+        $partner->undoApplication();
+
+        $this->assertNotificationExistsInDatabaseWith([
+            'notifier_user_id'  => self::$_freelancer->user_id,
+            'notified_user_id'  => self::$_employer->user_id,
+            'subject_id'        => self::$_project->project_id,
+            'event_id'          => Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_UNDO)->event_id
+        ]);
+
+        $this->assertPartnerNotExistsInDatabase();
+    }
+
 
     /**
      * @param array $data
      */
-    protected function assertPartnerExistsInDatabaseAfterApply(array $data)
+    protected function assertPartnerExistsInDatabaseByData(array $data)
     {
-        $partner = $this->getPartner($data);
+        $model      = new Model_Project_Partner();
+        $partner    = $model->getByUserProject($data);
 
-        $this->assertEquals(1, $partner['type']);
-        $this->assertNull($partner['approved_at']);
+        $this->assertTrue($partner->loaded());
+    }
+
+    protected function assertPartnerExistsInDatabase()
+    {
+        $partner = new Model_Project_Partner(self::$_partnerId);
+        $this->assertTrue($partner->loaded());
+    }
+
+    protected function assertPartnerNotExistsInDatabase()
+    {
+        $partner = new Model_Project_Partner(self::$_partnerId);
+        $this->assertFalse($partner->loaded());
     }
 
     /**

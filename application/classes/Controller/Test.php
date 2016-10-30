@@ -4,13 +4,14 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $data = [
-            'user_id'       => 2020,
-            'project_id'    => 10023
-        ];
+        $partner = DB::select()
+            ->from('projects_partners')
+            ->where('user_id', '=', 1)
+            ->and_where('project_id', '=', 1)
+            ->limit(1)
+            ->execute()->current();
 
-        $partner = new Model_Project_Partner(18);
-        $partner->cancelParticipation();
+        echo Debug::vars($partner);
     }
 
     public function action_clearcache()
