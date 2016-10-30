@@ -45,7 +45,9 @@ class Model_Project_Partner extends ORM
      */
     public function apply(array $data)
     {
-        return $this->submit($data);
+        $this->submit($data);
+
+        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_NEW);
     }
 
     /**

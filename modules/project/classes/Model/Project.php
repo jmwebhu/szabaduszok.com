@@ -110,7 +110,7 @@ class Model_Project extends ORM implements Subject
         $this->addRelations($post);
         
         if (!$id) {
-            Entity_Notification::createForProjectNew($this);
+            Notification_User::notifyProjectNew($this);
         }
 
         return $this;
