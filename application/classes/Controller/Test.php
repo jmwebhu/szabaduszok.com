@@ -4,8 +4,9 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $partner = new Model_Project_Partner(11);
-        $partner->undoApplication();
+
+        $partner = new Model_Project_Partner(12);
+        $partner->approveApplication();
     }
 
     public function action_clearcache()

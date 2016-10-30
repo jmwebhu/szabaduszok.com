@@ -78,7 +78,15 @@ class Model_Project_Partner extends ORM
     {
         $this->approved_at = date('Y-m-d H:i', time());
         $this->type = self::TYPE_PARTICIPANT;
-        return $this->save();
+        $save = $this->save();
+
+        $notification = Entity_Notification::createForApprove($this->project, $this->user);
+
+        $entity = new Entity_User_Freelancer($this->user);
+        $entity->setNotification($notification);
+        $entity->sendNotification();
+
+        return $save;
     }
 
     /**
