@@ -52,6 +52,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
      */
     public function testUndoApplication()
     {
+        $this->givenApplication();
         $this->assertPartnerExistsInDatabase();
 
         self::$_partner->undoApplication();
@@ -86,16 +87,64 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->assertApprovedPartnerExistsInDatabase();
     }
 
+    /**
+     * @covers Model_Project_Partner::rejectApplication()
+     */
+    public function testRejectApplication()
+    {
+        $this->givenApplication();
+        $this->assertPartnerExistsInDatabase();
+
+        self::$_partner->rejectApplication();
+
+        $this->assertNotificationExistsInDatabaseWith([
+            'notifier_user_id'  => self::$_employer->user_id,
+            'notified_user_id'  => self::$_freelancer->user_id,
+            'subject_id'        => self::$_project->project_id,
+            'event_id'          => Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_REJECT)->event_id
+        ]);
+
+        $this->assertPartnerNotExistsInDatabase();
+    }
+
+    /**
+     * @covers Model_Project_Partner::cancelParticipation()
+     */
+    public function testCancelParticipation()
+    {
+        $this->givenParticipation();
+        $this->assertPartnerExistsInDatabase();
+
+        self::$_partner->cancelParticipation();
+
+        $this->assertNotificationExistsInDatabaseWith([
+            'notifier_user_id'  => self::$_employer->user_id,
+            'notified_user_id'  => self::$_freelancer->user_id,
+            'subject_id'        => self::$_project->project_id,
+            'event_id'          => Model_Event_Factory::createEvent(Model_Event::TYPE_PARTICIPATE_REMOVE)->event_id
+        ]);
+
+        $this->assertPartnerNotExistsInDatabase();
+    }
+
     protected function givenApplication()
     {
-        $data = [
-            'user_id'       => self::$_freelancer->user_id,
-            'project_id'    => self::$_project->project_id
-        ];
+        if (self::$_partner == null || !self::$_partner->loaded()) {
+            $data = [
+                'user_id'       => self::$_freelancer->user_id,
+                'project_id'    => self::$_project->project_id
+            ];
 
-        $partner = new Model_Project_Partner();
-        $partner->apply($data);
-        self::$_partner = $partner;
+            $partner = new Model_Project_Partner();
+            $partner->apply($data);
+            self::$_partner = $partner;
+        }
+    }
+
+    protected function givenParticipation()
+    {
+        $this->givenApplication();
+        self::$_partner->approveApplication();
     }
 
 
