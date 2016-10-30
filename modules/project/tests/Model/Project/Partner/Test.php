@@ -23,6 +23,39 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     private static $_partner;
 
     /**
+     * @covers Model_Project_Partner::submit()
+     */
+    public function testSubmitWithoutType()
+    {
+        $data = [
+            'user_id'       => self::$_freelancer->user_id,
+            'project_id'    => self::$_project->project_id
+        ];
+
+        $partner = new Model_Project_Partner();
+        $partner->submit($data);
+
+        $this->assertEquals(1, $partner->type);
+    }
+
+    /**
+     * @covers Model_Project_Partner::submit()
+     */
+    public function testSubmitWithType()
+    {
+        $data = [
+            'user_id'       => self::$_freelancer->user_id,
+            'project_id'    => self::$_project->project_id,
+            'type'          => 2
+        ];
+
+        $partner = new Model_Project_Partner();
+        $partner->submit($data);
+
+        $this->assertEquals(2, $partner->type);
+    }
+
+    /**
      * @covers Model_Project_Partner::apply()
      */
     public function testApply()
@@ -136,7 +169,8 @@ class Model_Project_Partner_Test extends Unittest_TestCase
             ];
 
             $partner = new Model_Project_Partner();
-            $partner->apply($data);
+            $apply = $partner->apply($data);
+
             self::$_partner = $partner;
         }
     }
@@ -144,9 +178,8 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     protected function givenParticipation()
     {
         $this->givenApplication();
-        self::$_partner->approveApplication();
+        self::$_partner = self::$_partner->approveApplication();
     }
-
 
     /**
      * @param array $data
@@ -270,5 +303,10 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         self::$_employer->delete();
         self::$_freelancer->delete();
         self::$_project->delete();
+    }
+
+    public function tearDown()
+    {
+        DB::delete('projects_partners')->execute();
     }
 }
