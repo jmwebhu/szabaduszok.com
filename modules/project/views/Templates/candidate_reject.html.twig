@@ -1,0 +1,8 @@
+{% extends "Templates/notification_base.twig" %}
+
+{% block eventText %}
+    <p>Sajnáljuk, de {{ notifier.getName() }} elutasította a jelentkezésed a(z) {{ subject.getName() }} nevű projektre!</p>
+    <p>A megtekintéshez kattints az alábbi gombra:</p>
+
+    <a class="cta text-center center" target="_blank" href="{{ notification.getUrl() }}">Érdekel</a>
+{% endblock eventText %}

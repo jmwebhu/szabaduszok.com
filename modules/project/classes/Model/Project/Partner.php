@@ -94,6 +94,12 @@ class Model_Project_Partner extends ORM
      */
     public function rejectApplication()
     {
+        $notification = Entity_Notification::createForReject($this->project, $this->user);
+
+        $entity = new Entity_User_Freelancer($this->user);
+        $entity->setNotification($notification);
+        $entity->sendNotification();
+
         return $this->delete();
     }
 
@@ -102,6 +108,12 @@ class Model_Project_Partner extends ORM
      */
     public function cancelParticipation()
     {
+        $notification = Entity_Notification::createForCancel($this->project, $this->user);
+
+        $entity = new Entity_User_Freelancer($this->user);
+        $entity->setNotification($notification);
+        $entity->sendNotification();
+
         return $this->delete();
     }
 

@@ -4,9 +4,13 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
+        $data = [
+            'user_id'       => 2020,
+            'project_id'    => 10023
+        ];
 
-        $partner = new Model_Project_Partner(12);
-        $partner->approveApplication();
+        $partner = new Model_Project_Partner(15);
+        $partner->cancelParticipation();
     }
 
     public function action_clearcache()
