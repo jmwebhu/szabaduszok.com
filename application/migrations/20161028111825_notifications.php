@@ -27,9 +27,9 @@ class notifications extends Migration
       $this->add_index('notifications', 'subject_id', ['subject_id'], 'normal');
       $this->add_index('notifications', 'is_archived', ['is_archived'], 'normal');
 
-      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notifier_user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notified_user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`event_id`) REFERENCES `events`(`event_id`) ON DELETE SET NULL ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notifier_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notified_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`event_id`) REFERENCES `events`(`event_id`) ON DELETE CASCADE ON UPDATE CASCADE");
   }
 
   public function down()

@@ -184,8 +184,7 @@ class Model_Project extends ORM implements Subject
     {
         $data = $post;
 
-        $user               = Auth::instance()->get_user();
-        $data['user_id']    = $user->user_id;
+        $data['user_id']    = Auth::instance()->get_user()->user_id;
         $data['is_paid']    = 1;
         $data['is_active']  = 1;
 

@@ -16,7 +16,7 @@ class Notification_User
         $users = $search->search();
 
         foreach ($users as $user) {
-            $notification = Entity_Notification::createForProjectNew($project, $user);
+            $notification = Entity_Notification::createFor(Model_Event::TYPE_PROJECT_NEW, $project, $user);
 
             $entity = new Entity_User_Freelancer($user);
             $entity->setNotification($notification);
