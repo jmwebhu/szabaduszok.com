@@ -9,7 +9,7 @@ class Controller_Test extends Controller
             'project_id'    => 10023
         ];
 
-        $partner = new Model_Project_Partner(15);
+        $partner = new Model_Project_Partner(18);
         $partner->cancelParticipation();
     }
 

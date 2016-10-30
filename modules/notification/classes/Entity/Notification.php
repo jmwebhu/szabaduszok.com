@@ -299,124 +299,35 @@ class Entity_Notification extends Entity implements Notification
     }
 
     /**
+     * @param int $eventType
      * @param Model_Project $project
      * @param Model_User $user
      * @return Entity_Notification
      */
-    public static function createForProjectNew(Model_Project $project, Model_User $user)
+    public static function createFor($eventType, Model_Project $project, Model_User $user)
     {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_PROJECT_NEW);
+        $event      = Model_Event_Factory::createEvent($eventType);
+        $notifier   = null;
+        $notified   = null;
+
+        switch ($event->getNotifierClass()) {
+            case Entity_User_Employer::class:
+                $notifier = $project->user_id;
+                $notified = $user->user_id;
+                break;
+
+            case Entity_User_Freelancer::class:
+                $notifier = $user->user_id;
+                $notified = $project->user_id;
+                break;
+        }
+
+        Assert::notNull($notifier);
+        Assert::notNull($notified);
 
         $notification = new Entity_Notification();
-        $notification->setNotifierUserId($project->user_id);
-        $notification->setNotifiedUserId($user->user_id);
-        $notification->setEventId($event->event_id);
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
-
-        $notification->save();
-
-        return $notification;
-    }
-
-    /**
-     * @param Model_Project $project
-     * @param Model_User $applier
-     * @return Entity_Notification
-     */
-    public static function createForApply(Model_Project $project, Model_User $applier)
-    {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_NEW);
-
-        $notification = new Entity_Notification();
-        $notification->setNotifierUserId($applier->user_id);
-        $notification->setNotifiedUserId($project->user_id);
-        $notification->setEventId($event->event_id);
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
-
-        $notification->save();
-
-        return $notification;
-    }
-
-    /**
-     * @param Model_Project $project
-     * @param Model_User $undoer
-     * @return Entity_Notification
-     */
-    public static function createForUndo(Model_Project $project, Model_User $undoer)
-    {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_UNDO);
-
-        $notification = new Entity_Notification();
-        $notification->setNotifierUserId($undoer->user_id);
-        $notification->setNotifiedUserId($project->user_id);
-        $notification->setEventId($event->event_id);
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
-
-        $notification->save();
-
-        return $notification;
-    }
-
-    /**
-     * @param Model_Project $project
-     * @return Entity_Notification
-     */
-    public static function createForApprove(Model_Project $project, Model_User $freelancer)
-    {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_ACCEPT);
-
-        $notification = new Entity_Notification();
-        $notification->setNotifierUserId($project->user->user_id);
-        $notification->setNotifiedUserId($freelancer->user_id);
-        $notification->setEventId($event->event_id);
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
-
-        $notification->save();
-
-        return $notification;
-    }
-
-    /**
-     * @param Model_Project $project
-     * @return Entity_Notification
-     */
-    public static function createForReject(Model_Project $project, Model_User $freelancer)
-    {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_REJECT);
-
-        $notification = new Entity_Notification();
-        $notification->setNotifierUserId($project->user->user_id);
-        $notification->setNotifiedUserId($freelancer->user_id);
-        $notification->setEventId($event->event_id);
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
-
-        $notification->save();
-
-        return $notification;
-    }
-
-    /**
-     * @param Model_Project $project
-     * @return Entity_Notification
-     */
-    public static function createForCancel(Model_Project $project, Model_User $freelancer)
-    {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_PARTICIPATE_REMOVE);
-
-        $notification = new Entity_Notification();
-        $notification->setNotifierUserId($project->user->user_id);
-        $notification->setNotifiedUserId($freelancer->user_id);
+        $notification->setNotifierUserId($notifier);
+        $notification->setNotifiedUserId($notified);
         $notification->setEventId($event->event_id);
         $notification->setSubjectId($project->project_id);
         $notification->setSubjectName($project->object_name());
