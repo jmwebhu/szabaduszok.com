@@ -25,7 +25,7 @@ class Model_Project_Partner extends ORM
         'type'                  => ['type' => 'int',        'null' => true],
         'created_at'            => ['type' => 'datetime',   'null' => true],
         'updated_at'            => ['type' => 'datetime',   'null' => true],
-        'accepted_at'           => ['type' => 'datetime',   'null' => true]
+        'approved_at'           => ['type' => 'datetime',   'null' => true]
     ];
 
     protected $_belongs_to  = [
@@ -60,6 +60,14 @@ class Model_Project_Partner extends ORM
      */
     public function undoApplication()
     {
+        $project = AB::select()->from(new Model_Project())->where('project_id', '=', $this->project_id)->execute()->current();
+
+        $notification = Entity_Notification::createForUndo($project, Auth::instance()->get_user());
+
+        $entity = new Entity_User_Employer($project->user);
+        $entity->setNotification($notification);
+        $entity->sendNotification();
+
         return $this->delete();
     }
 

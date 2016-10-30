@@ -341,4 +341,26 @@ class Entity_Notification extends Entity implements Notification
 
         return $notification;
     }
+
+    /**
+     * @param Model_Project $project
+     * @param Model_User $undoer
+     * @return Entity_Notification
+     */
+    public static function createForUndo(Model_Project $project, Model_User $undoer)
+    {
+        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_CANDIDATE_UNDO);
+
+        $notification = new Entity_Notification();
+        $notification->setNotifierUserId($undoer->user_id);
+        $notification->setNotifiedUserId($project->user_id);
+        $notification->setEventId($event->event_id);
+        $notification->setSubjectId($project->project_id);
+        $notification->setSubjectName($project->object_name());
+        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+
+        $notification->save();
+
+        return $notification;
+    }
 }
