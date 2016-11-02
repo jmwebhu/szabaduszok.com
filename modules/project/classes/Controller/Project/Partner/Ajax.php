@@ -40,12 +40,12 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function rejectApplication()
     {
         $partner = new Model_Project_Partner(Input::post('project_partner_id'));
-        $this->_jsonResponse = json_encode($partner->rejectApplication());
+        $this->_jsonResponse = json_encode($partner->rejectApplication(Input::post('extra_data', [])));
     }
 
     protected function cancelParticipation()
     {
         $partner = new Model_Project_Partner(Input::post('project_partner_id'));
-        $this->_jsonResponse = json_encode($partner->cancelParticipation());
+        $this->_jsonResponse = json_encode($partner->cancelParticipation(Input::post('extra_data', [])));
     }
 }
