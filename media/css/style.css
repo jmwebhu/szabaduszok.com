@@ -1142,12 +1142,21 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 	   width: 180px;
 	   height: 320px;
     }
+
+    #project-profile-tabs li {
+        text-align: center;
+    }
 }
 @media (max-width: 360px)
 {
 	a.navbar-brand {
 		width: 170px !important;
 	}
+
+    #project-profile-tabs li {
+        font-size: 20px !important;
+        text-align: left;
+    }
 }
 
 
