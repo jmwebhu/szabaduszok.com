@@ -302,9 +302,10 @@ class Entity_Notification extends Entity implements Notification
      * @param int $eventType
      * @param Model_Project $project
      * @param Model_User $user
+     * @param array $extraData
      * @return Entity_Notification
      */
-    public static function createFor($eventType, Model_Project $project, Model_User $user)
+    public static function createFor($eventType, Model_Project $project, Model_User $user, array $extraData = [])
     {
         $event      = Model_Event_Factory::createEvent($eventType);
         $notifier   = null;
@@ -332,6 +333,10 @@ class Entity_Notification extends Entity implements Notification
         $notification->setSubjectId($project->project_id);
         $notification->setSubjectName($project->object_name());
         $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+
+        if ($extraData) {
+            $notification->setExtraDataJson(json_encode($extraData));
+        }
 
         $notification->save();
 

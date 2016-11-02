@@ -16,7 +16,7 @@ class notifications extends Migration
             'subject_name'              => ['string'],
             'event_id'                  => ['integer', 'default' => null, 'unsigned' => true],
             'url'                       => ['string'],
-            'extra_data_json'           => ['string'],
+            'extra_data_json'           => ['text'],
             'is_archived'               => ['boolean', 'unsigned' => true],
             'updated_at'                => array('datetime'),
             'created_at'                => array('datetime'),

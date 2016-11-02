@@ -6,7 +6,10 @@ class Controller_Test extends Controller
     {
         $data = [
             'user_id'       => 2020,
-            'project_id'    => 10023
+            'project_id'    => 10023,
+            'extra_data'    => [
+                'message'       => '2 hétre van szükségem'
+            ]
         ];
 
         $partner = new Model_Project_Partner();

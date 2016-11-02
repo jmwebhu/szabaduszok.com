@@ -23,6 +23,7 @@ class Model_Project_Partner extends ORM
         'user_id'               => ['type' => 'int',        'null' => true],
         'project_id'            => ['type' => 'int',        'null' => true],
         'type'                  => ['type' => 'int',        'null' => true],
+        'notification_id'       => ['type' => 'int',        'null' => true],
         'created_at'            => ['type' => 'datetime',   'null' => true],
         'updated_at'            => ['type' => 'datetime',   'null' => true],
         'approved_at'           => ['type' => 'datetime',   'null' => true]
@@ -33,10 +34,14 @@ class Model_Project_Partner extends ORM
             'model'         => 'User',
             'foreign_key'   => 'user_id'
         ],
-        'project'          => [
+        'project'       => [
             'model'         => 'Project',
             'foreign_key'   => 'project_id'
-        ]
+        ],
+        'notification'  => [
+            'model'         => 'Notification',
+            'foreign_key'   => 'notification_id'
+        ],
     ];
 
     /**
@@ -45,10 +50,12 @@ class Model_Project_Partner extends ORM
      */
     public function apply(array $data)
     {
-        $submit = $this->submit($data);
-        $project = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
+        $submit             = $this->submit($data);
+        $project            = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
 
-        $notification = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_NEW, $project, $this->user);
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_NEW, $project, $this->user, Arr::get($data, 'extra_data'));
+        $this->notification_id  = $notification->getId();
+        $this->save();
 
         $entity = new Entity_User_Employer($project->user);
         $entity->setNotification($notification);
@@ -62,9 +69,10 @@ class Model_Project_Partner extends ORM
      */
     public function undoApplication()
     {
-        $project = AB::select()->from(new Model_Project())->where('project_id', '=', $this->project_id)->execute()->current();
-
-        $notification = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $project, $this->user);
+        $project                = AB::select()->from(new Model_Project())->where('project_id', '=', $this->project_id)->execute()->current();
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $project, $this->user);
+        $this->notification_id  = $notification->getId();
+        $this->save();
 
         $entity = new Entity_User_Employer($project->user);
         $entity->setNotification($notification);
@@ -82,7 +90,9 @@ class Model_Project_Partner extends ORM
         $this->type = self::TYPE_PARTICIPANT;
         $save = $this->save();
 
-        $notification = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project, $this->user);
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project, $this->user);
+        $this->notification_id  = $notification->getId();
+        $this->save();
 
         $entity = new Entity_User_Freelancer($this->user);
         $entity->setNotification($notification);
@@ -96,7 +106,9 @@ class Model_Project_Partner extends ORM
      */
     public function rejectApplication()
     {
-        $notification = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_REJECT, $this->project, $this->user);
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_REJECT, $this->project, $this->user);
+        $this->notification_id  = $notification->getId();
+        $this->save();
 
         $entity = new Entity_User_Freelancer($this->user);
         $entity->setNotification($notification);
@@ -110,7 +122,9 @@ class Model_Project_Partner extends ORM
      */
     public function cancelParticipation()
     {
-        $notification = Entity_Notification::createFor(Model_Event::TYPE_PARTICIPATE_REMOVE, $this->project, $this->user);
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_PARTICIPATE_REMOVE, $this->project, $this->user);
+        $this->notification_id  = $notification->getId();
+        $this->save();
 
         $entity = new Entity_User_Freelancer($this->user);
         $entity->setNotification($notification);
