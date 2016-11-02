@@ -160,6 +160,30 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->assertPartnerNotExistsInDatabase();
     }
 
+    /**
+     * @covers Model_Project_Partner::throwExceptionIfEventNotPerformable()
+     */
+    public function testThrowExceptionIfEventNotPerformableOk()
+    {
+        $partner = new Model_Project_Partner();
+        $partner->setType(Model_Project_Partner::TYPE_CANDIDATE);
+
+        $result = $this->invokeMethod($partner, 'throwExceptionIfEventNotPerformable', [Model_Event::TYPE_CANDIDATE_NEW]);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @covers Model_Project_Partner::throwExceptionIfEventNotPerformable()
+     */
+    public function testThrowExceptionIfEventNotPerformableNotOk()
+    {
+        $partner = new Model_Project_Partner();
+        $partner->setType(Model_Project_Partner::TYPE_CANDIDATE);
+
+        $result = $this->invokeMethod($partner, 'throwExceptionIfEventNotPerformable', [Model_Event::TYPE_PARTICIPATE_REMOVE]);
+        $this->assertFalse($result);
+    }
+
     protected function givenApplication()
     {
         if (self::$_partner == null || !self::$_partner->loaded()) {

@@ -8,7 +8,7 @@ class Model_Project_Partner extends ORM
     /**
      * @var Model_Project_Partner_Type
      */
-    protected $_type = null;
+    protected $_partnerType = null;
 
     protected $_table_name  = 'projects_partners';
     protected $_primary_key = 'project_partner_id';
@@ -50,12 +50,21 @@ class Model_Project_Partner extends ORM
     ];
 
     /**
+     * @param int $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        $this->_partnerType = Model_Project_Partner_Type_Factory::createType($type);
+    }
+
+    /**
      * @param mixed|null $id
      */
-    public function __construct($id)
+    public function __construct($id = null)
     {
         parent::__construct($id);
-        $this->_type = Model_Project_Partner_Type_Factory::createType($this->type);
+        $this->_partnerType = Model_Project_Partner_Type_Factory::createType($this->type);
     }
 
 
@@ -83,7 +92,7 @@ class Model_Project_Partner extends ORM
 
     /**
      * @param array $extraData
-     * @return array
+     * @return ORM
      */
     public function undoApplication(array $extraData = [])
     {
@@ -96,10 +105,7 @@ class Model_Project_Partner extends ORM
         $entity->setNotification($notification);
         $entity->sendNotification();
 
-        $id = $this->project_partner_id;
-        $this->delete();
-
-        return ['error' => false, 'id' => $id];
+        return $this->delete();
     }
 
     /**
@@ -122,7 +128,7 @@ class Model_Project_Partner extends ORM
         $entity->setNotification($notification);
         $entity->sendNotification();
 
-        return ['error' => false, 'id' => $this->project_partner_id];
+        return $this;
     }
 
     /**
@@ -185,13 +191,21 @@ class Model_Project_Partner extends ORM
 
     /**
      * @param int $eventId
-     * @throws Exception
+     * @return bool
      */
     protected function throwExceptionIfEventNotPerformable($eventId)
     {
-        if ($this->_type->isEventPerformable(Model_Event_Factory::createEvent($eventId))) {
-            throw new Exception('Invalid event: ' . get_class(Model_Event_Factory::createEvent($eventId))
-                . ' For partner _type: ' . get_class($this->_type));
+        $result = true;
+        if (!$this->_partnerType->isEventPerformable(Model_Event_Factory::createEvent($eventId))) {
+            try {
+                throw new Exception('Invalid event: ' . get_class(Model_Event_Factory::createEvent($eventId))
+                    . ' For partner _type: ' . get_class($this->_partnerType));
+            } catch (Exception $ex) {
+                Log::instance()->add(Log::ALERT, $ex->getMessage());
+                $result = false;
+            }
         }
+
+        return $result;
     }
 }

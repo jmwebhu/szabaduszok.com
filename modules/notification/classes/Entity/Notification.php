@@ -302,11 +302,12 @@ class Entity_Notification extends Entity implements Notification
      * @param int $eventType
      * @param Model_Project $project
      * @param Model_User $user
-     * @param array $extraData
+     * @param array|null $extraData
      * @return Entity_Notification
      */
-    public static function createFor($eventType, Model_Project $project, Model_User $user, array $extraData = [])
+    public static function createFor($eventType, Model_Project $project, Model_User $user, $extraData = null)
     {
+        $extraData = ($extraData == null) ? [] : $extraData;
         $event      = Model_Event_Factory::createEvent($eventType);
         $notifier   = null;
         $notified   = null;
