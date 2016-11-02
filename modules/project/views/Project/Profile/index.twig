@@ -55,18 +55,15 @@
                 {% endblock descriptionContainer %}
             {% endembed %}
 
+            {% include "Project/Profile/parts/_profile.twig" %}
+
             <ul class="nav nav-tabs mb10">
-                <li class="w33" data-content="profile" class="active"><span class="fa fa-info icon-dark-gray hidden-xs"></span>Profil</li>
-                <li class="w33" data-content="candidates"><span class="ion ion-person-add icon-dark-gray hidden-xs"></span>Jelentkezők</li>
-                <li class="w33" data-content="participants"><span class="ion ion-person-stalker icon-dark-gray hidden-xs"></span>Résztvevők</li>
+                <li class="w50" data-content="candidates"><span class="ion ion-person-add icon-dark-gray hidden-xs"></span>Jelentkezők</li>
+                <li class="w50" data-content="participants"><span class="ion ion-person-stalker icon-dark-gray hidden-xs"></span>Résztvevők</li>
             </ul>
 
             <div class="tab-content">
-                <div id="profile" class="tab-pane fade in active">
-                {% include "Project/Profile/parts/_profile.twig" %}
-                </div>
-
-                <div id="candidates" class="tab-pane fade">
+                <div id="candidates" class="tab-pane fade in active">
                 {% include "Project/Profile/parts/_candidates.twig" %}
                 </div>
 

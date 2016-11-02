@@ -1566,6 +1566,10 @@ img.freelancer-placeholder-img {
 	width: 33.33% !important;
 }
 
+.w50 {
+	width: 50% !important;
+}
+
 .translateY50 {
 	transform: translateY(+62%);
 }
