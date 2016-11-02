@@ -103,7 +103,7 @@ class Model_User extends Model_Auth_User
             'model'         => 'User_Project_Notification_Skill',
             'foreign_key'   => 'user_id',
         ],
-        'projects' => [
+        'project_partners' => [
             'model'     	=> 'Project_Partner',
             'foreign_key'	=> 'user_id',
         ],

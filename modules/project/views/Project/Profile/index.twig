@@ -58,9 +58,9 @@
             {% include "Project/Profile/parts/_profile.twig" %}
 
             <ul class="nav nav-tabs mb10" id="project-profile-tabs">
-                <li class="w33" data-content="candidates"><span class="ion ion-person-add icon-dark-gray hidden-xs"></span>Jelentkezők</li>
-                <li class="w33" data-content="participants"><span class="ion ion-person-stalker icon-dark-gray hidden-xs"></span>Résztvevők</li>
-                <li class="w33" data-content="payouts"><span class="ion ion-social-usd icon-dark-gray hidden-xs"></span>Kifizetések</li>
+                <li class="w50" data-content="candidates"><span class="ion ion-person-add icon-dark-gray hidden-xs"></span>Jelentkezők</li>
+                <li class="w50" data-content="participants"><span class="ion ion-person-stalker icon-dark-gray hidden-xs"></span>Résztvevők</li>
+                {#<li class="w33" data-content="payouts"><span class="ion ion-social-usd icon-dark-gray hidden-xs"></span>Kifizetések</li>#}
             </ul>
 
             <div class="tab-content">
@@ -72,18 +72,11 @@
                 {% include "Project/Profile/parts/_participants.twig" %}
                 </div>
 
-                <div id="payouts" class="tab-pane fade">
-                    TODO
-                </div>
+                {#<div id="payouts" class="tab-pane fade">
+                </div>#}
             </div>
-
-
-			
-
-
             {% endif %}
-			</div>
-		</div>
+        </div>
 	</div>
 </div>
 

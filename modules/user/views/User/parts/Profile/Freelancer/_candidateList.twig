@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-sm-12 list">
+        <div class="row">
+            <div class="col-sm-12 list">
+                <div class="row">
+                    <div class="col-sm-12 list">
+
+                        {% for candidate in project_partners.candidates %}
+
+                            <a href="{{ ROOT }}szabaduszo-projekt/{{ candidate.project.getSlug() }}" class="anchor-no-effect project-list-anchor">
+                                <div class="row project-row bgc-white">
+                                    <div class="col-sm-2 project-img mobile-hide">
+                                        <img src="{{ ROOT }}media/img/szabaduszo-projekt.png" class="img-responsive project-image center-block hidden-xs" alt="Szabadúszó projekt, munka {{ candidate.project.getName() }}">
+                                        <h4 class="mg-md text-center hidden-xs project-owner-name">
+                                            {% if candidate.project.getModel().user.is_company %}
+                                                {{ candidate.project.getModel().user.company_name }}
+                                            {% else %}
+                                                {{ candidate.project.getModel().user.getName() }}
+                                            {% endif %}
+                                        </h4>
+                                    </div>
+                                    <div class="col-sm-4 list-details">
+                                        <span class="ion ion-folder pull-left icon-sm project-sign icon-lapis-lazuli"></span>
+                                        <h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli project-title-list">
+                                            {{ candidate.project.getNameCutOffAt() }}
+                                        </h3>
+                                        <div class="divider-h project-title-divider">
+                                            <span class="divider"></span>
+                                        </div>
+
+                                        <span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray"></span>
+                                        {% for profession in relations[candidate.project.getProjectId()]['professions'] %}
+                                            <span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
+                                        {% endfor %}
+
+
+                                        <h4 class="mg-md db cb pt10 project-salary">
+                                            <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
+                                            <span class="strong ml5">{{ salaries[candidate.project.getProjectId()]['salary'] }}</span> {{ salaries[candidate.project.getProjectId()]['postfix'] }}
+                                        </h4>
+
+                                        <p class="text-left project-share-date">
+                                            Jelentkezés időpontja: {{ candidate.project_partner.created_at|date('Y-m-d') }}
+                                        </p>
+                                    </div>
+
+                                    <div class="col-sm-4 list-details text-justify" style="margin-top:15px;">
+                                        {{ candidate.project_partner.notification.getFromExtraData('message') }}
+                                    </div>
+
+                                    <div class="col-sm-2 translateY80">
+                                        <a href="#" class="btn btn-block btn-lg btn-tomato"><span class="ion ion-ios-undo icon-spacer"></span>Visszavonás</a>
+                                    </div>
+                                </div>
+                            </a>
+                        {% else %}
+                            <p class="text-center">Sajnos nincsenek projektek</p>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1582,3 +1582,7 @@ img.freelancer-placeholder-img {
 .translateY50 {
 	transform: translateY(+62%);
 }
+
+.translateY80 {
+    transform: translateY(+170%);
+}

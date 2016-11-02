@@ -30,6 +30,7 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
     {
         parent::setContext();
         $this->setContextProjectNotification();
+        $this->setContextProjects();
     }
 
     private function setContextProjectNotification()
@@ -50,5 +51,47 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
                 'industries'        => $this->context->industries
             ]);
         }
+    }
+
+    private function setContextProjects()
+    {
+        $candidates     = $this->_user->getModel()->project_partners->where('type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all();
+        $participants   = $this->_user->getModel()->project_partners->where('type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all();
+
+        $partnersEntity     = ['candidates' => [], 'participants' => []];
+        $salaries           = [];
+        $relations          = [];
+
+        foreach ($candidates as $i => $candidate) {
+            $partnersEntity['candidates'][$i]                       = [];
+            $partnersEntity['candidates'][$i]['project']            = new Entity_Project($candidate->project);
+            $partnersEntity['candidates'][$i]['project_partner']    = $candidate;
+        }
+
+        foreach ($participants as $i => $participant) {
+            $partnersEntity['participants'][$i][]                   = [];
+            $partnersEntity['participants'][$i]['project']          = new Entity_Project($participant->project);
+            $partnersEntity['participants'][$i]['project_partner']  = $participant;
+        }
+
+        foreach ($partnersEntity['candidates'] as $partner) {
+            $salaries[$partner['project']->getProjectId()]          = Viewhelper_Project::getSalary($partner['project']);
+        }
+
+        foreach ($partnersEntity['participants'] as $partner) {
+            $salaries[$partner['project']->getProjectId()]          = Viewhelper_Project::getSalary($partner['project']);
+        }
+
+        foreach ($partnersEntity['candidates'] as $partner) {
+            $relations[$partner['project']->getProjectId()]         = $partner['project']->getModel()->getRelations();
+        }
+
+        foreach ($partnersEntity['participants'] as $partner) {
+            $relations[$partner['project']->getProjectId()]         = $partner['project']->getModel()->getRelations();
+        }
+
+        $this->context->project_partners    = $partnersEntity;
+        $this->context->salaries            = $salaries;
+        $this->context->relations           = $relations;
     }
 }

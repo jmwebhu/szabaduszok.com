@@ -34,13 +34,9 @@
                             {{ candidate.user.getShortDescription() }}
                         </p>
 
-                        <select class="rating" data-init="{{ candidate.user.getRatingPointsAvg()|number_format(2, '.', ' ') }}" id="{{ candidate.user.getUserId() }}">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
+                        <p class="text-left project-share-date">
+                            Jelentkezés időpontja: {{ candidate.project_partner.created_at|date('Y-m-d') }}
+                        </p>
                     </div>
                     <div class="col-sm-4 list-details text-justify" style="margin-top:15px;">
                         {{ candidate.project_partner.notification.getFromExtraData('message') }}
@@ -51,7 +47,7 @@
                     </div>
                 </div>
             {% else %}
-                <p class="text-center">Sajnos nincsenek felhasználók</p>
+                <p class="text-center">Sajnos nincsenek jelentkezők</p>
             {% endfor %}
 
         </div>
