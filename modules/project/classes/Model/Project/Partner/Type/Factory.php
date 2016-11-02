@@ -6,7 +6,7 @@ class Model_Project_Partner_Type_Factory
      * @param $typeId
      * @return Model_Project_Partner_Type
      */
-    public static function createType($typeId)
+    public static function createType($typeId = null)
     {
         $type = null;
         switch ($typeId) {
