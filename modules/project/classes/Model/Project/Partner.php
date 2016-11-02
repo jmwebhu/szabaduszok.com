@@ -5,6 +5,11 @@ class Model_Project_Partner extends ORM
     const TYPE_CANDIDATE    = 1;
     const TYPE_PARTICIPANT  = 2;
 
+    /**
+     * @var Model_Project_Partner_Type
+     */
+    protected $_type = null;
+
     protected $_table_name  = 'projects_partners';
     protected $_primary_key = 'project_partner_id';
 
@@ -45,13 +50,25 @@ class Model_Project_Partner extends ORM
     ];
 
     /**
+     * @param mixed|null $id
+     */
+    public function __construct($id)
+    {
+        parent::__construct($id);
+        $this->_type = Model_Project_Partner_Type_Factory::createType($this->type);
+    }
+
+
+    /**
      * @param array $data
      * @return array
      */
     public function apply(array $data)
     {
-        $submit             = $this->submit($data);
-        $project            = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
+        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_NEW);
+
+        $submit                 = $this->submit($data);
+        $project                = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
 
         $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_NEW, $project, $this->user, Arr::get($data, 'extra_data'));
         $this->notification_id  = $notification->getId();
@@ -65,32 +82,39 @@ class Model_Project_Partner extends ORM
     }
 
     /**
-     * @return ORM
+     * @param array $extraData
+     * @return array
      */
-    public function undoApplication()
+    public function undoApplication(array $extraData = [])
     {
+        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_UNDO);
+
         $project                = AB::select()->from(new Model_Project())->where('project_id', '=', $this->project_id)->execute()->current();
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $project, $this->user);
-        $this->notification_id  = $notification->getId();
-        $this->save();
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $project, $this->user, $extraData);
 
         $entity = new Entity_User_Employer($project->user);
         $entity->setNotification($notification);
         $entity->sendNotification();
 
-        return $this->delete();
+        $id = $this->project_partner_id;
+        $this->delete();
+
+        return ['error' => false, 'id' => $id];
     }
 
     /**
+     * @param array $extraData
      * @return ORM
      */
-    public function approveApplication()
+    public function approveApplication(array $extraData = [])
     {
+        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_ACCEPT);
+
         $this->approved_at = date('Y-m-d H:i', time());
         $this->type = self::TYPE_PARTICIPANT;
-        $save = $this->save();
+        $this->save();
 
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project, $this->user);
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project, $this->user, $extraData);
         $this->notification_id  = $notification->getId();
         $this->save();
 
@@ -98,7 +122,7 @@ class Model_Project_Partner extends ORM
         $entity->setNotification($notification);
         $entity->sendNotification();
 
-        return $save;
+        return ['error' => false, 'id' => $this->project_partner_id];
     }
 
     /**
@@ -106,6 +130,8 @@ class Model_Project_Partner extends ORM
      */
     public function rejectApplication()
     {
+        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_REJECT);
+
         $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_REJECT, $this->project, $this->user);
         $this->notification_id  = $notification->getId();
         $this->save();
@@ -122,6 +148,8 @@ class Model_Project_Partner extends ORM
      */
     public function cancelParticipation()
     {
+        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_PARTICIPATE_REMOVE);
+
         $notification           = Entity_Notification::createFor(Model_Event::TYPE_PARTICIPATE_REMOVE, $this->project, $this->user);
         $this->notification_id  = $notification->getId();
         $this->save();
@@ -153,5 +181,17 @@ class Model_Project_Partner extends ORM
     public function getByUserProject(array $data)
     {
         return $this->where('user_id', '=', $data['user_id'])->and_where('project_id', '=', $data['project_id'])->limit(1)->find();
+    }
+
+    /**
+     * @param int $eventId
+     * @throws Exception
+     */
+    protected function throwExceptionIfEventNotPerformable($eventId)
+    {
+        if ($this->_type->isEventPerformable(Model_Event_Factory::createEvent($eventId))) {
+            throw new Exception('Invalid event: ' . get_class(Model_Event_Factory::createEvent($eventId))
+                . ' For partner _type: ' . get_class($this->_type));
+        }
     }
 }

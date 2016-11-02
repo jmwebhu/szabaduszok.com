@@ -28,13 +28,13 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function undoApplication()
     {
         $partner = new Model_Project_Partner(Input::post('project_partner_id'));
-        $this->_jsonResponse = json_encode($partner->undoApplication());
+        $this->_jsonResponse = json_encode($partner->undoApplication(Input::post('extra_data', [])));
     }
 
     protected function approveApplication()
     {
         $partner = new Model_Project_Partner(Input::post('project_partner_id'));
-        $this->_jsonResponse = json_encode($partner->approveApplication());
+        $this->_jsonResponse = json_encode($partner->approveApplication(Input::post('extra_data', [])));
     }
 
     protected function rejectApplication()

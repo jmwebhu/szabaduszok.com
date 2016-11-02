@@ -22,6 +22,14 @@ class Model_Event extends ORM implements Event
     ];
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->event_id;
+    }
+
+    /**
      * @return string
      */
     public function getTemplateName()
