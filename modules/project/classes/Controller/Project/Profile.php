@@ -125,12 +125,16 @@ class Controller_Project_Profile extends Controller_User
         $partnersOrm        = $this->_project->getModel()->getPartners();
         $partnersEntity     = ['candidates' => [], 'participants' => []];
 
-        foreach ($partnersOrm['candidates'] as $candidate) {
-            $partnersEntity['candidates'][] = new Entity_User_Freelancer($candidate);
+        foreach ($partnersOrm['candidates'] as $i => $candidate) {
+            $partnersEntity['candidates'][$i]                     = [];
+            $partnersEntity['candidates'][$i]['user']               = new Entity_User_Freelancer($candidate->user);
+            $partnersEntity['candidates'][$i]['project_partner']    = $candidate;
         }
 
-        foreach ($partnersOrm['participants'] as $candidate) {
-            $partnersEntity['participants'][] = new Entity_User_Freelancer($candidate);
+        foreach ($partnersOrm['participants'] as $i => $participant) {
+            $partnersEntity['participants'][$i][]                   = [];
+            $partnersEntity['participants'][$i]['user']             = new Entity_User_Freelancer($participant->user);
+            $partnersEntity['participants'][$i]['project_partner']  = $participant;
         }
 
         $this->context->partners = $partnersEntity;

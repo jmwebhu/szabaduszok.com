@@ -2,40 +2,39 @@
     <div class="row">
         <div class="col-sm-12 list">
 
-            {% for user in partners.participants %}
-
+            {% for participant in partners.participants %}
                 <div class="row project-row bgc-white">
-                    <div class="col-sm-3 project-img mobile-hide text-center vcenter">
-                        <a href="{{ ROOT }}szabaduszo/{{ user.getSlug() }}" class="anchor-no-effect"><img src="{% if user.getLIstPicturePath() %}{{ ROOT }}uploads/picture/{{ user.getLIstPicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded img-responsive list-image center-block hidden-xs {% if user.list_picture_path is null %}freelancer-placeholder-img{% endif %}" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}"></a>
+                    <div class="col-sm-2 project-img mobile-hide text-center vcenter">
+                        <a href="{{ ROOT }}szabaduszo/{{ participant.user.getSlug() }}" class="anchor-no-effect"><img src="{% if participant.user.getLIstPicturePath() %}{{ ROOT }}uploads/picture/{{ participant.user.getLIstPicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded img-responsive list-image center-block hidden-xs {% if participant.user.list_picture_path is null %}freelancer-placeholder-img{% endif %}" alt="Szabaduszok.com - A magyar freelancer platform {{ participant.user.getName() }}"></a>
                     </div>
-                    <div class="col-sm-6 list-details">
+                    <div class="col-sm-8 list-details">
                         <span class="ion ion-person pull-left icon-sm project-sign icon-lapis-lazuli"></span>
                         <h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli project-title-list">
-                            <a href="{{ ROOT }}szabaduszo/{{ user.getSlug() }}" class="anchor-no-effect">{{ user.getName() }}</a>
+                            <a href="{{ ROOT }}szabaduszo/{{ participant.user.getSlug() }}" class="anchor-no-effect">{{ participant.user.getName() }}</a>
                         </h3>
                         <div class="divider-h project-title-divider">
                             <span class="divider"></span>
                         </div>
 
                         <span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray prof-free-list"></span>
-                        {% for profession in user.getRelation("professions") %}
+                        {% for profession in participant.user.getRelation("professions") %}
                             <span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
                         {% else %}
                             <span class="tag">Még nincs adat</span>
                         {% endfor %}
 
                         <span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray cb"></span>
-                        {% for skill in user.getRelation("skills") %}
+                        {% for skill in participant.user.getRelation("skills") %}
                             <span id="{{ skill.skill_id }}" class="tag skill-list">{{ skill.name }}</span>
                         {% else %}
                             <span class="tag">Még nincs adat</span>
                         {% endfor %}
 
                         <p class="text-justify project-short-description cb">
-                            {{ user.getShortDescription() }}
+                            {{ participant.user.getShortDescription() }}
                         </p>
 
-                        <select class="rating" data-init="{{ user.getRatingPointsAvg()|number_format(2, '.', ' ') }}" id="{{ user.getUserId() }}">
+                        <select class="rating" data-init="{{ participant.user.getRatingPointsAvg()|number_format(2, '.', ' ') }}" id="{{ participant.user.getUserId() }}">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -43,7 +42,7 @@
                             <option value="5">5</option>
                         </select>
                     </div>
-                    <div class="col-sm-3 translateY50">
+                    <div class="col-sm-2 translateY50">
                         <a href="#" class="btn btn-block btn-lg btn-lime-green"><span class="ion ion-social-usd icon-spacer"></span>Fizetés</a>
                         <a href="#" class="btn btn-block btn-lg btn-tomato"><span class="ion ion-android-cancel icon-spacer"></span>Törlés</a>
                     </div>

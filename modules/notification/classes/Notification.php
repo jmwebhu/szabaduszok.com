@@ -52,4 +52,10 @@ interface Notification
      * @return array
      */
     public function submit(array $data);
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getFromExtraData($key);
 }

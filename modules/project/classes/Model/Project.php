@@ -74,9 +74,7 @@ class Model_Project extends ORM implements Subject
             'foreign_key'   => 'project_id',
         ],
         'partners'      => [
-            'model'     	=> 'User',
-            'through'		=> 'projects_partners',
-            'far_key'		=> 'user_id',
+            'model'     	=> 'Project_Partner',
             'foreign_key'	=> 'project_id',
         ],
     ];
@@ -291,8 +289,8 @@ class Model_Project extends ORM implements Subject
     public function getPartners()
     {
         return [
-            'candidates'    => $this->partners->where('projects_partners.type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all(),
-            'participants'  => $this->partners->where('projects_partners.type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all(),
+            'candidates'    => $this->partners->where('type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all(),
+            'participants'  => $this->partners->where('type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all()
         ];
     }
 
