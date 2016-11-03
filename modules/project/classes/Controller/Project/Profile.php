@@ -122,20 +122,8 @@ class Controller_Project_Profile extends Controller_User
 
     protected function setContextPartners()
     {
-        $partnersOrm        = $this->_project->getModel()->getPartners();
-        $partnersEntity     = ['candidates' => [], 'participants' => []];
-
-        foreach ($partnersOrm['candidates'] as $i => $candidate) {
-            $partnersEntity['candidates'][$i]                     = [];
-            $partnersEntity['candidates'][$i]['user']               = new Entity_User_Freelancer($candidate->user);
-            $partnersEntity['candidates'][$i]['project_partner']    = $candidate;
-        }
-
-        foreach ($partnersOrm['participants'] as $i => $participant) {
-            $partnersEntity['participants'][$i][]                   = [];
-            $partnersEntity['participants'][$i]['user']             = new Entity_User_Freelancer($participant->user);
-            $partnersEntity['participants'][$i]['project_partner']  = $participant;
-        }
+        $viewhelper         = new Viewhelper_Project_Partner($this->_project->getModel());
+        $partnersEntity     = $viewhelper->getPartnersSeparatedByType();
 
         $this->context->partners = $partnersEntity;
     }

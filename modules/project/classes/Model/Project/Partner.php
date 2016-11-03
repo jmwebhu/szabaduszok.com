@@ -210,4 +210,12 @@ class Model_Project_Partner extends ORM
 
         return $result;
     }
+
+    /**
+     * @return string
+     */
+    public function getTypePlural()
+    {
+        return $this->_partnerType->getTypePlural();
+    }
 }

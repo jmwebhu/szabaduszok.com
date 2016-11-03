@@ -2,6 +2,9 @@
 
 abstract class Model_Project_Partner_Type
 {
+    const TYPE_CANDIDATES   = 'candidates';
+    const TYPE_PARTICIPANTS = 'participants';
+
     /**
      * @return array
      */
@@ -15,4 +18,9 @@ abstract class Model_Project_Partner_Type
     {
         return in_array($event->getId(), $this->getPerformableEventIds());
     }
+
+    /**
+     * @return string
+     */
+    abstract public function getTypePlural();
 }

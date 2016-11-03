@@ -10,9 +10,9 @@ class Viewhelper_Project_Partner_Subject_Factory
     {
         $subject = null;
         if ($subjectOrm instanceof Model_User) {
-            $subject = new Viewhelper_Project_Partner_Subject_User();
+            $subject = new Viewhelper_Project_Partner_Subject_User($subjectOrm);
         } elseif ($subjectOrm instanceof Model_Project) {
-            $subject = new Viewhelper_Project_Partner_Subject_Project();
+            $subject = new Viewhelper_Project_Partner_Subject_Project($subjectOrm);
         }
 
         Assert::notNull($subject);

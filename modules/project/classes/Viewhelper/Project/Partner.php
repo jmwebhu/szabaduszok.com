@@ -12,7 +12,7 @@ class Viewhelper_Project_Partner
      */
     public function __construct(ORM $subjectOrm)
     {
-        $this->_subject = $this->setSubject($subjectOrm);
+        $this->setSubject($subjectOrm);
     }
 
     /**
@@ -24,7 +24,6 @@ class Viewhelper_Project_Partner
     }
 
     /**
-     * @param array $partners
      * @return array
      */
     public function getPartnersSeparatedByType()

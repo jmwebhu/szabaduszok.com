@@ -4,9 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $project = new Model_Project(10023);
-        echo Debug::vars($project->partners->find_all());
-        exit;
+        $model = new Model_Project();
+        echo Debug::vars($model->object_name());
     }
 
     public function action_clearcache()

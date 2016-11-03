@@ -9,4 +9,12 @@ class Model_Project_Partner_Type_Participant extends Model_Project_Partner_Type
     {
         return [Model_Event::TYPE_PARTICIPATE_REMOVE, Model_Event::TYPE_PARTICIPATE_PAY];
     }
+
+    /**
+     * @return string
+     */
+    public function getTypePlural()
+    {
+        return self::TYPE_PARTICIPANTS;
+    }
 }

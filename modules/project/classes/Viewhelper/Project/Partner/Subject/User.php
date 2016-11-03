@@ -5,16 +5,25 @@ class Viewhelper_Project_Partner_Subject_User extends Viewhelper_Project_Partner
     /**
      * @return array
      */
-    public function getPartnersSeparatedByType()
-    {
-        // TODO: Implement getPartnersSeparatedByType() method.
-    }
-
-    /**
-     * @return array
-     */
     protected function getPartners()
     {
         return $this->_orm->project_partners->find_all();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRelationEntityClass()
+    {
+        return Entity_Project::class;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRelationObjectName()
+    {
+        $project = new Model_Project();
+        return $project->object_name();
     }
 }
