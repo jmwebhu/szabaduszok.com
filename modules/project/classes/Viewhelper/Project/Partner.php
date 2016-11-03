@@ -30,4 +30,12 @@ class Viewhelper_Project_Partner
     {
         return $this->_subject->getPartnersSeparatedByType();
     }
+
+    /**
+     * @return array
+     */
+    public function getPartners()
+    {
+        return $this->_subject->getPartners();
+    }
 }

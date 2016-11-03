@@ -60,20 +60,11 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
         $relations  = [];
 
         $partnersEntity = $viewhelper->getPartnersSeparatedByType();
-        foreach ($partnersEntity['candidates'] as $partner) {
-            $salaries[$partner['project']->getProjectId()]          = Viewhelper_Project::getSalary($partner['project']);
-        }
+        $partnersOrm    = $viewhelper->getPartners();
 
-        foreach ($partnersEntity['participants'] as $partner) {
-            $salaries[$partner['project']->getProjectId()]          = Viewhelper_Project::getSalary($partner['project']);
-        }
-
-        foreach ($partnersEntity['candidates'] as $partner) {
-            $relations[$partner['project']->getProjectId()]         = $partner['project']->getModel()->getRelations();
-        }
-
-        foreach ($partnersEntity['participants'] as $partner) {
-            $relations[$partner['project']->getProjectId()]         = $partner['project']->getModel()->getRelations();
+        foreach ($partnersOrm as $partner) {
+            $salaries[$partner->project_id]     = Viewhelper_Project::getSalary(new Entity_Project($partner->project));
+            $relations[$partner->project_id]    = $partner->project->getRelations();
         }
 
         $this->context->project_partners    = $partnersEntity;

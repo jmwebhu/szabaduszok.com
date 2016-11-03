@@ -44,7 +44,7 @@ abstract class Viewhelper_Project_Partner_Subject
     /**
      * @return array
      */
-    abstract protected function getPartners();
+    abstract public function getPartners();
 
     /**
      * @return string

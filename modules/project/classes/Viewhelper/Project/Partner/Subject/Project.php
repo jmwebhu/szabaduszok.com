@@ -5,7 +5,7 @@ class Viewhelper_Project_Partner_Subject_Project extends Viewhelper_Project_Part
     /**
      * @return array
      */
-    protected function getPartners()
+    public function getPartners()
     {
         return $this->_orm->partners->find_all();
     }
