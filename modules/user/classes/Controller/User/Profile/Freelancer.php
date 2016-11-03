@@ -55,12 +55,15 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
 
     private function setContextProjects()
     {
+        $viewhelper = new Viewhelper_Project_Partner($this->_user->getModel());
         $candidates     = $this->_user->getModel()->project_partners->where('type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all();
         $participants   = $this->_user->getModel()->project_partners->where('type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all();
 
-        $partnersEntity     = ['candidates' => [], 'participants' => []];
+        //$partnersEntity     = ['candidates' => [], 'participants' => []];
         $salaries           = [];
         $relations          = [];
+
+        $partnersEntity = $viewhelper->getPartnersSeparatedByType();
 
         foreach ($candidates as $i => $candidate) {
             $partnersEntity['candidates'][$i]                       = [];

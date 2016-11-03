@@ -1,0 +1,34 @@
+<?php
+
+class Viewhelper_Project_Partner
+{
+    /**
+     * @var Viewhelper_Project_Partner_Subject
+     */
+    protected $_subject;
+
+    /**
+     * @param ORM $subjectOrm
+     */
+    public function __construct(ORM $subjectOrm)
+    {
+        $this->_subject = $this->setSubject($subjectOrm);
+    }
+
+    /**
+     * @param ORM $subjectOrm
+     */
+    public function setSubject(ORM $subjectOrm)
+    {
+        $this->_subject = Viewhelper_Project_Partner_Subject_Factory::createSubject($subjectOrm);
+    }
+
+    /**
+     * @param array $partners
+     * @return array
+     */
+    public function getPartnersSeparatedByType()
+    {
+        return $this->_subject->getPartnersSeparatedByType();
+    }
+}
