@@ -1,4 +1,4 @@
-<div id="{{ fancyboxId }}" style="display: none;">
+<div id="{{ fancyboxId }}" class="project-partner-fancybox" style="display: none;">
     <div class="panel">
         <div class="panel-heading hidden-xs">
             {% block heading %}
@@ -6,16 +6,6 @@
         </div>
         <div class="panel-body">
             {% block body %}
-                <p>Ha biztosan jelentkezni akarsz a projektre, kattints a zöld 'Jelentkezés' gombra. Érdemes egy rödiv üzenetben összefoglalni a megbízó számára, hogy miért vagy alkalmas jelölt.</p>
-                <span class="fa fa-comment pull-left icon-sm icon-dark-gray"></span>
-                <div class="form-group">
-                    <label>
-                        Üzenet
-                    </label>
-                    <textarea class="form-control" id="message" name="message" rows="4" cols="50"></textarea>
-                </div>
-                <a href="#" data-toggle="tooltip" id="use-short-description" title="Kattints a linkre, és a profilodon megadott bemutatkozást küldjük el a jelentkezéseddel.">Bemutatkozás használata</a>
-                <a href="#" class="btn btn-block btn-lg btn-lime-green"><span class="ion ion-checkmark icon-spacer"></span>Jelentkezés</a>
             {% endblock body %}
         </div>
     </div>

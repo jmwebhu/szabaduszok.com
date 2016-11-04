@@ -3,3 +3,23 @@
 {% block heading %}
     <h1>Jelentkezés a(z) '{{ project.getName() }}' projektre</h1>
 {% endblock heading %}
+
+{% block body %}
+    <form method="post" action="#">
+        <input name="project_id" value="{{ project.getProjectId() }}" type="hidden">
+        <input name="user_id" value="{{ user.getUserId() }}" type="hidden">
+
+        <p>Ha biztosan jelentkezni akarsz a projektre, kattints a zöld 'Jelentkezés' gombra. Érdemes egy rödiv üzenetben összefoglalni a megbízó számára, hogy miért vagy alkalmas jelölt.</p>
+        <span class="fa fa-comment pull-left icon-sm icon-dark-gray"></span>
+        <div class="form-group">
+            <label>
+                Üzenet
+            </label>
+            <textarea class="form-control" id="message" name="extra_data[message]" rows="4" cols="50"></textarea>
+        </div>
+        <a href="#" data-toggle="tooltip" id="use-short-description" title="Kattints a linkre, és a profilodon megadott bemutatkozást küldjük el a jelentkezéseddel.">Bemutatkozás használata</a>
+
+        <a href="#" class="btn btn-block btn-lg btn-lime-green operation" data-operation="apply"><span class="ion ion-checkmark icon-spacer"></span>Jelentkezés</a>
+        <a href="#" class="btn btn-d btn-lg btn-block btn-gray cancel"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
+    </form>
+{% endblock body %}
