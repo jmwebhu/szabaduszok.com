@@ -179,6 +179,10 @@ class Model_Project_Partner extends ORM
             $data['type'] = self::TYPE_CANDIDATE;
         }
 
+        if (!Arr::get($data, 'user_id')) {
+            $data['user_id'] = Auth::instance()->get_user()->user_id;
+        }
+
         return parent::submit($data);
     }
 

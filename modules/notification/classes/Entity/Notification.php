@@ -340,7 +340,7 @@ class Entity_Notification extends Entity implements Notification
         $notification = new Entity_Notification();
         $notification->setNotifierUserId($notifier);
         $notification->setNotifiedUserId($notified);
-        $notification->setEventId($event->event_id);
+        $notification->setEventId($event->getId());
         $notification->setSubjectId($project->project_id);
         $notification->setSubjectName($project->object_name());
         $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));

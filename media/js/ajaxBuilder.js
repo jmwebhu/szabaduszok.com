@@ -13,7 +13,7 @@ var AjaxBuilder = function () {
         }
     };
 
-    this._before    = null;
+    this._beforeSend    = null;
     this._error     = null;
 };
 
@@ -43,8 +43,8 @@ AjaxBuilder.prototype.success = function (success) {
     return this;
 };
 
-AjaxBuilder.prototype.before = function (before) {
-    this._before = before;
+AjaxBuilder.prototype.beforeSend = function (beforeSend) {
+    this._beforeSend = beforeSend;
     return this;
 };
 
@@ -67,8 +67,8 @@ AjaxBuilder.prototype.send = function () {
         params.success = self._success;
     }
 
-    if (self._before) {
-        params.before = self._before;
+    if (self._beforeSend) {
+        params.beforeSend = self._beforeSend;
     }
 
     if (self._error) {
