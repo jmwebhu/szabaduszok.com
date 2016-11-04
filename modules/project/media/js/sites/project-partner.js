@@ -8,8 +8,8 @@ var ProjectPartner = {
         this.$undoApplication   = $('a#undoApplication');
 
         this.$useShortDescription = $('div.project-partner-fancybox a#use-short-description');
-        this.$cancel = $('div.project-partner-fancybox a.cancel');
-        this.$operation = $('div.project-partner-fancybox a.operation');
+        this.$cancel = $('div.project-partner-fancybox button.cancel');
+        this.$operation = $('div.project-partner-fancybox button.operation');
         this.$operationForm = $('div.project-partner-fancybox form#operation-form');
     },
     bindEvents: function () {
@@ -64,9 +64,9 @@ var ProjectPartner = {
         };
 
         var complete = function(data) {
-            $this.prop('disabled', false);
             setTimeout(function () {
-                $.fancybox.close()
+                $.fancybox.close();
+                $this.prop('disabled', false);
             }, 700);
         };
 
