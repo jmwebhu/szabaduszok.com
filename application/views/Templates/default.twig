@@ -75,7 +75,19 @@
 		<!-- Main container END -->  
 
 		<script>
+            String.prototype.replaceAll = function(search, replacement) {
+                var target = this;
+                return target.replace(new RegExp(search, 'g'), replacement);
+            };
+
 	    	var ROOT = '{{ ROOT }}'
+            var temp = '{{ loggedUser.getModel().asJson() }}'
+
+            temp = temp.replaceAll("&quot;", "\"");
+
+            var USER = JSON.parse(temp);
+
+            delete temp;
 	    </script>
         {% if env == PRODUCTION %}
             {# Google Analytics #}

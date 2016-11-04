@@ -52,7 +52,7 @@ var ProjectPartner = {
         $.fancybox.open(myOption);
     },
     useShortDescriptionClick: function () {
-        $('textarea#message').val('Bemutatkozás');
+        $('textarea#message').val(USER.short_description);
         return false;
     }
 };

@@ -486,17 +486,17 @@ abstract class Entity_User extends Entity implements Notifiable
 
     /**
      * @param int $type
-     * @param int|null $id
+     * @param mixed $value
      * @return Entity_User
      */
-    public static function createUser($type, $id = null)
+    public static function createUser($type, $value = null)
     {
         switch ($type) {
             case self::TYPE_FREELANCER:
-                return new Entity_User_Freelancer($id);
+                return new Entity_User_Freelancer($value);
 
             case self::TYPE_EMPLOYER:
-                return new Entity_User_Employer($id);
+                return new Entity_User_Employer($value);
         }
 
         Assert::neverShouldReachHere();
