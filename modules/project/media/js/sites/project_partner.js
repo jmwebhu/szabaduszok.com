@@ -21,28 +21,12 @@ var ProjectPartner = {
         };
 
         var beforeSend = function () {
-            console.log('before');
-            $this.attr('disabled', true);
-            $('span.loading').text('Folyamatban...').isLoading();
+            $this.prop('disabled', true);
+            Default.startLoading();
         };
 
         var success = function(data) {
-            console.log('success');
-            var $loading = $('span.loading');
-            $loading.isLoading('hide');
-
-            if (data.error) {
-                $loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
-                $loading.show();
-            } else {
-                $loading.html('Sikeres jelentkezés').addClass('alert-success');
-                $loading.show();
-            }
-
-            setTimeout(function () {
-                $loading.hide();
-            }, 2000);
-
+            Default.stopLoading(data.error, 'Sikeres jelentkezés');
             $this.prop('disabled', false);
         };
 

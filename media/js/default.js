@@ -66,7 +66,35 @@ var Default = {
 	    }
 	    
 	    return float;
-	}
+	},
+	startLoading: function (text) {
+        if (typeof text == 'undefined') {
+            text = 'Folyamtban...';
+        }
+
+        $('span.loading').text(text).isLoading();
+	},
+    stopLoading: function (error, successText) {
+
+        if (typeof successText == 'undefined') {
+            successText = 'Sikeres művelet';
+        }
+
+        var $loading = $('span.loading');
+        $loading.isLoading('hide');
+
+        if (error) {
+            $loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
+            $loading.show();
+        } else {
+            $loading.html(successText).addClass('alert-success');
+            $loading.show();
+        }
+
+        setTimeout(function () {
+            $loading.hide();
+        }, 1000);
+    }
 };
 
 var fancyBoxOptions = {
