@@ -4,15 +4,23 @@ var AjaxBuilder = function () {
     this._dataType  = "json";
     this._data      = null;
 
-    // functions
     this._success = function (data) {
         if (data.error) {
             console.log(data.message);
         } else {
-            console.log("Sikeres művelet");
+
         }
     };
 
+    this._complete = function (data) {
+        if (data.error) {
+            console.log(data.message);
+        } else {
+
+        }
+    };
+
+    this._error = null;
     this._beforeSend    = null;
     this._error     = null;
 };
@@ -37,9 +45,18 @@ AjaxBuilder.prototype.data = function (data) {
     return this;
 };
 
-
 AjaxBuilder.prototype.success = function (success) {
     this._success = success;
+    return this;
+};
+
+AjaxBuilder.prototype.complete = function (complete) {
+    this._complete = complete;
+    return this;
+};
+
+AjaxBuilder.prototype.error = function (error) {
+    this._error = error;
     return this;
 };
 
@@ -65,6 +82,14 @@ AjaxBuilder.prototype.send = function () {
 
     if (self._success) {
         params.success = self._success;
+    }
+
+    if (self._complete) {
+        params.complete = self._complete;
+    }
+
+    if (self._error) {
+        params.error = self._error;
     }
 
     if (self._beforeSend) {

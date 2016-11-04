@@ -10,6 +10,7 @@ var ProjectPartner = {
         this.$useShortDescription = $('div.project-partner-fancybox a#use-short-description');
         this.$cancel = $('div.project-partner-fancybox a.cancel');
         this.$operation = $('div.project-partner-fancybox a.operation');
+        this.$operationForm = $('div.project-partner-fancybox form#operation-form');
     },
     bindEvents: function () {
         this.$apply.click(ProjectPartner.applyClick);
@@ -22,28 +23,6 @@ var ProjectPartner = {
     applyClick: function () {
         ProjectPartner.openFancybox();
         return false;
-        /*var $this = $(this);
-        $this.prop('disabled', true);
-        var ajax = new AjaxBuilder();
-
-        var data = {
-            project_id: $this.data('project_id')
-        };
-
-        var beforeSend = function () {
-            $this.prop('disabled', true);
-            Default.startLoading();
-        };
-
-        legyen oncomplete
-        var success = function(data) {
-            Default.stopLoading(data.error, 'Sikeres jelentkezés');
-            $this.prop('disabled', false);
-        };
-
-        ajax.data(data).url(ROOT + 'projectpartner/ajax/apply').beforeSend(beforeSend).success(success).send();
-        
-        return false;*/
     },
     undoApplicationClick: function () {
 
@@ -68,7 +47,31 @@ var ProjectPartner = {
         return false;
     },
     operationClick: function () {
-        console.log('ope');
+        var $this = $(this);
+        $this.prop('disabled', true);
+        var ajax = new AjaxBuilder();
+
+        var beforeSend = function () {
+            Default.startLoading($('div.project-partner-fancybox span.loading'));
+        };
+
+        var success = function (data) {
+            Default.stopLoading(data.error, 'Sikeres jelentkezés', $('div.project-partner-fancybox span.loading'));
+        };
+
+        var error = function () {
+            Default.stopLoading(true, 'Sikeres jelentkezés', $('div.project-partner-fancybox span.loading'));
+        };
+
+        var complete = function(data) {
+            $this.prop('disabled', false);
+            setTimeout(function () {
+                $.fancybox.close()
+            }, 700);
+        };
+
+        ajax.url(ROOT + 'projectpartner/ajax/apply').data(ProjectPartner.$operationForm.serialize())
+            .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
 
         return false;
     }

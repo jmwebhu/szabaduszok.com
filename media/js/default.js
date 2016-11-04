@@ -67,20 +67,23 @@ var Default = {
 	    
 	    return float;
 	},
-	startLoading: function (text) {
+	startLoading: function ($loading, text) {
+
+        $loading = Default.getLoading($loading);
+
         if (typeof text == 'undefined') {
             text = 'Folyamtban...';
         }
 
-        $('span.loading').text(text).isLoading();
+        $loading.text(text).isLoading();
 	},
-    stopLoading: function (error, successText) {
+    stopLoading: function (error, successText, $loading) {
+        $loading = Default.getLoading($loading);
 
         if (typeof successText == 'undefined') {
             successText = 'Sikeres művelet';
         }
 
-        var $loading = $('span.loading');
         $loading.isLoading('hide');
 
         if (error) {
@@ -94,6 +97,13 @@ var Default = {
         setTimeout(function () {
             $loading.hide();
         }, 1000);
+    },
+    getLoading: function($loading) {
+        if (typeof $loading == 'undefined') {
+            $loading = $('span.loading');
+        }
+
+        return $loading;
     }
 };
 
