@@ -101,8 +101,8 @@ var fancyBoxOptions = {
     maxWidth	: '80%',
     maxHeight	: '80%',
     fitToView	: false,
-    width	: '80%',
-    height	: '80%',
+    width	    : '80%',
+    height	    : '80%',
     autoSize	: false,
     openEffect	: 'none',
     closeEffect	: 'none',
@@ -112,7 +112,7 @@ var fancyBoxOptions = {
     helpers		: { 
 		overlay : {
 			closeClick: false
-		} 
+		}
 	}
  };
 

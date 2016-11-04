@@ -6,13 +6,17 @@ var ProjectPartner = {
     cacheElements: function () {
         this.$apply             = $('a#apply');
         this.$undoApplication   = $('a#undoApplication');
+
+        this.$useShortDescription = $('a#use-short-description');
     },
     bindEvents: function () {
         this.$apply.click(ProjectPartner.applyClick);
         this.$undoApplication.click(ProjectPartner.undoApplicationClick);
+
+        this.$useShortDescription.click(ProjectPartner.useShortDescriptionClick);
     },
     applyClick: function () {
-        ProjectPartner.openFancybox();
+        ProjectPartner.openFancybox('Jelentkezés');
         return false;
         /*var $this = $(this);
         $this.prop('disabled', true);
@@ -27,6 +31,7 @@ var ProjectPartner = {
             Default.startLoading();
         };
 
+        legyen oncomplete
         var success = function(data) {
             Default.stopLoading(data.error, 'Sikeres jelentkezés');
             $this.prop('disabled', false);
@@ -39,11 +44,16 @@ var ProjectPartner = {
     undoApplicationClick: function () {
 
     },
-    openFancybox: function () {
+    openFancybox: function (title) {
         var myOption =  $.extend(true, {}, fancyBoxOptions);
-        myOption.href = '#project-partner-fancybox';
+        myOption.href = '#project-partner-fancybox-candidate';
+        myOption.height = 500;
 
         $.fancybox.open(myOption);
+    },
+    useShortDescriptionClick: function () {
+        $('textarea#message').val('Bemutatkozás');
+        return false;
     }
 };
 

@@ -1586,3 +1586,7 @@ img.freelancer-placeholder-img {
 .translateY80 {
     transform: translateY(+170%);
 }
+
+.ion-ios-information {
+	cursor: pointer;
+}
