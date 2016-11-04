@@ -12,7 +12,9 @@ var ProjectPartner = {
         this.$undoApplication.click(ProjectPartner.undoApplicationClick);
     },
     applyClick: function () {
-        var $this = $(this);
+        ProjectPartner.openFancybox();
+        return false;
+        /*var $this = $(this);
         $this.prop('disabled', true);
         var ajax = new AjaxBuilder();
 
@@ -32,10 +34,16 @@ var ProjectPartner = {
 
         ajax.data(data).url(ROOT + 'projectpartner/ajax/apply').beforeSend(beforeSend).success(success).send();
         
-        return false;
+        return false;*/
     },
     undoApplicationClick: function () {
 
+    },
+    openFancybox: function () {
+        var myOption =  $.extend(true, {}, fancyBoxOptions);
+        myOption.href = '#project-partner-fancybox';
+
+        $.fancybox.open(myOption);
     }
 };
 

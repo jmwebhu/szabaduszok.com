@@ -8,7 +8,7 @@ AssetCollection::instance()
     ->setJs('list', 'sites/list.js')
     ->setJs('profile', 'sites/profile.js')
 
-    ->setJs('project-partner', 'sites/project_partner.js')
+    ->setJs('project-partner', 'sites/project-partner.js', ['js' => ['fancybox']])
     
     ->setJs('wysihtml5', 'plugins/bootstrap3-wysihtml5.all.min.js')
     

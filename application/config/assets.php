@@ -18,7 +18,7 @@ AssetCollection::instance()
     
     ->setJs('ajax-builder', 'ajaxBuilder.js')   
     ->setJs('jquery-confirm', 'jquery-confirm.js')    
-    ->setJs('fancybox', 'jquery.fancybox.pack.js')
+    ->setJs('fancybox', 'jquery.fancybox.pack.js', ['css' => ['fancybox']])
 
     ->setCss('isloading', 'isloading.css')      
     ->setCss('font-awesome', 'font-awesome.min.css')
