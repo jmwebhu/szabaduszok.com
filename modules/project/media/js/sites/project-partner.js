@@ -21,15 +21,16 @@ var ProjectPartner = {
         this.$operation.click(ProjectPartner.operationClick);
     },
     applyClick: function () {
-        ProjectPartner.openFancybox();
+        ProjectPartner.openFancybox('candidate');
         return false;
     },
     undoApplicationClick: function () {
-
+        ProjectPartner.openFancybox('undo-application');
+        return false;
     },
-    openFancybox: function () {
+    openFancybox: function (target) {
         var myOption =  $.extend(true, {}, fancyBoxOptions);
-        myOption.href = '#project-partner-fancybox-candidate';
+        myOption.href = '#project-partner-fancybox-' + target;
         myOption.height = 500;
 
         myOption.afterLoad = function () {
@@ -48,7 +49,21 @@ var ProjectPartner = {
     },
     operationClick: function () {
         var $this = $(this);
-        $this.prop('disabled', true);
+        switch ($this.data('operation')) {
+            case 'apply':
+                ProjectPartner.apply($this);
+                break;
+
+            case 'undo-application':
+                ProjectPartner.undoApplication($this);
+                break;
+        }
+
+
+        return false;
+    },
+    apply: function ($button) {
+        $button.prop('disabled', true);
         var ajax = new AjaxBuilder();
 
         var beforeSend = function () {
@@ -66,14 +81,38 @@ var ProjectPartner = {
         var complete = function(data) {
             setTimeout(function () {
                 $.fancybox.close();
-                $this.prop('disabled', false);
+                $button.prop('disabled', false);
             }, 700);
         };
 
-        ajax.url(ROOT + 'projectpartner/ajax/apply').data(ProjectPartner.$operationForm.serialize())
+        ajax.url(ROOT + 'projectpartner/ajax/apply').data($('form#apply-form').serialize())
             .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
+    },
+    undoApplication: function ($button) {
+        $button.prop('disabled', true);
+        var ajax = new AjaxBuilder();
 
-        return false;
+        var beforeSend = function () {
+            Default.startLoading($('div.project-partner-fancybox span.loading'));
+        };
+
+        var success = function (data) {
+            Default.stopLoading(data.error, 'Sikeres Visszavonás', $('div.project-partner-fancybox span.loading'));
+        };
+
+        var error = function () {
+            Default.stopLoading(true, 'Sikeres visszavonás', $('div.project-partner-fancybox span.loading'));
+        };
+
+        var complete = function(data) {
+            setTimeout(function () {
+                $.fancybox.close();
+                $button.prop('disabled', false);
+            }, 700);
+        };
+
+        ajax.url(ROOT + 'projectpartner/ajax/undoApplication').data($('form#undo-application-form').serialize())
+            .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
     }
 };
 

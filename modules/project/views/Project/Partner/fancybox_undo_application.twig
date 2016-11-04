@@ -1,0 +1,23 @@
+{% extends "Project/Partner/fancybox_base.twig" %}
+
+{% block heading %}
+    <h1>Jelentkezés visszavonása a(z) '{{ project.getName() }}' projektre</h1>
+{% endblock heading %}
+
+{% block body %}
+    <form method="post" action="#" id="undo-application-form">
+        <input name="project_partner_id" value="{{ projectPartner.project_partner_id }}" type="hidden">
+
+        <p>Ha biztosan vissza akarod vonni a jelentkezésed, kattints a piros 'Visszavonás' gombra. Érdemes egy rödiv üzenetben összefoglalni az indoklásod a megbízó számára.</p>
+        <span class="fa fa-comment pull-left icon-sm icon-dark-gray"></span>
+        <div class="form-group">
+            <label>
+                Üzenet
+            </label>
+            <textarea class="form-control" id="message" name="extra_data[message]" rows="4" cols="50"></textarea>
+        </div>
+
+        <button href="#" class="btn btn-block btn-lg btn-tomato operation" data-operation="undo-application"><span class="ion ion-ios-undo icon-spacer"></span>Visszavonás</button>
+        <button href="#" class="btn btn-d btn-lg btn-block btn-gray cancel"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</button>
+    </form>
+{% endblock body %}
