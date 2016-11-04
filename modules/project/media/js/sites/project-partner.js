@@ -35,6 +35,7 @@ var ProjectPartner = {
 
         myOption.afterLoad = function () {
             $('.project-partner-fancybox textarea').val('');
+            $('.project-partner-fancybox button').prop('disabled', false);
         };
 
         $.fancybox.open(myOption);
@@ -49,20 +50,29 @@ var ProjectPartner = {
     },
     operationClick: function () {
         var $this = $(this);
+        var operationLang = '';
+        var ajaxTarget = '';
+        var formName = '';
+
         switch ($this.data('operation')) {
             case 'apply':
-                ProjectPartner.apply($this);
+                operationLang = 'jelentkezés';
+                ajaxTarget = 'apply';
+                formName = 'apply';
                 break;
 
             case 'undo-application':
-                ProjectPartner.undoApplication($this);
+                operationLang = 'visszavonás';
+                ajaxTarget = 'undoApplication';
+                formName = 'undo-application';
                 break;
         }
 
+        ProjectPartner.doOperation(operationLang, ajaxTarget, formName, $this);
 
         return false;
     },
-    apply: function ($button) {
+    doOperation: function (operationLang, ajaxTarget, formName, $button) {
         $button.prop('disabled', true);
         var ajax = new AjaxBuilder();
 
@@ -71,47 +81,18 @@ var ProjectPartner = {
         };
 
         var success = function (data) {
-            Default.stopLoading(data.error, 'Sikeres jelentkezés', $('div.project-partner-fancybox span.loading'));
+            Default.stopLoading(data.error, 'Sikeres ' + operationLang, $('div.project-partner-fancybox span.loading'));
         };
 
         var error = function () {
-            Default.stopLoading(true, 'Sikeres jelentkezés', $('div.project-partner-fancybox span.loading'));
+            Default.stopLoading(true, 'Sikeres ' + operationLang, $('div.project-partner-fancybox span.loading'));
         };
 
         var complete = function(data) {
-            setTimeout(function () {
-                $.fancybox.close();
-                $button.prop('disabled', false);
-            }, 700);
+            location.reload();
         };
 
-        ajax.url(ROOT + 'projectpartner/ajax/apply').data($('form#apply-form').serialize())
-            .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
-    },
-    undoApplication: function ($button) {
-        $button.prop('disabled', true);
-        var ajax = new AjaxBuilder();
-
-        var beforeSend = function () {
-            Default.startLoading($('div.project-partner-fancybox span.loading'));
-        };
-
-        var success = function (data) {
-            Default.stopLoading(data.error, 'Sikeres Visszavonás', $('div.project-partner-fancybox span.loading'));
-        };
-
-        var error = function () {
-            Default.stopLoading(true, 'Sikeres visszavonás', $('div.project-partner-fancybox span.loading'));
-        };
-
-        var complete = function(data) {
-            setTimeout(function () {
-                $.fancybox.close();
-                $button.prop('disabled', false);
-            }, 700);
-        };
-
-        ajax.url(ROOT + 'projectpartner/ajax/undoApplication').data($('form#undo-application-form').serialize())
+        ajax.url(ROOT + 'projectpartner/ajax/' + ajaxTarget).data($('form#' + formName + '-form').serialize())
             .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
     }
 };
