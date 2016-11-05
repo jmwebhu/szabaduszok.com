@@ -7,7 +7,7 @@ var ProjectPartner = {
         this.$apply             = $('a#apply');
         this.$undoApplication   = $('a#undoApplication');
         this.$approveApplication   = $('a.approveApplication');
-        this.$approveApplication   = $('a.rejectApplication');
+        this.$rejectApplication   = $('a.rejectApplication');
 
         this.$useShortDescription = $('div.project-partner-fancybox a#use-short-description');
         this.$cancel = $('div.project-partner-fancybox button.cancel');
@@ -18,6 +18,7 @@ var ProjectPartner = {
         this.$apply.click(ProjectPartner.applyClick);
         this.$undoApplication.click(ProjectPartner.undoApplicationClick);
         this.$approveApplication.click(ProjectPartner.approveApplicationClick);
+        this.$rejectApplication.click(ProjectPartner.rejectApplicationClick);
 
         this.$useShortDescription.click(ProjectPartner.useShortDescriptionClick);
         this.$cancel.click(ProjectPartner.cancelClick);
