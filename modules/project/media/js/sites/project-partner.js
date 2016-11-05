@@ -6,15 +6,18 @@ var ProjectPartner = {
     cacheElements: function () {
         this.$apply             = $('a#apply');
         this.$undoApplication   = $('a#undoApplication');
+        this.$approveApplication   = $('a.approveApplication');
+        this.$approveApplication   = $('a.rejectApplication');
 
         this.$useShortDescription = $('div.project-partner-fancybox a#use-short-description');
         this.$cancel = $('div.project-partner-fancybox button.cancel');
         this.$operation = $('div.project-partner-fancybox button.operation');
-        this.$operationForm = $('div.project-partner-fancybox form#operation-form');
+
     },
     bindEvents: function () {
         this.$apply.click(ProjectPartner.applyClick);
         this.$undoApplication.click(ProjectPartner.undoApplicationClick);
+        this.$approveApplication.click(ProjectPartner.approveApplicationClick);
 
         this.$useShortDescription.click(ProjectPartner.useShortDescriptionClick);
         this.$cancel.click(ProjectPartner.cancelClick);
@@ -26,6 +29,16 @@ var ProjectPartner = {
     },
     undoApplicationClick: function () {
         ProjectPartner.openFancybox('undo-application');
+        return false;
+    },
+    approveApplicationClick: function () {
+        $('#approve-application-form input[name="project_partner_id"]').val($(this).data('project_partner_id'));
+        ProjectPartner.openFancybox('approve-application');
+        return false;
+    },
+    rejectApplicationClick: function () {
+        $('#reject-application-form input[name="project_partner_id"]').val($(this).data('project_partner_id'));
+        ProjectPartner.openFancybox('reject-application');
         return false;
     },
     openFancybox: function (target) {
@@ -65,6 +78,18 @@ var ProjectPartner = {
                 operationLang = 'visszavonás';
                 ajaxTarget = 'undoApplication';
                 formName = 'undo-application';
+                break;
+
+            case 'approve-application':
+                operationLang = 'jóváhagyás';
+                ajaxTarget = 'approveApplication';
+                formName = 'approve-application';
+                break;
+
+            case 'reject-application':
+                operationLang = 'elutasítás';
+                ajaxTarget = 'rejectApplication';
+                formName = 'reject-application';
                 break;
         }
 

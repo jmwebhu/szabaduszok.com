@@ -48,7 +48,10 @@ class Controller_DefaultTemplate extends Controller_Twig
                         
             $this->context->assets = $assets->render();
             $user = Auth::instance()->get_user();
-            $this->context->loggedUser = Entity_User::createUser($user->type, $user);
+
+            if ($user->loaded()) {
+                $this->context->loggedUser = Entity_User::createUser($user->type, $user);
+            }
         }
         
         if ($this->request->is_ajax())
