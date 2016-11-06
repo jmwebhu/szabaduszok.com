@@ -4,14 +4,15 @@ var ProjectPartner = {
         this.bindEvents();
     },
     cacheElements: function () {
-        this.$apply             = $('a#apply');
-        this.$undoApplication   = $('a#undoApplication');
-        this.$approveApplication   = $('a.approveApplication');
-        this.$rejectApplication   = $('a.rejectApplication');
+        this.$apply                 = $('a#apply');
+        this.$undoApplication       = $('a#undoApplication');
+        this.$approveApplication    = $('a.approveApplication');
+        this.$rejectApplication     = $('a.rejectApplication');
+        this.$cancelParticipation   = $('a.cancelParticipation');
 
-        this.$useShortDescription = $('div.project-partner-fancybox a#use-short-description');
-        this.$cancel = $('div.project-partner-fancybox button.cancel');
-        this.$operation = $('div.project-partner-fancybox button.operation');
+        this.$useShortDescription   = $('div.project-partner-fancybox a#use-short-description');
+        this.$cancel                = $('div.project-partner-fancybox button.cancel');
+        this.$operation             = $('div.project-partner-fancybox button.operation');
 
     },
     bindEvents: function () {
@@ -19,6 +20,7 @@ var ProjectPartner = {
         this.$undoApplication.click(ProjectPartner.undoApplicationClick);
         this.$approveApplication.click(ProjectPartner.approveApplicationClick);
         this.$rejectApplication.click(ProjectPartner.rejectApplicationClick);
+        this.$cancelParticipation.click(ProjectPartner.cancelParticipationClick);
 
         this.$useShortDescription.click(ProjectPartner.useShortDescriptionClick);
         this.$cancel.click(ProjectPartner.cancelClick);
@@ -33,13 +35,18 @@ var ProjectPartner = {
         return false;
     },
     approveApplicationClick: function () {
-        $('#approve-application-form input[name="project_partner_id"]').val($(this).data('project_partner_id'));
+        $('input[name="project_partner_id"]').val($(this).data('project_partner_id'));
         ProjectPartner.openFancybox('approve-application');
         return false;
     },
     rejectApplicationClick: function () {
-        $('#reject-application-form input[name="project_partner_id"]').val($(this).data('project_partner_id'));
+        $('input[name="project_partner_id"]').val($(this).data('project_partner_id'));
         ProjectPartner.openFancybox('reject-application');
+        return false;
+    },
+    cancelParticipationClick: function () {
+        $('input[name="project_partner_id"]').val($(this).data('project_partner_id'));
+        ProjectPartner.openFancybox('cancel-participation');
         return false;
     },
     openFancybox: function (target) {
@@ -64,41 +71,20 @@ var ProjectPartner = {
     },
     operationClick: function () {
         var $this = $(this);
-        var operationLang = '';
-        var ajaxTarget = '';
-        var formName = '';
 
-        switch ($this.data('operation')) {
-            case 'apply':
-                operationLang = 'jelentkezés';
-                ajaxTarget = 'apply';
-                formName = 'apply';
-                break;
-
-            case 'undo-application':
-                operationLang = 'visszavonás';
-                ajaxTarget = 'undoApplication';
-                formName = 'undo-application';
-                break;
-
-            case 'approve-application':
-                operationLang = 'jóváhagyás';
-                ajaxTarget = 'approveApplication';
-                formName = 'approve-application';
-                break;
-
-            case 'reject-application':
-                operationLang = 'elutasítás';
-                ajaxTarget = 'rejectApplication';
-                formName = 'reject-application';
-                break;
-        }
-
-        ProjectPartner.doOperation(operationLang, ajaxTarget, formName, $this);
+        var operation = OperationFactory.create($this.data('operation'));
+        operation.doOperation($this);
 
         return false;
-    },
-    doOperation: function (operationLang, ajaxTarget, formName, $button) {
+    }
+};
+
+var OperationBase = {
+    getOperationLang: function () {},
+    getAjaxTarget: function() {},
+    getFormName: function () {},
+    doOperation: function ($button) {
+        var self = this;
         $button.prop('disabled', true);
         var ajax = new AjaxBuilder();
 
@@ -107,19 +93,65 @@ var ProjectPartner = {
         };
 
         var success = function (data) {
-            Default.stopLoading(data.error, 'Sikeres ' + operationLang, $('div.project-partner-fancybox span.loading'));
+            Default.stopLoading(data.error, 'Sikeres ' + self.getOperationLang(), $('div.project-partner-fancybox span.loading'));
         };
 
         var error = function () {
-            Default.stopLoading(true, 'Sikeres ' + operationLang, $('div.project-partner-fancybox span.loading'));
+            Default.stopLoading(true, 'Sikeres ' + self.getOperationLang(), $('div.project-partner-fancybox span.loading'));
         };
 
         var complete = function(data) {
             location.reload();
         };
 
-        ajax.url(ROOT + 'projectpartner/ajax/' + ajaxTarget).data($('form#' + formName + '-form').serialize())
+        ajax.url(ROOT + 'projectpartner/ajax/' + self.getAjaxTarget()).data($('form#' + self.getFormName() + '-form').serialize())
             .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
+    }
+};
+
+var Apply = $.extend(true, {}, OperationBase);
+Apply.getOperationLang = function () { return 'jelentkezés'; };
+Apply.getAjaxTarget = function() { return 'apply'; };
+Apply.getFormName = function () { return 'apply'; };
+
+var UndoApplication = $.extend(true, {}, OperationBase);
+UndoApplication.getOperationLang = function () { return 'visszavonás'; };
+UndoApplication.getAjaxTarget = function() { return 'undoApplication'; };
+UndoApplication.getFormName = function () { return 'undo-application'; };
+
+var ApproveApplication = $.extend(true, {}, OperationBase);
+ApproveApplication.getOperationLang = function () { return 'jóváhagyás'; };
+ApproveApplication.getAjaxTarget = function() { return 'approveApplication'; };
+ApproveApplication.getFormName = function () { return 'approve-application'; };
+
+var RejectApplication = $.extend(true, {}, OperationBase);
+RejectApplication.getOperationLang = function () { return 'elutasítás'; };
+RejectApplication.getAjaxTarget = function() { return 'rejectApplication'; };
+RejectApplication.getFormName = function () { return 'reject-application'; };
+
+var CancelApplication = $.extend(true, {}, OperationBase);
+CancelApplication.getOperationLang = function () { return 'törlés'; };
+CancelApplication.getAjaxTarget = function() { return 'cancelParticipation'; };
+CancelApplication.getFormName = function () { return 'cancel-participation'; };
+
+var OperationFactory = {
+    create: function (operation) {
+        switch (operation) {
+            case 'apply':
+                return Apply;
+
+            case 'undo-application':
+                return UndoApplication;
+
+            case 'approve-application':
+                return ApproveApplication;
+
+            case 'reject-application':
+                return RejectApplication;
+
+            case 'cancel-participation':
+                return CancelApplication;
+        }
     }
 };
 
