@@ -85,7 +85,9 @@
 
             temp = temp.replaceAll("&quot;", "\"");
 
-            var USER = JSON.parse(temp);
+            if (temp) {
+                var USER = JSON.parse(temp);
+            }
 
             delete temp;
 	    </script>
