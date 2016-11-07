@@ -211,14 +211,20 @@ class Model_User extends Model_Auth_User
      */
     public static function createUser($type, $id = null)
     {
+        $user = null;
         switch ($type) {
             case Entity_User::TYPE_FREELANCER:
-                return new Model_User_Freelancer($id);
+                $user = new Model_User_Freelancer($id);
+                break;
 
             case Entity_User::TYPE_EMPLOYER:
-                return new Model_User_Employer($id);
+                $user = new Model_User_Employer($id);
+                break;
         }
 
-        Assert::neverShouldReachHere();
+        $user->type = $type;
+        Assert::notNull($user);
+
+        return $user;
     }
 }
