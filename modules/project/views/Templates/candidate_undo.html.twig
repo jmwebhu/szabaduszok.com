@@ -1,0 +1,5 @@
+{% extends "Templates/notification_base.twig" %}
+
+{% block eventText %}
+    <p>Sajnáljuk, de {{ notifier.getName() }} visszavonta jelentkezését a(z) {{ subject.getName() }} nevű projetkedre!</p>
+{% endblock eventText %}

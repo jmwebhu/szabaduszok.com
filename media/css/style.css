@@ -1142,12 +1142,21 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 	   width: 180px;
 	   height: 320px;
     }
+
+    #project-profile-tabs li {
+        text-align: center;
+    }
 }
 @media (max-width: 360px)
 {
 	a.navbar-brand {
 		width: 170px !important;
 	}
+
+    #project-profile-tabs li {
+        font-size: 20px !important;
+        text-align: left;
+    }
 }
 
 
@@ -1507,7 +1516,7 @@ div.br-wrapper {
 .vcenter {
   position: relative;
   top: 50%;
-  transform: translateY(+10%);
+  transform: translateY(+15%);
 }
 .list-image {
 	
@@ -1560,4 +1569,24 @@ img.freelancer-placeholder-img {
 .profile-webpage-icon-container {
 	margin-top: 2px;
 	margin-right: 1px;
+}
+
+.w33 {
+	width: 33.33% !important;
+}
+
+.w50 {
+	width: 50% !important;
+}
+
+.translateY50 {
+	transform: translateY(+62%);
+}
+
+.translateY80 {
+    transform: translateY(+170%);
+}
+
+.ion-ios-information {
+	cursor: pointer;
 }

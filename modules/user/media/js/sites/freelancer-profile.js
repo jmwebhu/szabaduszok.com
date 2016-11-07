@@ -99,7 +99,6 @@ var FreelancerProfile = {
 			setTimeout(function() {
 				$this.prop('disabled', false);
 			}, 500);
-			
 		};
 		
 		ajax.data(FreelancerProfile.$form.serialize()).url(FreelancerProfile.$form.attr('action')).success(success).send();

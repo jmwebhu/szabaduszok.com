@@ -1,0 +1,60 @@
+<div class="col-sm-12 list">
+    <div class="row">
+        <div class="col-sm-12 list">
+
+            {% for candidate in partners.candidates %}
+                <div class="row project-row bgc-white">
+                    <div class="col-sm-2 project-img mobile-hide text-center vcenter">
+                        <a href="{{ ROOT }}szabaduszo/{{ candidate.user.getSlug() }}" class="anchor-no-effect"><img src="{% if candidate.user.getLIstPicturePath() %}{{ ROOT }}uploads/picture/{{ candidate.user.getLIstPicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded img-responsive list-image center-block hidden-xs {% if candidate.user.list_picture_path is null %}freelancer-placeholder-img{% endif %}" alt="Szabaduszok.com - A magyar freelancer platform {{ candidate.user.getName() }}"></a>
+                    </div>
+                    <div class="col-sm-4 list-details">
+                        <span class="ion ion-person pull-left icon-sm project-sign icon-lapis-lazuli"></span>
+                        <h3 class="mg-sm project-title-header text-justify tc-lapis-lazuli project-title-list">
+                            <a href="{{ ROOT }}szabaduszo/{{ candidate.user.getSlug() }}" class="anchor-no-effect">{{ candidate.user.getName() }}</a>
+                        </h3>
+                        <div class="divider-h project-title-divider">
+                            <span class="divider"></span>
+                        </div>
+
+                        <span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray prof-free-list"></span>
+                        {% for profession in candidate.user.getRelation("professions") %}
+                            <span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
+                        {% else %}
+                            <span class="tag">Még nincs adat</span>
+                        {% endfor %}
+
+                        <span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray cb"></span>
+                        {% for skill in candidate.user.getRelation("skills") %}
+                            <span id="{{ skill.skill_id }}" class="tag skill-list">{{ skill.name }}</span>
+                        {% else %}
+                            <span class="tag">Még nincs adat</span>
+                        {% endfor %}
+
+                        <p class="text-justify project-short-description cb">
+                            {{ candidate.user.getShortDescription() }}
+                        </p>
+
+                        <p class="text-left project-share-date">
+                            Jelentkezés időpontja: {{ candidate.project_partner.created_at|date('Y-m-d') }}
+                        </p>
+                    </div>
+                    <div class="col-sm-4 list-details text-justify" style="margin-top:15px;">
+                        {{ candidate.project_partner.notification.getFromExtraData('message') }}
+                    </div>
+                    <div class="col-sm-2 translateY50">
+                        {% if authorization.canApproveApplication() %}
+                        <a href="#" class="btn btn-block btn-lg btn-lime-green approveApplication" data-project_partner_id="{{ candidate.project_partner.project_partner_id }}" data-username="{{ candidate.user.getName() }}"><span class="ion ion-checkmark icon-spacer"></span>Jóváhagyás</a>
+                        {% endif %}
+
+                        {% if authorization.canRejectApplication() %}
+                        <a href="#" class="btn btn-block btn-lg btn-tomato rejectApplication" data-project_partner_id="{{ candidate.project_partner.project_partner_id }}" data-username="{{ candidate.user.getName() }}"><span class="ion ion-android-cancel icon-spacer"></span>Elutasítás</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center">Sajnos nincsenek jelentkezők</p>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>

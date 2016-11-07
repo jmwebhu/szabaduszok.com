@@ -135,16 +135,6 @@ abstract class Entity_User extends Entity implements Notifiable
     /**
      * @var int
      */
-    protected $_old_user_id;
-
-    /**
-     * @var string
-     */
-    protected $_password_plain;
-
-    /**
-     * @var int
-     */
     protected $_landing_page_id;
 
     /**
@@ -341,22 +331,6 @@ abstract class Entity_User extends Entity implements Notifiable
     /**
      * @return int
      */
-    public function getOldUserId()
-    {
-        return $this->_old_user_id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPasswordPlain()
-    {
-        return $this->_password_plain;
-    }
-
-    /**
-     * @return int
-     */
     public function getLandingPageId()
     {
         return $this->_landing_page_id;
@@ -486,17 +460,17 @@ abstract class Entity_User extends Entity implements Notifiable
 
     /**
      * @param int $type
-     * @param int|null $id
+     * @param mixed $value
      * @return Entity_User
      */
-    public static function createUser($type, $id = null)
+    public static function createUser($type, $value = null)
     {
         switch ($type) {
             case self::TYPE_FREELANCER:
-                return new Entity_User_Freelancer($id);
+                return new Entity_User_Freelancer($value);
 
             case self::TYPE_EMPLOYER:
-                return new Entity_User_Employer($id);
+                return new Entity_User_Employer($value);
         }
 
         Assert::neverShouldReachHere();
@@ -579,15 +553,6 @@ abstract class Entity_User extends Entity implements Notifiable
                 if (!$notifier->sendNotificationTo($this)) {
                     throw new Exception('Notificaion not sent. Notification: '
                         . $notifier->getNotification()->getId() . ' Notifiable: ' . $this->getId() . ' Notifier: ' . $notifier->getTemplateFormat());
-                }
-            }
-
-            foreach ($this->_notifiers as $notifier) {
-                /**
-                 * @var Notifier $notifier
-                 */
-                if (!$notifier->getNotification()->isArchived()) {
-                    $notifier->getNotification()->archive();
                 }
             }
         } catch (Exception $ex) {

@@ -1,4 +1,5 @@
 {% extends "Templates/default.twig" %}
+{% import "Project/Partner/fancybox_macro.twig" as partnerFancybox %}
 
 {% block content %}
 
@@ -8,152 +9,82 @@
 			<span class='error-label has-error general-error-label block mb10'>{{ error }}</span>
 			
 			{% if not error %}
-		
-			<input type="hidden" name="project_id" value="{{ project.getProjectId() }}">
-			<input type="hidden" name="user_slug" value="{{ user.getSlug() }}">
-			<input type="hidden" value="{{ user.getRatingPointsAvg() }}" id="initial-rating">
-			<input type="hidden" value="{{ canRate }}" id="can-rate">
-			
-			<div class="col-sm-12">
-				<h1 class="mg-md text-center tc-black">
-					{{ project.getName() }}
-				</h1>
-				{% embed "User/parts/_profilePanel.twig" %}
-                    {% block imageContainer %}
-                        <a href="{{ ROOT }}megbizo/{{ user.getSlug() }}">
-                            <img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
-                        </a>
-                    {% endblock imageContainer %}
 
-                    {% block detailsContainerContact %}
-                        {% if user.getIsCompany() and user.getCompanyName() %}
-                            <div class="col-5 fs18">
-                                <span class="fa fa-building icon-sm icon-dark-gray"></span>
-                            </div>
-                            <div class="col-95 fs18 mt2">
-                                {{ user.getCompanyName }}
-                            </div>
-                        {% endif %}
+            <input type="hidden" name="project_id" value="{{ project.getProjectId() }}">
+            <input type="hidden" name="user_slug" value="{{ user.getSlug() }}">
+            <input type="hidden" value="{{ user.getRatingPointsAvg() }}" id="initial-rating">
+            <input type="hidden" value="{{ canRate }}" id="can-rate">
 
-                        {{ parent() }}
+            <h1 class="mg-md text-center tc-black">
+                {{ project.getName() }}
+            </h1>
+            {% embed "User/parts/_profilePanel.twig" %}
+                {% block imageContainer %}
+                    <a href="{{ ROOT }}megbizo/{{ user.getSlug() }}">
+                        <img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
+                    </a>
+                {% endblock imageContainer %}
 
+                {% block detailsContainerContact %}
+                    {% if user.getIsCompany() and user.getCompanyName() %}
                         <div class="col-5 fs18">
-                            <span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
+                            <span class="fa fa-building icon-sm icon-dark-gray"></span>
                         </div>
-                        <div class="col-95 fs18">
-                            {{ user.getPhonenumber() }}
+                        <div class="col-95 fs18 mt2">
+                            {{ user.getCompanyName }}
                         </div>
+                    {% endif %}
 
-                        <div class="col-5 fs18">
-                            <span class="ion ion-email icon-dark-gray"></span>
-                        </div>
-                        <div class="col-95 fs18 profile-email-container">
-                            <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
-                        </div>
+                    {{ parent() }}
 
-                    {% endblock detailsContainerContact %}
-                    {% block descriptionContainer %}
-                    {% endblock descriptionContainer %}
-                {% endembed %}
+                    <div class="col-5 fs18">
+                        <span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
+                    </div>
+                    <div class="col-95 fs18">
+                        {{ user.getPhonenumber() }}
+                    </div>
 
-				<div class="panel">
-					<div class="panel-heading">
-						<h2 class="mg-clear tc-black">
-							Projekt profil
-						</h2>
-					</div>
-					<div class="panel-body">
-						<div class="col-sm-5">
-							<div class="col-5">
-								<span class="ion ion-briefcase icon-sm project-details-profeesion-sign icon-dark-gray"></span>
-							</div>
-							<div class="col-95 project-profession">
-								{% for industry in industries %}
-								<span id="{{ industry.industry_id }}" class="tag">{{ industry.name }}</span>
-								{% else %}
-								<span class="tag">Nincs adat</span>
-								{% endfor %}	
-							</div>				
-						
-							<div class="col-5">
-								<span class="ion ion-university icon-sm project-details-profeesion-sign icon-dark-gray"></span>
-							</div>
-							<div class="col-95 project-profession">
-								{% for profession in professions %}
-								<span id="{{ profession.profession_id }}" class="tag">{{ profession.name }}</span>
-								{% else %}
-								<span class="tag">Nincs adat</span>
-								{% endfor %}	
-							</div>
-							
-							<div class="col-5 fs18 project-profession">
-									<span class="ion ion-wrench icon-dark-gray project-details-profeesion-sign"></span>
-								</div>
-								<div class="col-95 fs18">
-									{% for skill in skills %}
-									<span id="{{ skill.skill_id }}" class="tag">{{ skill.name }}</span>
-									{% else %}
-									<span class="tag">Nincs adat</span>
-									{% endfor %}								
-								</div>						
-							
-							<div class="col-5">
-								<span class="ion ion-social-usd icon-sm project-details-dollar-sign icon-dark-gray"></span>
-							</div>
-							<div class="col-95 project-details-pay-paragraph">
-								<span class="bold">{{ salary.salary }}</span> {{ salary.postfix }}
-							</div>
-							
-							<div class="col-5">
-								<span class="ion ion-email icon-sm icon-dark-gray"></span>
-							</div>
-							<div class="col-95 fs18">
-								<a href="mailto:{{ project.geteMail() }}" target="_top">{{ project.getEmail() }}</a>
-							</div>
-							
-							<div class="col-5">
-								<span class="ion ion-android-phone-portrait icon-sm icon-dark-gray"></span>
-							</div>
-							<div class="col-95 fs18">
-								{{ project.getPhonenumber() }}
-							</div>
-						
-						</div>
-					
-						<div class="project-details-long-description text-justify col-sm-7">
-							<p class="project-profile-short">
-							{{ project.getShortDescription() }}
-							</p>
-							{% autoescape false %}
-							{{ project.getLongDescription() }}
-							{% endautoescape %}
-						</div>
-							
-																				
-						<p class="text-right project-share-date cb">
-							Megosztva: {{ project.getCreatedAt()|date("Y-m-d") }}
-						</p>
-						
-						{% if canEdit %}
-						<div class="text-center">
-							<a href="{{ ROOT }}szabaduszo-projekt-szerkesztes/{{ project.getSlug() }}" class="btn btn-block btn-lg btn-ultramarine-blue"><span class="ion ion-edit icon-spacer"></span>Szerkeszt</a>
-						</div>		
-						{% endif %}
-						
-						{% if canDelete %}
-						<div class="text-center">
-							<button class="btn btn-block btn-lg btn-ultramarine-blue btn-tomato" id="del" data-id="{{ project.getProjectId() }}"><span class="ion ion-trash-b icon-white icon-spacer"></span>Töröl</button>
-						</div>		
-						{% endif %}
-						<span class="loading text-center"></span>
-					</div>
-				</div>
-				
-				</div>
-				
-				{% endif %}
-			</div>
-		</div>
+                    <div class="col-5 fs18">
+                        <span class="ion ion-email icon-dark-gray"></span>
+                    </div>
+                    <div class="col-95 fs18 profile-email-container">
+                        <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
+                    </div>
+
+                {% endblock detailsContainerContact %}
+                {% block descriptionContainer %}
+                {% endblock descriptionContainer %}
+            {% endembed %}
+
+            {% include "Project/Profile/parts/_profile.twig" %}
+
+            <ul class="nav nav-tabs mb10" id="project-profile-tabs">
+                <li class="w50" data-content="candidates"><span class="ion ion-person-add icon-dark-gray hidden-xs"></span>Jelentkezők</li>
+                <li class="w50" data-content="participants"><span class="ion ion-person-stalker icon-dark-gray hidden-xs"></span>Résztvevők</li>
+                {#<li class="w33" data-content="payouts"><span class="ion ion-social-usd icon-dark-gray hidden-xs"></span>Kifizetések</li>#}
+            </ul>
+
+            <div class="tab-content">
+                <div id="candidates" class="tab-pane fade in active">
+                {% include "Project/Profile/parts/_candidates.twig" %}
+                </div>
+
+                <div id="participants" class="tab-pane fade">
+                {% include "Project/Profile/parts/_participants.twig" %}
+                </div>
+
+                {#<div id="payouts" class="tab-pane fade">
+                </div>#}
+            </div>
+
+            {{ partnerFancybox.build("project-partner-fancybox-candidate", "candidate", project, loggedUser) }}
+            {{ partnerFancybox.build("project-partner-fancybox-undo-application", "undo_application", project, loggedUser, projectPartner) }}
+            {{ partnerFancybox.build("project-partner-fancybox-approve-application", "approve_application", project, loggedUser) }}
+            {{ partnerFancybox.build("project-partner-fancybox-reject-application", "reject_application", project, loggedUser) }}
+            {{ partnerFancybox.build("project-partner-fancybox-cancel-participation", "cancel_participation", project, loggedUser) }}
+
+            {% endif %}
+        </div>
 	</div>
 </div>
 

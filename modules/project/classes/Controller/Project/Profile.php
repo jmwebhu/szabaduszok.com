@@ -98,6 +98,7 @@ class Controller_Project_Profile extends Controller_User
 
         $this->setContextAuthorization();
         $this->setContextRelations();
+        $this->setContextPartners();
     }
 
     protected function setContextAuthorization()
@@ -117,5 +118,18 @@ class Controller_Project_Profile extends Controller_User
         $this->context->industries  = Arr::get($relations, 'industries');
         $this->context->professions = Arr::get($relations, 'professions');
         $this->context->skills      = Arr::get($relations, 'skills');
+    }
+
+    protected function setContextPartners()
+    {
+        $viewhelper         = new Viewhelper_Project_Partner($this->_project->getModel());
+        $partnersEntity     = $viewhelper->getPartnersSeparatedByType();
+
+        $this->context->partners = $partnersEntity;
+
+        $projectPartnerModel            = new Model_Project_Partner();
+        $this->context->projectPartner  = $projectPartnerModel->where('user_id', '=', Auth::instance()->get_user()->user_id)->and_where('project_id', '=', $this->_project->getProjectId())->find();
+
+        $this->context->authorization   = new Authorization_User($this->_project->getModel(), Auth::instance()->get_user());
     }
 }

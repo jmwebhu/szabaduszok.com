@@ -1,0 +1,20 @@
+{% extends "Templates/emailDefault.twig" %}
+
+{% block content %}
+
+<h1>Hello {{ notified.getFirstname() }}!</h1>
+
+    {% block eventText %}
+    {% endblock eventText %}
+
+    {% block message %}
+    {% if notification.getFromExtraData("message") %}
+    <p>{{ notifier.getName() }} üzeni: {{ notification.getFromExtraData("message") }}</p>
+    {% endif %}
+    {% endblock message %}
+
+    {% block cta %}
+    <p>A megtekintéshez kattints az alábbi gombra:</p>
+    <a class="cta text-center center" target="_blank" href="{{ notification.getUrl() }}">Érdekel</a>
+    {% endblock cta %}
+{% endblock content %}

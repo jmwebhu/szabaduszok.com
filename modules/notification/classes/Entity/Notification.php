@@ -299,33 +299,58 @@ class Entity_Notification extends Entity implements Notification
     }
 
     /**
-     * @param Model_Project $project
+     * @param string $key
+     * @return mixed
      */
-    public static function createForProjectNew(Model_Project $project)
+    public function getFromExtraData($key)
     {
-        $event = Model_Event_Factory::createEvent(Model_Event::TYPE_PROJECT_NEW);
+        return $this->_model->getFromExtraData($key);
+    }
 
-        $search = Project_Notification_Search_Factory_User::makeSearch([
-            'industries'    => $project->getRelationIds('industries'),
-            'professions'   => $project->getRelationIds('professions'),
-            'skills'        => $project->getRelationIds('skills'),
-        ]);
 
-        $users = $search->search();
+    /**
+     * @param int $eventType
+     * @param Model_Project $project
+     * @param Model_User $user
+     * @param array|null $extraData
+     * @return Entity_Notification
+     */
+    public static function createFor($eventType, Model_Project $project, Model_User $user, $extraData = null)
+    {
+        $extraData = ($extraData == null) ? [] : $extraData;
+        $event      = Model_Event_Factory::createEvent($eventType);
+        $notifier   = null;
+        $notified   = null;
 
-        foreach ($users as $user) {
-            $notification = new Entity_Notification();
-            $notification->setNotifierUserId($project->user_id);
-            $notification->setNotifiedUserId($user->user_id);
-            $notification->setEventId($event->event_id);
-            $notification->setSubjectId($project->project_id);
-            $notification->setSubjectName($project->object_name());
-            $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+        switch ($event->getNotifierClass()) {
+            case Entity_User_Employer::class:
+                $notifier = $project->user_id;
+                $notified = $user->user_id;
+                break;
 
-            $notification->save();
-            $entity = new Entity_User_Freelancer($user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
+            case Entity_User_Freelancer::class:
+                $notifier = $user->user_id;
+                $notified = $project->user_id;
+                break;
         }
+
+        Assert::notNull($notifier);
+        Assert::notNull($notified);
+
+        $notification = new Entity_Notification();
+        $notification->setNotifierUserId($notifier);
+        $notification->setNotifiedUserId($notified);
+        $notification->setEventId($event->getId());
+        $notification->setSubjectId($project->project_id);
+        $notification->setSubjectName($project->object_name());
+        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+
+        if ($extraData) {
+            $notification->setExtraDataJson(json_encode($extraData));
+        }
+
+        $notification->save();
+
+        return $notification;
     }
 }

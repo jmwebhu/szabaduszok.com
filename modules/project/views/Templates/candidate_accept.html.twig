@@ -1,0 +1,5 @@
+{% extends "Templates/notification_base.twig" %}
+
+{% block eventText %}
+    <p>Gratulálunk! {{ notifier.getName() }} elfogadta a jelentkezésed a(z) {{ subject.getName() }} nevű projektre!</p>
+{% endblock eventText %}

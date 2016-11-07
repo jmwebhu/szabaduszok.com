@@ -138,4 +138,22 @@ class Model_User_Freelancer extends Model_User_Abstract
         $model = parent::getBySlug($slug);
         return new Model_User_Freelancer($model->user_id);
     }
+
+    /**
+     * @param Model_Project $project
+     * @return bool
+     */
+    public function isCandidateIn(Model_Project $project)
+    {
+        return Model_Project_Partner::isUserCandidateInProject($this, $project);
+    }
+
+    /**
+     * @param Model_Project $project
+     * @return bool
+     */
+    public function isParticipantIn(Model_Project $project)
+    {
+        return Model_Project_Partner::isUserParticipateInProject($this, $project);
+    }
 }

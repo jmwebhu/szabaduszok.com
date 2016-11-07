@@ -47,8 +47,6 @@ class Model_User extends Model_Auth_User
 		'skill_relation'			=> ['type' => 'int', 'null' => true],
 		'is_admin'					=> ['type' => 'int', 'null' => true],
 		'search_text'				=> ['type' => 'string', 'null' => true],
-		'old_user_id'				=> ['type' => 'int', 'null' => true],
-		'password_plain'			=> ['type' => 'string', 'null' => true],
 		'landing_page_id'			=> ['type' => 'int', 'null' => true],
 		'need_project_notification'	=> ['type' => 'int', 'null' => true],
 		'webpage'					=> ['type' => 'string', 'null' => true],
@@ -102,6 +100,10 @@ class Model_User extends Model_Auth_User
         'project_notification_skills' => [
             'model'         => 'User_Project_Notification_Skill',
             'foreign_key'   => 'user_id',
+        ],
+        'project_partners' => [
+            'model'     	=> 'Project_Partner',
+            'foreign_key'	=> 'user_id',
         ],
     ];
 
@@ -207,14 +209,20 @@ class Model_User extends Model_Auth_User
      */
     public static function createUser($type, $id = null)
     {
+        $user = null;
         switch ($type) {
             case Entity_User::TYPE_FREELANCER:
-                return new Model_User_Freelancer($id);
+                $user = new Model_User_Freelancer($id);
+                break;
 
             case Entity_User::TYPE_EMPLOYER:
-                return new Model_User_Employer($id);
+                $user = new Model_User_Employer($id);
+                break;
         }
 
-        Assert::neverShouldReachHere();
+        $user->type = $type;
+        Assert::notNull($user);
+
+        return $user;
     }
 }

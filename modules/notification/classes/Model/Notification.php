@@ -43,4 +43,14 @@ class Model_Notification extends ORM
             'foreign_key'   => 'event_id'
         ]
     ];
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getFromExtraData($key)
+    {
+        $extraDataArray = json_decode($this->extra_data_json, true);
+        return Arr::get($extraDataArray, $key, '');
+    }
 }

@@ -2684,5 +2684,10 @@ class Kohana_ORM extends Model implements serializable {
 
         return $model;
     }
+
+    public function asJson()
+    {
+        return json_encode($this->object());
+    }
 	
 } // End ORM

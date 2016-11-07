@@ -9,10 +9,10 @@ class users_project_notification_industries extends Migration
      'users_project_notification_industries',
      array
        (
-         'user_project_notification_industry_id'                 => ['integer', 'unsigned' => true],
-         'user_id'                => ['integer', 'unsigned' => true],
-         'industry_id'               => ['integer', 'unsigned' => true],
-         'created_at'          => array('datetime')
+         'user_project_notification_industry_id'    => ['integer', 'unsigned' => true],
+         'user_id'                                  => ['integer', 'unsigned' => true],
+         'industry_id'                              => ['integer', 'unsigned' => true],
+         'created_at'                               => array('datetime')
        ),
         'user_project_notification_industry_id'
      );

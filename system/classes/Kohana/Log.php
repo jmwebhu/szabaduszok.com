@@ -179,8 +179,12 @@ class Kohana_Log {
 
 	public function addException(Exception $ex)
     {
-        $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString();
+    	$postJson =  json_encode(Input::post_all());
+        $getJson =  json_encode(Input::get_all());
+
+        $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString() . ' GET: ' . $getJson . ' POST: ' . $postJson;
         $this->add(self::ERROR, $message);
+       
         
         Email::send('martin@szabaduszok.com', 'HIBA', $message);
     }

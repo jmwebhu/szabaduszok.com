@@ -1,0 +1,23 @@
+{% extends "Project/Partner/fancybox_base.twig" %}
+
+{% block heading %}
+    <h1>Résztvevő törlése: <span class="username"></span></h1>
+{% endblock heading %}
+
+{% block body %}
+    <form method="post" action="#" id="cancel-participation-form">
+        <input name="project_partner_id" value="" type="hidden">
+
+        <p>Ha biztosan törölni akarod a résztvevőt, kattints a piros 'Törlés' gombra. Érdemes egy rödiv üzenetben összefoglalni az indoklásod a szabadúszó számára.</p>
+        <span class="fa fa-comment pull-left icon-sm icon-dark-gray"></span>
+        <div class="form-group">
+            <label>
+                Üzenet
+            </label>
+            <textarea class="form-control" id="message" name="extra_data[message]" rows="4" cols="50"></textarea>
+        </div>
+
+        <button href="#" class="btn btn-block btn-lg btn-tomato operation" data-operation="cancel-participation"><span class="ion ion-android-cancel icon-spacer"></span>Törlés</button>
+        <button href="#" class="btn btn-d btn-lg btn-block btn-gray cancel"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</button>
+    </form>
+{% endblock body %}

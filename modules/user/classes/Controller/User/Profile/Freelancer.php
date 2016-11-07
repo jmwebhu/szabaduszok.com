@@ -30,6 +30,7 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
     {
         parent::setContext();
         $this->setContextProjectNotification();
+        $this->setContextProjects();
     }
 
     private function setContextProjectNotification()
@@ -50,5 +51,24 @@ class Controller_User_Profile_Freelancer extends Controller_User_Profile
                 'industries'        => $this->context->industries
             ]);
         }
+    }
+
+    private function setContextProjects()
+    {
+        $viewhelper = new Viewhelper_Project_Partner($this->_user->getModel());
+        $salaries   = [];
+        $relations  = [];
+
+        $partnersEntity = $viewhelper->getPartnersSeparatedByType();
+        $partnersOrm    = $viewhelper->getPartners();
+
+        foreach ($partnersOrm as $partner) {
+            $salaries[$partner->project_id]     = Viewhelper_Project::getSalary(new Entity_Project($partner->project));
+            $relations[$partner->project_id]    = $partner->project->getRelations();
+        }
+
+        $this->context->project_partners    = $partnersEntity;
+        $this->context->salaries            = $salaries;
+        $this->context->relations           = $relations;
     }
 }

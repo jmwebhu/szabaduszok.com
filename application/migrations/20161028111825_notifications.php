@@ -16,7 +16,7 @@ class notifications extends Migration
             'subject_name'              => ['string'],
             'event_id'                  => ['integer', 'default' => null, 'unsigned' => true],
             'url'                       => ['string'],
-            'extra_data_json'           => ['string'],
+            'extra_data_json'           => ['text'],
             'is_archived'               => ['boolean', 'unsigned' => true],
             'updated_at'                => array('datetime'),
             'created_at'                => array('datetime'),
@@ -27,9 +27,9 @@ class notifications extends Migration
       $this->add_index('notifications', 'subject_id', ['subject_id'], 'normal');
       $this->add_index('notifications', 'is_archived', ['is_archived'], 'normal');
 
-      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notifier_user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notified_user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`event_id`) REFERENCES `events`(`event_id`) ON DELETE SET NULL ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notifier_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`notified_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `notifications` ADD FOREIGN KEY (`event_id`) REFERENCES `events`(`event_id`) ON DELETE CASCADE ON UPDATE CASCADE");
   }
 
   public function down()

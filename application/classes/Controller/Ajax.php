@@ -35,6 +35,17 @@ class Controller_Ajax extends Controller_DefaultTemplate
     }
 
     /**
+     * @throws Exception
+     */
+    protected function throwExceptionIfErrorInResponse()
+    {
+        $response = json_decode($this->_jsonResponse, true);
+        if (Arr::get($response, 'error', false) == true) {
+            throw new Exception(Arr::get($response, 'message'));
+        }
+    }
+
+    /**
      * @param Exception $ex
      */
     protected function handleException(Exception $ex)

@@ -131,8 +131,7 @@ abstract class Array_Builder
 	public function from($from)
 	{
 		// Nem array -t kap. Kiszedi cache -bol
-		if (!is_array($from) && is_object($from))
-		{
+		if (!is_array($from) && is_object($from)) {
 		    $from = $from->getAll();
 		}
 		

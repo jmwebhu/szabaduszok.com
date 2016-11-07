@@ -74,6 +74,28 @@
                     {{ searchPanel.build(container) }}
                 </form>
             {% endif %}
+
+            <h2 class="text-center">Projektjeim</h2>
+
+            <ul class="nav nav-tabs mb10" id="project-profile-tabs">
+                <li class="w50" data-content="candidates"><span class="ion ion-person-add icon-dark-gray hidden-xs"></span>Jóváhagyásra vár</li>
+                <li class="w50" data-content="participants"><span class="ion ion-person-stalker icon-dark-gray hidden-xs"></span>Jóváhagyva</li>
+                {#<li class="w33" data-content="payouts"><span class="ion ion-social-usd icon-dark-gray hidden-xs"></span>Kifizetések</li>#}
+            </ul>
+
+            <div class="tab-content">
+                <div id="candidates" class="tab-pane fade in active">
+                    {% include 'User/parts/Profile/Freelancer/_candidateList.twig' %}
+                </div>
+
+                <div id="participants" class="tab-pane fade">
+                    {% include 'User/parts/Profile/Freelancer/_participantList.twig' %}
+                </div>
+
+                {#<div id="payouts" class="tab-pane fade">
+                </div>#}
+            </div>
+
         {% endblock bottomContainer %}
     {% endembed %}
 {% endblock profilePanel %}

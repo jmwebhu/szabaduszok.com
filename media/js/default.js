@@ -66,15 +66,53 @@ var Default = {
 	    }
 	    
 	    return float;
-	}
+	},
+	startLoading: function ($loading, text) {
+
+        $loading = Default.getLoading($loading);
+
+        if (typeof text == 'undefined') {
+            text = 'Folyamtban...';
+        }
+
+        $loading.text(text).isLoading();
+	},
+    stopLoading: function (error, successText, $loading) {
+        $loading = Default.getLoading($loading);
+
+        if (typeof successText == 'undefined') {
+            successText = 'Sikeres művelet';
+        }
+
+        $loading.isLoading('hide');
+
+        if (error) {
+            $loading.html('Sajnos, valami hiba történt...').addClass('alert-danger');
+            $loading.show();
+        } else {
+            $loading.html(successText).addClass('alert-success');
+            $loading.show();
+        }
+
+        setTimeout(function () {
+            $loading.hide();
+        }, 1000);
+    },
+    getLoading: function($loading) {
+        if (typeof $loading == 'undefined') {
+            $loading = $('span.loading');
+        }
+
+        return $loading;
+    }
 };
 
 var fancyBoxOptions = {
     maxWidth	: '80%',
     maxHeight	: '80%',
     fitToView	: false,
-    width	: '80%',
-    height	: '80%',
+    width	    : '80%',
+    height	    : '80%',
     autoSize	: false,
     openEffect	: 'none',
     closeEffect	: 'none',
@@ -84,7 +122,7 @@ var fancyBoxOptions = {
     helpers		: { 
 		overlay : {
 			closeClick: false
-		} 
+		}
 	}
  };
 
