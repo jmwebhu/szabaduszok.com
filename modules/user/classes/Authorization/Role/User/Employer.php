@@ -23,7 +23,7 @@ class Authorization_Role_User_Employer extends Authorization_Role_User
      */
     public function canApproveApplication()
     {
-        return true;
+        return ($this->_user->user_id == $this->_model->user_id);
     }
 
     /**
@@ -31,7 +31,7 @@ class Authorization_Role_User_Employer extends Authorization_Role_User
      */
     public function canRejectApplication()
     {
-        return true;
+        return ($this->_user->user_id == $this->_model->user_id);
     }
 
     /**

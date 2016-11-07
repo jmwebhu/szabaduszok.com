@@ -42,8 +42,13 @@
                         {{ candidate.project_partner.notification.getFromExtraData('message') }}
                     </div>
                     <div class="col-sm-2 translateY50">
+                        {% if authorization.canApproveApplication() %}
                         <a href="#" class="btn btn-block btn-lg btn-lime-green approveApplication" data-project_partner_id="{{ candidate.project_partner.project_partner_id }}"><span class="ion ion-checkmark icon-spacer"></span>Jóváhagyás</a>
+                        {% endif %}
+
+                        {% if authorization.canRejectApplication() %}
                         <a href="#" class="btn btn-block btn-lg btn-tomato rejectApplication" data-project_partner_id="{{ candidate.project_partner.project_partner_id }}"><span class="ion ion-android-cancel icon-spacer"></span>Elutasítás</a>
+                        {% endif %}
                     </div>
                 </div>
             {% else %}
