@@ -222,4 +222,42 @@ class Model_Project_Partner extends ORM
     {
         return $this->_partnerType->getTypePlural();
     }
+
+    /**
+     * @param Model_User $user
+     * @param Model_Project $project
+     * @return bool
+     */
+    public static function isUserCandidateInProject(Model_User $user, Model_Project $project)
+    {
+        return self::isUserPartnerInProject($user, $project, self::TYPE_CANDIDATE);
+    }
+
+    /**
+     * @param Model_User $user
+     * @param Model_Project $project
+     * @return bool
+     */
+    public static function isUserParticipateInProject(Model_User $user, Model_Project $project)
+    {
+        return self::isUserPartnerInProject($user, $project, self::TYPE_PARTICIPANT);
+    }
+
+    /**
+     * @param Model_User $user
+     * @param Model_Project $project
+     * @param $type
+     * @return bool
+     */
+    protected static function isUserPartnerInProject(Model_User $user, Model_Project $project, $type)
+    {
+        $count = DB::select()
+            ->from('projects_partners')
+            ->where('user_id', '=', $user->user_id)
+            ->and_where('project_id', '=', $project->project_id)
+            ->and_where('type', '=', $type)
+            ->execute()->count();
+
+        return $count == 1;
+    }
 }

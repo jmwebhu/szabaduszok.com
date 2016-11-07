@@ -61,8 +61,13 @@
             </div>
 
             <div>
+                {% if authorization.canApply() %}
                 <a href="#" class="btn btn-lg btn-lime-green" id="apply" data-project_id="{{ project.getProjectId() }}"><span class="ion ion-checkmark icon-spacer"></span>Jelentkezés</a>
+                {% endif %}
+
+                {% if authorization.canUndoApplication() %}
                 <a href="#" class="btn btn-lg btn-tomato" id="undoApplication" data-project_partner_id="{{ projectPartner.project_partner_id }}"><span class="ion ion-ios-undo icon-spacer"></span>Visszavonás</a>
+                {% endif %}
             </div>
 
         </div>

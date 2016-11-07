@@ -129,5 +129,7 @@ class Controller_Project_Profile extends Controller_User
 
         $projectPartnerModel            = new Model_Project_Partner();
         $this->context->projectPartner  = $projectPartnerModel->where('user_id', '=', Auth::instance()->get_user()->user_id)->and_where('project_id', '=', $this->_project->getProjectId())->find();
+
+        $this->context->authorization   = new Authorization_User($this->_project->getModel(), Auth::instance()->get_user());
     }
 }
