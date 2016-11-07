@@ -135,16 +135,6 @@ abstract class Entity_User extends Entity implements Notifiable
     /**
      * @var int
      */
-    protected $_old_user_id;
-
-    /**
-     * @var string
-     */
-    protected $_password_plain;
-
-    /**
-     * @var int
-     */
     protected $_landing_page_id;
 
     /**
@@ -336,22 +326,6 @@ abstract class Entity_User extends Entity implements Notifiable
     public function getSearchText()
     {
         return $this->_search_text;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOldUserId()
-    {
-        return $this->_old_user_id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPasswordPlain()
-    {
-        return $this->_password_plain;
     }
 
     /**

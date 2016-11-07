@@ -47,8 +47,6 @@ class Model_User extends Model_Auth_User
 		'skill_relation'			=> ['type' => 'int', 'null' => true],
 		'is_admin'					=> ['type' => 'int', 'null' => true],
 		'search_text'				=> ['type' => 'string', 'null' => true],
-		'old_user_id'				=> ['type' => 'int', 'null' => true],
-		'password_plain'			=> ['type' => 'string', 'null' => true],
 		'landing_page_id'			=> ['type' => 'int', 'null' => true],
 		'need_project_notification'	=> ['type' => 'int', 'null' => true],
 		'webpage'					=> ['type' => 'string', 'null' => true],
