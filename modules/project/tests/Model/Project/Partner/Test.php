@@ -66,7 +66,8 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         ];
 
         $partner = new Model_Project_Partner();
-        $partner->apply($data);
+
+        $partner->apply($data, $this->getAuthorizationMock());
         self::$_partner = $partner;
 
         $this->assertNotificationExistsInDatabaseWith([
@@ -88,7 +89,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->givenApplication();
         $this->assertPartnerExistsInDatabase();
 
-        self::$_partner->undoApplication();
+        self::$_partner->undoApplication($this->getAuthorizationMock());
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_freelancer->user_id,
@@ -108,7 +109,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->givenApplication();
         $this->assertPartnerExistsInDatabase();
 
-        self::$_partner->approveApplication();
+        self::$_partner->approveApplication($this->getAuthorizationMock());
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_employer->user_id,
@@ -128,7 +129,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->givenApplication();
         $this->assertPartnerExistsInDatabase();
 
-        self::$_partner->rejectApplication();
+        self::$_partner->rejectApplication($this->getAuthorizationMock());
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_employer->user_id,
@@ -148,7 +149,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->givenParticipation();
         $this->assertPartnerExistsInDatabase();
 
-        self::$_partner->cancelParticipation();
+        self::$_partner->cancelParticipation($this->getAuthorizationMock());
 
         $this->assertNotificationExistsInDatabaseWith([
             'notifier_user_id'  => self::$_employer->user_id,
@@ -161,27 +162,36 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Model_Project_Partner::throwExceptionIfEventNotPerformable()
+     * @return PHPUnit_Framework_MockObject_MockObject
      */
-    public function testThrowExceptionIfEventNotPerformableOk()
+    protected function getAuthorizationMock()
     {
-        $partner = new Model_Project_Partner();
-        $partner->setType(Model_Project_Partner::TYPE_CANDIDATE);
+        $authMock             = $this->getMockBuilder('\Authorization_User')
+            ->setConstructorArgs([self::$_project, self::$_freelancer])
+            ->setMethods(['canApply', 'canUndoApplication', 'canApproveApplication', 'canRejectApplication', 'canCancelParticipation'])
+            ->getMock();
 
-        $result = $this->invokeMethod($partner, 'throwExceptionIfEventNotPerformable', [Model_Event::TYPE_CANDIDATE_NEW]);
-        $this->assertTrue($result);
-    }
+        $authMock->expects($this->any())
+            ->method('canApply')
+            ->will($this->returnValue(true));
 
-    /**
-     * @covers Model_Project_Partner::throwExceptionIfEventNotPerformable()
-     */
-    public function testThrowExceptionIfEventNotPerformableNotOk()
-    {
-        $partner = new Model_Project_Partner();
-        $partner->setType(Model_Project_Partner::TYPE_CANDIDATE);
+        $authMock->expects($this->any())
+            ->method('canUndoApplication')
+            ->will($this->returnValue(true));
 
-        $result = $this->invokeMethod($partner, 'throwExceptionIfEventNotPerformable', [Model_Event::TYPE_PARTICIPATE_REMOVE]);
-        $this->assertFalse($result);
+        $authMock->expects($this->any())
+            ->method('canApproveApplication')
+            ->will($this->returnValue(true));
+
+        $authMock->expects($this->any())
+            ->method('canRejectApplication')
+            ->will($this->returnValue(true));
+
+        $authMock->expects($this->any())
+            ->method('canCancelParticipation')
+            ->will($this->returnValue(true));
+
+        return $authMock;
     }
 
     protected function givenApplication()
@@ -192,8 +202,17 @@ class Model_Project_Partner_Test extends Unittest_TestCase
                 'project_id'    => self::$_project->project_id
             ];
 
+            $authMock             = $this->getMockBuilder('\Authorization_User')
+                ->setConstructorArgs([self::$_project, self::$_freelancer])
+                ->setMethods(['canApply'])
+                ->getMock();
+
+            $authMock->expects($this->any())
+                ->method('canApply')
+                ->will($this->returnValue(true));
+
             $partner = new Model_Project_Partner();
-            $apply = $partner->apply($data);
+            $apply = $partner->apply($data, $authMock);
 
             self::$_partner = $partner;
         }
@@ -202,7 +221,16 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     protected function givenParticipation()
     {
         $this->givenApplication();
-        self::$_partner = self::$_partner->approveApplication();
+        $authMock             = $this->getMockBuilder('\Authorization_User')
+            ->setConstructorArgs([self::$_project, self::$_freelancer])
+            ->setMethods(['canApproveApplication'])
+            ->getMock();
+
+        $authMock->expects($this->any())
+            ->method('canApproveApplication')
+            ->will($this->returnValue(true));
+
+        self::$_partner = self::$_partner->approveApplication($authMock);
     }
 
     /**
@@ -275,6 +303,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
 
     public static function setUpBeforeClass()
     {
+        Cache::instance()->delete_all();
         $freelancerData = [
             'firstname'             => 'Web',
             'lastname'              => 'Józsi',

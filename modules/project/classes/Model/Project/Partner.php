@@ -8,7 +8,7 @@ class Model_Project_Partner extends ORM
     /**
      * @var Model_Project_Partner_Type
      */
-    protected $_partnerType = null;
+    protected $_partnerType     = null;
 
     protected $_table_name  = 'projects_partners';
     protected $_primary_key = 'project_partner_id';
@@ -57,7 +57,6 @@ class Model_Project_Partner extends ORM
         $this->type = $type;
         $this->_partnerType = Model_Project_Partner_Type_Factory::createType($type);
     }
-
     /**
      * @param mixed|null $id
      */
@@ -70,103 +69,143 @@ class Model_Project_Partner extends ORM
 
     /**
      * @param array $data
+     * @param Authorization_User $authorization
      * @return array
      */
-    public function apply(array $data)
+    public function apply(array $data, Authorization_User $authorization)
     {
-        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_NEW);
+        try {
+            $project                = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
+            $this->throwExceptionIfNotAuthorized($authorization->canApply());
 
-        $submit                 = $this->submit($data);
-        $project                = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
+            $result                 = $this->submit($data);
 
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_NEW, $project, $this->user, Arr::get($data, 'extra_data'));
-        $this->notification_id  = $notification->getId();
-        $this->save();
+            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_NEW, $project, $this->user, Arr::get($data, 'extra_data'));
+            $this->notification_id  = $notification->getId();
+            $this->save();
 
-        $entity = new Entity_User_Employer($project->user);
-        $entity->setNotification($notification);
-        $entity->sendNotification();
+            $entity = new Entity_User_Employer($project->user);
+            $entity->setNotification($notification);
+            $entity->sendNotification();
 
-        return $submit;
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+            $result = ['error' => true, 'message' => $ex->getMessage()];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Authorization_User $authorization
+     * @param array $extraData
+     * @return ORM
+     */
+    public function undoApplication(Authorization_User $authorization, array $extraData = [])
+    {
+        try {
+            $this->throwExceptionIfNotAuthorized($authorization->canUndoApplication());
+
+            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $this->project, $this->user, $extraData);
+
+            $entity = new Entity_User_Employer($this->project->user);
+            $entity->setNotification($notification);
+            $entity->sendNotification();
+
+            $result = $this->delete();
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+            $result = ['error' => true, 'message' => $ex->getMessage()];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Authorization_User $authorization
+     * @param array $extraData
+     * @return ORM
+     */
+    public function approveApplication(Authorization_User $authorization, array $extraData = [])
+    {
+        try {
+            $this->throwExceptionIfNotAuthorized($authorization->canApproveApplication());
+
+            $this->approved_at = date('Y-m-d H:i', time());
+            $this->type = self::TYPE_PARTICIPANT;
+            $this->save();
+
+            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project, $this->user, $extraData);
+            $this->notification_id  = $notification->getId();
+            $this->save();
+
+            $entity = new Entity_User_Freelancer($this->user);
+            $entity->setNotification($notification);
+            $entity->sendNotification();
+
+            $result = $this;
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+            $result = ['error' => true, 'message' => $ex->getMessage()];
+        }
+
+        return $result;
     }
 
     /**
      * @param array $extraData
      * @return ORM
      */
-    public function undoApplication(array $extraData = [])
+    public function rejectApplication(Authorization_User $authorization, array $extraData = [])
     {
-        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_UNDO);
+        try {
+            $this->throwExceptionIfNotAuthorized($authorization->canRejectApplication());
 
-        $project                = AB::select()->from(new Model_Project())->where('project_id', '=', $this->project_id)->execute()->current();
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $project, $this->user, $extraData);
+            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_REJECT, $this->project, $this->user, $extraData);
+            $this->notification_id  = $notification->getId();
+            $this->save();
 
-        $entity = new Entity_User_Employer($project->user);
-        $entity->setNotification($notification);
-        $entity->sendNotification();
+            $entity = new Entity_User_Freelancer($this->user);
+            $entity->setNotification($notification);
+            $entity->sendNotification();
 
-        return $this->delete();
+            $result = $this->delete();
+
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+            $result = ['error' => true, 'message' => $ex->getMessage()];
+        }
+
+        return $result;
     }
 
     /**
      * @param array $extraData
      * @return ORM
      */
-    public function approveApplication(array $extraData = [])
+    public function cancelParticipation(Authorization_User $authorization, array $extraData = [])
     {
-        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_ACCEPT);
+        try {
+            $this->throwExceptionIfNotAuthorized($authorization->canCancelParticipation());
 
-        $this->approved_at = date('Y-m-d H:i', time());
-        $this->type = self::TYPE_PARTICIPANT;
-        $this->save();
+            $notification           = Entity_Notification::createFor(Model_Event::TYPE_PARTICIPATE_REMOVE, $this->project, $this->user, $extraData);
+            $this->notification_id  = $notification->getId();
+            $this->save();
 
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project, $this->user, $extraData);
-        $this->notification_id  = $notification->getId();
-        $this->save();
+            $entity = new Entity_User_Freelancer($this->user);
+            $entity->setNotification($notification);
+            $entity->sendNotification();
 
-        $entity = new Entity_User_Freelancer($this->user);
-        $entity->setNotification($notification);
-        $entity->sendNotification();
+            $result = $this->delete();
 
-        return $this;
-    }
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+            $result = ['error' => true, 'message' => $ex->getMessage()];
+        }
 
-    /**
-     * @param array $extraData
-     * @return ORM
-     */
-    public function rejectApplication(array $extraData = [])
-    {
-        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_CANDIDATE_REJECT);
-
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_REJECT, $this->project, $this->user, $extraData);
-        $this->notification_id  = $notification->getId();
-        $this->save();
-
-        $entity = new Entity_User_Freelancer($this->user);
-        $entity->setNotification($notification);
-        $entity->sendNotification();
-
-        return $this->delete();
-    }
-
-    /**
-     * @param array $extraData
-     * @return ORM
-     */
-    public function cancelParticipation(array $extraData = [])
-    {
-        $this->throwExceptionIfEventNotPerformable(Model_Event::TYPE_PARTICIPATE_REMOVE);
-
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_PARTICIPATE_REMOVE, $this->project, $this->user, $extraData);
-        $this->notification_id  = $notification->getId();
-        $this->save();
-
-        $entity = new Entity_User_Freelancer($this->user);
-        $entity->setNotification($notification);
-        $entity->sendNotification();
-
-        return $this->delete();
+        return $result;
     }
 
     /**
@@ -196,23 +235,14 @@ class Model_Project_Partner extends ORM
     }
 
     /**
-     * @param int $eventId
-     * @return bool
+     * @param bool $isAuthorized
+     * @throws Exception
      */
-    protected function throwExceptionIfEventNotPerformable($eventId)
+    protected function throwExceptionIfNotAuthorized($isAuthorized)
     {
-        $result = true;
-        if (!$this->_partnerType->isEventPerformable(Model_Event_Factory::createEvent($eventId))) {
-            try {
-                throw new Exception('Invalid event: ' . get_class(Model_Event_Factory::createEvent($eventId))
-                    . ' For partner _type: ' . get_class($this->_partnerType));
-            } catch (Exception $ex) {
-                Log::instance()->add(Log::ALERT, $ex->getMessage());
-                $result = false;
-            }
+        if (!$isAuthorized) {
+            throw new Exception('Nincs jogosultságod a művelethez');
         }
-
-        return $result;
     }
 
     /**
