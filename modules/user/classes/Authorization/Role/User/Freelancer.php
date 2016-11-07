@@ -4,7 +4,14 @@ class Authorization_Role_User_Freelancer extends Authorization_Role_User
 {
     public function __construct(Model_User $user, ORM $model)
     {
-        $this->_user    = Model_User::createUser(Entity_User::TYPE_FREELANCER, $user->user_id);
+        $this->_user = $user;
+
+        // FONTOS, unitteszt dependency injection miatt kell sajnos. testCanApplyNotOk()
+        // A konstruktornak atadott mock objectet felulirja a createUser egy rendes user objecttel
+        if (!$user instanceof Model_User_Freelancer) {
+            $this->_user    = Model_User::createUser(Entity_User::TYPE_FREELANCER, $user->user_id);
+        }
+
         $this->_model   = $model;
     }
 
