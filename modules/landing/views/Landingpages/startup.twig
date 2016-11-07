@@ -7,18 +7,14 @@
 
     <div class="landing body">        
         
-        <h1 class="text-center tc-black landing main-header">Pörgesd Fel a Startupod Megvalósítását Még Ma!</h1>
-        <h2 class="text-center tc-black landing">Egy startup rengeteg munkát igényel. Design, fejlesztés, adminisztráció, marketing, cégvezetés... Úgy érzed, nem lehet mindent házon belül megoldani? Szervezz ki munkát Szabadúszóknak!</h2>
+        <h1 class="text-center tc-black landing main-header">Vigyázz, Kész, Kilövés!</h1>
+        <h2 class="text-center tc-black landing">Design, fejlesztés, adminisztráció, marketing, cégvezetés... Úgy érzed, nem lehet mindent házon belül megoldani? Szervezz ki munkát Szabadúszóknak!</h2>
 
         <div class="text-left col-sm-6 left">
             <ul class="list-group tc-black">
                 <li class="list-group-item">
                     <span class="fa fa-check feature-list-item lime-green"></span>
-                    Összesen <span class="bold">{{ countOfFreelancers }}</span> Szabadúszó kap értesítést a projektedről
-                </li>
-                <li class="list-group-item">
-                    <span class="fa fa-check feature-list-item lime-green"></span>
-                    <span class="bold">Korlátozott ideig teljesen ingyen</span> indíthatsz projekteket, és kereshetsz Szabadúszókat
+                    <span class="bold">{{ countOfFreelancers }}</span> Szabadúszó várja a projektedet
                 </li>
                 <li class="list-group-item">
                     <span class="fa fa-check feature-list-item lime-green"></span>
@@ -27,6 +23,10 @@
                 <li class="list-group-item">
                     <span class="fa fa-check feature-list-item lime-green"></span>
                     Az igazán <span class="bold">fontos</span> feladatokra tudsz koncentrálni
+                </li>
+                <li class="list-group-item">
+                    <span class="fa fa-check feature-list-item lime-green"></span>
+                    Korlátozott ideig <span class="bold">teljesen ingyenes</span>
                 </li>
                 <li class="list-group-item">
                     <span class="fa fa-check feature-list-item lime-green"></span>
@@ -46,8 +46,8 @@
                     <form method="GET" action="{{ ROOT }}megbizo-regisztracio" class="landing-form">
                         <span class='error-label has-error general-error-label block mb10 text-center'></span>		
                         <input class="landing-email form-control" type="email" autofocus required placeholder="E-mail cím" name="email">
-                        <input class="landing-email form-control" type="hidden" autofocus required placeholder="E-mail cím" name="landing_page_name" value="startup">
-                        <button type="submit" class="btn btn-xl animDelay1 erdekel-cta btn-lime-green call-to-action">TOVÁBB</button>                                                
+                        <input class="landing-email form-control" type="hidden" autofocus required name="landing_page_name" value="startup">
+                        <button type="submit" class="btn btn-xl animDelay1 erdekel-cta btn-lime-green call-to-action">REGISZTRÁCIÓ</button>
                     </form>                                            
                         
                     <span class="fa fa-lock feature-list-item"></span>Mi sem szeretjük a spam -et. E-mail címedet <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank">Adatvédelmi nyilatkozatunknak</a> megfelelően kezeljük!
