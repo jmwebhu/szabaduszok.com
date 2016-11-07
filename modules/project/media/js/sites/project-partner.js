@@ -36,16 +36,19 @@ var ProjectPartner = {
     },
     approveApplicationClick: function () {
         $("input[name='project_partner_id']").val($(this).data("project_partner_id"));
+        $("span.username").text($(this).data("username"));
         ProjectPartner.openFancybox("approve-application");
         return false;
     },
     rejectApplicationClick: function () {
         $("input[name='project_partner_id']").val($(this).data("project_partner_id"));
+        $("span.username").text($(this).data("username"));
         ProjectPartner.openFancybox("reject-application");
         return false;
     },
     cancelParticipationClick: function () {
         $("input[name='project_partner_id']").val($(this).data("project_partner_id"));
+        $("span.username").text($(this).data("username"));
         ProjectPartner.openFancybox("cancel-participation");
         return false;
     },
