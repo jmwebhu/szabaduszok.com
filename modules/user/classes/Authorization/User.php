@@ -2,6 +2,16 @@
 
 class Authorization_User extends Authorization
 {
+    /**
+     * @param ORM|null $model
+     * @param Model_User|null $user
+     */
+    public function __construct(ORM $model = null, Model_User $user = null)
+    {
+        parent::__construct($model, $user);
+        $this->_authorization_role = Authorization_Role_User_Factory::createRole($this);
+    }
+
 	/**
      * @param Auth $auth Unittest dependency injection
 	 * @return bool
@@ -48,4 +58,44 @@ class Authorization_User extends Authorization
 	    $user = Auth::instance()->get_user();
 		return $user->loaded();
 	}
+
+    /**
+     * @return bool
+     */
+	public function canApply()
+    {
+        return $this->_authorization_role->canApply();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canUndoApplication()
+    {
+        return $this->_authorization_role->canUndoApplication();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canApproveApplication()
+    {
+        return $this->_authorization_role->canApproveApplication();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canRejectApplication()
+    {
+        return $this->_authorization_role->canRejectApplication();
+    }
+
+    /**
+     * @return bool
+     */
+    public function canCancelParticipation()
+    {
+        return $this->_authorization_role->canCancelParticipation();
+    }
 }

@@ -138,4 +138,9 @@ class Model_User_Freelancer extends Model_User_Abstract
         $model = parent::getBySlug($slug);
         return new Model_User_Freelancer($model->user_id);
     }
+
+    public function isCandidate()
+    {
+
+    }
 }
