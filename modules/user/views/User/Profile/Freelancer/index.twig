@@ -75,6 +75,7 @@
                 </form>
             {% endif %}
 
+            {% if canSeeProjectNotification %}
             <h2 class="text-center">Projektjeim</h2>
 
             <ul class="nav nav-tabs mb10" id="project-profile-tabs">
@@ -95,6 +96,7 @@
                 {#<div id="payouts" class="tab-pane fade">
                 </div>#}
             </div>
+            {% endif %}
 
         {% endblock bottomContainer %}
     {% endembed %}
