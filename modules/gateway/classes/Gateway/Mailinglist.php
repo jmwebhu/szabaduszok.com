@@ -27,16 +27,16 @@ abstract class Gateway_Mailinglist
     }
 
     /**
-     * @param bool $isNew
+     * @param bool $isExists
      * @return bool mixed
      */
-    public function add($isNew)
+    public function add($isExists)
     {
-        if ($isNew) {
-            return $this->subscribe();
+        if ($isExists) {
+            return $this->update();
         }
 
-        return $this->update();
+        return $this->subscribe();
     }
 
     /**
@@ -93,7 +93,7 @@ abstract class Gateway_Mailinglist
 			$content = @file_get_contents($url, false, $context);
 
             if (is_bool($content) && $content == false) {
-                Log::instance()->add(Log::DEBUG, 'Mailinglist::sendRequest() method: ' . $method . ' data: ' . json_encode($data));
+                Log::instance()->add(Log::DEBUG, 'Mailinglist::sendRequest() method: ' . $method . ' content: ' . $content . ' data: ' . json_encode($data));
                 return false;
             }
 		}
