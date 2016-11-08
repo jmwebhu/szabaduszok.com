@@ -5,6 +5,8 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
     public function action_index()
     {
         try {
+            $loggedIn = Auth::instance()->get_user();
+            $this->throwForbiddenExceptionIfNot($loggedIn->loaded());
 
             $this->handleSessionError();
             $slug = $this->request->param('slug');
@@ -23,6 +25,9 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
             Session::instance()->set('error', $exnf->getMessage());
             $this->defaultExceptionRedirect($exnf);
 
+        } catch (HTTP_Exception_403 $exforbidden) {
+            Session::instance()->set('error', $exforbidden->getMessage());
+            $this->defaultExceptionRedirect($exforbidden);
         } catch (Exception $ex) {
             $this->context->error = __('defaultErrorMessage');
             Log::instance()->addException($ex);

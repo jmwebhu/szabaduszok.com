@@ -95,7 +95,7 @@ class Controller_DefaultTemplate extends Controller_Twig
     				Session::instance()->set('redirect_url', Route::url(Route::name($route), ['slug' => $ex->getRedirectSlug()]));
     			}
 
-                $message = $ex->getMessage();
+                //$message = $ex->getMessage();
     		}
 
     		Session::instance()->set('error', $message);

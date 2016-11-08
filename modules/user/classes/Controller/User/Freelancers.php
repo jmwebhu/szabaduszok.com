@@ -16,9 +16,6 @@ class Controller_User_Freelancers extends Controller_List
     {
         try
         {
-            $authorization = new Authorization_User();
-            $this->throwForbiddenExceptionIfNot($authorization->canSeeFreelancers(), 'Szabadúszóink megtekintéséhez, kérjük először lépj be.');
-
             $this->tryBody();
 
         } catch (HTTP_Exception_403 $exforbidden) {
