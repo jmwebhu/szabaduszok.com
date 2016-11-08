@@ -18,13 +18,14 @@ var Landing = {
      * Megnyitja azt a landing oldalt, aminek akapott parameter a neve
      */
     openLandingPage: function (name) {
-        
-        if (name) {
-            var $landingPage = $('div#' + name);                                   
-            if ($landingPage.length) {            
+        if ($(document).width() >= 464) {
+            if (name) {
+                var $landingPage = $('div#' + name);
+                if ($landingPage.length) {
 
-                Landing.sendAjax(name);
-                Landing.openFancybox(name);
+                    Landing.sendAjax(name);
+                    Landing.openFancybox(name);
+                }
             }
         }
     },

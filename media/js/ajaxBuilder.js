@@ -6,7 +6,7 @@ var AjaxBuilder = function () {
 
     this._success = function (data) {
         if (data.error) {
-            console.log(data.message);
+            
         } else {
 
         }
@@ -14,7 +14,7 @@ var AjaxBuilder = function () {
 
     this._complete = function (data) {
         if (data.error) {
-            console.log(data.message);
+            
         } else {
 
         }
