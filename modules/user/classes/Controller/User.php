@@ -41,16 +41,12 @@ abstract class Controller_User extends Controller_DefaultTemplate
     /**
      * @param string $location
      */
-    protected function finallyAddToMailingListAndRedirecr($location)
+    protected function finallyRedirect($location)
     {
         if ($this->request->method() == Request::POST) {
             Model_Database::trans_end([!$this->_error]);
 
             if (!$this->_error) {
-                $id             = Arr::get(Input::post_all(), 'user_id', false);
-                $mailinglist    = Gateway_Mailinglist_Factory::createMailinglist($this->_user);
-                $mailinglist->add((bool)$id);
-
                 header('Location: ' . $location, true, 302);
                 die();
             }

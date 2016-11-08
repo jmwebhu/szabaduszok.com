@@ -397,7 +397,7 @@ abstract class Entity_User extends Entity implements Notifiable
      * @return Entity_User
      * @throws Exception_UserRegistration
      */
-    public function submit(array $post)
+    public function submitUser(array $post, $mailinglist = null)
     {
         $data                       = $post;
         $id                         = Arr::get($data, 'user_id');
@@ -430,6 +430,12 @@ abstract class Entity_User extends Entity implements Notifiable
         $signupModel->deleteIfExists($this->_model->email);
 
         $this->mapModelToThis();
+
+        if ($mailinglist == null) {
+            $mailinglist    = Gateway_Mailinglist_Factory::createMailinglist($this);
+        }
+
+        $mailinglist->add((bool)$id);
 
         return $this;
     }

@@ -316,7 +316,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         ];
 
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
-        $freelancer->submit($freelancerData);
+        $freelancer->submitUser($freelancerData);
 
         $employerData = [
             'firstname'             => 'Martin',
@@ -330,7 +330,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         ];
 
         $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
-        $employer->submit($employerData);
+        $employer->submitUser($employerData);
 
         $projectData = [
             'name'                      => 'Teszt projekt',

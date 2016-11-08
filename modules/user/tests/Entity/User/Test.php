@@ -158,9 +158,9 @@ class Entity_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Entity_User::submit()
+     * @covers Entity_User::submitUser()
      */
-    public function testSubmitEmployerWithoutRelations()
+    public function testSubmitUserEmployerWithoutRelations()
     {
         $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
         $data = [
@@ -177,7 +177,7 @@ class Entity_User_Test extends Unittest_TestCase
             'short_description'     => 'Rövid bemutatkozás'
         ];
 
-        $employer->submit($data);
+        $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
 
         self::$_insertedUserIds[] = $employer->getUserId();
 
@@ -193,9 +193,71 @@ class Entity_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Entity_User::submit()
+     * @covers Entity_User::submitUser()
      */
-    public function testSubmitEmployerWithRelations()
+    public function testSubmitUserUpdateEmployerWithoutRelations()
+    {
+        $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
+        $data = [
+            'is_company'            => 'on',
+            'company_name'          => 'Szabaduszok.com Zrt.',
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => 'joomartin@jmweb.hu',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás'
+        ];
+
+        $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
+
+        self::$_insertedUserIds[] = $employer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($employer->getUserId());
+        $this->assertUserIdExistsInSession($employer->getUserId());
+        $this->assertUserIdExistsInCache($employer->getUserId());
+        $this->assertEmailNotExistsInSignup($employer->getEmail());
+        $this->assertEquals(1, $employer->getIsCompany());
+        $this->assertEquals('Szabaduszok.com Zrt.', $employer->getCompanyName());
+        $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
+        $this->assertEquals('joo-martin', $employer->getSlug());
+        $this->assertNotEmpty($employer->getSearchText());
+
+        $data = [
+            'user_id'               => $employer->getUserId(),
+            'is_company'            => 'on',
+            'company_name'          => 'Szabaduszok.com Kft.',
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => 'joomartin@jmweb.hu',
+            'password'              => 'Password1234',
+            'password_confirm'      => 'Password1234',
+            'address_postal_code'   => '1010',
+            'address_city'          => 'Budapest',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás, kicsit hosszabb'
+        ];
+
+        $employer->submitUser($data, $this->getMailinglistMockToUpdate('Gateway_Mailinglist_Mailchimp_Employer'));
+
+        $this->assertUserIdExistsInDatabase($employer->getUserId());
+        $this->assertUserIdExistsInSession($employer->getUserId());
+        $this->assertUserIdExistsInCache($employer->getUserId());
+        $this->assertEmailNotExistsInSignup($employer->getEmail());
+        $this->assertEquals(1, $employer->getIsCompany());
+        $this->assertEquals('Szabaduszok.com Kft.', $employer->getCompanyName());
+        $this->assertEquals(Auth::instance()->hash('Password1234'), $employer->getPassword());
+        $this->assertEquals('joo-martin', $employer->getSlug());
+        $this->assertNotEmpty($employer->getSearchText());
+    }
+
+    /**
+     * @covers Entity_User::submitUser()
+     */
+    public function testSubmitUserEmployerWithRelations()
     {
         $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
         $data = [
@@ -214,7 +276,7 @@ class Entity_User_Test extends Unittest_TestCase
             'professions'           => [2, 3]
         ];
 
-        $employer->submit($data);
+        $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
 
         self::$_insertedUserIds[] = $employer->getUserId();
 
@@ -231,9 +293,9 @@ class Entity_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Entity_User::submit()
+     * @covers Entity_User::submitUser()
      */
-    public function testSubmitFreelancerWithoutRelations()
+    public function testSubmitUserFreelancerWithoutRelations()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $data = [
@@ -250,7 +312,7 @@ class Entity_User_Test extends Unittest_TestCase
             'webpage'               => 'szabaduszok.com'
         ];
 
-        $freelancer->submit($data);
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
 
         self::$_insertedUserIds[] = $freelancer->getUserId();
 
@@ -267,9 +329,9 @@ class Entity_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Entity_User::submit()
+     * @covers Entity_User::submitUser()
      */
-    public function testSubmitFreelancerWithRelations()
+    public function testSubmitUserFreelancerWithRelations()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $data = [
@@ -289,7 +351,7 @@ class Entity_User_Test extends Unittest_TestCase
             'skills'                => [3, 4, 6, 7, 8, 9]
         ];
 
-        $freelancer->submit($data);
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
 
         self::$_insertedUserIds[] = $freelancer->getUserId();
 
@@ -314,9 +376,9 @@ class Entity_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Entity_User::submit()
+     * @covers Entity_User::submitUser()
      */
-    public function testSubmitFreelancerWithProfiles()
+    public function testSubmitUserFreelancerWithProfiles()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
@@ -336,7 +398,7 @@ class Entity_User_Test extends Unittest_TestCase
             'profiles'              => $profiles
         ];
 
-        $freelancer->submit($data);
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
 
         self::$_insertedUserIds[] = $freelancer->getUserId();
 
@@ -355,9 +417,9 @@ class Entity_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Entity_User::submit()
+     * @covers Entity_User::submitUser()
      */
-    public function testSubmitFreelancerWithRelationsAndProfiles()
+    public function testSubmitUserFreelancerWithRelationsAndProfiles()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
@@ -380,7 +442,7 @@ class Entity_User_Test extends Unittest_TestCase
             'profiles'              => $profiles
         ];
 
-        $freelancer->submit($data);
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
 
         self::$_insertedUserIds[] = $freelancer->getUserId();
 
@@ -536,5 +598,48 @@ class Entity_User_Test extends Unittest_TestCase
 
             $classReflection->setStaticPropertyValue('_' . $relationModel->object_plural(), $ids);
         }
+    }
+
+    /**
+     * @param string $class
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMailinglistMockToCreate($class)
+    {
+        $mailinglistMock = $this->getMockBuilder('\\' . $class)
+            ->disableOriginalConstructor()
+            ->setMethods(['subscribe', 'update'])
+            ->getMock();
+
+        $mailinglistMock->expects($this->once())
+            ->method('subscribe')
+            ->will($this->returnValue(true));
+
+        $mailinglistMock->expects($this->never())
+            ->method('update')
+            ->will($this->returnValue(false));
+
+        return $mailinglistMock;
+    }
+
+    /**
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMailinglistMockToUpdate($class)
+    {
+        $mailinglistMock = $this->getMockBuilder('\\' . $class)
+            ->disableOriginalConstructor()
+            ->setMethods(['subscribe', 'update'])
+            ->getMock();
+
+        $mailinglistMock->expects($this->once())
+            ->method('update')
+            ->will($this->returnValue(false));
+
+        $mailinglistMock->expects($this->never())
+            ->method('subscribe')
+            ->will($this->returnValue(true));
+
+        return $mailinglistMock;
     }
 }

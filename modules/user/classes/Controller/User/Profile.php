@@ -5,9 +5,9 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
     public function action_index()
     {
         try {
+
             $this->handleSessionError();
             $slug = $this->request->param('slug');
-
             $this->throwNotFoundExceptionIfNot($slug);
 
             $userModel = $this->getUserModel();

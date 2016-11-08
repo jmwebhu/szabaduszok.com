@@ -38,7 +38,7 @@ abstract class Controller_User_Create extends Controller_User implements Control
             Log::instance()->addException($ex);
 
         } finally {
-            $this->finallyAddToMailingListAndRedirecr($this->getProfileUrl());
+            $this->finallyRedirect($this->getProfileUrl());
         }
     }
 
@@ -70,8 +70,9 @@ abstract class Controller_User_Create extends Controller_User implements Control
         if ($this->request->method() == Request::POST) {
             Model_Database::trans_start();
 
-            $this->_user = Entity_User::createUser($this->getUserType());
-            $this->_user->submit(Input::post_all());
+            $this->_user    = Entity_User::createUser($this->getUserType());
+            $mailinglist    = Gateway_Mailinglist_Factory::createMailinglist($this->_user);
+            $this->_user->submitUser(Input::post_all(), $mailinglist);
 
             $this->_error = false;
 

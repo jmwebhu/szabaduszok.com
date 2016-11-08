@@ -55,7 +55,7 @@ abstract class Controller_User_Update extends Controller_User implements Control
             $this->_error = true;
 
         } finally {
-            $this->finallyAddToMailingListAndRedirecr($this->getProfileUrl());
+            $this->finallyRedirect($this->getProfileUrl());
         }
     }
 
@@ -80,7 +80,8 @@ abstract class Controller_User_Update extends Controller_User implements Control
     {
         if ($this->request->method() == Request::POST) {
             Model_Database::trans_start();
-            $this->_user->submit(Input::post_all());
+            $mailinglist = Gateway_Mailinglist_Factory::createMailinglist($this->_user);
+            $this->_user->submitUser(Input::post_all(), $mailinglist);
         }
     }
 }
