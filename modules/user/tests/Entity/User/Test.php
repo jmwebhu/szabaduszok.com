@@ -378,6 +378,56 @@ class Entity_User_Test extends Unittest_TestCase
     /**
      * @covers Entity_User::submitUser()
      */
+    public function testSubmitUserFreelancerWithNonExistingRelations()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $data = [
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => 'joomartin@szabaduszok.com',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'min_net_hourly_wage'   => '2500',
+            'webpage'               => 'szabaduszok.com',
+            'industries'            => [1],
+            'professions'           => [1, 2, 3, 'Teljesen új szakterület', 'TELJESEN új Szakterület'],
+            'skills'                => [3, 4, 6, 7, 8, 9, 'szupererő', 'Képesség']
+        ];
+
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
+        $this->assertUserIdExistsInSession($freelancer->getUserId());
+        $this->assertUserIdExistsInCache($freelancer->getUserId());
+        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
+        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertEquals('joo-martin', $freelancer->getSlug());
+        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
+        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
+        $this->assertEquals('1', $freelancer->getSkillRelation());
+        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+
+        $lastProfessionId = DB::select('profession_id')->from('professions')->order_by('profession_id', 'DESC')->limit(1)->execute()->get('profession_id');
+        $lastSkillIds = DB::select()->from('skills')->order_by('skill_id', 'DESC')->limit(2)->execute()->as_array();
+
+        $this->assertUserRelationExistsInDatabase('industry', [1], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('profession', [1, 2, 3, $lastProfessionId], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('skill', [3, 4, 6, 7, 8, 9, $lastSkillIds[0]['skill_id'], $lastSkillIds[1]['skill_id']], $freelancer->getUserId());
+
+        $this->assertUserProjectNotoficationExistsInDatabase('industry', [1], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('skill', [3, 4, 6, 7, 8, 9], $freelancer->getUserId());
+    }
+
+    /**
+     * @covers Entity_User::submitUser()
+     */
     public function testSubmitUserFreelancerWithProfiles()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
@@ -504,7 +554,6 @@ class Entity_User_Test extends Unittest_TestCase
         $relations = DB::select()
             ->from('users_' . $model->object_plural())
             ->where('user_id', '=', $userId)
-            ->and_where($model->primary_key(), 'IN', $relationIds)
             ->execute()->as_array();
 
         $this->assertEquals(count($relationIds), count($relations));
