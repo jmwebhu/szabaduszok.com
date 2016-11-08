@@ -37,12 +37,13 @@ abstract class Model_User_Project_Notification extends Model_Relation
     }
 
     /**
-     * @param array $ids
+     * @param array $values
      */
-    public function createBy(array $ids)
+    public function createBy(array $values)
     {
-        foreach ($ids as $id) {
-            $model                                          = $this->getOrCreateBy($id);
+        $uniqueValues = Arr::uniqueString($values);
+        foreach ($uniqueValues as $value) {
+            $model                                          = $this->getOrCreateBy($value);
             $relation                                       = $this->createModel();
             $relation->user_id                              = Auth::instance()->get_user()->user_id;
             $relation->{$this->getPrimaryKeyForEndModel()}  = intval($model->{$this->getPrimaryKeyForEndModel()});
