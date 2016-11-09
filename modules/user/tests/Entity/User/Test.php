@@ -377,6 +377,8 @@ class Entity_User_Test extends Unittest_TestCase
 
     /**
      * @covers Entity_User::submitUser()
+     * @group issue#6
+     * @see https://github.com/jmwebhu/szabaduszok.com/issues/6
      */
     public function testSubmitUserFreelancerWithNonExistingRelations()
     {

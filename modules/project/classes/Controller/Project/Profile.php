@@ -35,12 +35,15 @@ class Controller_Project_Profile extends Controller_User
     {
         try {
             $loggedIn = Auth::instance()->get_user();
-            $this->throwForbiddenExceptionIfNot($loggedIn->loaded());
+            $this->throwForbiddenExceptionIfNot($loggedIn->loaded(), 'A projekt megtekintéséhez kérjük lépj be');
 
             $this->throwExceptionIfNotVisible();
             $this->setContext();
 
         } catch (HTTP_Exception_403 $exforbidden) {
+            $exforbidden->setRedirectRoute($this->request->route());
+            $exforbidden->setRedirectSlug($this->request->param('slug'));
+            
             $this->handleException400($exforbidden);
 
         } catch (HTTP_Exception_404 $exnf) {
