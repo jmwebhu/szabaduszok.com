@@ -26,8 +26,12 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
             $this->defaultExceptionRedirect($exnf);
 
         } catch (HTTP_Exception_403 $exforbidden) {
+            $exforbidden->setRedirectRoute($this->request->route());
+            $exforbidden->setRedirectSlug($this->request->param('slug'));
+
             Session::instance()->set('error', $exforbidden->getMessage());
             $this->defaultExceptionRedirect($exforbidden);
+
         } catch (Exception $ex) {
             $this->context->error = __('defaultErrorMessage');
             Log::instance()->addException($ex);
