@@ -21,7 +21,11 @@ class Search_Complex_Project extends Search_Complex
      */
     public function getInitModels()
     {
-        $project = new Model_Project();
+        $project = $this->_currentModel;
+        if ($project == null) {
+            $project = new Model_Project();
+        }
+
         return $project->getOrderedByCreated(true);
     }
 

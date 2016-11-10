@@ -83,7 +83,9 @@ abstract class Search_Complex implements Search
         $this->_searchedSkillIds        = $searchedSkillIds;
         $this->_skillRelation           = $skillRelation;
 
-        $this->_currentModel            = $this->createSearchModel();
+        if ($this->_currentModel == null) {
+            $this->_currentModel            = $this->createSearchModel();
+        }
     }
 
     /**
@@ -208,7 +210,6 @@ abstract class Search_Complex implements Search
             }
 
             $this->_currentModel    = $model;
-
             $this->_searchRelation  = $this->makeSearchRelation();
             $found                  = $this->_searchRelation->searchRelationsInOneModel();
 
@@ -225,7 +226,7 @@ abstract class Search_Complex implements Search
 
     /**
      * @param bool $found
-     * @return array
+     * @return bool
      */
     protected function needToAddCurrentToMatchedBy($found)
     {

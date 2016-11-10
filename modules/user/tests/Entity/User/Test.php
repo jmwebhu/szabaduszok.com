@@ -2,11 +2,16 @@
 
 class Entity_User_Test extends Unittest_TestCase
 {
-    private static $_insertedUserIds = [];
-
-    public static $_industries = [];
+    /*
+     * Reflection hasznalja oket, ezert kell public, es latszolag ezert nincsenek hasznalva (initRelations)
+     */
+    public static $_industries  = [];
     public static $_professions = [];
-    public static $_skills = [];
+    public static $_skills      = [];
+
+    private static $_insertedUserIds        = [];
+    private static $_professionsOnTheFly    = ['Teljesen új szakterület'];
+    private static $_skillsOnTheFly         = ['szupererő', 'Képesség'];
 
     /**
      * @covers Entity_User::getName()
@@ -396,8 +401,8 @@ class Entity_User_Test extends Unittest_TestCase
             'min_net_hourly_wage'   => '2500',
             'webpage'               => 'szabaduszok.com',
             'industries'            => [1],
-            'professions'           => [1, 2, 3, 'Teljesen új szakterület', 'TELJESEN új Szakterület'],
-            'skills'                => [3, 4, 6, 7, 8, 9, 'szupererő', 'Képesség']
+            'professions'           => [1, 2, 3, self::$_professionsOnTheFly[0], 'TELJESEN új Szakterület'],
+            'skills'                => [3, 4, 6, 7, 8, 9, self::$_skillsOnTheFly[0], self::$_skillsOnTheFly[1]]
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -612,19 +617,36 @@ class Entity_User_Test extends Unittest_TestCase
 
     protected static function truncateUsers()
     {
-        DB::delete('users')->execute();
-        Cache::instance()->set('users', []);
+        if (self::$_insertedUserIds) {
+            DB::delete('users')->where('user_id', 'IN', self::$_insertedUserIds)->execute();
+            Cache::instance()->set('users', []);
+        }
     }
 
     protected static function truncateRelations()
     {
-        DB::delete('industries')->execute();
-        DB::delete('professions')->execute();
-        DB::delete('skills')->execute();
+        if (self::$_industries) {
+            DB::delete('industries')->where('industry_id', 'IN', self::$_industries)->execute();
+            Cache::instance()->set('industries', []);
+        }
 
-        Cache::instance()->set('industries', []);
-        Cache::instance()->set('professions', []);
-        Cache::instance()->set('skills', []);
+        if (self::$_professions) {
+            DB::delete('professions')->where('profession_id', 'IN', self::$_professions)->execute();
+            Cache::instance()->set('professions', []);
+        }
+
+        if (self::$_skills) {
+            DB::delete('skills')->where('skill_id', 'IN', self::$_skills)->execute();
+            Cache::instance()->set('skills', []);
+        }
+
+        foreach (self::$_professionsOnTheFly as $item) {
+            DB::delete('professions')->where('name', '=', $item)->execute();
+        }
+
+        foreach (self::$_skillsOnTheFly as $item) {
+            DB::delete('skills')->where('name', '=', $item)->execute();
+        }
     }
 
     /**

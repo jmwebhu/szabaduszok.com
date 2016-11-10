@@ -1,6 +1,6 @@
 <?php
 
-class ProjectSearchComplexTest extends Unittest_TestCase
+class Search_Complex_Test extends Unittest_TestCase
 {
     const TYPE_INDUSTRY     = 1;
     const TYPE_PROFESSION   = 2;
@@ -462,7 +462,6 @@ class ProjectSearchComplexTest extends Unittest_TestCase
 
     protected function whenSearch()
     {
-        $this->markTestSkipped('UJRA IRNI TESZTEKET AZ UJ SEARCH MODULHOZ 2016.10.21');
         $this->setSearch();
         $this->invokeMethod($this->_searchMock, 'search');
         $this->setMatchedProjectIdsFromSearch();
@@ -544,6 +543,10 @@ class ProjectSearchComplexTest extends Unittest_TestCase
         $searchMock->expects($this->any())
             ->method('getSkillRelationModel')
             ->will($this->returnValue($skillMock));
+
+        $searchMock->expects($this->any())
+            ->method('getInitModels')
+            ->will($this->returnValue($this->_projects));
 
         $searchMock->setCurrentModel($projectMock);
 
