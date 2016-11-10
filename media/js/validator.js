@@ -29,7 +29,11 @@ var Validator = {
 	notEmptySelect: function (value) {		
             return (value != -1 && value != null && value != '');
 	},
-	email: function (value) {		
+	email: function (value) {
+            if (typeof value == 'undefined' || value.length == 0) {
+                return true;
+            }
+
             var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		
             return regex.test(value);

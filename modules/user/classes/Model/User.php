@@ -50,6 +50,7 @@ class Model_User extends Model_Auth_User
 		'landing_page_id'			=> ['type' => 'int', 'null' => true],
 		'need_project_notification'	=> ['type' => 'int', 'null' => true],
 		'webpage'					=> ['type' => 'string', 'null' => true],
+        'paypal_account'			=> ['type' => 'string', 'null' => true]
 	];
 	
     protected $_has_many = [

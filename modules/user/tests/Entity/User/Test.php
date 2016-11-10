@@ -179,7 +179,7 @@ class Entity_User_Test extends Unittest_TestCase
             'address_postal_code'   => '9700',
             'address_city'          => 'Szombathely',
             'phonenumber'           => '06301923380',
-            'short_description'     => 'Rövid bemutatkozás'
+            'short_description'     => 'Rövid bemutatkozás',
         ];
 
         $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
@@ -194,6 +194,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('Szabaduszok.com Zrt.', $employer->getCompanyName());
         $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
         $this->assertEquals('joo-martin', $employer->getSlug());
+        $this->assertEmpty($employer->getPaypalAccount());
         $this->assertNotEmpty($employer->getSearchText());
     }
 
@@ -214,7 +215,8 @@ class Entity_User_Test extends Unittest_TestCase
             'address_postal_code'   => '9700',
             'address_city'          => 'Szombathely',
             'phonenumber'           => '06301923380',
-            'short_description'     => 'Rövid bemutatkozás'
+            'short_description'     => 'Rövid bemutatkozás',
+            'paypal_account'        => 'm4rt1n.j00@gmail.com'
         ];
 
         $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
@@ -229,6 +231,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('Szabaduszok.com Zrt.', $employer->getCompanyName());
         $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
         $this->assertEquals('joo-martin', $employer->getSlug());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $employer->getPaypalAccount());
         $this->assertNotEmpty($employer->getSearchText());
 
         $data = [
@@ -243,7 +246,8 @@ class Entity_User_Test extends Unittest_TestCase
             'address_postal_code'   => '1010',
             'address_city'          => 'Budapest',
             'phonenumber'           => '06301923380',
-            'short_description'     => 'Rövid bemutatkozás, kicsit hosszabb'
+            'short_description'     => 'Rövid bemutatkozás, kicsit hosszabb',
+            'paypal_account'        => 'm4rt1n1.j00@gmail.com'
         ];
 
         $employer->submitUser($data, $this->getMailinglistMockToUpdate('Gateway_Mailinglist_Mailchimp_Employer'));
@@ -256,6 +260,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('Szabaduszok.com Kft.', $employer->getCompanyName());
         $this->assertEquals(Auth::instance()->hash('Password1234'), $employer->getPassword());
         $this->assertEquals('joo-martin', $employer->getSlug());
+        $this->assertEquals('m4rt1n1.j00@gmail.com', $employer->getPaypalAccount());
         $this->assertNotEmpty($employer->getSearchText());
     }
 
@@ -278,7 +283,8 @@ class Entity_User_Test extends Unittest_TestCase
             'phonenumber'           => '06301923380',
             'short_description'     => 'Rövid bemutatkozás',
             'industries'            => [1],
-            'professions'           => [2, 3]
+            'professions'           => [2, 3],
+            'paypal_account'        => 'm4rt1n.j00@gmail.com'
         ];
 
         $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
@@ -294,6 +300,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals(0, $employer->getIsCompany());
         $this->assertEquals('', $employer->getCompanyName());
         $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $employer->getPaypalAccount());
         $this->assertEquals('joo-martin', $employer->getSlug());
     }
 
@@ -314,7 +321,8 @@ class Entity_User_Test extends Unittest_TestCase
             'phonenumber'           => '06301923380',
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
-            'webpage'               => 'szabaduszok.com'
+            'webpage'               => 'szabaduszok.com',
+            'paypal_account'        => 'm4rt1n.j00@gmail.com'
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -331,6 +339,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $freelancer->getPaypalAccount());
     }
 
     /**
@@ -351,6 +360,7 @@ class Entity_User_Test extends Unittest_TestCase
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
             'webpage'               => 'szabaduszok.com',
+            'paypal_account'        => 'm4rt1n.j00@gmail.com',
             'industries'            => [1],
             'professions'           => [1, 2, 3],
             'skills'                => [3, 4, 6, 7, 8, 9]
@@ -370,6 +380,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $freelancer->getPaypalAccount());
 
         $this->assertUserRelationExistsInDatabase('industry', [1], $freelancer->getUserId());
         $this->assertUserRelationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());
@@ -400,6 +411,7 @@ class Entity_User_Test extends Unittest_TestCase
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
             'webpage'               => 'szabaduszok.com',
+            'paypal_account'        => 'm4rt1n.j00@gmail.com',
             'industries'            => [1],
             'professions'           => [1, 2, 3, self::$_professionsOnTheFly[0], 'TELJESEN új Szakterület'],
             'skills'                => [3, 4, 6, 7, 8, 9, self::$_skillsOnTheFly[0], self::$_skillsOnTheFly[1]]
@@ -419,6 +431,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $freelancer->getPaypalAccount());
 
         $lastProfessionId = DB::select('profession_id')->from('professions')->order_by('profession_id', 'DESC')->limit(1)->execute()->get('profession_id');
         $lastSkillIds = DB::select()->from('skills')->order_by('skill_id', 'DESC')->limit(2)->execute()->as_array();
@@ -452,7 +465,8 @@ class Entity_User_Test extends Unittest_TestCase
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
             'webpage'               => 'szabaduszok.com',
-            'profiles'              => $profiles
+            'profiles'              => $profiles,
+            'paypal_account'        => 'm4rt1n.j00@gmail.com'
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -469,6 +483,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $freelancer->getPaypalAccount());
 
         $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
     }
@@ -496,7 +511,8 @@ class Entity_User_Test extends Unittest_TestCase
             'industries'            => [1],
             'professions'           => [1, 2, 3],
             'skills'                => [3, 4, 6, 7, 8, 9],
-            'profiles'              => $profiles
+            'profiles'              => $profiles,
+            'paypal_account'        => 'm4rt1n.j00@gmail.com'
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -513,6 +529,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        $this->assertEquals('m4rt1n.j00@gmail.com', $freelancer->getPaypalAccount());
 
         $this->assertUserRelationExistsInDatabase('industry', [1], $freelancer->getUserId());
         $this->assertUserRelationExistsInDatabase('profession', [1, 2, 3], $freelancer->getUserId());

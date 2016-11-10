@@ -114,6 +114,31 @@
                         {% block address %}
                         {% endblock address %}
 
+                        {% block misc %}
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="mg-clear tc-black">
+                                    Egyéb
+                                </h3>
+                            </div>
+
+                            <div class="panel-body">
+                                <span class="fa fa-paypal pull-left icon-sm icon-dark-gray"></span>
+                                <div class="form-group">
+                                    <label>
+                                        PayPal account
+                                    </label>
+
+                                    <input class="form-control" type="text" name="paypal_account" id="paypal-account" value="{{ user.getPaypalAccount() }}" data-rules='{"email": "true"}'>
+                                </div>
+
+                                <p class="text-justify">
+                                    Ha megadod a PayPal account -od, a megbízóknak lehetőségük lesz kifizetni Téged az oldalon keresztül, egy kattintással. Semmi másra nem fogjuk használni, és természetesen senki nem fogja látni.
+                                </p>
+                            </div>
+                        </div>
+                        {% endblock misc %}
+
                         {% block credentials %}
                             <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
                             <div class="form-group">

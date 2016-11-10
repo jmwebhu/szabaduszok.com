@@ -138,6 +138,11 @@ abstract class Entity_User extends Entity implements Notifiable
     protected $_landing_page_id;
 
     /**
+     * @var string
+     */
+    protected $_paypal_account;
+
+    /**
      * Entity_User constructor.
      */
     public function __construct()
@@ -390,6 +395,14 @@ abstract class Entity_User extends Entity implements Notifiable
     public function setSearch(Search $search)
     {
         $this->_search = $search;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaypalAccount()
+    {
+        return $this->_paypal_account;
     }
 
     /**
