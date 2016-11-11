@@ -18,7 +18,7 @@ var Landing = {
      * Megnyitja azt a landing oldalt, aminek akapott parameter a neve
      */
     openLandingPage: function (name) {
-        if ($(document).width() >= 464) {
+        if (name == 'blackfriday' || $(document).width() >= 464) {
             if (name) {
                 var $landingPage = $('div#' + name);
                 if ($landingPage.length) {

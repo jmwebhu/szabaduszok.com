@@ -13,6 +13,15 @@
     }
 }
 
+.landing-page.blackfriday {
+    color: white !important;
+    font-family: Helvetica;
+
+    background-color: black !important;
+    background-image: none !important;
+    font-size: 16px !important;
+}
+
 .landing.navbar {
     text-align: center;
     float: left;
@@ -24,6 +33,26 @@
     font-size: 40px;
     margin: 10px 10px 0 10px;
     color: #E86A10 !important;
+}
+
+.landing-page.blackfriday h1 {
+    /*color: #f1c40f !important;*/
+    color: white !important;
+    font-family: "Josefin Sans";
+    font-weight: bold;
+}
+
+.landing-page.blackfriday h2 {
+    font-family: "Josefin Sans";
+    font-weight: bold;
+}
+
+.landing-page.blackfriday .call-to-action {
+    background-color: black !important;
+}
+
+.landing-page.blackfriday .call-to-action:hover {
+    color: #E86A10;
 }
 
 .landing-page .call-to-action {
@@ -56,13 +85,17 @@
         max-width: inherit;
 }
 
+.landing-page.blackfriday.container {
+    height: 150vh !important;
+}
+
 .landing-page.container {
     background-image: url("../img/szabaduszok-startup-rocket.jpg");
 }
 
-/*.landing-page.container.freelancer {
-    background-image: url("../../../../media/img/szabaduszok-freelancer.jpg");
-}*/
+.landing-page.blackfriday.container {
+    background-image: none !important;
+}
 
 .landing-page.container > * {
     z-index: 2;
