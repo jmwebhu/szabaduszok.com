@@ -203,19 +203,25 @@ abstract class Entity
     public function submit(array $data)
     {
         try {
-            $result = true;
+            $result = ['error' => false];
             Model_Database::trans_start();
 
             $this->_model->submit($data);
             $this->mapModelToThis();
+
+        } catch (ORM_Validation_Exception $ex) {
+            $result = ['error' => true, 'validationErrors' => $ex->errors()];
+            Session::instance()->set('validationErrors', $ex->errors('models'));
+
         } catch (Exception $ex) {
-            $result = false;
+            $result = ['error' => true];
             Log::instance()->addException($ex);
+
         } finally {
-            Model_Database::trans_end([$result]);
+            Model_Database::trans_end([!$result['error']]);
         }
 
-        return $result;
+        return $result['error'];
     }
 
     /**
@@ -238,6 +244,14 @@ abstract class Entity
     public function has($alias, $farKeys = null)
     {
         return $this->_model->has($alias, $farKeys);
+    }
+
+    /**
+     * @return array
+     */
+    public function object()
+    {
+        return $this->_model->object();
     }
 
     /**

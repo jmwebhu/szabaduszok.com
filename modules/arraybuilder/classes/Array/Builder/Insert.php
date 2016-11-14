@@ -23,51 +23,51 @@ class Array_Builder_Insert extends Array_Builder
 {
 	/**
 	 * INSERT zaradek utani tabla nev
-	 * 
+	 *
 	 * @var string $_insert
 	 */
 	protected $_insert;
-	
+
 	/**
 	 * SET zaradek mezo nevek
-	 * 
+	 *
 	 * @var array $_set
 	 */
 	protected $_set = [];
-	
+
 	/**
 	 * VALUES zaradek mezo ertekek
-	 * 
+	 *
 	 * @var array $_values
 	 */
 	protected $_values = [];
-	
+
 	/**
 	 * INSERT zaradek
-	 * 
+	 *
 	 * @param string $table		Tabla nev
 	 */
 	public function insert($table)
 	{
 		$this->_insert = $table;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * SET zaradek
-	 * 
-	 * Csak string -et lehet megadni. Ez lesz a cache -ben az index, es azon az indexen fog 
+	 *
+	 * Csak string -et lehet megadni. Ez lesz a cache -ben az index, es azon az indexen fog
 	 * elhelyezkedni a tenyleges ertek.
-	 * 
+	 *
 	 * Pl.:
-	 * 
+	 *
 	 * ```$skill = new Model_Skill(12);
 	 *    ...
 	 *	->set($skill->skill_id)->values($skill);```
-	 * 
+	 *
 	 * Ilyenkor a cache 12 indexebe szurja be a modelt
-	 * 
+	 *
 	 * @param array $index	Index
 	 * @return Array_Builder
 	 */
@@ -75,31 +75,31 @@ class Array_Builder_Insert extends Array_Builder
 	{
 		if (!is_scalar($index))
 		{
-			throw new Exception('Wrong argument');
+			throw new Exception('Wrong argument. Type of ' . gettype($index));
 		}
-		
+
 		$this->_set = $index;
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * VALUES zaradek
-	 * 
+	 *
 	 * @param array|Object $values		Ertekek
 	 * @return Array_Builder
 	 */
 	public function values($values)
 	{
 		$this->_values = $values;
-		
+
 		return $this;
 	}
 
 	/**
 	 * Lekerdezes futtatasa
 	 * @see Array_Builder::execute()
-	 * 
+	 *
 	 * @param void
 	 * @return array
 	 */
@@ -107,9 +107,9 @@ class Array_Builder_Insert extends Array_Builder
 	{
 		$items 				= Cache::instance()->get($this->_insert);
 		$items[$this->_set] = $this->_values;
-		
+
 		Cache::instance()->set($this->_insert, $items);
-		
+
 		return $items[$this->_set];
 	}
 }

@@ -4,38 +4,28 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $header = "Content-type: application/json\r\n";
+        $project = new Entity_Project();
         $data = [
-            "intent"    => "sale",
-            "payer"     => [
-                "payment_method" => "paypal"
-            ],
-            "transactions"  => [
-                "amount"    => [
-                    "total" => 1000,
-                    "currency"  => "HUF"
-                ]
-            ],
-            "description"   => "Projekt neve",
-            "redirect_urls" => [
-                "return_url"    => URL::base(true, false) . "?success=1",
-                "cancel_url"    => URL::base(true, false) . "?success=0",
-            ]
+            'user_id'   => 2042,
+            'name'      => 'Projekt',
+            'short_description' => 'Rövid leírás',
+            'long_description' => 'Hosszú leírás',
+            'email' => 'martinasdf@szabaduszok.com',
+            'phonenumber'   => '+4917662658919',
+            'salary_type'   => 1,
+            'salary_low'    => 1000.00
         ];
 
-        $options = [
-            "http" => [
-                "header"  => $header,
-                "method"  => "POST",
-                "content" => json_encode($data)
-            ]
-        ];
-
-        $url        = "https://api.sandbox.paypal.com/v1/payments/payment";
-        $context    = stream_context_create($options);
-        $content    = file_get_contents($url, false, $context);
-
-        echo Debug::vars($content);
+        try {
+            $result = $project->submit($data);
+            //echo Debug::vars($result);
+        } catch (ORM_Validation_Eception $ex) {
+            echo Debug::vars($ex->errors());
+            echo Debug::vars($ex);
+        } finally {
+            echo Debug::vars(Session::instance()->get('validationErrors'));
+            Session::instance()->delete('validationErrors');
+        }
     }
 
     public function action_clearcache()

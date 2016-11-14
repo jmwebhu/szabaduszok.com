@@ -26,21 +26,21 @@ class Kohana_ORM extends Model implements serializable {
 	 * @var array
 	 */
 	protected static $_init_cache = array();
-	
+
 	public $_authorization = null;
-	
+
 	/**
 	 * Nev mezo. Ez alapjan kesziti el az egyedi slug -ot
 	 * @var string
 	 */
 	public $_nameField = 'name';
-	
+
 	/**
 	 * Masodik nev mezo. Ha van erteke mindketto hasznalja slug -hoz
 	 * @var string
 	 */
 	public $_nameFieldSecond = null;
-	
+
 	/**
 	 * Slug mezo.
 	 * @var string
@@ -287,7 +287,7 @@ class Kohana_ORM extends Model implements serializable {
     {
         return $this->_db;
     }
-	
+
 	/**
 	 * Constructs a new model and loads a record if given
 	 *
@@ -326,22 +326,14 @@ class Kohana_ORM extends Model implements serializable {
 
 	public function submit(array $data)
 	{
-		try
-		{
-				if (isset($data[$this->_primary_key])) $this->_loaded = true;
+		if (isset($data[$this->_primary_key])) $this->_loaded = true;
 
-				$this->bind($data);
-				$reload = (!isset($data[$this->_primary_key]) or !empty($data['userFiles']));
-				
-				$this->save();
+		$this->bind($data);
+		$reload = (!isset($data[$this->_primary_key]) or !empty($data['userFiles']));
 
-				return array('error'=>false,'id'=>$this->pk(),'reload'=>$reload);
+		$this->save();
 
-		} catch (ORM_Validation_Exception $e) {
-				return array('error'=>true,'messages'=>$e->getMessage());
-		} catch (Exception $e){
-				return array('error'=>true, 'messages'=>$e->getMessage(), 'details' => array('message' => $e->getMessage(), 'trace' => $e->getTraceAsString()));
-		}
+		return array('error'=>false,'id'=>$this->pk(),'reload'=>$reload);
 	}
 
 	public function bind($post)
@@ -354,19 +346,19 @@ class Kohana_ORM extends Model implements serializable {
 				{
 					$this->_primary_key_value = $post[$index];
 				}
-				
+
 				$this->$index = $post[$index];
 			}
 			else
 			{
 				$id = Arr::get($post, $this->_primary_key);
-				
+
 				if (!$id)
 				{
 					$this->$index = NULL;
-				}			
+				}
 			}
-		}	
+		}
 
 		return $this;
 	}
@@ -1079,7 +1071,7 @@ class Kohana_ORM extends Model implements serializable {
 	 * @return Database_Result
 	 */
 	public function find_all()
-	{		
+	{
 		if ($this->_loaded)
 			throw new Kohana_Exception('Method find_all() cannot be called on loaded objects');
 
@@ -1660,7 +1652,7 @@ class Kohana_ORM extends Model implements serializable {
 
 		$columns = array($this->_has_many[$alias]['foreign_key'], $this->_has_many[$alias]['far_key']);
 		$foreign_key = $this->pk();
-		
+
 		if ($extra)
 		{
 			$columns[] = Arr::get($extra, 'col');
@@ -1678,8 +1670,8 @@ class Kohana_ORM extends Model implements serializable {
 			{
 				$query->values(array($foreign_key, $key));
 			}
-			
-		}				
+
+		}
 
 		$query->execute($this->_db);
 
@@ -2461,46 +2453,46 @@ class Kohana_ORM extends Model implements serializable {
 
 		return ( ! $model->loaded());
 	}
-	
+
 	public function getUniqueSlug()
 	{
-		$name = ($this->_nameFieldSecond) ? $this->{$this->_nameField} . ' ' . $this->{$this->_nameFieldSecond} : $this->{$this->_nameField};		
-		
+		$name = ($this->_nameFieldSecond) ? $this->{$this->_nameField} . ' ' . $this->{$this->_nameFieldSecond} : $this->{$this->_nameField};
+
 		if (empty(trim($name)) && $this instanceof Model_User)
 		{
 			$name = $this->company_name;
 		}
-		
-		// Slug keszitese nevbol				
+
+		// Slug keszitese nevbol
 		$slug = URL::slug($name);
-		
+
 		if (empty(trim($slug)))
 		{
 			$slug = $this->email;
 		}
-		
+
 		// Lekerdezi van -e mar ilyen slug
 		$sameSlugModel = ORM::factory($this->object_name())->where($this->_object_name . '.' . $this->_slugField, '=', $slug);
-		
+
 		// Ha modositas tortenik
 		if ($this->loaded())
 		{
 			// Onmagat zarja ki
-			$sameSlugModel->and_where($this->_primary_key, '!=', $this->pk());	
+			$sameSlugModel->and_where($this->_primary_key, '!=', $this->pk());
 		}
-		
+
 		$sameSlugModel->limit(1)->find();
-		
+
 		// Ha van azonos
 		if ($sameSlugModel->loaded())
 		{
-			// Hozza teszi az id -t 
-			$slug .= '-' . $this->pk(); 
+			// Hozza teszi az id -t
+			$slug .= '-' . $this->pk();
 		}
-		
+
 		return $slug;
 	}
-	
+
 	public function saveSlug()
 	{
         if ($this->_slugField)
@@ -2511,55 +2503,55 @@ class Kohana_ORM extends Model implements serializable {
             $this->save();
         }
 	}
-	
+
 	public function removeAll($table, $key)
 	{
 		DB::delete($table)->where($key, '=', $this->pk())->execute();
 	}
-	
+
 	public function cacheToCollection()
 	{
 		AB::insert($this->_table_name)->set($this->pk())->values($this)->execute();
 	}
-	
+
 	public function cacheAll()
 	{
 		$cache = Cache::instance();
-		$cache->delete($this->_table_name);	
-		
+		$cache->delete($this->_table_name);
+
 		$orm = ORM::factory($this->object_name());
 		$models = $orm->find_all();
-		
+
 		$collection = [];
-		
+
 		foreach ($models as $model)
 		{
 			$collection[$model->pk()] = $model;
 		}
-		
+
 		$cache->set($this->_table_name, $collection);
-		
+
 		return $collection;
 	}
-	
+
 	public function getAll()
 	{
 		$cache      = Cache::instance();
 		$collection = $cache->get($this->_table_name);
-		
+
 		if (!$collection) {
 			$orm = ORM::factory($this->object_name());
 			$collection = $orm->cacheAll();
-		}		
-		
+		}
+
 		return $collection;
 	}
-	
+
 	public function getAllWhere(array $where)
 	{
 		$models = ORM::factory($this->_object_name)->getAll();
 		$result = [];
-		
+
 		foreach ($models as $model)
 		{
 			/**
@@ -2570,93 +2562,93 @@ class Kohana_ORM extends Model implements serializable {
 				$result[] = $model;
 			}
 		}
-		
-		return $result;		
+
+		return $result;
 	}
-	
+
 	public function getById($id)
 	{
 		if ($id)
 		{
 			$cache = Cache::instance();
 			$collection = $cache->get($this->_table_name);
-			
+
 			if (!$collection)
 			{
 				$orm = ORM::factory($this->_object_name);
 				$collection = $orm->cacheAll();
 			}
-			
-			$model = Arr::get($collection, $id);			
-			
+
+			$model = Arr::get($collection, $id);
+
 			if (!$model)
 			{
 				$model = ORM::factory($this->_object_name, $id)->find();
-			}			
-			
+			}
+
 			return $model;
-		}		
+		}
 		else
 		{
 			return ORM::factory($this->_object_name);
 		}
 	}
-	
+
 	public function getByColumn($col, $value)
 	{
 		$cache = Cache::instance();
-		$collection = $cache->get($this->_table_name);		
-		
+		$collection = $cache->get($this->_table_name);
+
 		if (!$collection)
-		{	
+		{
 			$orm = ORM::factory($this->_object_name);
 			$collection = $orm->cacheAll();
 		}
-		
+
 		foreach ($collection as $orm)
 		{
 			/**
 			 * @var $orm ORM
 			 */
 			if ($orm->{$col} == $value)
-			{				
+			{
 				$model = $orm;
 				break;
 			}
-		}		
-		
+		}
+
 		if (!$model || !$model->loaded())
 		{
 			$model = ORM::factory($this->_object_name)->where($this->_object_name . '.' . $col, '=', $value)->limit(1)->find();
 			$collection[] = $model;
 		}
-		
+
 		return $model;
 	}
-	
+
 	/**
      * Visszaadja az ORM adott kapcsolatanak azonositoit egy tombben
-     * 
+     *
      * @param string $relation		Keresett kapcsolat
      * @return array $ids			Azonositok
      */
     public function getRelationIds($relation)
     {
-    	$ids = [];    	    	
+    	$ids = [];
     	foreach ($this->{$relation}->find_all() as $orm)
     	{
     		$ids[] = $orm->{$orm->primary_key()};
     	}
-    	
+
     	return $ids;
     }
-    
+
     /**
      * Ket modelt hasonlit ossze, aszerint, hogy mikor hoztak letre
      *
      * @param ORM $a  Egyik projekt
      * @param ORM $b  Masik projekt
-     * 
+     *
      * @return integer          1, 0, -1
      */
     public static function sortByDate(ORM $a, ORM $b)
@@ -2670,7 +2662,7 @@ class Kohana_ORM extends Model implements serializable {
     	{
     		return -1;
     	}
-    
+
     	return 0;
     }
 
@@ -2689,5 +2681,5 @@ class Kohana_ORM extends Model implements serializable {
     {
         return json_encode($this->object());
     }
-	
+
 } // End ORM

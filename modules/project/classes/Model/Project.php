@@ -17,12 +17,12 @@ class Model_Project extends ORM implements Subject
 		'column' => 'created_at',
 		'format' => 'Y-m-d H:i'
 	];
-	
+
 	protected $_updated_column = [
 		'column' => 'updated_at',
 		'format' => 'Y-m-d H:i'
 	];
-    
+
     protected $_table_columns = [
     	'project_id'        => ['type' => 'int',        'key' => 'PRI'],
     	'user_id'           => ['type' => 'int',        'null' => true],
@@ -49,7 +49,7 @@ class Model_Project extends ORM implements Subject
             'foreign_key'   => 'user_id'
         ]
     ];
-    
+
     protected $_has_many    = [
     	'industries'    => [
     		'model'     	=> 'Industry',
@@ -68,7 +68,7 @@ class Model_Project extends ORM implements Subject
    			'through'		=> 'projects_skills',
    			'far_key'		=> 'skill_id',
    			'foreign_key'	=> 'project_id',
-    	], 
+    	],
         'notifications' => [
             'model'         => 'Project_Notification',
             'foreign_key'   => 'project_id',
@@ -78,6 +78,21 @@ class Model_Project extends ORM implements Subject
             'foreign_key'	=> 'project_id',
         ],
     ];
+
+    public function rules()
+    {
+        return [
+            'user_id'           => [['not_empty']],
+            'name'              => [['not_empty']],
+            'short_description' => [['not_empty']],
+            'long_description'  => [['not_empty']],
+            'email'             => [['not_empty'], ['email'], ['email_domain']],
+            'phonenumber'       => [['not_empty']],
+            'salary_type'       => [['not_empty']],
+            'salary_low'        => [['not_empty'], ['numeric']],
+            'salary_high'       => [['numeric']]
+        ];
+    }
 
     /**
      * @return Array_Builder
@@ -94,7 +109,7 @@ class Model_Project extends ORM implements Subject
      * @throws Exception
      */
     public function submit(array $post)
-    {    	           
+    {
         $id = Arr::get($post, 'project_id');
 
         if (!$id) {
@@ -103,16 +118,12 @@ class Model_Project extends ORM implements Subject
         }
 
         $post = $this->setDefaultProperties($post);
-                
-        $submit = parent::submit($post);
-        
-        if (Arr::get($submit, 'error')) {
-        	throw new Exception(Arr::get($submit, 'messages'));
-        }
+
+        parent::submit($post);
 
         $this->saveSlug();
         $this->addRelations($post);
-        
+
         if (!$id) {
             Notification_User::notifyProjectNew($this);
         }
@@ -152,7 +163,7 @@ class Model_Project extends ORM implements Subject
                 $this->clearCache();
             }
         }
-    	
+
     	return ['error' => $error, 'message' => $message];
     }
 
@@ -213,7 +224,7 @@ class Model_Project extends ORM implements Subject
     	$this->removeAll('projects_industries', 'project_id');
     	$this->removeAll('projects_professions', 'project_id');
     	$this->removeAll('projects_skills', 'project_id');
-    	
+
         $this->addRelation($post, new Model_Project_Industry(), new Model_Industry());
         $this->addRelation($post, new Model_Project_Profession(), new Model_Profession());
         $this->addRelation($post, new Model_Project_Skill(), new Model_Skill());
@@ -221,7 +232,7 @@ class Model_Project extends ORM implements Subject
 
     /**
      * Visszaadja, hogy hany aktiv projekt van
-     * 
+     *
      * @return int
      */
     public function getCount()

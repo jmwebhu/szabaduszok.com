@@ -16,7 +16,8 @@ class Arr_Test extends Unittest_TestCase
         return [
             [['webfejlesztés'], Arr::uniqueString(['webfejlesztés', 'Webfejlesztés'])],
             [['webfejlesztés', 'beágyazott rendszerek'], Arr::uniqueString(['webfejlesztés', 'beágyazott rendszerek'])],
-            [['Webfejlesztés', 'java'], Arr::uniqueString(['Webfejlesztés', 'WebFEJLESZTÉS', 'java', 'JAVA'])]
+            [['Webfejlesztés', 'java'], Arr::uniqueString(['Webfejlesztés', 'WebFEJLESZTÉS', 'java', 'JAVA'])],
+            [[1, 2], Arr::uniqueString(['1', 2])],
         ];
     }
 }
