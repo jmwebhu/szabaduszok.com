@@ -3,6 +3,22 @@
 class Model_User_Employer extends Model_User_Abstract
 {
     /**
+     * @return array
+     */
+    public function rules()
+    {
+        $parent     = parent::rules();
+        $parent['address_postal_code'][] = ['not_empty'];
+
+        $employer = [
+            'address_city'          => [['not_empty'], ['alpha', [':value', true]]],
+            'phonenumber'           => [['not_empty'], ['phone']]
+        ];
+
+        return array_merge($parent, $employer);
+    }
+
+    /**
      * @return int
      */
     public function getType()

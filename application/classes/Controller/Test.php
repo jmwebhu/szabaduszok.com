@@ -4,7 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $user = new Entity_User_Employer();
+        $user = new Entity_User_Freelancer();
         $data = [
             'is_company'            => 'on',
             'company_name'          => 'Szabaduszok.com Kft.',
@@ -16,7 +16,9 @@ class Controller_Test extends Controller
             'address_postal_code'   => '1010',
             'address_city'          => 'Budapest',
             'phonenumber'           => '06301923380',
-            'short_description'     => 'Rövid bemutatkozás, kicsit hosszabb'
+            'short_description'     => 'Rövid bemutatkozás, kicsit hosszabb',
+            'min_net_hourly_wage'   => '1200.00',
+            'webpage'               => 'asdf'
         ];
 
         try {

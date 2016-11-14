@@ -3,6 +3,20 @@
 class Model_User_Freelancer extends Model_User_Abstract
 {
     /**
+     * @return array
+     */
+    public function rules()
+    {
+        $parent = parent::rules();
+        $freelancer = [
+            'min_net_hourly_wage'   => [['not_empty'], ['numeric']],
+            'webpage'               => [['not_empty'], ['url']]            
+        ];
+
+        return array_merge($parent, $freelancer);
+    }
+
+    /**
      * @return Array_Builder
      */
     public function baseSelect()

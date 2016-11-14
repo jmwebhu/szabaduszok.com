@@ -401,6 +401,7 @@ abstract class Entity_User extends Entity implements Notifiable
     {
         try {
             Model_Database::trans_start();
+            $result = ['error' => false];
 
             $data                       = $post;
             $id                         = Arr::get($data, 'user_id');
@@ -439,7 +440,6 @@ abstract class Entity_User extends Entity implements Notifiable
             }
 
             $mailinglist->add((bool)$id);
-            $result = ['error' => false];
 
         } catch (ORM_Validation_Exception $ex) {
             $result = ['error' => true, 'validationErrors' => $ex->errors()];
