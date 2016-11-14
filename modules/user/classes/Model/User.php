@@ -118,7 +118,6 @@ class Model_User extends Model_Auth_User
             'email'                 => [['not_empty'], ['email'], ['email_domain']],
             'password'              => [['not_empty'], ['min_length', [':value', 6]]],
             'address_postal_code'   => [['numeric'], ['min_length', [':value', 4]]]
-            
         ];
     }
     

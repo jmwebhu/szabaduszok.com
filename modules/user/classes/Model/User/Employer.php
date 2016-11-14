@@ -12,7 +12,7 @@ class Model_User_Employer extends Model_User_Abstract
 
         $employer = [
             'address_city'          => [['not_empty'], ['alpha', [':value', true]]],
-            'phonenumber'           => [['not_empty'], ['phone']]
+            'phonenumber'           => [['not_empty']]
         ];
 
         return array_merge($parent, $employer);
