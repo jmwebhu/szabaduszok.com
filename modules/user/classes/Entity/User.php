@@ -399,43 +399,59 @@ abstract class Entity_User extends Entity implements Notifiable
      */
     public function submitUser(array $post, $mailinglist = null)
     {
-        $data                       = $post;
-        $id                         = Arr::get($data, 'user_id');
-        $userModel                  = new Model_User();
-        $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
+        try {
+            Model_Database::trans_start();
 
-        if ($userWithEmail->loaded()) {
-            throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
+            $data                       = $post;
+            $id                         = Arr::get($data, 'user_id');
+            $userModel                  = new Model_User();
+            $userWithEmail              = $userModel->getByEmail(Arr::get($data, 'email'), $id);
+
+            if ($userWithEmail->loaded()) {
+                throw new Exception_UserRegistration('Ezzel az e-mail címmel már regisztráltak. Kérjük válassz másikat, vagy jelentkezz be.');
+            }
+
+            $data['type']               = $this->_model->getType();
+            $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
+            $data['landing_page_id']    = $landing->landing_page_id;
+
+            $data = $this->unsetPasswordFrom($data);
+            $data = $this->fixPost($data);
+
+            $this->_model->updateSession();
+
+            $this->_model->submit($data);
+
+            $this->_file->uploadFiles();
+
+            $this->_model->search_text = $this->_business->getSearchTextFromFields();
+            $this->_model->save();
+
+            $this->_model->cacheToCollection();
+
+            $signupModel = new Model_Signup();
+            $signupModel->deleteIfExists($this->_model->email);
+
+            $this->mapModelToThis();
+
+            if ($mailinglist == null) {
+                $mailinglist    = Gateway_Mailinglist_Factory::createMailinglist($this);
+            }
+
+            $mailinglist->add((bool)$id);
+            $result = ['error' => false];
+
+        } catch (ORM_Validation_Exception $ex) {
+            $result = ['error' => true, 'validationErrors' => $ex->errors()];
+            Session::instance()->set('validationErrors', $ex->errors('models'));
+
+        } catch (Exception $ex) {
+            $result = ['error' => true];
+            Log::instance()->addException($ex);
+
+        } finally {
+            Model_Database::trans_end([!$result['error']]);
         }
-
-        $data['type']               = $this->_model->getType();
-        $landing                    = Model_Landing::byName(Arr::get($data, 'landing_page_name'));
-        $data['landing_page_id']    = $landing->landing_page_id;
-
-        $data = $this->unsetPasswordFrom($data);
-        $data = $this->fixPost($data);
-
-        $this->_model->updateSession();
-
-        $this->_model->submit($data);
-
-        $this->_file->uploadFiles();
-
-        $this->_model->search_text = $this->_business->getSearchTextFromFields();
-        $this->_model->save();
-
-        $this->_model->cacheToCollection();
-
-        $signupModel = new Model_Signup();
-        $signupModel->deleteIfExists($this->_model->email);
-
-        $this->mapModelToThis();
-
-        if ($mailinglist == null) {
-            $mailinglist    = Gateway_Mailinglist_Factory::createMailinglist($this);
-        }
-
-        $mailinglist->add((bool)$id);
 
         return $this;
     }

@@ -107,6 +107,17 @@ class Model_User extends Model_Auth_User
         ],
     ];
 
+    public function rules()
+    {
+        return [
+            'lastname'      => [['not_empty'], ['alpha', [':value', true]]],
+            'firstname'     => [['not_empty'], ['alpha', [':value', true]]],
+            'email'         => [['not_empty'], ['email'], ['email_domain']],
+            'password'      => [['not_empty'], ['min_length', [':value', 6]]],
+            
+        ];
+    }
+    
     public function byType($type)
     {
         return $this->where('type', '=', $type);

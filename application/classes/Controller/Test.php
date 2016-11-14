@@ -4,20 +4,23 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $project = new Entity_Project();
+        $user = new Entity_User_Employer();
         $data = [
-            'user_id'   => 2042,
-            'name'      => 'Projekt',
-            'short_description' => 'Rövid leírás',
-            'long_description' => 'Hosszú leírás',
-            'email' => 'martinasdf@szabaduszok.com',
-            'phonenumber'   => '+4917662658919',
-            'salary_type'   => 1,
-            'salary_low'    => 1000.00
+            'is_company'            => 'on',
+            'company_name'          => 'Szabaduszok.com Kft.',
+            'lastname'              => 'Joóűáéúőóüö',
+            'firstname'             => 'Mártinűáéúő',
+            'email'                 => 'joomartin' . time() . '@jmweb.hu',
+            'password'              => 'Password1234',
+            'password_confirm'      => 'Password1234',
+            'address_postal_code'   => '1010',
+            'address_city'          => 'Budapest',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás, kicsit hosszabb'
         ];
 
         try {
-            $result = $project->submit($data);
+            $result = $user->submitUser($data);
             //echo Debug::vars($result);
         } catch (ORM_Validation_Eception $ex) {
             echo Debug::vars($ex->errors());
