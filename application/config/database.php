@@ -20,7 +20,7 @@ return array
 			 *
 			 * Ports and sockets may be appended to the hostname.
 			 */
-			'hostname'   => '127.0.0.1:8889',
+			'hostname'   => '127.0.0.1',
 			'database'   => $baseconfig['db'],
 			'username'   => $baseconfig['db_user'],
 			'password'   => $baseconfig['db_password'],
