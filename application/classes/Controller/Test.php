@@ -5,23 +5,21 @@ class Controller_Test extends Controller
     public function action_index()
     {
         $header = "Content-type: application/json\r\n";
-        $header .= "Authorization: Bearer AYSq3RDGsmBLJE-otTkBtM-jBRd1TCQwFf9RGfwddNXWz0uFU9ztymylOhRS\r\n";
+        $header .= "Authorization: Bearer A101.MZzXm6ddy58J5CfE2sQ-jfbdzrCweN5UWGDc4CP1VkvS8ttmI_ASDph8dOLlXi4-.WSlpi8falsoclt_ewcbDxvHizV8\r\n";
 
         $data = [
             "intent" => "sale",
             "payer" => [
                 "payment_method"    => "paypal"
             ],
-            "payee" => [
-                "email" => "szamlazas@jmweb.hu"
-            ],
             "transactions" => [
-                "amount" => [
-                    "total" => "45000",
-                    "currency"  => "HUF"
+                [
+                    "amount" => [
+                        "total" => "10",
+                        "currency"  => "HUF"
+                    ]
                 ]
             ],
-            "description" => "Projekt neve",
             "redirect_urls" => [
                 "return_url" => "http://127.0.0.1/szabaduszok.com/success=1",
                 "cancel_url" => "http://127.0.0.1/szabaduszok.com/success=0"
@@ -35,9 +33,9 @@ class Controller_Test extends Controller
                 'content' => json_encode($data)
             ]
         ];
-        
-        $context = stream_context_create($options);
-        $response = file_get_contents("https://api.paypal.com/v1/payments/payment", false, $context);
+
+        $context    = stream_context_create($options);
+        $response   = file_get_contents("https://api.paypal.com/v1/payments/payment", false, $context);
 
         echo Debug::vars($response);
     }
