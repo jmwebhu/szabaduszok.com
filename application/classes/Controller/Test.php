@@ -4,16 +4,38 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $res = DB::select()
-            ->from('projects_partners')
-            ->where('user_id', '=', 2022)
-            ->and_where('project_id', '=', 10023)
-            ->and_where('type', '=', Model_Project_Partner::TYPE_CANDIDATE)
-            ->limit(1)
-            ->execute()->count();
+        $header = "Content-type: application/json\r\n";
+        $data = [
+            "intent"    => "sale",
+            "payer"     => [
+                "payment_method" => "paypal"
+            ],
+            "transactions"  => [
+                "amount"    => [
+                    "total" => 1000,
+                    "currency"  => "HUF"
+                ]
+            ],
+            "description"   => "Projekt neve",
+            "redirect_urls" => [
+                "return_url"    => URL::base(true, false) . "?success=1",
+                "cancel_url"    => URL::base(true, false) . "?success=0",
+            ]
+        ];
 
+        $options = [
+            "http" => [
+                "header"  => $header,
+                "method"  => "POST",
+                "content" => json_encode($data)
+            ]
+        ];
 
-        echo Debug::vars($res);
+        $url        = "https://api.sandbox.paypal.com/v1/payments/payment";
+        $context    = stream_context_create($options);
+        $content    = file_get_contents($url, false, $context);
+
+        echo Debug::vars($content);
     }
 
     public function action_clearcache()
