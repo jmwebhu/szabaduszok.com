@@ -1,6 +1,6 @@
 <?php
 
-$file = Kohana::find_file('models/user.php');
+$file = Kohana::find_file('messages/models', 'user');
 $user = include $file;
 
 $freelancer = [

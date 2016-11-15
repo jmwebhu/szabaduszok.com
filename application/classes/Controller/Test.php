@@ -8,8 +8,8 @@ class Controller_Test extends Controller
         $data = [
             'is_company'            => 'on',
             'company_name'          => 'Szabaduszok.com Kft.',
-            'lastname'              => 'Joóűáéúőóüö',
-            'firstname'             => 'Mártinűáéúő',
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
             'email'                 => 'joomartin' . time() . '@jmweb.hu',
             'password'              => 'Password1234',
             'password_confirm'      => 'Password1234',
