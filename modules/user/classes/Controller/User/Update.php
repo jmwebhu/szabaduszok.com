@@ -35,6 +35,9 @@ abstract class Controller_User_Update extends Controller_User implements Control
             $this->setContext();
             $this->handlePostRequest();
 
+        } catch (ORM_Validation_Exception $ovex) {
+            $this->handleValidationException($ovex, $this->getUrl());
+            
         } catch (HTTP_Exception_404 $exnf) {
             Session::instance()->set('error', $exnf->getMessage());
             $this->defaultExceptionRedirect($exnf);
