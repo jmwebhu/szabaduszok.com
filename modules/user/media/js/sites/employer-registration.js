@@ -2,21 +2,7 @@ var EmployerReg = {
 	init: function () {
 		this.cacheElements();
 		this.bindEvents();
-		this.addWidgets();	
-		
-		/**
-		 * private.szabaduszok.com launch elott az assetmerger Parse error -t dobott, ha 
-		 * egy if volt, es benne && operator
-		 */		
-		if (typeof EmployerReg.$userId !== 'undefined') {
-			
-			if (typeof EmployerReg.$userId.val() != 'undefined') {
-				
-				if (this.$isCompany.prop('checked') == true) {
-					this.isCompanyChange();
-				}
-			}											
-		}			
+		this.addWidgets();		
 	},
 	cacheElements: function () {
 		this.$submit = $('button[type="submit"]');

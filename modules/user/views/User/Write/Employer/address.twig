@@ -11,7 +11,7 @@
             <label>
                 Irányítószám*
             </label>
-            <input class="form-control" id="address-postal-code" name="address_postal_code" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ user.getAddressPostalCode() }}">
+            <input class="form-control" id="address-postal-code" name="address_postal_code" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true", "number": "true"}' value="{% if user.getAddressPostalCode() %}{{ user.getAddressPostalCode() }}{% else %}{{ post_session.address_postal_code }}{% endif %}">
         </div>
 
         <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
@@ -19,7 +19,7 @@
             <label>
                 Város*
             </label>
-            <input class="form-control" id="address-city" name="address_city" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true"}' value="{{ user.getAddressCity() }}">
+            <input class="form-control" id="address-city" name="address_city" type="text" placeholder="Számlázási" required data-rules='{"notEmpty": "true"}' value="{% if user.getAddressCity() %}{{ user.getAddressCity() }}{% else %}{{ post_session.address_city }}{% endif %}">
         </div>
 
         <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
@@ -27,7 +27,7 @@
             <label>
                 Utca és házszám
             </label>
-            <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{{ user.getAddressStreet() }}">
+            <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{% if user.getAddressStreet() %}{{ user.getAddressStreet() }}{% else %}{{ post_session.address_street }}{% endif %}">
         </div>
     </div>
 </div>

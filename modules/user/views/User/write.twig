@@ -12,7 +12,7 @@
                                 <input name="user_id" id="user-id" type="hidden" value="{{ user.getUserId() }}">
                             {% endif %}
 
-                            <input name="landing_page_name" type="hidden" value="{{ landingPageName }}">
+                            <input name="landing_page_name" type="hidden" value="{% if landingPageName %}{{ landingPageName }}{% else %}{{ post_session.landing_page_name }}{% endif %}">
 
                             <h1 class="mg-md text-center tc-black">
                                 {{ pageTitle }} {{ user.getName() }}

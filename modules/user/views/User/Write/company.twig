@@ -1,14 +1,32 @@
 <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
 <div class="checkbox">
     <label>
-        <input type="checkbox" id="is-company" name="is_company" {% if user.getIsCompany() %}checked{% endif %}>Céges?
+        <input type="checkbox" id="is-company" name="is_company" {% if user.getIsCompany() or post_session.is_company == 'on' %}checked{% endif %}>Céges?
     </label>
 </div>
 
-<span class="fa fa-building pull-left icon-sm icon-dark-gray hidden"></span>
-<div class="form-group hidden">
+<span class="fa fa-building pull-left icon-sm icon-dark-gray 
+	{% if post_session.is_company %}
+	{% else %}
+		{% if user.getIsCompany() %}
+		{% else %}
+		hidden
+		{% endif %}
+	{% endif %}
+"></span>
+
+<div class="form-group 
+	{% if post_session.is_company %}	
+	{% else %}
+		{% if user.getIsCompany() %}
+		{% else %}
+		hidden
+		{% endif %}
+	{% endif %}
+">
+
     <label>
         Cégnév*
     </label>
-    <input class="form-control" id="company-name" name="company_name" type="text" value="{{ user.getCompanyName() }}">
+    <input class="form-control" id="company-name" name="company_name" type="text" value="{% if user.getCompanyName() %}{{ user.getCompanyName() }}{% else %}{{ post_session.company_name }}{% endif %}">
 </div>
