@@ -34,7 +34,7 @@ class Controller_Project_Update extends Controller_Project
             $this->handlePostRequest();
 
         } catch (ORM_Validation_Exception $ovex) {
-            $this->handleValidationException($ovex, Route::url('projectCreate'));
+            $this->handleValidationException($ovex, Route::url('projectUpdate', ['slug' => $this->request->param('slug')]));
             
         } catch (HTTP_Exception_403 $exforbidden) {
             $this->handleForbiddenException($exforbidden);
