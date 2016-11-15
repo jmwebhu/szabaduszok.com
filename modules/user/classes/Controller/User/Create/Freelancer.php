@@ -18,6 +18,14 @@ class Controller_User_Create_Freelancer extends Controller_User_Create
         return Route::url('freelancerProfile', ['slug' => $this->_user->getSlug()]);
     }
 
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return Route::url('freelancerRegistration');
+    }
+
     protected function setContext()
     {
         parent::setContext();

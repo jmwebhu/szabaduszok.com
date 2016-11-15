@@ -27,6 +27,9 @@ abstract class Controller_User_Create extends Controller_User implements Control
 
             $this->handlePostRequest();
 
+        } catch (ORM_Validation_Exception $ovex) {
+            $this->handleValidationException($ovex, $this->getUrl());
+            
         } catch (Exception_UserRegistration $exur) {
             $this->context->error = $exur->getMessage();
             $this->_error = true;
@@ -57,6 +60,9 @@ abstract class Controller_User_Create extends Controller_User implements Control
 
         $industry                           = new Model_Industry();
         $this->context->industries          = $industry->getAll();
+        $this->context->AB                  = new AB();
+        $this->context->professionModel     = new Model_Profession();
+        $this->context->skillModel          = new Model_Skill();
     }
 
     protected function handleSignup()

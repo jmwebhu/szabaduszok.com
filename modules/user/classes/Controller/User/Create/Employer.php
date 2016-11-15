@@ -17,4 +17,12 @@ class Controller_User_Create_Employer extends Controller_User_Create
     {
         return Route::url('projectOwnerProfile', ['slug' => $this->_user->getSlug()]);
     }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return Route::url('projectOwnerRegistration');
+    }
 }

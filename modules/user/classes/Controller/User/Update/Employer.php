@@ -17,4 +17,12 @@ class Controller_User_Update_Employer extends Controller_User_Update
     {
         return Route::url('projectOwnerProfile', ['slug' => $this->_user->getSlug()]);
     }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return Route::url('projectOwnerProfileEdit', ['slug' => $this->_user->getSlug()]);
+    }
 }

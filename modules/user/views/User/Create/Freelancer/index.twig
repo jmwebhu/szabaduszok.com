@@ -11,6 +11,16 @@
         <select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
             {% for skill in user.getRelation('skills') %}
                 <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
+            {% else %}
+                {% for skill in post_session.skills %}
+                <option value="{{ skill }}" selected>
+                    {% if skill matches '/^\\d+$/' %}                               
+                        {{ AB.getSelect().from(skillModel).where('skill_id', '=', skill).execute().current().name }}
+                    {% else %}
+                        {{ skill }}
+                    {% endif %}
+                </option>
+                {% endfor %}
             {% endfor %}
         </select>
     </div>
@@ -23,7 +33,7 @@
         <label>
             Weboldal
         </label>
-        <input class="form-control" id="webpage" name="webpage" type="text" data-rules='{"url": "true"}' value="{{ user.getWebpage() }}">
+        <input class="form-control" id="webpage" name="webpage" type="text" data-rules='{"url": "true"}' value="{% if user.getWebpage() %}{{ user.getWebpage() }}{% else %}{{post_session.webpage }}{% endif %}">
     </div>
 
     <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
@@ -31,7 +41,7 @@
         <label>
             Minimum nettó órabér*
         </label>
-        <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control" data-rules='{"notEmpty": "true", "number": "true"}' value="{{ user.getMinNetHourlyWage() }}">
+        <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control" data-rules='{"notEmpty": "true", "number": "true"}' value="{% if user.getMinNetHourlyWage() %}{{ user.getMinNetHourlyWage() }}{% else %}{{post_session.min_net_hourly_wage }}{% endif %}">
     </div>
 
     <span class="ion ion-android-attach pull-left icon-sm icon-dark-gray"></span>

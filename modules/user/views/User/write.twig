@@ -19,6 +19,8 @@
                             </h1>
                         {% endblock formHeader %}
 
+                        {% include 'errors/validation_errors.twig' %}
+
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="mg-clear tc-black">
@@ -66,7 +68,7 @@
                                         </label>
                                         <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
                                             {% for industry in industries %}
-                                                <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
+                                                <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) or industry.industry_id in post_session.industries %}selected{% endif %}>{{ industry.name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -83,7 +85,17 @@
 
                                         <select id="professions" class="form-control" name="professions[]" multiple="multiple">
                                             {% for profession in user.getRelation('professions') %}
-                                                <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
+                                                <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>                                        
+                                            {% else %}
+                                                {% for profession in post_session.professions %}
+                                                <option value="{{ profession }}" selected>
+                                                    {% if profession matches '/^\\d+$/' %}                                          
+                                                        {{ AB.getSelect().from(professionModel).where('profession_id', '=', profession).execute().current().name }}
+                                                    {% else %}
+                                                        {{ profession }}
+                                                    {% endif %}
+                                                </option>
+                                                {% endfor %}
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -99,7 +111,7 @@
                                         <label>
                                             Rövid szakmai bemutatkozás
                                         </label>
-                                        <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{{ user.getShortDescription() }}</textarea>
+                                        <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{% if user.getShortDescription() %}{{ user.getShortDescription() }}{% else %}{{ post_session.short_description }}{% endif %}</textarea>
                                     </div>
 
                                 {% endblock professionalProfile %}
