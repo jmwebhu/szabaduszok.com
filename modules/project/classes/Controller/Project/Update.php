@@ -33,6 +33,9 @@ class Controller_Project_Update extends Controller_Project
             $this->setContext();
             $this->handlePostRequest();
 
+        } catch (ORM_Validation_Exception $ovex) {
+            $this->handleValidationException($ovex, Route::url('projectCreate'));
+            
         } catch (HTTP_Exception_403 $exforbidden) {
             $this->handleForbiddenException($exforbidden);
 
@@ -95,6 +98,10 @@ class Controller_Project_Update extends Controller_Project
         $this->context->user        = $this->_user;
 
         $this->setContextRelations();
+
+        $this->context->AB              = new AB();
+        $this->context->professionModel = new Model_Profession();
+        $this->context->skillModel      = new Model_Skill();
     }
 
     protected function setContextRelations()

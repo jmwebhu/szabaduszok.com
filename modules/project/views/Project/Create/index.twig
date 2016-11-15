@@ -95,7 +95,7 @@
 								<label>
 									Projekt neve*
 								</label>
-								<input id="name" name="name" class="form-control" required data-rules='{"notEmpty": "true"}' value="{% if project.getName() %}{{ project.getName() }}{% else %}{{ post_session.name }}{% endif %}">
+								<input id="name" name="name" class="form-control"  value="{% if project.getName() %}{{ project.getName() }}{% else %}{{ post_session.name }}{% endif %}">
 							</div><span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
 							<div class="form-group">
 								<label>
