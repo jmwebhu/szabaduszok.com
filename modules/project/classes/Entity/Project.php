@@ -442,25 +442,20 @@ class Entity_Project extends Entity implements Notification_Subject
      */
     public function submit(array $data)
     {
-        try {
-            $submit = parent::submit($data);
+        $submit = parent::submit($data);
 
-            if (!$submit) {
-                throw new Exception();
-            }
-
-            $this->_search_text = $this->_business->getSearchTextFromFields();
-            $save = $this->save();
-
-            if (!$save) {
-                throw new Exception();
-            }
-
-            $this->_model->cacheToCollection();
-
-        } catch (Exception $ex) {
-
+        if (!$submit) {
+            throw new Exception();
         }
+
+        $this->_search_text = $this->_business->getSearchTextFromFields();
+        $save = $this->save();
+
+        if (!$save) {
+            throw new Exception();
+        }
+
+        $this->_model->cacheToCollection();
 
         return $this;
     }

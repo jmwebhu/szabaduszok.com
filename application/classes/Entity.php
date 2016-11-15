@@ -202,26 +202,12 @@ abstract class Entity
      */
     public function submit(array $data)
     {
-        try {
-            $result = ['error' => false];
-            Model_Database::trans_start();
+        $result = ['error' => false];
 
-            $this->_model->submit($data);
-            $this->mapModelToThis();
+        $this->_model->submit($data);
+        $this->mapModelToThis();
 
-        } catch (ORM_Validation_Exception $ex) {
-            $result = ['error' => true, 'validationErrors' => $ex->errors()];
-            Session::instance()->set('validationErrors', $ex->errors('models'));
-
-        } catch (Exception $ex) {
-            $result = ['error' => true];
-            Log::instance()->addException($ex);
-
-        } finally {
-            Model_Database::trans_end([!$result['error']]);
-        }
-
-        return $result['error'];
+        return true;
     }
 
     /**

@@ -131,4 +131,14 @@ class Controller_DefaultTemplate extends Controller_Twig
             throw new HTTP_Exception_403($message);
         }
     }
+
+    protected function handleValidationException(ORM_Validation_Exception $ovex, $redirectUrl)
+    {
+        Session::instance()->set('validation_errors', $ovex->errors('models'));
+        Session::instance()->set('post', Input::post_all());
+        Session::instance()->set('get', Input::get_all());
+
+        header('Location: ' . $redirectUrl, true, 302);
+        die();
+    }
 }

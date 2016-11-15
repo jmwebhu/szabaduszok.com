@@ -106,7 +106,6 @@ class Model_Project extends ORM implements Subject
     /**
      * @param array $post
      * @return ORM
-     * @throws Exception
      */
     public function submit(array $post)
     {
@@ -117,8 +116,7 @@ class Model_Project extends ORM implements Subject
             $post['expiration_date'] = date('Y-m-d', strtotime('+1 month'));
         }
 
-        $post = $this->setDefaultProperties($post);
-
+        $post   = $this->setDefaultProperties($post);
         parent::submit($post);
 
         $this->saveSlug();

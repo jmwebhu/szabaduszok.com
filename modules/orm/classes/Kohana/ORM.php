@@ -324,6 +324,10 @@ class Kohana_ORM extends Model implements serializable {
 		}
 	}
 
+	/**
+	 * @param array $data
+	 * @return array
+	 */
 	public function submit(array $data)
 	{
 		if (isset($data[$this->_primary_key])) $this->_loaded = true;
@@ -333,7 +337,10 @@ class Kohana_ORM extends Model implements serializable {
 
 		$this->save();
 
-		return array('error'=>false,'id'=>$this->pk(),'reload'=>$reload);
+		return [
+			'error' => false, 
+			'id' 	=> $this->pk()
+		];
 	}
 
 	public function bind($post)

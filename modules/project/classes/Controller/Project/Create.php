@@ -33,10 +33,17 @@ class Controller_Project_Create extends Controller_Project
     public function action_index()
     {
         try {
+            /*echo Debug::vars(Session::instance()->get_once('validation_errors'));
+            echo Debug::vars(Session::instance()->get_once('post'));
+            echo Debug::vars(Session::instance()->get_once('get'));
+            exit;*/
             $this->throwExceptionIfCannotCreate();
             $this->setContext();
             $this->handlePostRequest();
 
+        } catch (ORM_Validation_Exception $ovex) {
+            $this->handleValidationException($ovex, Route::url('projectCreate'));
+            
         } catch (HTTP_Exception_403 $exforbidden) {
             $this->handleForbiddenException($exforbidden);
 
