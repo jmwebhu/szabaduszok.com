@@ -8,10 +8,7 @@ class Controller_DefaultTemplate extends Controller_Twig
     {
     	//$user = $this->context->loggedUser = Auth::instance()->get_user(); 
     	
-    	// Be sure to only profile if it's enabled
-    	if (Kohana::$profiling === TRUE)
-    	{
-    		// Start a new benchmark
+    	if (Kohana::$profiling === TRUE) {
     		$this->_benchmark = Profiler::start('default', __FUNCTION__);
     	}
     	
@@ -23,26 +20,27 @@ class Controller_DefaultTemplate extends Controller_Twig
         $this->context->STAGING     = 20;
         $this->context->TESTING     = 30;
         $this->context->DEVELOPMENT = 40;
+
+        $this->context->validation_errors   = Session::instance()->get_once('validation_errors');
+        $this->context->post_session        = Session::instance()->get_once('post_session');
+        $this->context->get_session         = Session::instance()->get_once('get_session');
     }
 
     public function after()
     {
-        if ($this->auto_render)
-        {        	
-            $assets =  AssetManager::instance()->getRequestAssets();
-            $files = AssetCollection::instance()->getAssets($assets['css'], $assets['js']);
+        if ($this->auto_render) {        	
+            $assets     = AssetManager::instance()->getRequestAssets();
+            $files      = AssetCollection::instance()->getAssets($assets['css'], $assets['js']);
 
             $assets = Assets::instance()
                 ->controller($this->request->controller())
                 ->action($this->request->action());
 
-            foreach($files['css'] as $css)
-            {
+            foreach($files['css'] as $css) {
                 $assets->css($css);
             }
 
-            foreach($files['js'] as $js)
-            {
+            foreach($files['js'] as $js) {
                 $assets->js($js);
             }                        
                         
@@ -54,19 +52,16 @@ class Controller_DefaultTemplate extends Controller_Twig
             }
         }
         
-        if ($this->request->is_ajax())
-        {
+        if ($this->request->is_ajax()) {
         	$this->auto_render = false;
         	$this->response->headers('Content-Type', 'application/json');
         }
         
 
-        if ($this->_benchmark)
-        {
-        	// Stop the benchmark
+        if ($this->_benchmark) {
         	Profiler::stop($this->_benchmark);
         	$this->context->profiler = View::factory('profiler/stats');
-        }                
+        }              
 
         parent::after();
     }
@@ -135,8 +130,8 @@ class Controller_DefaultTemplate extends Controller_Twig
     protected function handleValidationException(ORM_Validation_Exception $ovex, $redirectUrl)
     {
         Session::instance()->set('validation_errors', $ovex->errors('models'));
-        Session::instance()->set('post', Input::post_all());
-        Session::instance()->set('get', Input::get_all());
+        Session::instance()->set('post_session', Input::post_all());
+        Session::instance()->set('get_session', Input::get_all());
 
         header('Location: ' . $redirectUrl, true, 302);
         die();

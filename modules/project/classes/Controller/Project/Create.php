@@ -32,11 +32,7 @@ class Controller_Project_Create extends Controller_Project
 
     public function action_index()
     {
-        try {
-            /*echo Debug::vars(Session::instance()->get_once('validation_errors'));
-            echo Debug::vars(Session::instance()->get_once('post'));
-            echo Debug::vars(Session::instance()->get_once('get'));
-            exit;*/
+        try {        
             $this->throwExceptionIfCannotCreate();
             $this->setContext();
             $this->handlePostRequest();
@@ -75,6 +71,10 @@ class Controller_Project_Create extends Controller_Project
         $this->context->email       = Viewhelper_Project::getEmail($this->_user);
         $this->context->phonenumber = Viewhelper_Project::getPhonenumber($this->_user);
         $this->context->industries  = $industry->getAll();
+        $this->context->AB          = new AB();
+
+        $this->context->professionModel = new Model_Profession();
+        $this->context->skillModel      = new Model_Skill();
     }
 
     protected function handlePostRequest()

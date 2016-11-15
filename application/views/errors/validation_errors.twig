@@ -1,0 +1,22 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel" style="{% if validation_errors %}display:block;{% else %}display:none !important;{% endif %}">
+				<div class="panel-heading">
+					<h3 class="mg-clear tc-black">
+						Kérlek javítsd ki az alábbi hibákat
+					</h3>
+				</div>
+				<div class="panel-body">
+					<div class='alert alert-danger'>
+						<ul>
+						{% for name, value in validation_errors %}
+							<li>{{ value }}</li>
+						{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

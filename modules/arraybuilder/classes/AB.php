@@ -84,4 +84,10 @@ class AB
 		$arrayBuilderDelete = new Array_Builder_Delete();
 		return $arrayBuilderDelete->delete($table, $key);		
 	}
+
+	public function getSelect()
+	{
+		$arrayBuilderSelect = new Array_Builder_Select();		
+		return $arrayBuilderSelect->select();	
+	}
 }

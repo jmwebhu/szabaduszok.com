@@ -12,6 +12,7 @@
 					<h1 class="mg-md text-center tc-black">
 						{{ pageTitle }}
 					</h1>
+					{% include 'errors/validation_errors.twig' %}
 					<span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
 					<div class="panel">
 						<div class="panel-heading">
@@ -27,7 +28,7 @@
 								</label>
 								<select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
 								{% for industry in industries %}
-								<option value="{{ industry.industry_id }}" {% if project.getModel().has('industries', industry) %}selected{% endif %}>{{ industry.name }}</option>
+								<option value="{{ industry.industry_id }}" {% if project.getModel().has('industries', industry) or industry.industry_id in post_session.industries %}selected{% endif %}>{{ industry.name }}</option>						
 								{% endfor %}
 								</select>
 							</div>							
@@ -36,11 +37,21 @@
 							</p><span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
 							<div class="form-group">
 								<label>
-									Szakterületek*
+									Szakterületek*				
 								</label>
 								<select id="professions" class="form-control" name="professions[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
 								{% for profession in project.relation("professions") %}
 								<option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>
+								{% else %}
+									{% for profession in post_session.professions %}
+									<option value="{{ profession }}" selected>
+										{% if profession matches '/^\\d+$/' %}											
+											{{ AB.getSelect().from(professionModel).where('profession_id', '=', profession).execute().current().name }}
+										{% else %}
+											{{ profession }}
+										{% endif %}
+									</option>
+									{% endfor %}
 								{% endfor %}
 	 							</select>
 							</div>
@@ -54,6 +65,16 @@
 								<select id="skills" class="form-control" name="skills[]" multiple="multiple">
 								{% for skill in project.relation("skills") %}
 								<option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
+								{% else %}
+									{% for skill in post_session.skills %}
+									<option value="{{ skill }}" selected>
+										{% if skill matches '/^\\d+$/' %}								
+											{{ AB.getSelect().from(skillModel).where('skill_id', '=', skill).execute().current().name }}
+										{% else %}
+											{{ skill }}
+										{% endif %}
+									</option>
+									{% endfor %}
 								{% endfor %}
 								</select>		
 							</div>
@@ -74,12 +95,12 @@
 								<label>
 									Projekt neve*
 								</label>
-								<input id="name" name="name" class="form-control" value="{{ project.getName() }}">
+								<input id="name" name="name" class="form-control" required data-rules='{"notEmpty": "true"}' value="{% if project.getName() %}{{ project.getName() }}{% else %}{{ post_session.name }}{% endif %}">
 							</div><span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
 							<div class="form-group">
 								<label>
 									Rövid leírás*
-								</label><textarea id="short-description" name="short_description" class="form-control" rows="2" cols="50" required data-rules='{"notEmpty": "true"}'>{{ project.getShortDescription() }}</textarea>
+								</label><textarea id="short-description" name="short_description" class="form-control" rows="2" cols="50" required data-rules='{"notEmpty": "true"}'>{% if project.getShortDescription() %}{{ project.getShortDescription() }}{% else %}{{ post_session.short_description }}{% endif %}</textarea>
 							</div>
 							<p class="text-justify">
 								Ez fog megjelenni a projekt listában, tehát mindenki ezt látja először. Legyen tömör, és egyértelmű.
@@ -88,7 +109,7 @@
 								<label>
 									Hosszabb leírás*
 								</label>
-								<textarea class="form-control" rows="20" cols="50" id="long-description" name="long_description" data-rules='{"notEmpty": "true"}'>{{ project.getLongDescription() }}</textarea>
+								<textarea class="form-control" rows="20" cols="50" id="long-description" name="long_description" data-rules='{"notEmpty": "true"}'>{% if project.getLongDescription() %}{{ project.getLongDescription() }}{% else %}{{ post_session.long_description }}{% endif %}</textarea>
 							</div>
 							<p class="text-justify">
 								Ez fog megjelenni, ha valaki rákattint a projektra a listából. Ez lehet részletesebb.
@@ -122,7 +143,7 @@
 							</div>
 							<div class="radio">
 								<label>
-									<input type="radio" name="salary_type" value="2" id="salary-type-fix" {% if project.getSalaryType() == 2 %}checked{% endif %}>Fix összeg
+									<input type="radio" name="salary_type" value="2" id="salary-type-fix" {% if project.getSalaryType() == 2 or post_session.salary_type == 2 %}checked{% endif %}>Fix összeg
 								</label>
 							</div>
 							
@@ -131,7 +152,7 @@
 								<label>
 									Nettó alsó határ*
 								</label>
-								<input class="form-control" type="text" id="salary-low" name="salary_low" required data-rules='{"notEmpty": "true", "number": "true"}' value="{{ project.getSalaryLow() }}">
+								<input class="form-control" type="text" id="salary-low" name="salary_low" required data-rules='{"notEmpty": "true", "number": "true"}' value="{% if project.getSalaryLow() %}{{ project.getSalaryLow() }}{% else %}{{ post_session.salary_low }}{% endif %}">
 							</div>
 							
 							<span class="ion ion-arrow-graph-up-right pull-left icon-sm icon-dark-gray"></span>
@@ -139,7 +160,7 @@
 								<label>
 									Nettó felső határ
 								</label>
-								<input class="form-control" type="text" id="salary-high" name="salary_high" data-rules='{"number": "true"}' value="{{ project.getSalaryHigh() }}">
+								<input class="form-control" type="text" id="salary-high" name="salary_high" data-rules='{"number": "true"}' value="{% if project.getSalaryHigh() %}{{ project.getSalaryHigh() }}{% else %}{{ post_session.salary_high }}{% endif %}">
 							</div>
 						</div>
 					</div>
@@ -157,13 +178,13 @@
 								<label>
 									E-mail cím*
 								</label>
-								<input class="form-control" id="email" name="email" type="email" value="{{ email }}" required data-rules='{"notEmpty": "true", "email": "true"}'>
+								<input class="form-control" id="email" name="email" type="email" value="{% if post_session.email %}{{ post_session.email }}{% else %}{{ email }}{% endif %}" required data-rules='{"notEmpty": "true", "email": "true"}'>
 							</div><span class="ion ion-android-phone-portrait pull-left icon-sm icon-dark-gray"></span>
 							<div class="form-group">
 								<label>
 									Telefonszám*
 								</label>
-								<input class="form-control" type="tel" id="phonenumber" name="phonenumber" value="{{ phonenumber }}" required data-rules='{"notEmpty": "true"}'>
+								<input class="form-control" type="tel" id="phonenumber" name="phonenumber" value="{% if post_session.phonenumber %}{{ post_session.phonenumber }}{% else %}{{ phonenumber }}{% endif %}" required data-rules='{"notEmpty": "true"}'>
 							</div>
 						</div>
 					</div> 
