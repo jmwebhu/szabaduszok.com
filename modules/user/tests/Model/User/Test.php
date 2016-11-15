@@ -34,9 +34,9 @@ class Model_User_Test extends Unittest_TestCase
         $this->assertArrayHasKey('password', $rules);
         $this->assertArrayHasKey('address_postal_code', $rules);
 
-        $this->assertArraySubset([0 => ['not_empty']], $rules['lastname']);
-        $this->assertArraySubset([0 => ['not_empty']], $rules['firstname']);
-        $this->assertArraySubset([0 => ['not_empty']], $rules['password']);
+        $this->assertTrue(in_array(['not_empty'], $rules['lastname']));
+        $this->assertTrue(in_array(['not_empty'], $rules['firstname']));
+        $this->assertTrue(in_array(['not_empty'], $rules['password']));
     }
 
 

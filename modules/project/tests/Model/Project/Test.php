@@ -90,6 +90,33 @@ class Model_Project_Test extends Unittest_TestCase
         $this->assertEmpty($skills);
     }
 
+    /**
+     * @covers Model_Project::rules()
+     */
+    public function testRules()
+    {
+        $project    = new Model_Project();
+        $rules      = $project->rules();
+
+        $this->assertArrayHasKey('user_id', $rules);
+        $this->assertArrayHasKey('name', $rules);
+        $this->assertArrayHasKey('short_description', $rules);
+        $this->assertArrayHasKey('long_description', $rules);
+        $this->assertArrayHasKey('phonenumber', $rules);
+        $this->assertArrayHasKey('salary_type', $rules);
+        $this->assertArrayHasKey('salary_low', $rules);
+        $this->assertArrayHasKey('salary_high', $rules);
+
+
+        $this->assertTrue(in_array(['not_empty'], $rules['user_id']));
+        $this->assertTrue(in_array(['not_empty'], $rules['name']));
+        $this->assertTrue(in_array(['not_empty'], $rules['short_description']));
+        $this->assertTrue(in_array(['not_empty'], $rules['long_description']));
+        $this->assertTrue(in_array(['not_empty'], $rules['phonenumber']));
+        $this->assertTrue(in_array(['not_empty'], $rules['salary_type']));
+        $this->assertTrue(in_array(['not_empty'], $rules['salary_low']));
+    }
+
     protected function assertSameRelations($expected, $actual)
     {
         foreach ($expected as $i => $industry) {

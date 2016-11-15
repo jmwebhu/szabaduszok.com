@@ -11,7 +11,13 @@
 					<div class='alert alert-danger'>
 						<ul>
 						{% for name, value in validation_errors %}
+							{% if value is iterable %}
+								{% for item in value %}
+								<li>{{ item }}</li>
+								{% endfor %}
+							{% else %}
 							<li>{{ value }}</li>
+							{% endif %}
 						{% endfor %}
 						</ul>
 					</div>

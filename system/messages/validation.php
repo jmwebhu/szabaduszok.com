@@ -19,7 +19,7 @@ return array(
 	'matches'       => ':field must be the same as :param3',
 	'min_length'    => ':field must be at least :param2 characters long',
 	'max_length'    => ':field must not exceed :param2 characters long',
-	'not_empty'     => ':field must not be empty',
+	'not_empty'     => ':field mező nem lehet üres',
 	'numeric'       => ':field must be numeric',
 	'phone'         => ':field must be a phone number',
 	'range'         => ':field must be within the range of :param2 to :param3',

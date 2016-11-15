@@ -3,7 +3,7 @@
 return [
     'email'                 => 'Mi az e-mail címed?',
     'emailLogin'            => 'Mi az e-mail címed?',
-    'password'              => 'Milyen jelszót választasz?',
+    'password'              => 'Jelszó',
     'password_confirm'      => 'Megismételnéd?',
     'name'                  => 'Mi a céged neve?',
     'contact_name'          => 'Hogy szólíthatunk?',
@@ -11,7 +11,7 @@ return [
     'address_city'          => 'Melyik városban laksz?',
     'address_street'        => 'Milyen utcában?',
     'address_housenumber'   => 'Mi a házszámod?',
-    'phonenumber'           => 'Mi a telefonszámod?',
+    'phonenumber'           => 'A telefonszám',
     'tax_number'            => 'Mi az adószámod?',
     'activity'              => 'Milyen tevékenységgel foglalkozol?',
     'inCaseOfPersonOwnName' => 'Magánszemély esetén a saját név',

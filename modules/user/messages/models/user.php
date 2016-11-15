@@ -14,10 +14,6 @@ return [
         'email'         => 'Kérlek helyes e-mail formátumot adj meg (@ és . is legyen benn)',
         'email_domain'  => 'Kérlek ellenőrizd az e-mail címhez tartozó domaint'
     ],
-    'password' => [
-        'not_empty'     => 'A jelszót kérlek ne hagyd üresen',
-        'min_length'	=> 'A jelszó legyen legalább 6 karakter'       
-    ],
     'address_postal_code' => [
         'numeric'     	=> 'Az irányítószám csak számokat tartalmazzon',
         'min_length'	=> 'Az irányítószám legyen legalább 4 számjegy'       
