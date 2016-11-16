@@ -61,36 +61,31 @@ class Viewhelper_User_Type_Test extends Unittest_TestCase
     public static function setUpBeforeClass()
     {
         $freelancer = new Model_User_Freelancer();
-        $freelancer->user_id = 1999;
         $freelancer->lastname = 'Teszt';
         $freelancer->firstname = 'Szabadúszó';
-        $freelancer->email = 'teszt' . $freelancer->user_id . '@szabaduszok.com';
-        $freelancer->password = 'pass';
+        $freelancer->email = uniqid() . '@szabaduszok.com';
+        $freelancer->password = 'password123';
         $freelancer->min_net_hourly_wage = '2500';
-        $freelancer->save();
 
+        $freelancer->save();
         self::$_freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER, $freelancer);
 
-        $employer = new Model_User_Freelancer();
-        $employer->user_id = 2000;
+        $employer = new Model_User_Employer();
         $employer->lastname = 'Teszt';
         $employer->firstname = 'Megbízó';
-        $employer->email = 'teszt' . $employer->user_id . '@szabaduszok.com';
+        $employer->email = uniqid() . '@szabaduszok.com';
         $employer->phonenumber = '063012345678';
-        $employer->password = 'pass';
+        $employer->password = 'password123';
         $employer->address_postal_code = '9700';
         $employer->address_city = 'Szombathely';
+        
         $employer->save();
-
         self::$_employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, $employer);
     }
 
     public static function tearDownAfterClass()
     {
-        $freelancer = new Model_User_Freelancer(1999);
-        $freelancer->delete();
-
-        $freelancer = new Model_User_Employer(2000);
-        $freelancer->delete();
+        self::$_freelancer->getModel()->delete();
+        self::$_employer->getModel()->delete();
     }
 }
