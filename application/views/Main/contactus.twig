@@ -9,12 +9,12 @@
 					Szabaduszok.com - Írj nekünk!
 				</h1>
 				{% if message %}
-				<div class='alert alert-success text-center'>{{ message }}</div>
+				<div class='alert {% if error %}alert-danger{% else %}alert-success{% endif %} text-center'>{{ message }}</div>
 				{% endif %}					
 				
 				<p class="text-justify">Bármilyen kérdésed, észrevételed, véleményed van, szivesen fogadjuk azt. Az alábbi űrlap kitöltésével tudsz velünk kapcsolatba lépni. Ha szeretnél, e-mailt is tudsz küldeni a <a href="mailto:hello@szabaduszok.com" target="_top">hello@szabaduszok.com</a> címre.</p>
 				<form id="contact-form" method="POST" action="{{ ROOT }}szabaduszok-irj-nekunk">
-				
+					{{ form.csrf() }}
 					<span class="ion ion-person pull-left icon-sm icon-dark-gray"></span>
 					<div class="form-group">
 						<label>

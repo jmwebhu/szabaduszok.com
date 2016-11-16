@@ -32,38 +32,44 @@ class Controller_Main extends Controller_DefaultTemplate
 	{
 		try
 		{
-			$result = ['error' => false];
+			$error = false;
 			$this->context->title = 'Írj nekünk!';
 			
-			if ($this->request->method() == Request::POST)
-			{
+			if ($this->request->method() == Request::POST) {
 				Model_Database::trans_start();
+				$post 		= Input::post_all();
 				$contact	= new Model_Contact();
 				
+				$validation = Validation::factory(Input::post_all());
+				$validation->rule('name', 'not_empty');
+				$validation->rule('email', 'not_empty');
+				$validation->rule('email', 'email');
+				$validation->rule('message', 'not_empty');
+
+				if (!$validation->check()) {
+					throw new Validation_Exception($validation, 'Kérlek minden mezőt tölts ki');
+				}
+
 				$submit = $contact->submit(Input::post_all());
-				
-				if (Arr::get($submit, 'error'))
-				{
+				if (Arr::get($submit, 'error')) {
 					throw new Exception(Arr::get($submit, 'messages'));
 				}
-			}
-		}
-		catch (Exception $ex)		// Altalanos hiba
-		{
-			$this->context->error = __('defaultErrorMessage');
-				
-			// Logbejegyzest keszit
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
-				
-			$result = ['error' => true];
-		}
-		finally
-		{
-			if ($this->request->method() == Request::POST)
-			{
-				Model_Database::trans_end([!Arr::get($result, 'error')]);
+
 				$this->context->message = 'Köszönjük, hogy írtál nekünk, a lehető leghamarabb válaszolni fogunk!';
+			}
+		} catch (Validation_Exception $vex) {
+			$this->context->message = $vex->getMessage();
+			$error = true;
+
+		} catch (Exception $ex) {
+			$this->context->message = __('defaultErrorMessage');	
+			Log::instance()->addException($ex);
+			$error = true;
+
+		} finally {
+			if ($this->request->method() == Request::POST) {
+				Model_Database::trans_end([!$error]);	
+				$this->context->error = $error;		
 			}
 		}
 	}

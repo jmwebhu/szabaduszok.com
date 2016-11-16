@@ -1,5 +1,5 @@
 {% macro build(container) %}
-{% import _self as datatable %}
+{% import 'Templates/form.twig' as form %}
 <div class="panel">
     <div class="panel-heading">
         <h2 class="mg-clear tc-black">
@@ -36,8 +36,9 @@
 {% endmacro %}
 
 {% macro buildSimpleForm(container) %}
+{% import 'Templates/form.twig' as form %}
 <form id="simple-search-form" method="POST" action="{{ container.getSimpleFormAction() }}">
-
+    {{ form.csrf() }}
     <input type="hidden" name="simple" value="1">
 
     <p class="search-form-paragraph">
@@ -55,7 +56,9 @@
 {% endmacro %}
 
 {% macro buildComplexForm(container) %}
+{% import 'Templates/form.twig' as form %}
 <form id="complex-search-form" method="POST" action="{{ container.getComplexFormAction() }}">
+    {{ form.csrf() }}
     <input type="hidden" name="complex" value="1">
 
     <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
