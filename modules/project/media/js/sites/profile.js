@@ -109,7 +109,7 @@ var ProjectProfile = {
 			}, 500);
 		};
 		
-		ajax.data({id: id, 'csrf-token': TOKEN}).url(ROOT + 'project/ajax/inactivate').success(success).error(error).send();
+		ajax.data({id: id}).url(ROOT + 'project/ajax/inactivate').success(success).error(error).send();
 	},
 	rateClick: function () {						
 		
