@@ -307,7 +307,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $freelancerData = [
             'firstname'             => 'Web',
             'lastname'              => 'Józsi',
-            'email'                 => microtime() . '@szabaduszok.com',
+            'email'                 => uniqid() . '@szabaduszok.com',
             'password'              => 'asdfasdf123',
             'password_confirm'      => 'asdfasdf123',
             'address_postal_code'   => '9700',
@@ -321,7 +321,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $employerData = [
             'firstname'             => 'Martin',
             'lastname'              => 'Joó',
-            'email'                 => microtime() . '@szabaduszok.com',
+            'email'                 => uniqid() . '@szabaduszok.com',
             'password'              => 'asdfasdf123',
             'password_confirm'      => 'asdfasdf123',
             'address_postal_code'   => '9700',
@@ -336,7 +336,7 @@ class Model_Project_Partner_Test extends Unittest_TestCase
             'name'                      => 'Teszt projekt',
             'short_description'         => 'Teszt projekt Teszt projekt',
             'long_description'          => 'Teszt projekt Teszt projekt Teszt projekt',
-            'email'                     => microtime() . '@szabaduszok.com',
+            'email'                     => uniqid() . '@szabaduszok.com',
             'phonenumber'               => '06301923380',
             'salary_type'               => 1,
             'salary_low'                => 3200,
