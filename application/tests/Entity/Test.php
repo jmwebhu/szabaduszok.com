@@ -3,6 +3,11 @@
 class Entity_Test extends Unittest_TestCase
 {
     /**
+     * @var Entity_User_Employer
+     */
+    private static $_employer = null;
+
+    /**
      * @var Entity_Project
      */
     private $_entity;
@@ -354,6 +359,7 @@ class Entity_Test extends Unittest_TestCase
     {
         $data = [
             'project_id'        => 9999,
+            'user_id'           => self::$_employer->getUserId(),
             'name'              => 'Teszt',
             'short_description' => 'Rövid leírás',
             'long_description'  => 'Hosszú leírás',
@@ -441,5 +447,33 @@ class Entity_Test extends Unittest_TestCase
         $this->_entity = new Entity_Project();
         $this->_model = new Model_Project();
         parent::setUp();
+    }
+
+    public static function setUpBeforeClass()
+    {
+        $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
+        $data = [
+            'is_company'            => 'on',
+            'company_name'          => 'Szabaduszok.com Zrt.',
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => uniqid() . '@jmweb.hu',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás'
+        ];
+
+        $employer->submitUser($data);
+        self::$_employer = $employer;
+    }
+
+    public static function tearDownAfterClass()
+    {
+        if (self::$_employer) {
+            DB::delete('users')->where('user_id', '=', self::$_employer->getUserId())->execute();
+        }
     }
 }

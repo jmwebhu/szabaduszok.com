@@ -173,7 +173,7 @@ class Entity_User_Test extends Unittest_TestCase
             'company_name'          => 'Szabaduszok.com Zrt.',
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@jmweb.hu',
+            'email'                 => uniqid() . '@jmweb.hu',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
@@ -183,7 +183,6 @@ class Entity_User_Test extends Unittest_TestCase
         ];
 
         $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
-
         self::$_insertedUserIds[] = $employer->getUserId();
 
         $this->assertUserIdExistsInDatabase($employer->getUserId());
@@ -208,7 +207,7 @@ class Entity_User_Test extends Unittest_TestCase
             'company_name'          => 'Szabaduszok.com Zrt.',
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@jmweb.hu',
+            'email'                 => uniqid() . '@jmweb.hu',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
@@ -237,7 +236,7 @@ class Entity_User_Test extends Unittest_TestCase
             'company_name'          => 'Szabaduszok.com Kft.',
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@jmweb.hu',
+            'email'                 => uniqid() . '@jmweb.hu',
             'password'              => 'Password1234',
             'password_confirm'      => 'Password1234',
             'address_postal_code'   => '1010',
@@ -271,7 +270,7 @@ class Entity_User_Test extends Unittest_TestCase
             'company_name'          => '',
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@jmweb.hu',
+            'email'                 => uniqid() . '@jmweb.hu',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
@@ -306,7 +305,7 @@ class Entity_User_Test extends Unittest_TestCase
         $data = [
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@szabaduszok.com',
+            'email'                 => uniqid() . '@szabaduszok.com',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
@@ -336,13 +335,55 @@ class Entity_User_Test extends Unittest_TestCase
     /**
      * @covers Entity_User::submitUser()
      */
+    public function testSubmitUserFreelancerWithProfiles()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
+
+        $data = [
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => uniqid() . '@szabaduszok.com',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'min_net_hourly_wage'   => '2500',
+            'webpage'               => 'szabaduszok.com',
+            'profiles'              => $profiles
+        ];
+
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
+        $this->assertUserIdExistsInSession($freelancer->getUserId());
+        $this->assertUserIdExistsInCache($freelancer->getUserId());
+        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
+        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSlug());
+        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
+        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
+        $this->assertEquals('1', $freelancer->getSkillRelation());
+        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+
+        $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
+    }
+
+    /**
+     * @covers Entity_User::submitUser()
+     */
     public function testSubmitUserFreelancerWithRelations()
     {
+        
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $data = [
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@szabaduszok.com',
+            'email'                 => uniqid() . '@szabaduszok.com',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
@@ -381,6 +422,57 @@ class Entity_User_Test extends Unittest_TestCase
 
     /**
      * @covers Entity_User::submitUser()
+     */
+    public function testSubmitUserFreelancerWithRelationsAndProfiles()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
+
+        $data = [
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => uniqid() . '@szabaduszok.com',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'min_net_hourly_wage'   => '2500',
+            'webpage'               => 'szabaduszok.com',
+            'industries'            => [self::$_industries[0]],
+            'professions'           => [self::$_professions[0], self::$_professions[1], self::$_professions[2]],
+            'skills'                => [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8]],
+            'profiles'              => $profiles
+        ];
+
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
+        $this->assertUserIdExistsInSession($freelancer->getUserId());
+        $this->assertUserIdExistsInCache($freelancer->getUserId());
+        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
+        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSlug());
+        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
+        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
+        $this->assertEquals('1', $freelancer->getSkillRelation());
+        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+
+        $this->assertUserRelationExistsInDatabase('industry', [self::$_industries[0]], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('profession', [self::$_professions[0], self::$_professions[1], self::$_professions[2]], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('skill', [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8]], $freelancer->getUserId());
+
+        $this->assertUserProjectNotoficationExistsInDatabase('industry', [self::$_industries[0]], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('profession', [self::$_professions[0], self::$_professions[1], self::$_professions[2]], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('skill', [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8]], $freelancer->getUserId());
+
+        $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
+    }
+
+    /**
+     * @covers Entity_User::submitUser()
      * @group issue#6
      * @see https://github.com/jmwebhu/szabaduszok.com/issues/6
      */
@@ -390,7 +482,7 @@ class Entity_User_Test extends Unittest_TestCase
         $data = [
             'lastname'              => 'Joó',
             'firstname'             => 'Martin',
-            'email'                 => 'joomartin@szabaduszok.com',
+            'email'                 => uniqid() . '@szabaduszok.com',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
@@ -434,93 +526,77 @@ class Entity_User_Test extends Unittest_TestCase
     /**
      * @covers Entity_User::submitUser()
      */
-    public function testSubmitUserFreelancerWithProfiles()
+    public function testSubmitUserFreelancerValidationNotOk()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
-        $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
-
         $data = [
-            'lastname'              => 'Joó',
-            'firstname'             => 'Martin',
-            'email'                 => 'joomartin@szabaduszok.com',
+            'lastname'              => '',
+            'firstname'             => '',
+            'email'                 => '',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
             'address_postal_code'   => '9700',
             'address_city'          => 'Szombathely',
             'phonenumber'           => '06301923380',
             'short_description'     => 'Rövid bemutatkozás',
-            'min_net_hourly_wage'   => '2500',
-            'webpage'               => 'szabaduszok.com',
-            'profiles'              => $profiles
+            'min_net_hourly_wage'   => '',
+            'webpage'               => 'szabaduszok.com'
         ];
 
-        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        $result = true;
 
-        self::$_insertedUserIds[] = $freelancer->getUserId();
+        try {
+            $freelancer->submitUser($data);
+        } catch (ORM_Validation_Exception $ovex) {
+            $result = false;
+            $errors = $ovex->errors('models');
 
-        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
-        $this->assertUserIdExistsInSession($freelancer->getUserId());
-        $this->assertUserIdExistsInCache($freelancer->getUserId());
-        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
-        $this->assertNotEmpty($freelancer->getSlug());
-        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
-        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
-        $this->assertEquals('1', $freelancer->getSkillRelation());
-        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+            $this->assertArrayHasKey('lastname', $errors);
+            $this->assertArrayHasKey('firstname', $errors);
+            $this->assertArrayHasKey('email', $errors);
+            $this->assertArrayHasKey('min_net_hourly_wage', $errors);
+        }
 
-        $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
+        $this->assertFalse($result);
     }
 
     /**
      * @covers Entity_User::submitUser()
      */
-    public function testSubmitUserFreelancerWithRelationsAndProfiles()
+    public function testSubmitUserEmployerValidationNotOk()
     {
-        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
-        $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
-
+        $employer = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
         $data = [
-            'lastname'              => 'Joó',
-            'firstname'             => 'Martin',
-            'email'                 => 'joomartin@szabaduszok.com',
+            'lastname'              => '',
+            'firstname'             => '',
+            'email'                 => '',
             'password'              => 'Password123',
             'password_confirm'      => 'Password123',
-            'address_postal_code'   => '9700',
-            'address_city'          => 'Szombathely',
-            'phonenumber'           => '06301923380',
+            'address_postal_code'   => '',
+            'address_city'          => null,
+            'phonenumber'           => '',
             'short_description'     => 'Rövid bemutatkozás',
-            'min_net_hourly_wage'   => '2500',
-            'webpage'               => 'szabaduszok.com',
-            'industries'            => [self::$_industries[0]],
-            'professions'           => [self::$_professions[0], self::$_professions[1], self::$_professions[2]],
-            'skills'                => [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8]],
-            'profiles'              => $profiles
+            'min_net_hourly_wage'   => '',
+            'webpage'               => 'szabaduszok.com'
         ];
 
-        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
-        self::$_insertedUserIds[] = $freelancer->getUserId();
+        $result = true;
 
-        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
-        $this->assertUserIdExistsInSession($freelancer->getUserId());
-        $this->assertUserIdExistsInCache($freelancer->getUserId());
-        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
-        $this->assertNotEmpty($freelancer->getSlug());
-        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
-        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
-        $this->assertEquals('1', $freelancer->getSkillRelation());
-        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        try {
+            $employer->submitUser($data);
+        } catch (ORM_Validation_Exception $ovex) {
+            $result = false;
+            $errors = $ovex->errors('models');
 
-        $this->assertUserRelationExistsInDatabase('industry', [self::$_industries[0]], $freelancer->getUserId());
-        $this->assertUserRelationExistsInDatabase('profession', [self::$_professions[0], self::$_professions[1], self::$_professions[2]], $freelancer->getUserId());
-        $this->assertUserRelationExistsInDatabase('skill', [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8]], $freelancer->getUserId());
+            $this->assertArrayHasKey('lastname', $errors);
+            $this->assertArrayHasKey('firstname', $errors);
+            $this->assertArrayHasKey('email', $errors);
+            $this->assertArrayHasKey('address_city', $errors);
+            $this->assertArrayHasKey('address_postal_code', $errors);
+            $this->assertArrayHasKey('phonenumber', $errors);
+        }
 
-        $this->assertUserProjectNotoficationExistsInDatabase('industry', [self::$_industries[0]], $freelancer->getUserId());
-        $this->assertUserProjectNotoficationExistsInDatabase('profession', [self::$_professions[0], self::$_professions[1], self::$_professions[2]], $freelancer->getUserId());
-        $this->assertUserProjectNotoficationExistsInDatabase('skill', [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8]], $freelancer->getUserId());
-
-        $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
+        $this->assertFalse($result);
     }
 
     public function assertUserIdExistsInDatabase($id)
@@ -598,19 +674,19 @@ class Entity_User_Test extends Unittest_TestCase
         }
     }
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
         self::truncateUsers();
         self::truncateRelations();
         self::initRelation('industry', 3);
         self::initRelation('profession', 5);
-        self::initRelation('skill', 10);
+        self::initRelation('skill', 10);   
     }
 
-    public function tearDown()
+    public static function tearDownAfterClass()
     {
         self::truncateUsers();
-        self::truncateRelations();
+        self::truncateRelations();   
     }
 
     protected static function truncateUsers()
@@ -663,7 +739,8 @@ class Entity_User_Test extends Unittest_TestCase
 
             $classReflection = new ReflectionClass('Entity_User_Test');
             $ids = $classReflection->getStaticPropertyValue('_' . $relationModel->object_plural());
-            $ids[] = $relationModel->{$relationModel->primary_key()};
+            $idCol = $relation . '_id';
+            $ids[] = $relationModel->{$idCol};
 
             $classReflection->setStaticPropertyValue('_' . $relationModel->object_plural(), $ids);
         }

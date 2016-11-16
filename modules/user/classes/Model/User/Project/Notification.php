@@ -48,7 +48,7 @@ abstract class Model_User_Project_Notification extends Model_Relation
             $relation->user_id                              = Auth::instance()->get_user()->user_id;
             $relation->{$this->getPrimaryKeyForEndModel()}  = intval($model->{$this->getPrimaryKeyForEndModel()});
 
-            $relation->save();
+            $save = $relation->save();        
         }
     }
 }
