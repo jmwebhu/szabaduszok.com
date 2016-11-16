@@ -105,7 +105,7 @@ var OperationBase = {
 
         var complete = function(data) {
             location.reload();
-        };
+        };        
 
         ajax.url(ROOT + "projectpartner/ajax/" + self.getAjaxTarget()).data($("form#" + self.getFormName() + "-form").serialize())
             .beforeSend(beforeSend).success(success).complete(complete).error(error).send();
