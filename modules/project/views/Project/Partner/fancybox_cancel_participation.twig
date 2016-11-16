@@ -6,6 +6,7 @@
 
 {% block body %}
     <form method="post" action="#" id="cancel-participation-form">
+        {{ form.csrf }}
         <input name="project_partner_id" value="" type="hidden">
 
         <p>Ha biztosan törölni akarod a résztvevőt, kattints a piros 'Törlés' gombra. Érdemes egy rövid üzenetben összefoglalni az indoklásod a szabadúszó számára.</p>

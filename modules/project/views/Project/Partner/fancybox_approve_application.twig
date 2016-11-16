@@ -6,6 +6,7 @@
 
 {% block body %}
     <form method="post" action="#" id="approve-application-form">
+        {{ form.csrf }}
         <input name="project_partner_id" value="" type="hidden">
 
         <p>Ha biztosan jóvá akarod hagyni a jelentkezést, kattints a zöld 'Jóváhagyás' gombra. Érdemes egy rövid üzenetben összefoglalni az indoklásod a szabadúszó számára.</p>
