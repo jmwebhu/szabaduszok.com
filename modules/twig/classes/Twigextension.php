@@ -128,4 +128,8 @@ class Twigextension {
         return $twig->loadTemplate($template)->render($params);
     }
 
+    public static function token()
+    {
+        return Security::token();
+    }
 }

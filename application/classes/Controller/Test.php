@@ -4,7 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        var_dump(uniqid());
+        var_dump(Security::token());
+        echo Debug::vars(Session::instance()->as_array());
     }
 
     public function action_user()

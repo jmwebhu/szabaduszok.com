@@ -1,8 +1,31 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Security extends Kohana_Security {
+class Security extends Kohana_Security 
+{
+	/**
+	 * @param array $post
+	 */
+	public static function validateCsrfTokenIn(array $post)
+	{
+		$validation = Validation::factory($post);
+		$validation->rule('csrf-token', 'not_empty');
+		$validation->rule('csrf-token', 'Security::check');
 
-		public static function xss_clean($str)
+		if (!$validation->check()) {
+			try {
+				throw new Validation_Exception($validation, 'CSRF validation failed with token: ' . Arr::get($post, 'csrf-token', 'NO TOKEN'));
+
+			} catch (Validation_Exception $vex) {
+				Log::instance()->addException($vex, Log::EMERGENCY);
+
+				header('Location: ' . URL::base(true, false), false, 302);
+				die();
+			}
+		}
+	}
+
+
+	public static function xss_clean($str)
 	{
 		// http://svn.bitflux.ch/repos/public/popoon/trunk/classes/externalinput.php
 		// +----------------------------------------------------------------------+

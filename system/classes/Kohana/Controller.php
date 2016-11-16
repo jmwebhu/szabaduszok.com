@@ -98,7 +98,7 @@ abstract class Kohana_Controller {
 	 */
 	public function before()
 	{
-		// Nothing by default
+		
 	}
 
 	/**
@@ -110,7 +110,6 @@ abstract class Kohana_Controller {
 	 */
 	public function after()
 	{
-		// Nothing by default
 	}
 
 	/**

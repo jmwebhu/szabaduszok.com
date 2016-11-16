@@ -13,7 +13,7 @@ class Kohana_Security {
 	/**
 	 * @var  string  key name used for token storage
 	 */
-	public static $token_name = 'security_token';
+	public static $token_name = 'csrf-token';
 
 	/**
 	 * Generate and store a unique token which can be used to help prevent

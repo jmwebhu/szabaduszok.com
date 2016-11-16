@@ -6,7 +6,9 @@ class Controller_DefaultTemplate extends Controller_Twig
 	
     public function before()
     {
-    	//$user = $this->context->loggedUser = Auth::instance()->get_user(); 
+        if ($this->request->method() == Request::POST) {
+            Security::validateCsrfTokenIn(Input::post_all());
+        }
     	
     	if (Kohana::$profiling === TRUE) {
     		$this->_benchmark = Profiler::start('default', __FUNCTION__);
