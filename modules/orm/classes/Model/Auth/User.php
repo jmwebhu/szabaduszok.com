@@ -256,7 +256,7 @@ class Model_Auth_User extends ORM {
             return true;
         }
 
-        throw new Exception_UserNotFound('Sajnáljuk, nincs ilyen e-mail cím. Kérjük róbáld meg egy másikkal.');
+        throw new Exception_UserNotFound('Sajnáljuk, nincs ilyen e-mail cím. Kérjük próbáld meg egy másikkal.');
     }
 
 } // End Auth User Model
