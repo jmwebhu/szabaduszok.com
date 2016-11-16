@@ -17,6 +17,7 @@ class Controller_DefaultTemplate extends Controller_Twig
         $this->context->ROOT 		= URL::base(null, true);
         $this->context->title 		= 'A magyar freelancer platform';
         $this->context->env		    = Kohana::$environment;
+        $this->context->token       = Security::token();
 
         $this->context->PRODUCTION  = 10;
         $this->context->STAGING     = 20;
