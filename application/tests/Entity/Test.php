@@ -397,6 +397,7 @@ class Entity_Test extends Unittest_TestCase
         $entity->setSalaryLow(2000);
         $entity->setSalaryHigh(2500);
         $entity->setSlug('teszt');
+        $entity->setUserId(self::$_employer->getUserId());
 
         $this->_entity = $entity;
     }
