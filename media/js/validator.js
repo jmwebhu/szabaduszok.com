@@ -4,6 +4,7 @@ var Validator = {
             var labels = {
                 'notEmpty'			: 'Ezt a mezőt kérlek ne hagyd üresen',
                 'notEmptySelect'	: 'Kérlek válassz egyet',
+                'notEmptyCheckbox'  : 'Ezt a mezőt kérlek jelöld be',
                 'email'				: 'Kérlek érvényes e-mail címet adj meg.',
                 'longer'			: 'Próbálj meg hosszab értéket megadni',
                 'number'			: 'Kérlek itt csak számokat használj',
@@ -17,18 +18,14 @@ var Validator = {
 	},
 		
 	notEmpty: function (value, $elem) {
-		
-            var realValue = value;
-
-            if ($elem && $elem.hasClass('tinymce')) {
-                //realValue = tinyMCE.activeEditor.getContent({format : 'raw'});
-            }		
-
-            return !realValue.length == 0;
+            return !value.length == 0;
 	},
 	notEmptySelect: function (value) {		
             return (value != -1 && value != null && value != '');
 	},
+    notEmptyCheckbox: function (value, $elem) {      
+        return $elem.is(':checked');
+    },
 	email: function (value) {		
             var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		
@@ -145,7 +142,7 @@ var Validator = {
                     $form.find('span.error-label:not(.general-error-label)').remove();
 
                     $elem.focus();
-                    var $formGroup = $elem.parent('.form-group:first');
+                    var $formGroup = $elem.parents('.form-group:first');        
 
                     $formGroup.addClass('has-error');													
                     $formGroup.append("<span class='error-label has-error'>" + Validator.map(error.rule) + "</span>");

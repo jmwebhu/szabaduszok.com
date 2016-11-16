@@ -28,7 +28,7 @@ class users extends Migration
         'list_picture_path'       => ['text'],
         'cv_path'                 => ['text'],
         'is_company'              => ['boolean'],
-        'company_name'            => ['string[10]'],
+        'company_name'            => ['string[100]'],
         'created_at'              => ['datetime'],
         'updated_at'              => ['datetime'],
         'rating_points_sum'       => ['integer', 'unsigned' => true],
