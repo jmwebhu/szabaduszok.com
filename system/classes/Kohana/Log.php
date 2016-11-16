@@ -174,19 +174,34 @@ class Kohana_Log {
 			$this->write();
 		}
 
+		Email::send('martin@szabaduszok.com', 'HIBA, SZINT: ' . self::getLevelAsString($level), $message);
+
 		return $this;
 	}
 
-	public function addException(Exception $ex)
+	public function addException(Exception $ex, $level = self::ERROR)
     {
-    	$postJson =  json_encode(Input::post_all());
-        $getJson =  json_encode(Input::get_all());
+    	$postJson 	=  json_encode(Input::post_all());
+        $getJson 	=  json_encode(Input::get_all());
 
         $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString() . ' GET: ' . $getJson . ' POST: ' . $postJson;
-        $this->add(self::ERROR, $message);
-       
-        
-        Email::send('martin@szabaduszok.com', 'HIBA', $message);
+        $this->add($level, $message);
+    }
+
+    public static function getLevelAsString($level)
+    {
+    	$class 		= new ReflectionClass('Kohana_Log');
+        $constants 	= $class->getConstants();
+
+        $constName = 'ERROR';
+        foreach ($constants as $name => $value) {
+            if ($value == $level) {
+                $constName = $name;
+                break;
+            }
+        }
+
+        return $constName;
     }
 
 	/**

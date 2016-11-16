@@ -6,6 +6,7 @@
 
 {% block body %}
     <form method="post" action="#" id="undo-application-form">
+        {{ form.csrf() }}
         <input name="project_partner_id" value="{{ projectPartner.project_partner_id }}" type="hidden">
 
         <p>Ha biztosan vissza akarod vonni a jelentkezésed, kattints a piros 'Visszavonás' gombra. Érdemes egy rövid üzenetben összefoglalni az indoklásod a megbízó számára.</p>

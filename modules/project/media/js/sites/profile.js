@@ -63,7 +63,6 @@ var ProjectProfile = {
 		});				
 	},
 	sendInactivateAjax: function (id) {
-		
 		ProjectProfile.$loading.isLoading({
             text:       "Folyamatban..."
         });

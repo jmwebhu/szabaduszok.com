@@ -27,17 +27,10 @@ class Model_Contact  extends ORM
     
     public function submit(array $data)
     {
-    	$loggedUser = Auth::instance()->get_user();
-    	
-    	if (!$loggedUser->loaded())
-    	{
-    		$this->user_id = $loggedUser->user_id;
-    	}
-    	
-    	$submit = parent::submit($data);
+    	$data['user_id']   = Auth::instance()->get_user()->user_id;    	
+    	$submit            = parent::submit($data);
     	
     	$message = Arr::get($data, 'name') . ' - ' . Arr::get($data, 'email') . "\r\n" . Arr::get($data, 'message') . "\r\n" . 'contact_id: ' . $this->contact_id; 
-    	
     	Email::send('hello@szabaduszok.com', '[ÚJ VÉLEMÉNY]', $message);
     	
     	return $submit;

@@ -72,6 +72,7 @@ AjaxBuilder.prototype.error = function (error) {
 
 AjaxBuilder.prototype.send = function () {
     var self = this;
+    self._data['csrf-token']  = TOKEN;
 
     var params = {
         url: self._url,

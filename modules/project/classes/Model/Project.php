@@ -143,7 +143,7 @@ class Model_Project extends ORM implements Subject
             $this->is_active = 0;
             $this->save();
 
-            $this->notifyObservers(self::EVENT_INACTIVATE);
+            //$this->notifyObservers(self::EVENT_INACTIVATE);
 
         } catch (Exception $ex) {
             $error      = true;

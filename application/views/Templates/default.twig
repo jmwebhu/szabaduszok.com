@@ -1,4 +1,4 @@
-{% import 'Templates/formmacros.twig' as forms %}
+{% import 'Templates/form.twig' as form %}
 
 {% spaceless %}
 
@@ -80,8 +80,9 @@
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
 
-	    	var ROOT = '{{ ROOT }}'
-            var temp = '{{ loggedUser.getModel().asJson() }}'
+	    	var ROOT    = '{{ ROOT }}'
+            var TOKEN   = '{{ token }}'
+            var temp    = '{{ loggedUser.getModel().asJson() }}'
 
             temp = temp.replaceAll("&quot;", "\"");
 

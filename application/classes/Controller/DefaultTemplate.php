@@ -6,7 +6,9 @@ class Controller_DefaultTemplate extends Controller_Twig
 	
     public function before()
     {
-    	//$user = $this->context->loggedUser = Auth::instance()->get_user(); 
+        if ($this->request->method() == Request::POST) {
+            Security::validateCsrfTokenIn(Input::post_all());
+        }
     	
     	if (Kohana::$profiling === TRUE) {
     		$this->_benchmark = Profiler::start('default', __FUNCTION__);
@@ -15,6 +17,7 @@ class Controller_DefaultTemplate extends Controller_Twig
         $this->context->ROOT 		= URL::base(null, true);
         $this->context->title 		= 'A magyar freelancer platform';
         $this->context->env		    = Kohana::$environment;
+        $this->context->token       = Security::token();
 
         $this->context->PRODUCTION  = 10;
         $this->context->STAGING     = 20;

@@ -6,6 +6,7 @@
 
 {% block body %}
     <form method="post" action="#" id="reject-application-form">
+        {{ form.csrf() }}
         <input name="project_partner_id" value="" type="hidden">
 
         <p>Ha biztosan el akarod utasítani a jelentkezést, kattints a piros 'Elutasítás' gombra. Érdemes egy rövid üzenetben összefoglalni az indoklásod a szabadúszó számára.</p>
