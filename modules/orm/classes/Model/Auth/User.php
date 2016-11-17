@@ -298,7 +298,8 @@ class Model_Auth_User extends ORM {
         if ($user && $user->loaded()) {
             $password = Text::generatePassword();
 
-            $user->password = $password;
+            $user->salt 	= self::salt();
+            $user->password = Auth::instance()->hash($password . $user->salt);
             $user->save();
 
             $html = Twig::getHtmlFromTemplate('Templates/newPasswordEmail.twig', ['email' => $email, 'password' => $password, 'user' => $user->firstname]);
