@@ -24,7 +24,7 @@ class Model_Visitorinfo extends ORM
         catch (Exception $ex)
         {
             $result = ['error' => true];
-            ORM::factory('Errorlog')->log('Visitorinfo log', 'Visitorinfo logInfo', $ex);
+            Log::instance()->addException($ex);
         }
 
         return $result;

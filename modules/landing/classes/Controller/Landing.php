@@ -32,9 +32,7 @@ class Controller_Landing extends Controller_DefaultTemplate
 		}
 		catch (Exception $ex)		// Altalanos hiba
 		{
-			// Logbejegyzest keszit
-			$errorLog = new Model_Errorlog();
-			$errorLog->log($ex);
+			Log::instance()->addException($ex);
 		
 			$result	= ['error' => true];
 			$json 	= json_encode($result);

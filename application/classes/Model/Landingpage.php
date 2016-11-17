@@ -50,7 +50,7 @@ class Model_Landingpage extends ORM
     	} 
     	catch (Exception $ex) 
     	{
-    		ORM::factory('Errorlog')->log('Landing oldal szamolas', 'Landing oldal szamolas', $ex);
+    		Log::instance()->addException($ex);
     		
     		$result = [
     			'error' 	=> true,
@@ -92,7 +92,7 @@ class Model_Landingpage extends ORM
     	} 
     	catch (Exception $ex) 
     	{    	
-    		ORM::factory('Errorlog')->log('Landing oldal szamolas', 'Landing oldal szamolas', $ex);
+    		Log::instance()->addException($ex);
     	}
     	
     	return $lp;
