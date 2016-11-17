@@ -179,7 +179,7 @@ class Entity_User_Test extends Unittest_TestCase
             'address_postal_code'   => '9700',
             'address_city'          => 'Szombathely',
             'phonenumber'           => '06301923380',
-            'short_description'     => 'Rövid bemutatkozás'
+            'short_description'     => 'Rövid "bemutatkozás'
         ];
 
         $employer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Employer'));
@@ -197,6 +197,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertNotEmpty($employer->getSalt());
         $this->assertNotEmpty($employer->getSlug());
         $this->assertNotEmpty($employer->getSearchText());
+        $this->assertEquals("Rövid 'bemutatkozás", $employer->getShortDescription());
     }
 
     /**
