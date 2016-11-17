@@ -16,7 +16,7 @@ return array(
 	'exact_length'  => ':field must be exactly :param2 characters long',
 	'in_array'      => ':field must be one of the available options',
 	'ip'            => ':field must be an ip address',
-	'matches'       => ':field must be the same as :param3',
+	'matches'       => ':field mező értéke legyen azonos a(z) :param3 mező értékével',
 	'min_length'    => ':field must be at least :param2 characters long',
 	'max_length'    => ':field must not exceed :param2 characters long',
 	'not_empty'     => ':field mező nem lehet üres',

@@ -4,7 +4,7 @@ return [
     'email'                 => 'Mi az e-mail címed?',
     'emailLogin'            => 'Mi az e-mail címed?',
     'password'              => 'Jelszó',
-    'password_confirm'      => 'Megismételnéd?',
+    'password_confirm'      => 'Jelszó mégegyszer',
     'name'                  => 'Mi a céged neve?',
     'contact_name'          => 'Hogy szólíthatunk?',
     'address_postal_code'   => 'Mi az irányítószámod?',

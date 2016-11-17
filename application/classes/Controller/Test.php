@@ -4,8 +4,16 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        var_dump(Security::token());
-        echo Debug::vars(Session::instance()->as_array());
+        $password   = "pswrd123";
+        $salt       = Auth::instance()->hash(Model_Test::salt());
+
+        $test               = new Model_Test();
+        $test->password     = Auth::instance()->hash($password . $salt);
+        $test->salt         = $salt;
+
+        $test->save();
+
+        echo Debug::vars($test->object());
     }
 
     public function action_user()

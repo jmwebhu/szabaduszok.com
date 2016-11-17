@@ -50,6 +50,7 @@ class Model_User extends Model_Auth_User
 		'landing_page_id'			=> ['type' => 'int', 'null' => true],
 		'need_project_notification'	=> ['type' => 'int', 'null' => true],
 		'webpage'					=> ['type' => 'string', 'null' => true],
+        'salt'                      => ['type' => 'string', 'null' => true],
 	];
 	
     protected $_has_many = [
@@ -119,6 +120,11 @@ class Model_User extends Model_Auth_User
             'password'              => [['not_empty'], ['min_length', [':value', 6]]],
             'address_postal_code'   => [['numeric'], ['min_length', [':value', 4]]]
         ];
+    }
+
+    public function filters()
+    {
+
     }
     
     public function byType($type)

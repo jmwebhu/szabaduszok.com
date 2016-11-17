@@ -83,7 +83,7 @@ class Kohana_Auth_ORM extends Auth {
 		if (is_string($password))
 		{
 			// Create a hashed password
-			$password = $this->hash($password);
+			$password = $this->hash($password . $user->salt);
 		}
 
 		// If the passwords match, perform a login
