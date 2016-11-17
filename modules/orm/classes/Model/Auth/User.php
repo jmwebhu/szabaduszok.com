@@ -293,14 +293,20 @@ class Model_Auth_User extends ORM {
 
     public static function passwordReminder($email)
     {
-        $user = AB::select()->from(new Model_User())->where('email', '=', $email)->limit(1)->execute()->current();
+        $userTmp = AB::select()->from(new Model_User())->where('email', '=', $email)->limit(1)->execute()->current();
 
-        if ($user && $user->loaded()) {
-            $password = Text::generatePassword();
+        if ($userTmp && $userTmp->loaded()) {
+        	$user 		= Model_User::createUser($userTmp->type, $userTmp->user_id);
+            $password 	= Text::generatePassword();
 
-            $user->salt 	= self::salt();
-            $user->password = Auth::instance()->hash($password . $user->salt);
-            $user->save();
+            try {
+            	$user->salt 	= self::salt();
+	            $user->password = Auth::instance()->hash($password . $user->salt);
+	            $user->save();
+            } catch (ORM_Validation_Exception $ovex) {
+            	echo Debug::vars($ovex->errors('models'));
+            	exit;
+            }         
 
             $html = Twig::getHtmlFromTemplate('Templates/newPasswordEmail.twig', ['email' => $email, 'password' => $password, 'user' => $user->firstname]);
 
