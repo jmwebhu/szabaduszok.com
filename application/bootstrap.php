@@ -166,7 +166,7 @@ Kohana::modules(array(
  * If you have not defined a cookie salt in your Cookie class then
  * uncomment the line below and define a preferrably long salt.
  */
-Cookie::$salt = 'ceb20772e0c9d240c75eb26b0e37abee';
+//Cookie::$salt = 'ceb20772e0c9d240c75eb26b0e37abee';
 
 Cache::$default = $baseconfig['cache_default'];
 
