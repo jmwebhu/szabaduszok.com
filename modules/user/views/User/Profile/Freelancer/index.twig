@@ -34,7 +34,7 @@
                 <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
             </div>
 
-            {% if user.webpage %}
+            {% if user.getWebpage() %}
                 <div class="col-5 fs16 profile-webpage-icon-container">
                     <span class="fa fa-chrome icon-dark-gray"></span>
                 </div>
@@ -43,7 +43,7 @@
                 </div>
             {% endif %}
 
-            {% if user.cv_path %}
+            {% if user.getCvPath() %}
                 <div class="col-5 fs18">
                     <span class="ion ion-android-attach icon-sm icon-dark-gray"></span>
                 </div>

@@ -37,6 +37,11 @@ class File_User_Freelancer extends File_User
 
         $this->throwException($fullFilename, 'Hiba történt az önéletrajz feltöltése során. Kérjük próbáld meg újra.');
 
+        if (!File::validateByMimes($fullFilename, ['application/msword', 'application/pdf', 'application/x-iwork-pages-sffpages', 'application/vnd.apple.pages', 'application/vnd.oasis.opendocument.text'])) {
+            $this->throwException(false, 'Hibás önéletrajz formátum. Kérjük próbáld meg újra.');
+            unlink($sourceFilename);
+        }
+
         return $filename;
     }
 
@@ -46,6 +51,6 @@ class File_User_Freelancer extends File_User
     protected function validateCvFile()
     {
         return !(!Upload::valid($this->_cvFile) || !Upload::not_empty($this->_cvFile)
-            || !Upload::type($this->_cvFile, ['pdf', 'doc', 'docx', 'pages', 'odt', 'wps', 'wpd', 'rtf', 'docm']));
+            || !Upload::type($this->_cvFile, ['pdf', 'doc', 'docx', 'pages', 'odt']));
     }
 }
