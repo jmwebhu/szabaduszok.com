@@ -124,7 +124,9 @@ class Model_User extends Model_Auth_User
 
     public function filters()
     {
-
+        return [
+            'short_description' => [['str_replace', ["\"", "'", ':value']]]
+        ];
     }
     
     public function byType($type)

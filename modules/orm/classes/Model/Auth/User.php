@@ -122,7 +122,8 @@ class Model_Auth_User extends ORM {
 	 */
 	public function unique_key($value)
 	{
-		return Valid::email($value) ? 'email' : 'username';
+		//return Valid::email($value) ? 'email' : 'username';
+		return 'email';
 	}
 
 	/**
