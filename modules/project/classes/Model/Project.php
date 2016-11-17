@@ -6,10 +6,8 @@
  * Felelosseg: Projekt lekerdezesek
  */
 
-class Model_Project extends ORM implements Subject
+class Model_Project extends ORM
 {
-    const EVENT_INACTIVATE = 'inactivate';
-
     protected $_table_name  = 'projects';
     protected $_primary_key = 'project_id';
 
@@ -69,10 +67,6 @@ class Model_Project extends ORM implements Subject
    			'far_key'		=> 'skill_id',
    			'foreign_key'	=> 'project_id',
     	],
-        'notifications' => [
-            'model'         => 'Project_Notification',
-            'foreign_key'   => 'project_id',
-        ],
         'partners'      => [
             'model'     	=> 'Project_Partner',
             'foreign_key'	=> 'project_id',
@@ -143,8 +137,6 @@ class Model_Project extends ORM implements Subject
             $this->is_active = 0;
             $this->save();
 
-            //$this->notifyObservers(self::EVENT_INACTIVATE);
-
         } catch (Exception $ex) {
             $error      = true;
             $message    = 'Sajnos valami hiba történt...';
@@ -178,18 +170,6 @@ class Model_Project extends ORM implements Subject
     }
 
     /**
-     * @param string $event
-     */
-    public function notifyObservers($event)
-    {
-        switch ($event) {
-            case self::EVENT_INACTIVATE:
-                $this->notifyObserversByInactivate();
-                break;
-        }
-    }
-
-    /**
      * @param array $post
      * @return array
      */
@@ -202,16 +182,6 @@ class Model_Project extends ORM implements Subject
         $data['is_active']  = 1;
 
         return $data;
-    }
-
-    protected function notifyObserversByInactivate()
-    {
-        foreach ($this->notifications->find_all() as $notification) {
-            /**
-             * @var $notification Observer
-             */
-            $notification->notify(self::EVENT_INACTIVATE);
-        }
     }
 
     /**
