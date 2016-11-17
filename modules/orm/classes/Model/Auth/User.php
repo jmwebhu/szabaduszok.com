@@ -49,11 +49,11 @@ class Model_Auth_User extends ORM {
 	 */
 	public function filters()
 	{
-		return array(
+		/*return array(
 			'password' => array(
-				array(array(Auth::instance(), 'hash'))
+				array(array(Auth::instance(), 'hash'), array(':value', 'Model_Auth_User::salt()'))
 			)
-		);
+		);*/
 	}
 
 	/**
@@ -64,9 +64,10 @@ class Model_Auth_User extends ORM {
 	public function labels()
 	{
 		return array(
-			'username'         => 'username',
-			'email'            => 'email address',
-			'password'         => 'password',
+			'username'         	=> 'username',
+			'email'            	=> 'email address',
+			'password'         	=> 'password',
+			'password_confirm'	=> 'Jelszó mégegyszer'
 		);
 	}
 
@@ -159,6 +160,10 @@ class Model_Auth_User extends ORM {
 		$extra_validation = Model_User::get_password_validation($values)
 			->rule('password', 'not_empty');
 
+		$hashed = self::getHashedCredentials($values['password']);
+		$values['password']	= $hashed['password'];
+		$values['salt']		= $hashed['salt'];
+
 		return $this->values($values, $expected)->create($extra_validation);
 	}
 
@@ -185,20 +190,56 @@ class Model_Auth_User extends ORM {
 	 */
 	public function update_user($values, $expected = NULL)
 	{
-		if (empty($values['password']))
-		{
+		if (empty($values['password'])) {
 			unset($values['password'], $values['password_confirm']);
+		} else {
+
+			$validation = Model_User::get_password_validation($values);
+
+			if (!$validation->check()) {
+				throw new ORM_Validation_Exception('user', $validation);
+			}
+
+			$hashed = self::getHashedCredentials($values['password'], $values['password_confirm']);
+			$values['password']			= $hashed['password'];
+			$values['password_confirm']	= $hashed['password_confirm'];
+			$values['salt']				= $hashed['salt'];
 		}
 
-		// Validation for passwords
-		$extra_validation = Model_User::get_password_validation($values);
-
-		return $this->values($values, $expected)->update($extra_validation);
+		return $this->values($values, $expected)->update();
 	}
 
     public function updateSession()
     {
         Session::instance()->set('auth_user', $this);
+    }
+
+    /**
+     * @param strin $password
+     * @return array
+     */
+    public static function getHashedCredentials($password, $passwordConfirm = null)
+    {
+    	$salt 		= self::salt();
+        $password 	= Auth::instance()->hash($password . $salt);
+
+        $result = [
+        	'password'	=> $password,
+        	'salt'		=> $salt
+        ];
+
+        if ($passwordConfirm) {
+			$passwordConfirm 	= Auth::instance()->hash($password . $salt);        	
+
+			$result['password_confirm'] = $passwordConfirm;
+        }
+
+        return $result;
+    }
+
+    public static function salt()
+    {
+    	return Auth::instance()->hash(openssl_random_pseudo_bytes(64));
     }
 
     /**
@@ -221,8 +262,10 @@ class Model_Auth_User extends ORM {
         }
 
         // At kell -e iranyitani valami, vagy mehet default
-        $url = Session::instance()->get('redirectUrl');
-        $user = Auth::instance()->get_user();
+        $url 	= Session::instance()->get('redirectUrl');
+        $user 	= Auth::instance()->get_user();
+
+        $user->setSaltedPasswordFrom(Input::post('password'));
 
         // Nem volt session -ben semmilyen url
         if (!$url) {
@@ -237,6 +280,15 @@ class Model_Auth_User extends ORM {
         Cache::instance()->set('users', $all);
 
         return $url;
+    }
+
+    protected function setSaltedPasswordFrom($rawPassword)
+    {
+    	if (empty($this->salt)) {
+    		$this->salt 	= self::salt();
+    		$this->password = Auth::instance()->hash($rawPassword . $this->salt);
+    		$this->save();
+    	}
     }
 
     public static function passwordReminder($email)
