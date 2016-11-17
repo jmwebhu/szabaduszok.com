@@ -138,6 +138,11 @@ abstract class Entity_User extends Entity implements Notifiable
     protected $_landing_page_id;
 
     /**
+     * @var string
+     */
+    protected $_salt;
+
+    /**
      * Entity_User constructor.
      */
     public function __construct()
@@ -350,6 +355,14 @@ abstract class Entity_User extends Entity implements Notifiable
     public function getSearch()
     {
         return $this->_search;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->_salt;
     }
 
     /**

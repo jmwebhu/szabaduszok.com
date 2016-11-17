@@ -212,7 +212,7 @@ class Viewhelper_User_Type_Freelancer_Test extends Unittest_TestCase
         $freelancer->lastname = 'Teszt';
         $freelancer->firstname = 'Szabadúszó';
         $freelancer->email = 'teszt' . $freelancer->user_id . '@szabaduszok.com';
-        $freelancer->password = 'pass';
+        $freelancer->password = 'password123';
         $freelancer->min_net_hourly_wage = '2500';
         $freelancer->save();
 

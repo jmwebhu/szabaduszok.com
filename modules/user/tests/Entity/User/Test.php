@@ -191,7 +191,10 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEmailNotExistsInSignup($employer->getEmail());
         $this->assertEquals(1, $employer->getIsCompany());
         $this->assertEquals('Szabaduszok.com Zrt.', $employer->getCompanyName());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
+        $this->assertNotEmpty($employer->getPassword());
+        $this->assertNotEmpty($employer->getSalt());
+        $this->assertNotEmpty($employer->getPassword());
+        $this->assertNotEmpty($employer->getSalt());
         $this->assertNotEmpty($employer->getSlug());
         $this->assertNotEmpty($employer->getSearchText());
     }
@@ -226,7 +229,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEmailNotExistsInSignup($employer->getEmail());
         $this->assertEquals(1, $employer->getIsCompany());
         $this->assertEquals('Szabaduszok.com Zrt.', $employer->getCompanyName());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
+        $this->assertNotEmpty($employer->getPassword());
+        $this->assertNotEmpty($employer->getSalt());
         $this->assertNotEmpty($employer->getSlug());
         $this->assertNotEmpty($employer->getSearchText());
 
@@ -254,7 +258,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEmailNotExistsInSignup($employer->getEmail());
         $this->assertEquals(1, $employer->getIsCompany());
         $this->assertEquals('Szabaduszok.com Kft.', $employer->getCompanyName());
-        $this->assertEquals(Auth::instance()->hash('Password1234'), $employer->getPassword());
+        $this->assertNotEmpty($employer->getPassword());
+        $this->assertNotEmpty($employer->getSalt());
         $this->assertNotEmpty($employer->getSlug());
         $this->assertNotEmpty($employer->getSearchText());
     }
@@ -292,7 +297,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserRelationExistsInDatabase('profession', [self::$_professions[1], self::$_professions[2]], $employer->getUserId());
         $this->assertEquals(0, $employer->getIsCompany());
         $this->assertEquals('', $employer->getCompanyName());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $employer->getPassword());
+        $this->assertNotEmpty($employer->getPassword());
+        $this->assertNotEmpty($employer->getSalt());
         $this->assertNotEmpty($employer->getSlug());
     }
 
@@ -324,7 +330,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserIdExistsInSession($freelancer->getUserId());
         $this->assertUserIdExistsInCache($freelancer->getUserId());
         $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSalt());
         $this->assertNotEmpty($freelancer->getSlug());
         $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
@@ -363,7 +370,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserIdExistsInSession($freelancer->getUserId());
         $this->assertUserIdExistsInCache($freelancer->getUserId());
         $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSalt());
         $this->assertNotEmpty($freelancer->getSlug());
         $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
@@ -404,7 +412,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserIdExistsInSession($freelancer->getUserId());
         $this->assertUserIdExistsInCache($freelancer->getUserId());
         $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSalt());
         $this->assertNotEmpty($freelancer->getSlug());
         $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
@@ -453,7 +462,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserIdExistsInSession($freelancer->getUserId());
         $this->assertUserIdExistsInCache($freelancer->getUserId());
         $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSalt());
         $this->assertNotEmpty($freelancer->getSlug());
         $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
@@ -504,7 +514,8 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertUserIdExistsInSession($freelancer->getUserId());
         $this->assertUserIdExistsInCache($freelancer->getUserId());
         $this->assertEmailNotExistsInSignup($freelancer->getEmail());
-        $this->assertEquals(Auth::instance()->hash('Password123'), $freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSalt());
         $this->assertNotEmpty($freelancer->getSlug());
         $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
