@@ -10,6 +10,13 @@
  */
 class Kohana_File {
 
+	public static function validateByMimes($filename, array $mimes)
+	{
+		$mime = self::mime($filename);
+
+		return in_array($mime, $mimes);
+	}
+
 	/**
 	 * Attempt to get the mime type from a file. This method is horribly
 	 * unreliable, due to PHP being horribly unreliable when it comes to

@@ -4,7 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        
+        var_dump(DOCROOT . File_User::PATH_PROFILE_PICTURE);
+
     }
 
     public function action_user()

@@ -48,8 +48,8 @@ abstract class File_User
     public function uploadFiles()
     {
         if (isset($_FILES['profile_picture']) && !empty($_FILES['profile_picture']['name'])) {
-            $this->_profilePictureFile = $_FILES['profile_picture'];
-            $filenames = $this->uploadProfilePicture();
+            $this->_profilePictureFile  = $_FILES['profile_picture'];
+            $filenames                  = $this->uploadProfilePicture();
 
             $this->_user->profile_picture_path  = Arr::get($filenames, 'profile');
             $this->_user->list_picture_path     = Arr::get($filenames, 'list');
@@ -71,6 +71,11 @@ abstract class File_User
 
         $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, self::PATH_PROFILE_PICTURE);
         $this->throwException($sourceFilename, 'Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
+
+        if (!File::validateByMimes($sourceFilename, ['image/jpeg', 'image/pjpeg', 'image/png'])) {
+            $this->throwException(false, 'Hibás kép formátum. Kérjük próbáld meg újra.');
+            unlink($sourceFilename);
+        }
 
         $this->saveImagesFrom($sourceFilename);
 
@@ -98,7 +103,7 @@ abstract class File_User
     protected function validateImageFile()
     {
         return !(!Upload::valid($this->_profilePictureFile) || !Upload::not_empty($this->_profilePictureFile)
-            || !Upload::type($this->_profilePictureFile, ['jpg', 'jpeg', 'png', 'gif', 'bmp']));
+            || !Upload::type($this->_profilePictureFile, ['jpg', 'jpeg', 'png']));
     }
 
     /**
