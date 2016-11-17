@@ -87,7 +87,7 @@ class Kohana_Auth_ORM extends Auth {
 		}
 
 		// If the passwords match, perform a login
-		if ($user->password === $password)
+		if (Security::slow_equals($user->password, $password))
 		{
 			if ($remember === TRUE)
 			{
