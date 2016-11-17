@@ -4,10 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $password = 'Deth4Life01';
-        $hash = Auth::instance()->hash($password);
-
-        var_dump($hash);
+        
     }
 
     public function action_user()
