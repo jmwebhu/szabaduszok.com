@@ -7,6 +7,8 @@ class Entity_Project_Test extends Unittest_TestCase
 	 */
 	private static $_employer = null;
 
+	private static $_insertedProjectIds = [];
+
 	/**
 	 * @covers Entity_Project::submit()
 	 */
@@ -43,6 +45,8 @@ class Entity_Project_Test extends Unittest_TestCase
 		$this->assertEquals(null, $project->getSalaryHigh());	
 		$this->assertEquals(1, $project->getIsActive());	
 
+		self::$_insertedProjectIds[] = $project->getProjectId();
+
 		return $project;
 	}
 
@@ -73,7 +77,7 @@ class Entity_Project_Test extends Unittest_TestCase
 	public function testInactivateOk(Entity_Project $project)
 	{
 		$project->inactivate();
-		
+
 		$this->assertEquals(0, $project->getIsActive());	
 	}
 
@@ -100,6 +104,10 @@ class Entity_Project_Test extends Unittest_TestCase
 	{
 		if (self::$_employer) {
 			self::$_employer->getModel()->delete();
+		}
+
+		if (self::$_insertedProjectIds) {
+			DB::delete('projects')->where('project_id', 'IN', self::$_insertedProjectIds)->execute();
 		}
 	}
 }
