@@ -4,7 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        var_dump(DOCROOT . File_User::PATH_PROFILE_PICTURE);
+        echo Debug::vars(Text::isId('1999 óta foglalkozom informatikával'));
 
     }
 

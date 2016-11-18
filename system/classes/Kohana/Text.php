@@ -694,7 +694,7 @@ class Kohana_Text {
 
 	public static function isId($value)
 	{
-            $intval = intval($value);
-            return (is_int($intval) && $intval != 0);
+        $intval = intval($value);
+        return (is_int($intval) && $intval != 0 && strlen($intval) === strlen($value));
 	}
 }
