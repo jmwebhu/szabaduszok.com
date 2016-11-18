@@ -1,12 +1,23 @@
 {% extends "User/write.twig" %}
 
+{% block professionHint %}
+    {{ parent() }}
+    <p class="text-justify">
+        <span class="bold">FIGYELEM!</span> Érdemes szem előtt tartani a kereshetőséget, és a megbízók gondolkodását. Ide olyan általános dolgokat adj meg, amivel egy kevésbé hozzáértő is megtalál, pl.: rendszergazda, seo, online marketing. Ne adj meg konkrét technológiákat. Azok a képességeknél lesznek.
+    </p>
+{% endblock professionHint %}
+
 {% block professionalProfileMisc %}
     {{ parent() }}
+
     <span class="ion ion-wrench pull-left icon-sm icon-dark-gray"></span>
     <div class="form-group">
         <label>
             Képességek*
         </label>
+        <p class="text-justify">
+            Szakterületen belüli konkrét képességek, pl.: php, linux, adwords. Légy minél pontosabb, itt is szem előtt tartva a kereshetőséget.
+        </p>
 
         <select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
             {% for skill in user.getRelation('skills') %}
@@ -24,9 +35,6 @@
             {% endfor %}
         </select>
     </div>
-    <p class="text-justify">
-        Szakterületen belüli konkrét képességek, pl.: php. Többet is megadhatsz. Választhatsz meglévőket, vagy hozhatsz létre újakat. Kérlek próbáld meg minél pontosabban megadni, a mennyiség korlátlan.
-    </p>
 
     <span class="fa fa-chrome pull-left icon-sm icon-dark-gray"></span>
     <div class="form-group">
