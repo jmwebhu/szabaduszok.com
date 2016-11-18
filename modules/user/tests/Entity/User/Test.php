@@ -11,7 +11,7 @@ class Entity_User_Test extends Unittest_TestCase
 
     private static $_insertedUserIds        = [];
     private static $_professionsOnTheFly    = ['Teljesen új szakterület'];
-    private static $_skillsOnTheFly         = ['szupererő', 'Képesség'];
+    private static $_skillsOnTheFly         = ['szupererő', 'Képesség', '23 év tapasztalat'];
 
     /**
      * @covers Entity_User::getName()
@@ -484,7 +484,7 @@ class Entity_User_Test extends Unittest_TestCase
 
     /**
      * @covers Entity_User::submitUser()
-     * @group issue#6
+     * @group issue #6
      * @see https://github.com/jmwebhu/szabaduszok.com/issues/6
      */
     public function testSubmitUserFreelancerWithNonExistingRelations()
@@ -609,6 +609,57 @@ class Entity_User_Test extends Unittest_TestCase
         }
 
         $this->assertFalse($result);
+    }
+
+    /**
+     * @covers Entity_User::submitUser()
+     * @group issue #17
+     * @see https://github.com/jmwebhu/szabaduszok.com/issues/17
+     */
+    public function testSubmitUserFreelancerWithRelationsIdLikeText()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $data = [
+            'lastname'              => 'Joó',
+            'firstname'             => 'Martin',
+            'email'                 => uniqid() . '@szabaduszok.com',
+            'password'              => 'Password123',
+            'password_confirm'      => 'Password123',
+            'address_postal_code'   => '9700',
+            'address_city'          => 'Szombathely',
+            'phonenumber'           => '06301923380',
+            'short_description'     => 'Rövid bemutatkozás',
+            'min_net_hourly_wage'   => '2500',
+            'webpage'               => 'szabaduszok.com',
+            'industries'            => [self::$_industries[0]],
+            'professions'           => [self::$_professions[0], self::$_professions[1], self::$_professions[2]],
+            'skills'                => [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8], self::$_skillsOnTheFly[2]]
+        ];
+
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $lastSkillId = DB::select('skill_id')->from('skills')->order_by('skill_id', 'DESC')->limit(1)->execute()->get('skill_id');
+
+        $this->assertUserIdExistsInDatabase($freelancer->getUserId());
+        $this->assertUserIdExistsInSession($freelancer->getUserId());
+        $this->assertUserIdExistsInCache($freelancer->getUserId());
+        $this->assertEmailNotExistsInSignup($freelancer->getEmail());
+        $this->assertNotEmpty($freelancer->getPassword());
+        $this->assertNotEmpty($freelancer->getSalt());
+        $this->assertNotEmpty($freelancer->getSlug());
+        $this->assertEquals('http://szabaduszok.com', $freelancer->getWebpage());
+        $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
+        $this->assertEquals('1', $freelancer->getSkillRelation());
+        $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+
+        $this->assertUserRelationExistsInDatabase('industry', [self::$_industries[0]], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('profession', [self::$_professions[0], self::$_professions[1], self::$_professions[2]], $freelancer->getUserId());
+        $this->assertUserRelationExistsInDatabase('skill', [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8], $lastSkillId], $freelancer->getUserId());
+
+        $this->assertUserProjectNotoficationExistsInDatabase('industry', [self::$_industries[0]], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('profession', [self::$_professions[0], self::$_professions[1], self::$_professions[2]], $freelancer->getUserId());
+        $this->assertUserProjectNotoficationExistsInDatabase('skill', [self::$_skills[2], self::$_skills[3], self::$_skills[5], self::$_skills[6], self::$_skills[7], self::$_skills[8], $lastSkillId], $freelancer->getUserId());
     }
 
     public function assertUserIdExistsInDatabase($id)
