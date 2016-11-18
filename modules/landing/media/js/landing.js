@@ -18,9 +18,11 @@ var Landing = {
      * Megnyitja azt a landing oldalt, aminek akapott parameter a neve
      */
     openLandingPage: function (name) {
-        if (name == 'blackfriday' || $(document).width() >= 464) {
+        if (name == 'blackfriday' || name == 'blackfridayproject' || $(document).width() >= 464) {
             if (name) {
+                console.log(name);
                 var $landingPage = $('div#' + name);
+                console.log($landingPage);
                 if ($landingPage.length) {
 
                     Landing.sendAjax(name);
