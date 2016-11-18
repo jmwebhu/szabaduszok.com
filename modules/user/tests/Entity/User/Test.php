@@ -387,7 +387,6 @@ class Entity_User_Test extends Unittest_TestCase
      */
     public function testSubmitUserFreelancerWithRelations()
     {
-        
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $data = [
             'lastname'              => 'Joó',
@@ -433,7 +432,7 @@ class Entity_User_Test extends Unittest_TestCase
     /**
      * @covers Entity_User::submitUser()
      */
-    public function testSubmitUserFreelancerWithRelationsAndProfiles()
+    public function testSubmitUserFreelancerWithRelationAndProfiles()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $profiles = ['https://linkedin.com/jm', 'https://facebook.com/jm'];
@@ -616,7 +615,7 @@ class Entity_User_Test extends Unittest_TestCase
      * @group issue #17
      * @see https://github.com/jmwebhu/szabaduszok.com/issues/17
      */
-    public function testSubmitUserFreelancerWithRelationsIdLikeText()
+    public function testSubmitUserFreelancerWithRelationIdLikeText()
     {
         $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
         $data = [
@@ -804,7 +803,6 @@ class Entity_User_Test extends Unittest_TestCase
             $ids = $classReflection->getStaticPropertyValue('_' . $relationModel->object_plural());
             $idCol = $relation . '_id';
             $ids[] = $relationModel->{$idCol};
-
             $classReflection->setStaticPropertyValue('_' . $relationModel->object_plural(), $ids);
         }
     }

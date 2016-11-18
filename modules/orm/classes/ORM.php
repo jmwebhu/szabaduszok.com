@@ -36,7 +36,7 @@ class ORM extends Kohana_ORM
         $modelTemp  = new $className();		
         
         // Azonosito, tehat letezik
-        if (Text::isId($value)) {
+        if (is_numeric($value)) {
             $model = $modelTemp->findByPk($value);                
         } else {    // Uj elem
 			$byName				= new $className();

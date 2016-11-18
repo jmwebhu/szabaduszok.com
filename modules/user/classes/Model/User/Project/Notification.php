@@ -15,7 +15,7 @@ abstract class Model_User_Project_Notification extends Model_Relation
     {
         $model   = $this->getEndRelationModel();
 
-        if (Text::isId($value)) {
+        if (is_numeric($value)) {
             $intval             = intval($value);
             $model              = $model->where($model->primary_key(), '=', $intval)->find();
 
