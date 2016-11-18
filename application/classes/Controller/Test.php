@@ -4,8 +4,6 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        echo Debug::vars(Text::isId('1999 óta foglalkozom informatikával'));
-
     }
 
     public function action_user()

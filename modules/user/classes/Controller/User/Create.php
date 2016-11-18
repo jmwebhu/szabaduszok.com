@@ -28,6 +28,7 @@ abstract class Controller_User_Create extends Controller_User implements Control
             $this->handlePostRequest();
 
         } catch (ORM_Validation_Exception $ovex) {
+            $this->_error = true;
             $this->handleValidationException($ovex, $this->getUrl());
             
         } catch (Exception_UserRegistration $exur) {

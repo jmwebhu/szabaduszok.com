@@ -430,9 +430,9 @@ abstract class Entity_User extends Entity implements Notifiable
         $data = $this->unsetPasswordFrom($data);
         $data = $this->fixPost($data);
 
-        $this->_model->updateSession();
-
         $this->_model->submit($data);
+
+        $this->_model->updateSession();
 
         $this->_file->uploadFiles();
 
