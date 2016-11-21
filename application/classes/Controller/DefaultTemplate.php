@@ -7,7 +7,7 @@ class Controller_DefaultTemplate extends Controller_Twig
     public function before()
     {
         if ($this->request->method() == Request::POST) {
-            Security::validateCsrfTokenIn(Input::post_all());
+            //Security::validateCsrfTokenIn(Input::post_all());
         }
     	
     	if (Kohana::$profiling === TRUE) {
