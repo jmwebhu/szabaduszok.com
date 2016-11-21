@@ -114,8 +114,8 @@ class Model_User extends Model_Auth_User
     public function rules()
     {
         return [
-            'lastname'              => [['not_empty'], ['alpha', [':value', true]]],
-            'firstname'             => [['not_empty'], ['alpha', [':value', true]]],
+            'lastname'              => [['not_empty']],
+            'firstname'             => [['not_empty']],
             'email'                 => [['not_empty'], ['email'], ['email_domain']],
             'password'              => [['not_empty'], ['min_length', [':value', 6]]],
             'address_postal_code'   => [['numeric'], ['min_length', [':value', 4]]]
