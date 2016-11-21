@@ -2,7 +2,7 @@
 
 abstract class File_User
 {
-    const PATH_PROFILE_PICTURE          = DOCROOT . 'uploads/picture';
+    const PATH_PROFILE_PICTURE          = 'uploads/picture';
     const FILE_PREFFIX                  = 'szabaduszok-';
     const PROFILE_PICTURE_SUFFIX        = '-pic';
     const PROFILE_PICTURE_LIST_SUFFIX   = '-pic-list';
@@ -69,7 +69,7 @@ abstract class File_User
         $this->setProfilePictureFilenameWith($extension);
         $this->setProfilePictureListFilenameWith($extension);
 
-        $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, self::PATH_PROFILE_PICTURE);
+        $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, DOCROOT . self::PATH_PROFILE_PICTURE);
         $this->throwException($sourceFilename, 'Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
 
         if (!File::validateByMimes($sourceFilename, ['image/jpeg', 'image/pjpeg', 'image/png'])) {
@@ -139,7 +139,7 @@ abstract class File_User
      */
     protected function getFullPathBy($filename)
     {
-        return self::PATH_PROFILE_PICTURE . DIRECTORY_SEPARATOR . $filename;
+        return DOCROOT . self::PATH_PROFILE_PICTURE . DIRECTORY_SEPARATOR . $filename;
     }
 
     /**

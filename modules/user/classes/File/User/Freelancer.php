@@ -2,7 +2,7 @@
 
 class File_User_Freelancer extends File_User
 {
-    const PATH_CV   = DOCROOT . 'uploads/cv';
+    const PATH_CV   = 'uploads/cv';
     const CV_SUFFIX = '-cv';
 
     /**
@@ -33,13 +33,13 @@ class File_User_Freelancer extends File_User
 
         $extension      = Upload::getExt($this->_cvFile);
         $filename       = strtolower(self::FILE_PREFFIX .  $this->_user->slug . self::CV_SUFFIX . '.' . $extension);
-        $fullFilename   = Upload::save($this->_cvFile, $filename, self::PATH_CV);
+        $fullFilename   = Upload::save($this->_cvFile, $filename, DOCROOT . self::PATH_CV);
 
         $this->throwException($fullFilename, 'Hiba történt az önéletrajz feltöltése során. Kérjük próbáld meg újra.');
 
         if (!File::validateByMimes($fullFilename, ['application/msword', 'application/pdf', 'application/x-iwork-pages-sffpages', 'application/vnd.apple.pages', 'application/vnd.oasis.opendocument.text'])) {
             $this->throwException(false, 'Hibás önéletrajz formátum. Kérjük próbáld meg újra.');
-            unlink($sourceFilename);
+            unlink($fullFilename);
         }
 
         return $filename;

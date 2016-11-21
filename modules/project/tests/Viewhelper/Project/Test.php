@@ -46,8 +46,9 @@ class Viewhelper_Project_Test extends Unittest_TestCase
         $create = Viewhelper_Project::getFormAction('create');
         $edit = Viewhelper_Project::getFormAction('edit', $project);
 
-        $this->assertEquals('http://127.0.0.1/szabaduszok.com/uj-szabaduszo-projekt', $create);
-        $this->assertEquals('http://127.0.0.1/szabaduszok.com/szabaduszo-projekt-szerkesztes/elso-projekt', $edit);
+        $base = URL::base(true, false);
+        $this->assertEquals($base . 'uj-szabaduszo-projekt', $create);
+        $this->assertEquals($base . 'szabaduszo-projekt-szerkesztes/elso-projekt', $edit);
     }
 
     /**
