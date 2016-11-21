@@ -4,11 +4,8 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        echo Debug::vars(is_numeric('203'));
-        echo Debug::vars(is_numeric('199 óta dolgozom'));
-        echo Debug::vars(is_numeric('css3'));
-        echo Debug::vars(is_numeric('html'));
-        echo Debug::vars(is_numeric(423));
+        echo Debug::vars(Security::token());
+        echo Debug::vars(Session::instance()->as_array());
     }
 
     public function action_user()
@@ -44,6 +41,7 @@ class Controller_Test extends Controller
 
     public function action_clearcache()
     {
-        Cache::instance()->delete_all();
+        $delete = Cache::instance()->delete_all();
+        var_dump($delete);
     }
 }

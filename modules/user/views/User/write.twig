@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <form action="{{ formAction }}" method="post" enctype="multipart/form-data">
-                        {{ form.csrf() }}
+                        <input type="hidden" name="csrf-token" value="{{ token }}">
                         {% block formHeader %}
                             {% if hasIdInput %}
                                 <input name="user_id" id="user-id" type="hidden" value="{{ user.getUserId() }}">

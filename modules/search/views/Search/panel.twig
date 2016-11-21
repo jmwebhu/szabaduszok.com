@@ -1,5 +1,4 @@
-{% macro build(container) %}
-{% import 'Templates/form.twig' as form %}
+{% macro build(container, token) %}
 <div class="panel">
     <div class="panel-heading">
         <h2 class="mg-clear tc-black">
@@ -18,15 +17,15 @@
         {% if container.needTabs() %}
             <div class="tab-content">
                 <div id="complex" class="tab-pane fade in active">
-                    {{ _self.buildComplexForm(container) }}
+                    {{ _self.buildComplexForm(container, token) }}
                 </div>
 
                 <div id="simple" class="tab-pane fade">
-                    {{ _self.buildSimpleForm(container) }}
+                    {{ _self.buildSimpleForm(container, token) }}
                 </div>
             </div>
         {% else %}
-            {{ _self.buildComplexForm(container) }}
+            {{ _self.buildComplexForm(container, token) }}
         {% endif %}
     </div>
     <!-- panel-body END -->
@@ -35,10 +34,9 @@
 
 {% endmacro %}
 
-{% macro buildSimpleForm(container) %}
-{% import 'Templates/form.twig' as form %}
+{% macro buildSimpleForm(container, token) %}
 <form id="simple-search-form" method="POST" action="{{ container.getSimpleFormAction() }}">
-    {{ form.csrf() }}
+    <input type="hidden" name="csrf-token" value="{{ token }}">
     <input type="hidden" name="simple" value="1">
 
     <p class="search-form-paragraph">
@@ -55,10 +53,9 @@
 </form>
 {% endmacro %}
 
-{% macro buildComplexForm(container) %}
-{% import 'Templates/form.twig' as form %}
+{% macro buildComplexForm(container, token) %}
 <form id="complex-search-form" method="POST" action="{{ container.getComplexFormAction() }}">
-    {{ form.csrf() }}
+    <input type="hidden" name="csrf-token" value="{{ token }}">
     <input type="hidden" name="complex" value="1">
 
     <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>

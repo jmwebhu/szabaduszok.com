@@ -6,7 +6,7 @@
 
 {% block body %}
     <form method="post" action="#" id="apply-form">
-        {{ form.csrf() }}
+        <input type="hidden" name="csrf-token" value="{{ token }}">
         <input name="project_id" value="{{ project.getProjectId() }}" type="hidden">
         <input name="user_id" value="{{ user.getUserId() }}" type="hidden">
 

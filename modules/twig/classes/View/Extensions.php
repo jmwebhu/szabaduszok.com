@@ -34,8 +34,7 @@ class View_Extensions extends Twig_Extension {
             'get_user'          =>  new Twig_Function_Function('Twigextension::get_user'),
             'isGranted'         =>  new Twig_Function_Function('Twigextension::isGranted'),
             'hasRole'           =>  new Twig_Function_Function('Twigextension::hasRole'),
-			'in_array'          =>  new Twig_Function_Function('Twigextension::in_array'),
-            'token'             =>  new Twig_Function_Function('Twigextension::token'),
+			'in_array'          =>  new Twig_Function_Function('Twigextension::in_array')
         );
     }
 

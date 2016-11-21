@@ -71,7 +71,7 @@
         {% block bottomContainer %}
             {% if canSeeProjectNotification %}
                 <form id="project-notification-form" method="POST" action="{{ ROOT }}user/ajax/saveProjectNotification">
-                    {{ searchPanel.build(container) }}
+                    {{ searchPanel.build(container, token) }}
                 </form>
             {% endif %}
 

@@ -10,7 +10,7 @@
 				</h1>
 				<span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
 				<form id="login-form" action="{{ ROOT }}szabaduszok-belepes" method="post">
-					{{ form.csrf() }}
+					<input type="hidden" name="csrf-token" value="{{ token }}">
 					<span class="ion ion-email pull-left icon-sm icon-dark-gray"></span>
 					<div class="form-group">
 						<label>

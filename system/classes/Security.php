@@ -6,14 +6,14 @@ class Security extends Kohana_Security
 	 * @param array $post
 	 */
 	public static function validateCsrfTokenIn(array $post)
-	{
+    {
 		$validation = Validation::factory($post);
-		$validation->rule('csrf-token', 'not_empty');
-		$validation->rule('csrf-token', 'Security::check');
+		$validation->rule(Security::$token_name, 'not_empty');
+		$validation->rule(Security::$token_name, 'Security::check');
 
 		if (!$validation->check()) {
 			try {
-				throw new Validation_Exception($validation, 'CSRF validation failed with token: ' . Arr::get($post, 'csrf-token', 'NO TOKEN'));
+				throw new Validation_Exception($validation, 'CSRF validation failed with token: ' . Arr::get($post, Security::$token_name, 'NO TOKEN'));
 
 			} catch (Validation_Exception $vex) {
 				Log::instance()->addException($vex, Log::EMERGENCY);

@@ -6,7 +6,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<form id="project-form" method="post" action="{{ formAction }}">
-					{{ form.csrf() }}
+					<input type="hidden" name="csrf-token" value="{{ token }}">
 					<input type="hidden" value="{{ project.getProjectId() }}" name="project_id">
 				
 					<h1 class="mg-md text-center tc-black">

@@ -127,9 +127,4 @@ class Twigextension {
         $twig = Kohana_Twig::instance();
         return $twig->loadTemplate($template)->render($params);
     }
-
-    public static function token()
-    {
-        return Security::token();
-    }
 }
