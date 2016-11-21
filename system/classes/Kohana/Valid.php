@@ -376,11 +376,11 @@ class Kohana_Valid {
 	 * @param   boolean $utf8   trigger UTF-8 compatibility
 	 * @return  boolean
 	 */
-	public static function alpha($str, $utf8 = FALSE)
+	public static function alpha($str, $utf8 = true)
 	{
 		$str = (string) $str;
 
-		if ($utf8 === TRUE)
+		if ($utf8 === true)
 		{
 			return (bool) preg_match('/^\pL++$/uD', $str);
 		}
