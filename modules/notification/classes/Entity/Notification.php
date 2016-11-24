@@ -311,35 +311,33 @@ class Entity_Notification extends Entity implements Notification
     /**
      * @param int $eventType
      * @param Notification_Subject $subject
-     * @param Notifiable $user
+     * @param Notifiable $notifier
+     * @param Notifiable $notified
      * @param array|null $extraData
      * @return Entity_Notification
      */
-    public static function createFor($eventType, Notification_Subject $subject, Notifiable $user, $extraData = null)
+    public static function createFor($eventType, Notification_Subject $subject, Notifiable $notifier, Notifiable $notified, $extraData = null)
     {
-        $extraData = ($extraData == null) ? [] : $extraData;
-        $event      = Model_Event_Factory::createEvent($eventType);
-        $notifier   = null;
-        $notified   = null;
+        $extraData      = ($extraData == null) ? [] : $extraData;
+        $event          = Model_Event_Factory::createEvent($eventType);
+        $notifierId     = null;
+        $notifiedId     = null;
 
-        switch ($event->getNotifierClass()) {
-            case Entity_User_Employer::class:
-                $notifier = $subject->getData()['user_id'];
-                $notified = $user->getId();
-                break;
+        /**
+         * @todo
+         * - Modositani ugy, hogy ne az event -tol fuggjon ki az ertesito es ki az ertesitett
+         * - Atadni parameterben az ertesitot es az ertesitettet
+         */
 
-            case Entity_User_Freelancer::class:
-                $notifier = $user->getId();
-                $notified = $subject->getData()['user_id'];
-                break;
-        }
+        $notifierId = $notifier->getId();
+        $notifiedId = $notified->getId();
 
         Assert::notNull($notifier);
         Assert::notNull($notified);
 
         $notification = new Entity_Notification();
-        $notification->setNotifierUserId($notifier);
-        $notification->setNotifiedUserId($notified);
+        $notification->setNotifierUserId($notifierId);
+        $notification->setNotifiedUserId($notifiedId);
         $notification->setEventId($event->getId());
         $notification->setSubjectId($subject->getId());
         $notification->setSubjectName($subject->getSubjectType());

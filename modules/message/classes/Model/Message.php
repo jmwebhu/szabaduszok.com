@@ -1,6 +1,6 @@
 <?php
 
-class Model_Message extends ORM implements Message
+class Model_Message extends ORM implements Message, Notification_Subject
 {
     protected $_table_name  = 'messages';
     protected $_primary_key = 'message_id';
@@ -65,9 +65,9 @@ class Model_Message extends ORM implements Message
         return new DateTime($this->created_at);
     }
 
-    public function getJson()
+    public function getData()
     {
-        return $this->getJson();
+        return $this->object();
     }
 
     public function isReaded()
@@ -103,15 +103,24 @@ class Model_Message extends ORM implements Message
     {
     }
 
+    public function getSubjectType()
+    {
+        return 'message';
+    }
+
+
     public function send()
     {
         $this->save();
-        /*$notification           = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $this->user, Arr::get($data, 'extra_data'));
+        $notifierEntity = Entity_User::createUser($this->sender->type, $this->sender);
+        $notifiedEntity = Entity_User::createUser($this->receiver->type, $this->receiver);
+
+        $notification           = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, $this->message);
         $this->notification_id  = $notification->getId();
         $this->save();
 
         $entity = new Entity_User_Employer($project->user);
         $entity->setNotification($notification);
-        $entity->sendNotification();*/
+        $entity->sendNotification();
     }
 }

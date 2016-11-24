@@ -30,7 +30,7 @@ interface Message
     /**
      * @return string
      */
-    public function getJson();
+    public function getData();
 
     /**
      * @return bool

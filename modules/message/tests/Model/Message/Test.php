@@ -32,6 +32,6 @@ class Model_Message_Test extends Unittest_TestCase
         $this->assertNotEmpty($message->getSender());
         $this->assertNotEmpty($message->getReceiver());
         $this->assertEquals('Teszt', $message->getMessage());
-
+        $this->assertNotEmpty($message->getData());
     }
 }
