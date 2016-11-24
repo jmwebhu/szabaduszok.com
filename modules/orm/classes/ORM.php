@@ -164,6 +164,11 @@ class ORM extends Kohana_ORM
         return $sb->get('');
     }
 
+    public function getJson()
+    {
+        return json_encode($this->object());
+    }
+
     public function getRelationBy($name)
     {
         if ($this->isRelationHasMany($name)) {

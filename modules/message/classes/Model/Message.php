@@ -34,8 +34,7 @@ class Model_Message extends ORM implements Message
         return [
             'sender_id'     => [['not_empty']],
             'receiver_id'   => [['not_empty']],
-            'message'       => [['not_empty']],
-            'created_at'    => [['not_empty']],
+            'message'       => [['not_empty']]
         ];
     }
 
@@ -83,12 +82,12 @@ class Model_Message extends ORM implements Message
 
     public function setSender(Message_Participant $sender)
     {
-        $this->sender = $sender;
+        $this->sender_id = $sender->getId();
     }
 
     public function setReceiver(Message_Participant $receiver)
     {
-        $this->receiver = $receiver;
+        $this->receiver_id = $receiver->getId();
     }
 
     public function setMessage($message)

@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 
-class Model_User extends Model_Auth_User
+class Model_User extends Model_Auth_User implements Message_Participant
 {
 	public $_nameField          = 'lastname';
 	public $_nameFieldSecond    = 'firstname';
@@ -247,4 +247,22 @@ class Model_User extends Model_Auth_User
 
         return $user;
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return SB::create($this->lastname)->append(' ')->append($this->firstname)->get();
+    }
+
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-abstract class Entity_User extends Entity implements Notifiable 
+abstract class Entity_User extends Entity implements Notifiable, Message_Participant
 {
     const TYPE_FREELANCER       = 1;
     const TYPE_EMPLOYER         = 2;
@@ -598,5 +598,13 @@ abstract class Entity_User extends Entity implements Notifiable
     public function getId()
     {
         return $this->_user_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJson()
+    {
+        return $this->_model->getJson();
     }
 }

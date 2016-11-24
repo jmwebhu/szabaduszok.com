@@ -13,11 +13,25 @@ class Model_Message_Test extends Unittest_TestCase
         $this->assertArrayHasKey('sender_id', $rules);
         $this->assertArrayHasKey('receiver_id', $rules);
         $this->assertArrayHasKey('message', $rules);
-        $this->assertArrayHasKey('created_at', $rules);
 
         $this->assertTrue(in_array(['not_empty'], $rules['sender_id']));
         $this->assertTrue(in_array(['not_empty'], $rules['receiver_id']));
         $this->assertTrue(in_array(['not_empty'], $rules['message']));
-        $this->assertTrue(in_array(['not_empty'], $rules['created_at']));
+    }
+    
+    public function testGettersSetters()
+    {
+        $sender     = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);
+        $receiver   = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+
+        $message    = new Model_Message(1);
+        $message->setSender($sender);
+        $message->setReceiver($receiver);
+        $message->setMessage('Teszt');
+
+        $this->assertNotEmpty($message->getSender());
+        $this->assertNotEmpty($message->getReceiver());
+        $this->assertEquals('Teszt', $message->getMessage());
+
     }
 }
