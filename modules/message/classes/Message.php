@@ -71,4 +71,10 @@ interface Message
      * @return void
      */
     public function setArchived($archived);
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function send();
 }

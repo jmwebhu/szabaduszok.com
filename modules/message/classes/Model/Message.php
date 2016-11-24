@@ -34,7 +34,8 @@ class Model_Message extends ORM implements Message
         return [
             'sender_id'     => [['not_empty']],
             'receiver_id'   => [['not_empty']],
-            'message'       => [['not_empty']]
+            'message'       => [['not_empty']],
+            'created_at'    => [['not_empty']],
         ];
     }
 
@@ -101,5 +102,10 @@ class Model_Message extends ORM implements Message
 
     public function setArchived($archived)
     {
+    }
+
+    public function send()
+    {
+        $this->save();
     }
 }
