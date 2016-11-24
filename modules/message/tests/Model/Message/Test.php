@@ -18,7 +18,7 @@ class Model_Message_Test extends Unittest_TestCase
         $this->assertTrue(in_array(['not_empty'], $rules['receiver_id']));
         $this->assertTrue(in_array(['not_empty'], $rules['message']));
     }
-    
+
     public function testGettersSetters()
     {
         $sender     = Entity_User::createUser(Entity_User::TYPE_EMPLOYER);

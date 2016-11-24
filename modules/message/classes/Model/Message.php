@@ -106,5 +106,12 @@ class Model_Message extends ORM implements Message
     public function send()
     {
         $this->save();
+        /*$notification           = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $this->user, Arr::get($data, 'extra_data'));
+        $this->notification_id  = $notification->getId();
+        $this->save();
+
+        $entity = new Entity_User_Employer($project->user);
+        $entity->setNotification($notification);
+        $entity->sendNotification();*/
     }
 }

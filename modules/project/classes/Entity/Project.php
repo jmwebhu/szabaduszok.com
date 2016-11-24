@@ -475,4 +475,17 @@ class Entity_Project extends Entity implements Notification_Subject
     {
         return $this->_model->object();
     }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_project_id;
+    }
+
+    public function getSubjectType()
+    {
+        return $this->_model->object_name();
+    }
 }

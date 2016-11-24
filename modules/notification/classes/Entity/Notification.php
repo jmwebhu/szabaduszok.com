@@ -310,12 +310,12 @@ class Entity_Notification extends Entity implements Notification
 
     /**
      * @param int $eventType
-     * @param Model_Project $project
-     * @param Model_User $user
+     * @param Notification_Subject $subject
+     * @param Notifiable $user
      * @param array|null $extraData
      * @return Entity_Notification
      */
-    public static function createFor($eventType, Model_Project $project, Model_User $user, $extraData = null)
+    public static function createFor($eventType, Notification_Subject $subject, Notifiable $user, $extraData = null)
     {
         $extraData = ($extraData == null) ? [] : $extraData;
         $event      = Model_Event_Factory::createEvent($eventType);
@@ -324,13 +324,13 @@ class Entity_Notification extends Entity implements Notification
 
         switch ($event->getNotifierClass()) {
             case Entity_User_Employer::class:
-                $notifier = $project->user_id;
-                $notified = $user->user_id;
+                $notifier = $subject->getData()['user_id'];
+                $notified = $user->getId();
                 break;
 
             case Entity_User_Freelancer::class:
-                $notifier = $user->user_id;
-                $notified = $project->user_id;
+                $notifier = $user->getId();
+                $notified = $subject->getData()['user_id'];
                 break;
         }
 
@@ -341,9 +341,9 @@ class Entity_Notification extends Entity implements Notification
         $notification->setNotifierUserId($notifier);
         $notification->setNotifiedUserId($notified);
         $notification->setEventId($event->getId());
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+        $notification->setSubjectId($subject->getId());
+        $notification->setSubjectName($subject->getSubjectType());
+        $notification->setUrl(Route::url('projectProfile', ['slug' => $subject->getData()['slug']]));
 
         if ($extraData) {
             $notification->setExtraDataJson(json_encode($extraData));
