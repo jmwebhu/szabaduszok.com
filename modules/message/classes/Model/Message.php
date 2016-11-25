@@ -111,16 +111,27 @@ class Model_Message extends ORM implements Message, Notification_Subject
     public function send()
     {
         $this->save();
-        
+
         $notifierEntity = Entity_User::createUser($this->sender->type, $this->sender);
         $notifiedEntity = Entity_User::createUser($this->receiver->type, $this->receiver);
 
         $notification           = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, ['message' => $this->message]);
-        $this->notification_id  = $notification->getId();
-        $this->save();
+        /*$this->notification_id  = $notification->getId();
+        $this->save();*/
 
         $entity = Entity_User::createUser($this->receiver->type, $this->receiver);
         $entity->setNotification($notification);
         $entity->sendNotification();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationUrl()
+    {
+        /**
+         * @todo
+         */
+        return URL::base(true, false) . 'uzenetek';
     }
 }

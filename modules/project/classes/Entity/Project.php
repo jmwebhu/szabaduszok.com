@@ -484,8 +484,19 @@ class Entity_Project extends Entity implements Notification_Subject
         return $this->_project_id;
     }
 
+    /**
+     * @return string
+     */
     public function getSubjectType()
     {
         return $this->_model->object_name();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationUrl()
+    {
+        return Route::url('projectProfile', ['slug' => $this->_slug]);
     }
 }

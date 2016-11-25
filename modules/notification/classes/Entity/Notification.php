@@ -323,12 +323,6 @@ class Entity_Notification extends Entity implements Notification
         $notifierId     = null;
         $notifiedId     = null;
 
-        /**
-         * @todo
-         * - Modositani ugy, hogy ne az event -tol fuggjon ki az ertesito es ki az ertesitett
-         * - Atadni parameterben az ertesitot es az ertesitettet
-         */
-
         $notifierId = $notifier->getId();
         $notifiedId = $notified->getId();
 
@@ -341,7 +335,7 @@ class Entity_Notification extends Entity implements Notification
         $notification->setEventId($event->getId());
         $notification->setSubjectId($subject->getId());
         $notification->setSubjectName($subject->getSubjectType());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $subject->getData()['slug']]));
+        $notification->setUrl($subject->getNotificationUrl());
 
         if ($extraData) {
             $notification->setExtraDataJson(json_encode($extraData));

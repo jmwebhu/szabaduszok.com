@@ -16,4 +16,9 @@ interface Notification_Subject
      * @return array
      */
     public function getData();
+
+    /**
+     * @return string
+     */
+    public function getNotificationUrl();
 }
