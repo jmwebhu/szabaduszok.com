@@ -307,7 +307,6 @@ class Entity_Notification extends Entity implements Notification
         return $this->_model->getFromExtraData($key);
     }
 
-
     /**
      * @param int $eventType
      * @param Notification_Subject $subject

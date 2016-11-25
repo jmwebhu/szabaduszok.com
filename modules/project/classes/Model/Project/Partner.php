@@ -75,22 +75,10 @@ class Model_Project_Partner extends ORM
     public function apply(array $data, Authorization_User $authorization)
     {
         try {
-            $project                = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
-            $entityProject          = new Entity_Project($project);
-
             $this->throwExceptionIfNotAuthorized($authorization->canApply());
+            $result = $this->submit($data);
 
-            $result                 = $this->submit($data);
-            $notifierEntity         = Entity_User::createUser($this->user->type, $this->user);
-            $notifiedEntity         = Entity_User::createUser($this->project->user->type, $this->project->user);
-
-            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_NEW, $entityProject, $notifierEntity, $notifiedEntity, Arr::get($data, 'extra_data'));
-            $this->notification_id  = $notification->getId();
-            $this->save();
-
-            $entity = new Entity_User_Employer($project->user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
+            $this->sendNotificationToNotified(Model_Event::TYPE_CANDIDATE_NEW, $this->user, $this->project->user, Arr::get($data, 'extra_data'));
 
         } catch (Exception $ex) {
             Log::instance()->addException($ex);
@@ -109,16 +97,7 @@ class Model_Project_Partner extends ORM
     {
         try {
             $this->throwExceptionIfNotAuthorized($authorization->canUndoApplication());
-
-            $entityProject          = new Entity_Project($this->project);
-            $notifierEntity         = Entity_User::createUser($this->user->type, $this->user);
-            $notifiedEntity         = Entity_User::createUser($this->project->user->type, $this->project->user);
-
-            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_UNDO, $entityProject, $notifierEntity, $notifiedEntity, $extraData);
-
-            $entity = new Entity_User_Employer($this->project->user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
+            $this->sendNotificationToNotified(Model_Event::TYPE_CANDIDATE_UNDO, $this->user, $this->project->user, $extraData);
 
             $result = $this->delete();
 
@@ -144,17 +123,7 @@ class Model_Project_Partner extends ORM
             $this->type = self::TYPE_PARTICIPANT;
             $this->save();
 
-            $entityProject          = new Entity_Project($this->project);
-            $notifierEntity         = Entity_User::createUser($this->project->user->type, $this->project->user);
-            $notifiedEntity         = Entity_User::createUser($this->user->type, $this->user);
-
-            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_ACCEPT, $entityProject, $notifierEntity, $notifiedEntity, $extraData);
-            $this->notification_id  = $notification->getId();
-            $this->save();
-
-            $entity = new Entity_User_Freelancer($this->user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
+            $this->sendNotificationToNotified(Model_Event::TYPE_CANDIDATE_ACCEPT, $this->project->user, $this->user, $extraData);
 
             $result = $this;
 
@@ -167,6 +136,7 @@ class Model_Project_Partner extends ORM
     }
 
     /**
+     * @param Authorization_User $authorization
      * @param array $extraData
      * @return ORM
      */
@@ -174,18 +144,7 @@ class Model_Project_Partner extends ORM
     {
         try {
             $this->throwExceptionIfNotAuthorized($authorization->canRejectApplication());
-            $entityProject          = new Entity_Project($this->project);
-
-            $notifierEntity         = Entity_User::createUser($this->project->user->type, $this->project->user);
-            $notifiedEntity         = Entity_User::createUser($this->user->type, $this->user);
-
-            $notification           = Entity_Notification::createFor(Model_Event::TYPE_CANDIDATE_REJECT, $entityProject, $notifierEntity, $notifiedEntity, $extraData);
-            $this->notification_id  = $notification->getId();
-            $this->save();
-
-            $entity = new Entity_User_Freelancer($this->user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
+            $this->sendNotificationToNotified(Model_Event::TYPE_CANDIDATE_REJECT, $this->project->user, $this->user, $extraData);
 
             $result = $this->delete();
 
@@ -198,6 +157,7 @@ class Model_Project_Partner extends ORM
     }
 
     /**
+     * @param Authorization_User $authorization
      * @param array $extraData
      * @return ORM
      */
@@ -205,18 +165,7 @@ class Model_Project_Partner extends ORM
     {
         try {
             $this->throwExceptionIfNotAuthorized($authorization->canCancelParticipation());
-            $entityProject          = new Entity_Project($this->project);
-
-            $notifierEntity         = Entity_User::createUser($this->project->user->type, $this->project->user);
-            $notifiedEntity         = Entity_User::createUser($this->user->type, $this->user);
-
-            $notification           = Entity_Notification::createFor(Model_Event::TYPE_PARTICIPATE_REMOVE, $entityProject, $notifierEntity, $notifiedEntity, $extraData);
-            $this->notification_id  = $notification->getId();
-            $this->save();
-
-            $entity = new Entity_User_Freelancer($this->user);
-            $entity->setNotification($notification);
-            $entity->sendNotification();
+            $this->sendNotificationToNotified(Model_Event::TYPE_PARTICIPATE_REMOVE, $this->project->user, $this->user, $extraData);
 
             $result = $this->delete();
 
@@ -252,17 +201,6 @@ class Model_Project_Partner extends ORM
     public function getByUserProject(array $data)
     {
         return $this->where('user_id', '=', $data['user_id'])->and_where('project_id', '=', $data['project_id'])->limit(1)->find();
-    }
-
-    /**
-     * @param bool $isAuthorized
-     * @throws Exception
-     */
-    protected function throwExceptionIfNotAuthorized($isAuthorized)
-    {
-        if (!$isAuthorized) {
-            throw new Exception('Nincs jogosultságod a művelethez');
-        }
     }
 
     /**
@@ -309,5 +247,37 @@ class Model_Project_Partner extends ORM
             ->execute()->count();
 
         return $count == 1;
+    }
+
+    /**
+     * @param int $eventId
+     * @param Model_User $notifier
+     * @param Model_User $notified
+     * @param null|array $extraData
+     */
+    protected function sendNotificationToNotified($eventId, Model_User $notifier, Model_User $notified, $extraData = null)
+    {
+        $projectEntity      = new Entity_Project($this->project);
+        $notifierEntity     = Entity_User::createUser($notifier->type, $notifier);
+        $notifiedEntity     = Entity_User::createUser($notified->type, $notified);
+
+        $notification       = Entity_Notification::createFor($eventId, $projectEntity, $notifierEntity, $notifiedEntity, $extraData);
+
+        $notifiedEntity->setNotification($notification);
+        $notifiedEntity->sendNotification();
+
+        $this->notification_id  = $notification->getId();
+        $this->save();
+    }
+
+    /**
+     * @param bool $isAuthorized
+     * @throws Exception
+     */
+    protected function throwExceptionIfNotAuthorized($isAuthorized)
+    {
+        if (!$isAuthorized) {
+            throw new Exception('Nincs jogosultságod a művelethez');
+        }
     }
 }
