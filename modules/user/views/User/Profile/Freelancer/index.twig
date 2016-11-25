@@ -30,7 +30,7 @@
             </div>
 
             {% if user.getWebpage() %}
-                <div class="col-5 fs16 profile-webpage-icon-container">
+                <div class="col-5 fs15 pt1 mrp1 mlm1 mb1">
                     <span class="fa fa-chrome icon-dark-gray"></span>
                 </div>
                 <div class="col-95 fs18 profile-webpage-container">
@@ -39,11 +39,11 @@
             {% endif %}
 
             {% if user.getCvPath() %}
-                <div class="col-5 fs18">
-                    <span class="ion ion-android-attach icon-sm icon-dark-gray"></span>
+                <div class="col-5 fs17 mt2">
+                    <span class="fa fa-paperclip icon-sm icon-dark-gray"></span>
                 </div>
                 <div class="col-95 fs18">
-                    <a href="{{ ROOT }}uploads/cv/{{ user.getCvPath() }}" download title="Szabaduszok.com - {{ user.getName() }}">Önéletrajz letöltése</a>
+                    <a href="{{ ROOT }}uploads/cv/{{ user.getCvPath() }}" download title="Szabaduszok.com - {{ user.getName() }}">Önéletrajz</a>
                 </div>
             {% endif %}
 
