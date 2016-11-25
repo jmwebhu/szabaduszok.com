@@ -148,6 +148,7 @@ var FreelancerProfile = {
 				
 				FreelancerProfile.$rateButton.fadeOut(function () {
 					FreelancerProfile.$rateButton.hide();
+					$('div.bottom-container').addClass('pt20');
 				});								
 				
 				FreelancerProfile.$rating.barrating('set', parseInt(data.avg));

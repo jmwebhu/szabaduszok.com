@@ -1,0 +1,12 @@
+Directory DOCROOT/uploads/cv must be writable Trace: #0 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/File/User/Freelancer.php(36): Kohana_Upload::save(Array, 'szabaduszok-sza...', '/Applications/M...')
+#1 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/File/User/Freelancer.php(19): File_User_Freelancer->uploadCv()
+#2 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/Entity/User.php(437): File_User_Freelancer->uploadFiles()
+#3 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/Controller/User/Update.php(87): Entity_User->submitUser(Array, Object(Gateway_Mailinglist_Mailchimp_Freelancer))
+#4 /Applications/MAMP/htdocs/szabaduszok.com/modules/user/classes/Controller/User/Update.php(36): Controller_User_Update->handlePostRequest()
+#5 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Controller.php(84): Controller_User_Update->action_index()
+#6 [internal function]: Kohana_Controller->execute()
+#7 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request/Client/Internal.php(97): ReflectionMethod->invoke(Object(Controller_User_Update_Freelancer))
+#8 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request/Client.php(114): Kohana_Request_Client_Internal->execute_request(Object(Request), Object(Response))
+#9 /Applications/MAMP/htdocs/szabaduszok.com/system/classes/Kohana/Request.php(997): Kohana_Request_Client->execute(Object(Request))
+#10 /Applications/MAMP/htdocs/szabaduszok.com/index.php(132): Kohana_Request->execute()
+#11 {main} GET: [] POST: {"csrf-token":"e7gx5sUIVgbfbk48ZEodUGWUAP55H5C5oWFMf25n0RI=","user_id":"2","landing_page_name":"","lastname":"Szabad\u00fasz\u00f3","firstname":"J\u00e1nos","email":"janos@szabaduszok.com","industries":["1"],"professions":["1"],"skills":["1","2","3"],"webpage":"szabaduszok.com","min_net_hourly_wage":"3000","short_description":"5 \u00e9ves tapasztalat webes rendszerek fejleszt\u00e9s\u00e9ben. Nagyv\u00e1llalati rendszerek, folyamatir\u00e1ny\u00edt\u00e1s, sz\u00e1ml\u00e1z\u00e1s, \u00fczteli folyamatok, nagy terhel\u00e9s\u0171 rendszerek.","profiles":["http:\/\/linkedin.com\/janos","http:\/\/stackoverflow.com\/janos","http:\/\/facebook.com\/janos","","",""],"address_postal_code":"9700","address_city":"Szombathely","address_street":"","password":"","password_confirm":"","profile_picture":{"name":"","type":"","tmp_name":"","error":"4","size":"0"},"cv":{"name":"Graham-vs-Buffett.pdf","type":"application\/pdf","tmp_name":"\/Applications\/MAMP\/tmp\/php\/phptS497h","error":"0","size":"72024"}}

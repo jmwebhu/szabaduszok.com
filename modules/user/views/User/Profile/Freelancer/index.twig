@@ -12,6 +12,8 @@
                     </a>
                 {% endfor %}
             </div>
+            <a href="{{ ROOT }}uzenetek/{{ user.getSlug() }}" class="btn btn-lg btn-block btn-ultramarine-blue"><span class="fa fa-comments-o icon-spacer icon-white"></span>Kapcsolatfelvétel</a>
+
         {% endblock imageContainer %}
 
         {% block detailsContainerContact %}
@@ -25,13 +27,6 @@
                 {% else %}
                     Nincs adat
                 {% endif %}
-            </div>
-
-            <div class="col-5 fs18">
-                <span class="ion ion-email icon-dark-gray"></span>
-            </div>
-            <div class="col-95 fs18 profile-email-container">
-                <a href="mailto:{{ user.getEmail() }}">E-mail küldése</a>
             </div>
 
             {% if user.getWebpage() %}
