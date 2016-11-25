@@ -241,6 +241,14 @@ abstract class Entity
     }
 
     /**
+     * @return ORM
+     */
+    public function delete()
+    {
+        return $this->_model->delete();
+    }
+
+    /**
      * @param null $class   Unittest miatt
      * @return string
      */

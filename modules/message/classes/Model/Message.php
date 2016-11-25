@@ -115,9 +115,7 @@ class Model_Message extends ORM implements Message, Notification_Subject
         $notifierEntity = Entity_User::createUser($this->sender->type, $this->sender);
         $notifiedEntity = Entity_User::createUser($this->receiver->type, $this->receiver);
 
-        $notification           = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, ['message' => $this->message]);
-        /*$this->notification_id  = $notification->getId();
-        $this->save();*/
+        $notification   = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, ['message' => $this->message]);
 
         $entity = Entity_User::createUser($this->receiver->type, $this->receiver);
         $entity->setNotification($notification);
