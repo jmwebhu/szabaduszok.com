@@ -4,8 +4,12 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        echo Debug::vars(Security::token());
-        echo Debug::vars(Session::instance()->as_array());
+        $arr = ['x' => 123];
+        try {
+            throw new Exception('Test');
+        } catch (Exception $ovex) {
+            Log::instance()->addException($ovex);
+        }
     }
 
     public function action_user()

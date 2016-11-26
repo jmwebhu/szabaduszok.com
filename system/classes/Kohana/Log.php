@@ -185,6 +185,11 @@ class Kohana_Log {
         $getJson 	=  json_encode(Input::get_all());
 
         $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString() . ' GET: ' . $getJson . ' POST: ' . $postJson;
+
+        if ($ex instanceof ORM_Validation_Exception) {
+            $message .= ' ERRORS: ' . json_encode($ex->errors());
+        }
+
         $this->add($level, $message);
     }
 
