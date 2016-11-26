@@ -4,11 +4,15 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $arr = ['x' => 123];
-        try {
-            throw new Exception('Test');
-        } catch (Exception $ovex) {
-            Log::instance()->addException($ovex);
+        $users = ORM::factory('User')->find_all();
+        foreach ($users as $user) {
+            //echo Debug::vars($user->email);
+            $validation = Validation::factory($user->object());
+            $validation->rule('email', 'email_domain');
+
+            if (!$validation->check()) {
+                echo Debug::vars($user->email);
+            }
         }
     }
 
