@@ -132,4 +132,9 @@ class Model_Message extends ORM implements Message, Notification_Subject
          */
         return URL::base(true, false) . 'uzenetek';
     }
+
+    public function getParticipantsBy(Model_User $user)
+    {
+
+    }
 }
