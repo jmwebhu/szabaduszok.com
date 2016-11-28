@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') OR die('No direct access allowed.');
 
-class Model_User extends Model_Auth_User implements Message_Participant
+class Model_User extends Model_Auth_User
 {
 	public $_nameField          = 'lastname';
 	public $_nameFieldSecond    = 'firstname';

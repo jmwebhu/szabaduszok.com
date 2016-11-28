@@ -1,6 +1,6 @@
 <?php
 
-interface Message_Participant
+interface Conversation_Participant
 {
     /**
      * @return int
@@ -11,9 +11,4 @@ interface Message_Participant
      * @return string
      */
     public function getName();
-
-    /**
-     * @return string
-     */
-    public function getJson();
 }
