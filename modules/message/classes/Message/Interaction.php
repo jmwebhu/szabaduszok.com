@@ -26,4 +26,14 @@ interface Message_Interaction
      * @return bool
      */
     public function getIsReaded();
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt();
 }

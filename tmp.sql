@@ -1,7 +1,7 @@
 #
 # SQL Export
 # Created by Querious (1055)
-# Created: 2016. november 28. 21:11:26 CET
+# Created: 2016. november 28. 21:16:28 CET
 # Encoding: Unicode (UTF-8)
 #
 
@@ -141,6 +141,8 @@ CREATE TABLE `message_interactions` (
   `user_id` int(11) unsigned DEFAULT '0',
   `is_deleted` tinyint(1) unsigned DEFAULT '0',
   `is_readed` tinyint(1) unsigned DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`message_interaction_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
