@@ -11,9 +11,7 @@ class Model_Conversation_Test extends Unittest_TestCase
         $rules          = $conversation->rules();
 
         $this->assertArrayHasKey('name', $rules);
-        $this->assertArrayHasKey('slug', $rules);
 
         $this->assertTrue(in_array(['not_empty'], $rules['name']));
-        $this->assertTrue(in_array(['not_empty'], $rules['slug']));
     }
 }

@@ -36,4 +36,10 @@ interface Conversation
      * @return array of Message
      */
     public function getMessages();
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    public function submit(array $data);
 }

@@ -39,8 +39,7 @@ class Model_Conversation extends ORM implements Conversation
     public function rules()
     {
         return [
-            'name'  => [['not_empty']],
-            'slug'  => [['not_empty']]
+            'name'  => [['not_empty']]
         ];
     }
 

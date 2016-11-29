@@ -82,4 +82,17 @@ class Entity_Conversation extends Entity implements Conversation
     {
         return $this->_model->getMessages();
     }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->_name = $name;
+    }
+
+    public function setParticipants(array $participant)
+    {
+        // TODO: Implement setParticipants() method.
+    }
 }

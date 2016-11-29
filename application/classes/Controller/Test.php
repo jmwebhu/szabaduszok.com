@@ -4,7 +4,24 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        EntityFieldGenerator::generateFromModel(new Model_Message());
+        try {
+            $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER, 2);
+            $employer   = Entity_User::createUser(Entity_User::TYPE_EMPLOYER, 1);
+
+            $data = [
+                'name'          => 'Joó Martin, Kis Pista',
+                'participants'  => [$employer, $freelancer]
+            ];
+
+            $conversation = new Entity_Conversation();
+            $submit = $conversation->submit($data);
+            echo Debug::vars($submit);
+
+        } catch (Exception $ex) {
+            echo Debug::vars($ex->getMessage());
+            echo Debug::vars($ex->getTraceAsString());
+            exit;
+        }
     }
 
     public function action_user()
