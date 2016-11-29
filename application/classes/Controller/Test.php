@@ -4,15 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $sender     = Entity_User::createUser(2, 1);
-        $receiver   = Entity_User::createUser(2, 2);
-
-        $message = new Model_Message();
-        $message->setSender($sender);
-        $message->setReceiver($receiver);
-        $message->setMessage('Hello');
-
-        $message->send();
+        EntityFieldGenerator::generateFromModel(new Model_Message());
     }
 
     public function action_user()
@@ -37,7 +29,7 @@ class Controller_Test extends Controller
         try {
             $result = $user->submitUser($data);
             //echo Debug::vars($result);
-        } catch (ORM_Validation_Eception $ex) {
+        } catch (ORM_Validation_Exception $ex) {
             echo Debug::vars($ex->errors());
             echo Debug::vars($ex);
         } finally {

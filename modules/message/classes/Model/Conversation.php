@@ -27,7 +27,13 @@ class Model_Conversation extends ORM implements Conversation
         'messages'  => [
             'model'         => 'Message',
             'foreign_key'   => 'conversation_id'
-        ]
+        ],
+        'users'  => [
+            'model'         => 'User',
+            'far_key'       => 'user_id',
+            'through'       => 'conversation_users',
+            'foreign_key'   => 'conversation_id'
+        ],
     ];
 
     public function rules()
@@ -79,14 +85,16 @@ class Model_Conversation extends ORM implements Conversation
     }
 
     /**
-     * @return array
+     * @return array of Conversation_Participant
      */
     public function getParticipants()
     {
-        /**
-         * @todo
-         */
-        return [];
+        $users = [];
+        foreach ($this->users->find_all as $user) {
+            $users[] = Entity_User::createUser($user->type, $user);
+        }
+
+        return $users;
     }
 
     /**
@@ -94,7 +102,7 @@ class Model_Conversation extends ORM implements Conversation
      */
     public function getMessages()
     {
-        $entity     = new Entity_Message();
+        $entity = new Entity_Message();
         return $entity->getEntitiesFromModels($this->messages->find_all());
     }
 }
