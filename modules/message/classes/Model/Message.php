@@ -38,11 +38,13 @@ class Model_Message extends ORM implements Message
     public function rules()
     {
         return [
-            'sender_id'     => [['not_empty']],
-            'receiver_id'   => [['not_empty']],
-            'message'       => [['not_empty']]
+            'conversation_id'   => [['not_empty']],
+            'sender_id'         => [['not_empty']],
+            'message'           => [['not_empty']]
         ];
     }
+
+    // Message implementaions
 
     /**
      * @return int
@@ -76,11 +78,6 @@ class Model_Message extends ORM implements Message
         return $this->message;
     }
 
-    public function send()
-    {
-        // TODO: Implement send() method.
-    }
-
     /**
      * @return DateTime
      */
@@ -95,5 +92,10 @@ class Model_Message extends ORM implements Message
     public function getUpdatedAt()
     {
         return new DateTime($this->updated_at);
+    }
+
+    public function send()
+    {
+        // TODO: Implement send() method.
     }
 }
