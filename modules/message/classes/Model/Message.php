@@ -35,6 +35,13 @@ class Model_Message extends ORM implements Message
         ],
     ];
 
+    protected $_has_many = [
+        'interactions'  => [
+            'model'         => 'Message_Interaction',
+            'foreign_key'   => 'message_id'
+        ]
+    ];
+
     public function rules()
     {
         return [

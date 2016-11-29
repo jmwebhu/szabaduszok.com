@@ -23,6 +23,13 @@ class Model_Conversation extends ORM implements Conversation
         'updated_at'        => ['type' => 'datetime',   'null' => true]
     ];
 
+    protected $_has_many = [
+        'messages'  => [
+            'model'         => 'Message',
+            'foreign_key'   => 'conversation_id'
+        ]
+    ];
+
     public function rules()
     {
         return [
@@ -83,15 +90,11 @@ class Model_Conversation extends ORM implements Conversation
     }
 
     /**
-     * @return array
+     * @return array of Message
      */
     public function getMessages()
     {
-        /**
-         * @todo
-         */
-        return [];
+        $entity     = new Entity_Message();
+        return $entity->getEntitiesFromModels($this->messages->find_all());
     }
-
-
 }
