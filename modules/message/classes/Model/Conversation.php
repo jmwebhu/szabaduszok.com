@@ -43,7 +43,7 @@ class Model_Conversation extends ORM implements Conversation
      */
     public function getId()
     {
-        return $this->conversation_id;
+        return (int)$this->conversation_id;
     }
 
     /**

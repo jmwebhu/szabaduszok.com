@@ -58,7 +58,7 @@ class Model_Message extends ORM implements Message
      */
     public function getId()
     {
-        return $this->message_id;
+        return (int)$this->message_id;
     }
 
     /**
