@@ -16,4 +16,14 @@ interface Conversation_Participant_Link
      * @return Conversation_Participant
      */
     public function getParticipant();
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt();
 }
