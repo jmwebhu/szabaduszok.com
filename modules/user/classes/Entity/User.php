@@ -1,6 +1,6 @@
 <?php
 
-abstract class Entity_User extends Entity implements Notifiable
+abstract class Entity_User extends Entity implements Notifiable, Conversation_Participant
 {
     const TYPE_FREELANCER       = 1;
     const TYPE_EMPLOYER         = 2;

@@ -26,4 +26,14 @@ interface Message
      * @return void
      */
     public function send();
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt();
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt();
 }
