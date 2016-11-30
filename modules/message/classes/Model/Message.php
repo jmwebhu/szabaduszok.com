@@ -113,13 +113,10 @@ class Model_Message extends ORM implements Message
     {
         parent::submit($data);
 
-        $this->addRelations($data);
+        $this->addInteractions();
     }
 
-    /**
-     * @param array $data
-     */
-    protected function addRelations(array $data)
+    protected function addInteractions()
     {
         foreach ($this->conversation->users->find_all() as $user) {
             $interaction                = new Model_Message_Interaction();
