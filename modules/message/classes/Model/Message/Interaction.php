@@ -59,7 +59,7 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
 
     /**
      * @param int $messageId
-     * @return Model_Message_Interaction
+     * @return array of Model_Message_Interaction
      */
     public static function getAllByMessage($messageId)
     {

@@ -95,4 +95,16 @@ class Entity_Conversation extends Entity implements Conversation
     {
         // TODO: Implement setParticipants() method.
     }
+
+    /**
+     * @param Conversation_Participant $user
+     */
+    public function deleteConversation(Conversation_Participant $user)
+    {
+        $interaction                    = new Model_Conversation_Interaction();
+        $interaction->conversation_id   = $this->getId();
+        $interaction->user_id           = $user->getId();
+        $interaction->is_deleted        = true;
+        $interaction->save();
+    }
 }
