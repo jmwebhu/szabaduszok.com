@@ -5,14 +5,22 @@ class Controller_Test extends Controller
     public function action_index()
     {
         try {
-            $data = [
+            /*$data = [
                 'name'  => 'Joó Martin, Kis Pista',
                 'users' => [2, 1]
             ];
 
             $conversation = new Entity_Conversation();
-            $submit = $conversation->submit($data);
-            echo Debug::vars($submit);
+            $submit = $conversation->submit($data);*/
+
+            $data = [
+                'conversation_id'   => 18,
+                'message'           => 'Teszt',
+                'sender_id'         => 2
+            ];
+
+            $message = new Entity_Message();
+            $message->submit($data);
 
         } catch (Exception $ex) {
             echo Debug::vars($ex->getMessage());

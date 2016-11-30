@@ -30,8 +30,8 @@ class Model_Message extends ORM implements Message
             'foreign_key'   => 'sender_id'
         ],
         'conversation'          => [
-            'model'         => 'User',
-            'foreign_key'   => 'sender_id'
+            'model'         => 'Conversation',
+            'foreign_key'   => 'conversation_id'
         ],
     ];
 
@@ -104,5 +104,31 @@ class Model_Message extends ORM implements Message
     public function send()
     {
         // TODO: Implement send() method.
+    }
+
+    /**
+     * @param array $data
+     */
+    public function submit(array $data)
+    {
+        parent::submit($data);
+
+        $this->addRelations($data);
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function addRelations(array $data)
+    {
+        foreach ($this->conversation->users->find_all() as $user) {
+            $interaction                = new Model_Message_Interaction();
+            $interaction->message_id    = $this->message_id;
+            $interaction->user_id       = $user->user_id;
+            $interaction->is_deleted    = false;
+            $interaction->is_readed     = ($user->user_id == $this->sender_id) ? true : false;
+
+            $interaction->save();
+        }
     }
 }

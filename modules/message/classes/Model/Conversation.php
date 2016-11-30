@@ -122,7 +122,6 @@ class Model_Conversation extends ORM implements Conversation
     protected function addRelations(array $data)
     {
         $this->removeAll('conversations_users', 'conversation_id');
-
         $this->addRelation($data, new Model_Conversation_User(), new Model_User());
     }
 }
