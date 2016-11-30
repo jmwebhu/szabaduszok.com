@@ -59,6 +59,16 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
 
     /**
      * @param int $messageId
+     * @return Model_Message_Interaction
+     */
+    public static function getAllByMessage($messageId)
+    {
+        $model = new Model_Message_Interaction();
+        return $model->where('message_id', '=', $messageId)->find_all();
+    }
+
+    /**
+     * @param int $messageId
      * @param int $userId
      * @return array of Model_Message_Interaction
      */

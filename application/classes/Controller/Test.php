@@ -4,11 +4,11 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $interactions = new Model_Message_Interaction([
-            'message_id' => 6
-        ]);
+        /*$outgoing = new Entity_Message(6);
+        $outgoing->deleteMessage(new Entity_User_Freelancer(2));*/
 
-        echo Debug::vars($interactions);
+        $incoming = new Entity_Message(6);
+        $incoming->deleteMessage(new Entity_User_Employer(1));
     }
 
     public function action_user()

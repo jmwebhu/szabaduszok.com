@@ -4,8 +4,7 @@ class Message_Transaction_Delete_Type_Outgoing extends Message_Transaction_Delet
 {
     public function delete()
     {
-        $interactions = Model_Message_Interaction::getAllByMessageExceptGivenUser(
-            $this->_message->getId(), $this->_user->getId());
+        $interactions = Model_Message_Interaction::getAllByMessage($this->_message->getId());
 
         foreach ($interactions as $interaction) {
             /**

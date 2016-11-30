@@ -60,6 +60,25 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
         $this->assertEquals(0, $interaction->is_deleted);
     }
 
+    /**
+     * @covers Model_Message_Interaction::getAllByMessage()
+     */
+    public function testGetAllByMessage()
+    {
+        $interactions = Model_Message_Interaction::getAllByMessage(self::$_messages[0]->getId());
+
+        $this->assertEquals(2, count($interactions));
+
+        $interactionSender      = $interactions[0];
+        $interactionReceiver    = $interactions[1];
+
+        $this->assertEquals(1, $interactionSender->is_readed);
+        $this->assertEquals(0, $interactionSender->is_deleted);
+
+        $this->assertEquals(0, $interactionReceiver->is_readed);
+        $this->assertEquals(0, $interactionReceiver->is_deleted);
+    }
+
     public static function setUpBeforeClass()
     {
         self::setUpUsers();
