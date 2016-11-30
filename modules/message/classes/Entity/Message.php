@@ -3,6 +3,11 @@
 class Entity_Message extends Entity implements Message
 {
     /**
+     * @var Message_Transaction_Delete
+     */
+    protected $_transactionDelete = null;
+
+    /**
      * @var int
      */
     protected $_message_id;
@@ -83,5 +88,14 @@ class Entity_Message extends Entity implements Message
     public function send()
     {
         // TODO: Implement send() method.
+    }
+
+    /**
+     * @param Conversation_Participant $user
+     */
+    public function deleteMessage(Conversation_Participant $user)
+    {
+        $this->_transactionDelete = new Message_Transaction_Delete($this, $user);
+        $this->_transactionDelete->delete();
     }
 }

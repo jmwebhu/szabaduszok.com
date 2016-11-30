@@ -10,7 +10,6 @@ class Message_Transaction_Delete_Type_Incoming extends Message_Transaction_Delet
         $interaction = Model_Message_Interaction::getByMessageAndUser(
             $this->_message->getId(), $this->_user->getId());
 
-        $interaction->is_deleted = true;
-        $interaction->save();
+        $interaction->setIsDeleted(true);
     }
 }

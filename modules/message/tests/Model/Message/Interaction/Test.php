@@ -74,7 +74,7 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
         }
 
         foreach (self::$_users as $user) {
-            $user->delete();
+            DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
         }
 
         foreach (self::$_conversations as $conversation) {
