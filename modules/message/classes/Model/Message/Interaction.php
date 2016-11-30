@@ -114,11 +114,13 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
     }
 
     /**
+     * @param int $messageId
      * @param int $userId
      * @return array of Model_Message_Interaction
      */
-    public static function getAllExcept($userId)
+    public static function getAllByMessageExceptGivenUser($messageId, $userId)
     {
-
+        $model = new Model_Message_Interaction();
+        return $model->where('message_id', '=', $messageId)->and_where('user_id', '!=', $userId)->find_all();
     }
 }

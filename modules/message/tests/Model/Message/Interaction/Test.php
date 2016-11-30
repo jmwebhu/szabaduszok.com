@@ -44,6 +44,22 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
         $this->assertEquals(0, $interaction->is_deleted);
     }
 
+    /**
+     * @covers Model_Message_Interaction::getAllByMessageExceptGivenUser()
+     */
+    public function testGetAllByMessageExceptGivenUser()
+    {
+        $interactions = Model_Message_Interaction::getAllByMessageExceptGivenUser(self::$_messages[0]->getId(), self::$_users[0]->getId());
+
+        $this->assertEquals(1, count($interactions));
+
+        $interaction = $interactions[0];
+
+        $this->assertEquals(self::$_users[1], $interaction->user_id);
+        $this->assertEquals(0, $interaction->is_readed);
+        $this->assertEquals(0, $interaction->is_deleted);
+    }
+
     public static function setUpBeforeClass()
     {
         self::setUpUsers();
