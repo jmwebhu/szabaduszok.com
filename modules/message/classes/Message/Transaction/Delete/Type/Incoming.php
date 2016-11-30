@@ -1,9 +1,16 @@
 <?php
 
-class Message_Transaction_Delete_Type_Incoming implements Message_Transaction_Delete_Type
+class Message_Transaction_Delete_Type_Incoming extends Message_Transaction_Delete_Type
 {
+    /**
+     * @return void
+     */
     public function delete()
     {
-        // TODO: Implement delete() method.
+        $interaction = Model_Message_Interaction::getByMessageAndUser(
+            $this->_message->getId(), $this->_user->getId());
+
+        $interaction->is_deleted = true;
+        $interaction->save();
     }
 }

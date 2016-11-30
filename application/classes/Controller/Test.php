@@ -4,29 +4,11 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        try {
-            /*$data = [
-                'name'  => 'Joó Martin, Kis Pista',
-                'users' => [2, 1]
-            ];
+        $interactions = new Model_Message_Interaction([
+            'message_id' => 6
+        ]);
 
-            $conversation = new Entity_Conversation();
-            $submit = $conversation->submit($data);*/
-
-            $data = [
-                'conversation_id'   => 18,
-                'message'           => 'Teszt',
-                'sender_id'         => 2
-            ];
-
-            $message = new Entity_Message();
-            $message->submit($data);
-
-        } catch (Exception $ex) {
-            echo Debug::vars($ex->getMessage());
-            echo Debug::vars($ex->getTraceAsString());
-            exit;
-        }
+        echo Debug::vars($interactions);
     }
 
     public function action_user()

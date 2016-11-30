@@ -18,18 +18,18 @@ class Message_Transaction_Delete
     protected $_type    = null;
 
     /**
-     * Message_Transaction_Delete constructor.
-     * @param Message $_message
-     * @param Conversation_Participant $_user
+     * @param Message $message
+     * @param Conversation_Participant $user
      */
-    public function __construct(Message $_message, Conversation_Participant $_user)
+    public function __construct(Message $message, Conversation_Participant $user)
     {
-        $this->_message = $_message;
-        $this->_user    = $_user;
+        $this->_message = $message;
+        $this->_user    = $user;
+        $this->_type    = Message_Transaction_Delete_Type_Factory::createType($message, $user);
     }
 
     public function delete()
     {
-
+        return $this->_type->delete();
     }
 }

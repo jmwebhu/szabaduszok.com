@@ -99,4 +99,26 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
     {
         return new DateTime($this->updated_at);
     }
+
+    /**
+     * @param int $messageId
+     * @param int $userId
+     * @return Model_Message_Interaction
+     */
+    public static function getByMessageAndUser($messageId, $userId)
+    {
+        return new Model_Message_Interaction([
+            'message_id'    => $messageId,
+            'user_id'       => $userId
+        ]);
+    }
+
+    /**
+     * @param int $userId
+     * @return array of Model_Message_Interaction
+     */
+    public static function getAllExcept($userId)
+    {
+
+    }
 }
