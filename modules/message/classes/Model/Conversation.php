@@ -31,7 +31,7 @@ class Model_Conversation extends ORM implements Conversation
         'users'  => [
             'model'         => 'User',
             'far_key'       => 'user_id',
-            'through'       => 'conversation_users',
+            'through'       => 'conversations_users',
             'foreign_key'   => 'conversation_id'
         ],
     ];
@@ -103,5 +103,26 @@ class Model_Conversation extends ORM implements Conversation
     {
         $entity = new Entity_Message();
         return $entity->getEntitiesFromModels($this->messages->find_all());
+    }
+
+    /**
+     * @param array $data
+     */
+    public function submit(array $data)
+    {
+        parent::submit($data);
+
+        $this->saveSlug();
+        $this->addRelations($data);
+    }
+
+    /**
+     * @param array $data
+     */
+    protected function addRelations(array $data)
+    {
+        $this->removeAll('conversations_users', 'conversation_id');
+
+        $this->addRelation($data, new Model_Conversation_User(), new Model_User());
     }
 }

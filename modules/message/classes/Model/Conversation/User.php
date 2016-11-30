@@ -2,25 +2,13 @@
 
 class Model_Conversation_User extends ORM implements Conversation_Participant_Link
 {
-    protected $_table_name  = 'conversation_users';
+    protected $_table_name  = 'conversations_users';
     protected $_primary_key = 'conversation_user_id';
-
-    protected $_created_column = [
-        'column' => 'created_at',
-        'format' => 'Y-m-d H:i'
-    ];
-
-    protected $_updated_column = [
-        'column' => 'updated_at',
-        'format' => 'Y-m-d H:i'
-    ];
 
     protected $_table_columns = [
         'conversation_user_id'  => ['type' => 'int',        'key' => 'PRI'],
         'conversation_id'       => ['type' => 'int',        'null' => true],
-        'user_id'               => ['type' => 'int',        'null' => true],
-        'created_at'            => ['type' => 'datetime',   'null' => true],
-        'updated_at'            => ['type' => 'datetime',   'null' => true]
+        'user_id'               => ['type' => 'int',        'null' => true]
     ];
 
     public function rules()
