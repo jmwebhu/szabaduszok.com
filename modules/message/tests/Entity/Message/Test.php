@@ -4,7 +4,9 @@ class Entity_Messge_Test extends Unittest_TestCase
 {
     protected static $_users = [];
 
-    protected static $_conversation = null;
+    protected static $_conversations = [];
+
+    protected static $_message = null;
 
     /**
      * @covers Entity_Message::submit()
@@ -14,7 +16,7 @@ class Entity_Messge_Test extends Unittest_TestCase
         $data = [
             'message'           => 'Hello',
             'sender_id'         => self::$_users[0]->user_id,
-            'conversation_id'   => self::$_conversation->getConversationId()
+            'conversation_id'   => self::$_conversations[0]->getConversationId()
         ];
 
         $message = new Entity_Message();
@@ -35,13 +37,33 @@ class Entity_Messge_Test extends Unittest_TestCase
     }
 
     /**
+     * @covers Entity_Message::deleteMessage()
+     */
+    public function testDeleteMessageIncoming()
+    {
+        $sender     = self::$_users[0];
+        $receiver   = self::$_users[1];
+
+        $this->givenMessage($sender, $receiver, 'Megkeresés');
+        $receiverEntity = Entity_User::createUser($receiver->type, $receiver);
+
+        self::$_message->deleteMessage($receiverEntity);
+
+        $this->assertMessageInteractionExistsWithFlags(
+            self::$_message->getMessageId(), $receiverEntity->getUserId(), ['is_readed' => 0, 'is_deleted' => 1]);
+
+        $this->assertMessageInteractionExistsWithFlags(
+            self::$_message->getMessageId(), $sender->user_id, ['is_readed' => 1, 'is_deleted' => 0]);
+    }
+
+    /**
      * @param int $messageId
      * @param int $userId
      * @param array $flags
      */
     protected function assertMessageInteractionExistsWithFlags($messageId, $userId, array $flags)
     {
-        $interactions = DB::select()
+        $interaction = DB::select()
             ->from('message_interactions')
             ->where('message_id', '=', $messageId)
             ->and_where('user_id', '=', $userId)
@@ -49,7 +71,7 @@ class Entity_Messge_Test extends Unittest_TestCase
             ->and_where('is_readed', '=', Arr::get($flags, 'is_readed', 0))
             ->execute()->current();
 
-        $this->assertNotEmpty($interactions['message_interaction_id']);
+        $this->assertNotEmpty($interaction['message_interaction_id']);
     }
 
     public static function setUpBeforeClass()
@@ -95,7 +117,7 @@ class Entity_Messge_Test extends Unittest_TestCase
         $conversation = new Entity_Conversation();
         $conversation->submit($data);
 
-        self::$_conversation = $conversation;
+        self::$_conversations[] = $conversation;
     }
 
     public static function tearDownAfterClass()
@@ -104,6 +126,35 @@ class Entity_Messge_Test extends Unittest_TestCase
             DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
         }
 
-        DB::delete('conversations')->where('conversation_id', '=', self::$_conversation->getConversationId())->execute();
+        foreach (self::$_conversations as $conversation) {
+            DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
+        }
+
+        if (self::$_message != null) {
+            DB::delete('messages')->where('message_id', '=', self::$_message->getMessageId())->execute();
+        }
+    }
+
+    private function givenMessage(Model_User $sender, Model_User $receiver, $message)
+    {
+        $data = [
+            'users' => [$sender->user_id, $receiver->user_id]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        self::$_conversations[] = $conversation;
+
+        $data = [
+            'message'           => $message,
+            'sender_id'         => $sender->user_id,
+            'conversation_id'   => $conversation->getConversationId()
+        ];
+
+        $message = new Entity_Message();
+        $message->submit($data);
+
+        self::$_message = $message;
     }
 }
