@@ -4,11 +4,47 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        /*$outgoing = new Entity_Message(6);
-        $outgoing->deleteMessage(new Entity_User_Freelancer(2));*/
+    }
 
-        $incoming = new Entity_Message(6);
-        $incoming->deleteMessage(new Entity_User_Employer(1));
+    public function action_message()
+    {
+        // beszelgetes letrehozasa
+        $data = [
+            'name'      => 'Teszt',
+            'users'     => [1, 2]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        // Uzenet kuldese
+        $data = [
+            'message'           => 'Megkaptam',
+            'sender_id'         => 1,
+            'conversation_id'   => 9
+        ];
+
+        $message = new Entity_Message();
+        $message->submit($data);
+
+        // Elkuldott uzenet torlese
+        $deleter = new Entity_User_Freelancer(1);
+        $message = new Entity_Message(4);
+        $message->deleteMessage($deleter);
+
+        // Fogadott uzenet torlese
+        $deleter = new Entity_User_Freelancer(1);
+        $message = new Entity_Message(3);
+        $message->deleteMessage($deleter);
+
+        // Beszelgetes torlese
+        $deleter = new Entity_User_Freelancer(1);
+        $conversation = new Entity_Conversation(9);
+        $conversation->deleteConversation($deleter);
+
+        $deleter = new Entity_User_Employer(2);
+        $conversation = new Entity_Conversation(9);
+        $conversation->deleteConversation($deleter);
     }
 
     public function action_user()
