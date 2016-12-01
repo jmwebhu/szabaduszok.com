@@ -57,6 +57,26 @@ class Entity_Messge_Test extends Unittest_TestCase
     }
 
     /**
+     * @covers Entity_Message::deleteMessage()
+     */
+    public function testDeleteMessageOutgoing()
+    {
+        $sender     = self::$_users[0];
+        $receiver   = self::$_users[1];
+
+        $this->givenMessage($sender, $receiver, 'Megkeresés');
+        $senderEntity = Entity_User::createUser($sender->type, $sender);
+
+        self::$_message->deleteMessage($senderEntity);
+
+        $this->assertMessageInteractionExistsWithFlags(
+            self::$_message->getMessageId(), $senderEntity->getUserId(), ['is_readed' => 1, 'is_deleted' => 1]);
+
+        $this->assertMessageInteractionExistsWithFlags(
+            self::$_message->getMessageId(), $receiver->user_id, ['is_readed' => 0, 'is_deleted' => 1]);
+    }
+
+    /**
      * @param int $messageId
      * @param int $userId
      * @param array $flags

@@ -108,6 +108,7 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
         $freelancer->email          = uniqid() . '@gmail.com';
         $freelancer->password       = 'Password123';
         $freelancer->min_net_hourly_wage       = '3000';
+        $freelancer->type       = Entity_User::TYPE_FREELANCER;
 
         $freelancer->save();
 
@@ -119,6 +120,7 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
         $employer->email          = uniqid() . '@gmail.com';
         $employer->phonenumber          = '06301923380';
         $employer->password       = 'Password123';
+        $employer->type       = Entity_User::TYPE_EMPLOYER;
 
         $employer->save();
 
