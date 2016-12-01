@@ -30,6 +30,14 @@ class Entity_Conversation extends Entity implements Conversation
     /**
      * @return int
      */
+    public function getConversationId()
+    {
+        return $this->_conversation_id;
+    }
+
+    /**
+     * @return int
+     */
     public function getId()
     {
         return (int)$this->_conversation_id;

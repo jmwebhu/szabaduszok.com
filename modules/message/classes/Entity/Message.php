@@ -40,6 +40,30 @@ class Entity_Message extends Entity implements Message
     /**
      * @return int
      */
+    public function getMessageId()
+    {
+        return $this->_message_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getConversationId()
+    {
+        return $this->_conversation_id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSenderId()
+    {
+        return $this->_sender_id;
+    }
+
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->_model->getId();

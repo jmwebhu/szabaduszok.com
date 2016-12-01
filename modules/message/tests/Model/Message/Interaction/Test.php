@@ -5,7 +5,6 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
     protected static $_users                = [];
     protected static $_conversations        = [];
     protected static $_messages             = [];
-    protected static $_messageInteractions  = [];
 
     /**
      * @covers Model_Message_Interaction::rules()
@@ -89,7 +88,7 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
     public static function tearDownAfterClass()
     {
         foreach (self::$_messages as $message) {
-            $message->getModel()->delete();
+            DB::delete('messages')->where('message_id', '=', $message->getMessageId())->execute();
         }
 
         foreach (self::$_users as $user) {
@@ -97,11 +96,7 @@ class Model_Message_Interaction_Test extends Unittest_TestCase
         }
 
         foreach (self::$_conversations as $conversation) {
-            $conversation->getModel()->delete();
-        }
-
-        foreach (self::$_messageInteractions as $message) {
-            $message->getModel()->delete();
+            DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
         }
     }
 

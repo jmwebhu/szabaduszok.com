@@ -23,8 +23,8 @@ class message_interactions extends Migration
         $this->add_index('message_interactions', 'is_deleted', ['is_deleted']);
         $this->add_index('message_interactions', 'is_readed', ['is_readed']);
 
-        $this->sql("ALTER TABLE `message_interactions` ADD FOREIGN KEY (`message_id`) REFERENCES `messages`(`message_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-        $this->sql("ALTER TABLE `message_interactions` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
+        $this->sql("ALTER TABLE `message_interactions` ADD FOREIGN KEY (`message_id`) REFERENCES `messages`(`message_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+        $this->sql("ALTER TABLE `message_interactions` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
     }
 
     public function down()

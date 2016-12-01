@@ -21,8 +21,8 @@ class conversation_interactions extends Migration
 
         $this->add_index('conversation_interactions', 'is_deleted', ['is_deleted']);
 
-        $this->sql("ALTER TABLE `conversation_interactions` ADD FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`conversation_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-        $this->sql("ALTER TABLE `conversation_interactions` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
+        $this->sql("ALTER TABLE `conversation_interactions` ADD FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`conversation_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+        $this->sql("ALTER TABLE `conversation_interactions` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
     }
 
     public function down()

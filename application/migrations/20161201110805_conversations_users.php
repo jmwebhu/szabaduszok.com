@@ -16,8 +16,8 @@ class conversations_users extends Migration
          'conversation_user_id'
      );
 
-      $this->sql("ALTER TABLE `conversations_users` ADD FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`conversation_id`) ON DELETE SET NULL ON UPDATE CASCADE");
-      $this->sql("ALTER TABLE `conversations_users` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `conversations_users` ADD FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`conversation_id`) ON DELETE CASCADE ON UPDATE CASCADE");
+      $this->sql("ALTER TABLE `conversations_users` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE ON UPDATE CASCADE");
   }
 
   public function down()
