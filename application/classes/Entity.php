@@ -174,6 +174,21 @@ abstract class Entity
     }
 
     /**
+     * @param array $ids
+     * @return array
+     */
+    public function getEntitiesFromIds(array $ids)
+    {
+        $entities = [];
+        foreach ($ids as $i => $id) {
+            $class      = 'Entity_' . $this->getEntityName();
+            $entities[$i] = new $class($id);
+        }
+
+        return $entities;
+    }
+
+    /**
      * @return bool
      */
     public function save()

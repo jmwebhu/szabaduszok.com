@@ -4,18 +4,30 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
+        // beszelgetes letrehozasa
+        $data = [
+            //'name'      => 'Teszt',
+            'users'     => [1, 2]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        exit;
     }
 
     public function action_message()
     {
         // beszelgetes letrehozasa
         $data = [
-            'name'      => 'Teszt',
+            //'name'      => 'Teszt',
             'users'     => [1, 2]
         ];
 
         $conversation = new Entity_Conversation();
         $conversation->submit($data);
+
+        exit;
 
         // Uzenet kuldese
         $data = [

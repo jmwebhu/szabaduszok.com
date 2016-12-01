@@ -110,6 +110,14 @@ class Model_Conversation extends ORM implements Conversation
      */
     public function submit(array $data)
     {
+        $entities = [];
+        foreach ($data['users'] as $id) {
+            $model      = new Model_User($id);
+            $entities[] = Entity_User::createUser($model->type, $model);
+        }
+
+        $data['name'] = Text_Conversation::getNameFromUsers($entities);
+
         parent::submit($data);
 
         $this->saveSlug();
