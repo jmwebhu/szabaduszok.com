@@ -25,6 +25,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
         $conversation->delete();
     }
 
+    /**
+     * @param int $conversationId
+     * @param array $userIds
+     */
     protected function assertConversationUsersExist($conversationId, array $userIds)
     {
         $conversationUsers = DB::select()
@@ -75,5 +79,12 @@ class Entity_Conversation_Test extends Unittest_TestCase
 
         self::$_users[] = $freelancer;
         self::$_users[] = $employer;
+    }
+
+    public static function tearDownAfterClass()
+    {
+        foreach (self::$_users as $user) {
+            DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
+        }
     }
 }
