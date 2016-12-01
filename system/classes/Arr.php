@@ -17,4 +17,15 @@ class Arr extends Kohana_Arr
 
         return array_values($temp);
     }
+
+    /**
+     * @param int $index
+     * @param array $array
+     * @return bool
+     */
+    public static function isLastIndex($index, array $array)
+    {
+        $count = (count($array) == 0) ? 0 : count($array) - 1;
+        return $index == $count;
+    }
 }
