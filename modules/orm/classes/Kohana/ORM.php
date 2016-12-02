@@ -2473,7 +2473,7 @@ class Kohana_ORM extends Model implements serializable {
 		// Slug keszitese nevbol
 		$slug = URL::slug($name);
 
-		if (empty(trim($slug)))
+		if (empty(trim($slug)) && $this instanceof Model_User)
 		{
 			$slug = $this->email;
 		}

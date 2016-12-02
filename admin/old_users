@@ -1,0 +1,3 @@
+SELECT COUNT(*) as old_users_count
+FROM users
+WHERE DATE_FORMAT(created_at, "%m") < 11;

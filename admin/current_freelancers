@@ -1,0 +1,4 @@
+SELECT COUNT(*)
+FROM users
+WHERE type = 1
+AND DATE_FORMAT(created_at, "%m") <= 11;

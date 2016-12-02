@@ -52,8 +52,8 @@ class ORM extends Kohana_ORM
             // Slug generalas, hozzadas cache gyujtemenyhez           
             $model->saveSlug();                       
             $model->cacheToCollection();
-        }        
-        
+        }
+
         return $model;
     }
     
@@ -68,12 +68,12 @@ class ORM extends Kohana_ORM
      */
     protected function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
     {
-        $thisPk                         = $this->primary_key();
-        $relationIds                    = [];    			
-		$cache                          = Cache::instance();   
-		$cacheRelations                 = $relationModel->getAll();    	
-		$cacheRelations[$this->{$thisPk}]    = [];
-        
+        $thisPk                             = $this->primary_key();
+        $relationIds                        = [];
+		$cache                              = Cache::instance();
+		$cacheRelations                     = $relationModel->getAll();
+		$cacheRelations[$this->{$thisPk}]   = [];
+
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
         $postData = Arr::uniqueString($postData);
@@ -88,7 +88,7 @@ class ORM extends Kohana_ORM
 				}				
 
 				$cacheRelations[$this->{$thisPk}][] = $relation;
-			}                
+			}
 
 			$this->add($relationEndModel->object_plural(), $relationIds);       
 			$cache->set($relationModel->table_name(), $cacheRelations);

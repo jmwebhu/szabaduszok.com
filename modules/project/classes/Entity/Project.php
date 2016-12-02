@@ -438,7 +438,8 @@ class Entity_Project extends Entity implements Notification_Subject
 
     /**
      * @param array $data
-     * @return Entity_Project|bool
+     * @return $this
+     * @throws Exception
      */
     public function submit(array $data)
     {
