@@ -1,10 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Controller_Test extends Controller
+class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-
+        $model  = new Model_Conversation();
+        $items  = $model->getForLeftPanelBy(2);
     }
 
     public function action_message()
