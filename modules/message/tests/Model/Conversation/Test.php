@@ -21,17 +21,103 @@ class Model_Conversation_Test extends Unittest_TestCase
     /**
      * @covers Model_Conversation::getForLeftPanelBy()
      */
-    public function testGetForLeftPanelByAllActive()
+    public function testGetForLeftPanelByOneDeleted()
     {
         $model          = new Model_Conversation();
         $conversations  = $model->getForLeftPanelBy(self::$_users[0]->user_id);
 
         $this->assertEquals(2, count($conversations));
         $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
-        $this->assertEquals('joo-martin-kis-pista', $conversations[0]->getSlug());
+        $this->assertNotEmpty($conversations[0]->getSlug());
 
         $this->assertEquals('Joó Martin, Nagy Béla', $conversations[1]->getName());
-        $this->assertEquals('joo-martin-nagy-bela', $conversations[1]->getSlug());
+        $this->assertNotEmpty($conversations[1]->getSlug());
+
+        $this->assertUserHasInteraction(
+            self::$_users[0]->user_id, self::$_conversations['deleted'][0]->getId(), ['is_deleted' => 1]);
+    }
+
+    /**
+     * @covers Model_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByAllActive()
+    {
+        $model          = new Model_Conversation();
+        $conversations  = $model->getForLeftPanelBy(self::$_users[1]->user_id);
+
+        $this->assertEquals(1, count($conversations));
+        $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
+        $this->assertNotEmpty($conversations[0]->getSlug());
+
+        $this->assertUserHasNoInteraction(
+            self::$_users[1]->user_id, self::$_conversations['active'][0]->getId());
+    }
+
+    /**
+     * @covers Model_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByAllDeletedReceiver()
+    {
+        $model          = new Model_Conversation();
+        $conversations  = $model->getForLeftPanelBy(self::$_users[3]->user_id);
+
+        $this->assertEquals(1, count($conversations));
+
+        $this->assertUserHasNoInteraction(
+            self::$_users[3]->user_id, self::$_conversations['deleted'][0]->getId());
+    }
+
+    /**
+     * @covers Model_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByAllDeletedSenderReceiver()
+    {
+        $model          = new Model_Conversation();
+        $conversations  = $model->getForLeftPanelBy(self::$_users[3]->user_id);
+
+        $this->assertEquals(1, count($conversations));
+
+        $this->assertUserHasNoInteraction(
+            self::$_users[3]->user_id, self::$_conversations['deleted'][0]->getId());
+
+        $conversations  = $model->getForLeftPanelBy(self::$_users[0]->user_id);
+        $this->assertEquals(2, count($conversations));
+
+        $this->assertUserHasInteraction(
+            self::$_users[0]->user_id, self::$_conversations['deleted'][0]->getId(), ['is_deleted' => 1]);
+    }
+
+    /**
+     * @param $userId
+     * @param $conversationId
+     * @param array $flags
+     */
+    protected function assertUserHasInteraction($userId, $conversationId, array $flags)
+    {
+        $interaction = DB::select()
+            ->from('conversation_interactions')
+            ->where('user_id', '=', $userId)
+            ->and_where('conversation_id', '=', $conversationId)
+            ->execute()->current();
+
+        $this->assertNotNull($interaction);
+        $this->assertNotEmpty($interaction['conversation_interaction_id']);
+        $this->assertEquals(Arr::get($flags, 'is_deleted', 0), $interaction['is_deleted']);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $conversationId
+     */
+    protected function assertUserHasNoInteraction($userId, $conversationId)
+    {
+        $interaction = DB::select()
+            ->from('conversation_interactions')
+            ->where('user_id', '=', $userId)
+            ->and_where('conversation_id', '=', $conversationId)
+            ->execute()->current();
+
+        $this->assertNull($interaction);
     }
 
     public static function setUpBeforeClass()
@@ -56,8 +142,18 @@ class Model_Conversation_Test extends Unittest_TestCase
         $conversation1 = new Entity_Conversation();
         $conversation1->submit($data);
 
-        self::$_conversations[] = $conversation;
-        self::$_conversations[] = $conversation1;
+        $data = [
+            'users' => [self::$_users[0]->user_id, self::$_users[3]->user_id]
+        ];
+
+        $conversation2 = new Entity_Conversation();
+        $conversation2->submit($data);
+
+        $conversation2->deleteConversation(Entity_User::createUser(self::$_users[0]->type,self::$_users[0]));
+
+        self::$_conversations['active'][] = $conversation;
+        self::$_conversations['active'][] = $conversation1;
+        self::$_conversations['deleted'][] = $conversation2;
     }
 
     protected static function setUpUsers()
@@ -96,9 +192,22 @@ class Model_Conversation_Test extends Unittest_TestCase
 
         $employer1->save();
 
+        $employer2 = new Model_User_Employer();
+        $employer2->lastname       = 'Horváth';
+        $employer2->firstname      = 'Péter';
+        $employer2->address_postal_code      = '9700';
+        $employer2->address_city      = 'Szombathely';
+        $employer2->email          = uniqid() . '@gmail.com';
+        $employer2->phonenumber          = '06301923380';
+        $employer2->password       = 'Password123';
+        $employer2->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer2->save();
+
         self::$_users[] = $freelancer;
         self::$_users[] = $employer;
         self::$_users[] = $employer1;
+        self::$_users[] = $employer2;
     }
 
     public static function tearDownAfterClass()
@@ -107,8 +216,10 @@ class Model_Conversation_Test extends Unittest_TestCase
             DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
         }
 
-        foreach (self::$_conversations as $conversation) {
-            DB::delete('conversations')->where('conversation_id', '=', $conversation->getId())->execute();
+        foreach (self::$_conversations as $array) {
+            foreach ($array as $item) {
+                DB::delete('conversations')->where('conversation_id', '=', $item->getId())->execute();
+            }
         }
     }
 }
