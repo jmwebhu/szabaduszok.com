@@ -4,8 +4,15 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $model  = new Model_Conversation();
-        $items  = $model->getForLeftPanelBy(2);
+        $model  = new Model_Conversation(9);
+
+        $items = $model->messages
+            ->join('message_interactions', 'left')
+                ->on('message_interactions.message_id', '=', 'message.message_id')
+
+            ->and_where('message_interactions.user_id', '!=', 1)
+
+            ->count_all();
     }
 
     public function action_message()

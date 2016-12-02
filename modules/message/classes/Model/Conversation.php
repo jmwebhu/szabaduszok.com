@@ -129,6 +129,7 @@ class Model_Conversation extends ORM implements Conversation
     }
 
     /**
+     * BAL OLDALI PANEL
      * Visszaadja az uzenetek oldal bal oldali paneleben megjeleno beszelgeteseket.
      * Azokat, amikben szerepel a felasznalo, ES nincs hozza torolt interacio
      *
@@ -151,10 +152,41 @@ class Model_Conversation extends ORM implements Conversation
     }
 
     /**
+     * UZENETEK SZAMA
+     * Osszes es olvasatlan kulon
+     * @return array
+     */
+    public function getCountOfMessages()
+    {
+
+    }
+
+    /**
+     * @param int $userId
+     * @return int
+     */
+    protected function getCountOfAllMessagesBy($userId)
+    {
+        return $this->messages
+            ->join('message_interactions', 'left')
+                ->on('message_interactions.message_id', '=', 'message.message_id')
+
+            ->and_where('message_interactions.user_id', '!=', $userId)
+            ->count_all();
+    }
+
+    /**
+     * @return int
+     */
+    protected function getCounOfAllUnreadMessages()
+    {
+    }
+
+    /**
      * @param int $userId
      * @return array
      */
-    public function getAllBy($userId)
+    protected function getAllBy($userId)
     {
         $model = new Model_Conversation();
 
