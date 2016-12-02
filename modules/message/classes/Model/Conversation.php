@@ -128,14 +128,42 @@ class Model_Conversation extends ORM implements Conversation
         $this->addRelations($data);
     }
 
-    public function getForLeftPanel(Conversation_Participant $user)
+    /**
+     * Visszaadja az uzenetek oldal bal oldali paneleben megjeleno beszelgeteseket.
+     * Azokat, amikben szerepel a felasznalo, ES nincs hozza torolt interacio
+     *
+     * @param int $userId
+     * @return array
+     */
+    public function getForLeftPanelBy($userId)
+    {
+        $model          = new Model_Conversation();
+        $allByUser      = $model->getAllBy($userId);
+        $forLeftPanel   = [];
+
+        foreach ($allByUser as $item) {
+            if (!$item->hasDeletedInteractionBy($userId)) {
+                $forLeftPanel[] = $item;
+            }
+        }
+
+        return $forLeftPanel;
+    }
+
+    /**
+     * @param int $userId
+     * @return array
+     */
+    public function getAllBy($userId)
     {
         $model = new Model_Conversation();
 
-        $model
+        return $model
             ->join('conversations_users', 'left')
-                ->on('conversations_users.conversation_id', '=', 'conversations.conversation_id')
-            ->where('user_id', '=', $user->getId())->find_all();
+                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
+
+            ->where('conversations_users.user_id', '=', $userId)
+            ->find_all();
     }
 
     /**
