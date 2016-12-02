@@ -34,6 +34,10 @@ class Model_Conversation extends ORM implements Conversation
             'through'       => 'conversations_users',
             'foreign_key'   => 'conversation_id'
         ],
+        'interactions'  => [
+            'model'         => 'Conversation_Interaction',
+            'foreign_key'   => 'conversation_id'
+        ],
     ];
 
     public function rules()
@@ -122,6 +126,25 @@ class Model_Conversation extends ORM implements Conversation
 
         $this->saveSlug();
         $this->addRelations($data);
+    }
+
+    public function getForLeftPanel(Conversation_Participant $user)
+    {
+        $model = new Model_Conversation();
+
+        $model
+            ->join('conversations_users', 'left')
+                ->on('conversations_users.conversation_id', '=', 'conversations.conversation_id')
+            ->where('user_id', '=', $user->getId())->find_all();
+    }
+
+    /**
+     * @param int $userId
+     * @return bool
+     */
+    public function hasDeletedInteractionBy($userId)
+    {
+        return ($this->interactions->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
     }
 
     /**
