@@ -4,15 +4,7 @@ class Controller_Test extends Controller
 {
     public function action_index()
     {
-        $sender     = Entity_User::createUser(2, 1);
-        $receiver   = Entity_User::createUser(2, 2);
 
-        $message = new Model_Message();
-        $message->setSender($sender);
-        $message->setReceiver($receiver);
-        $message->setMessage('Hello');
-
-        $message->send();
     }
 
     public function action_user()
