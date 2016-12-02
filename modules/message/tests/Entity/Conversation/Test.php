@@ -2,7 +2,8 @@
 
 class Entity_Conversation_Test extends Unittest_TestCase
 {
-    static protected $_users = [];
+    protected static $_users = [];
+    protected static $_conversations = [];
 
     /**
      * @covers Entity_Conversation::submit()
@@ -22,7 +23,36 @@ class Entity_Conversation_Test extends Unittest_TestCase
         $this->assertNotEmpty($conversation->getCreatedAt());
         $this->assertConversationUsersExist($conversation->getConversationId(), $data['users']);
 
-        $conversation->delete();
+        self::$_conversations[] = $conversation;
+    }
+
+    /**
+     * @covers Entity_Conversation::deleteConversation()
+     */
+    public function testDeleteConversation()
+    {
+        $conversation = $this->givenConversation();
+        $conversation->deleteConversation(Entity_User::createUser(self::$_users[0]->type, self::$_users[0]));
+
+        $this->assertConversationInteractionExists(
+            $conversation->getConversationId(), self::$_users[0], ['is_deleted' => 1]);
+
+        $this->assertConversationInteractionNotExists(
+            $conversation->getConversationId(), self::$_users[1]);
+    }
+
+    private function givenConversation()
+    {
+        $data = [
+            'users' => [self::$_users[0]->user_id, self::$_users[1]->user_id]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        self::$_conversations[] = $conversation;
+
+        return $conversation;
     }
 
     /**
@@ -46,6 +76,38 @@ class Entity_Conversation_Test extends Unittest_TestCase
         foreach ($userIds as $userId) {
             $this->assertTrue(in_array($userId, $ids));
         }
+    }
+
+    /**
+     * @param int $conversationId
+     * @param int $userId
+     * @param array $flags
+     */
+    protected function assertConversationInteractionExists($conversationId, $userId, array $flags)
+    {
+        $conversationInteraction = DB::select()
+            ->from('conversation_interactions')
+            ->where('conversation_id', '=', $conversationId)
+            ->and_where('user_id', '=', $userId)
+            ->execute()->current();
+
+        $this->assertNotEmpty($conversationInteraction['conversation_interaction_id']);
+        $this->assertEquals(Arr::get($flags, 'is_deleted', 0), $conversationInteraction['is_deleted']);
+    }
+
+    /**
+     * @param int $conversationId
+     * @param int $userId
+     */
+    protected function assertConversationInteractionNotExists($conversationId, $userId)
+    {
+        $conversationInteraction = DB::select()
+            ->from('conversation_interactions')
+            ->where('conversation_id', '=', $conversationId)
+            ->and_where('user_id', '=', $userId)
+            ->execute()->current();
+
+        $this->assertNull($conversationInteraction);
     }
 
     public static function setUpBeforeClass()
@@ -85,6 +147,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
     {
         foreach (self::$_users as $user) {
             DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
+        }
+
+        foreach (self::$_conversations as $conversation) {
+            DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
         }
     }
 }
