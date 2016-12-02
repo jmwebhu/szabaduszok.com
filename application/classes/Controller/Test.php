@@ -6,13 +6,7 @@ class Controller_Test extends Controller_DefaultTemplate
     {
         $conversation = new Model_Conversation(9);
 
-        $items = $conversation->messages
-            ->join('message_interactions', 'left')
-                ->on('message_interactions.message_id', '=', 'message.message_id')
-
-            ->where('message_interactions.is_deleted', '=', 0)
-            ->and_where('message_interactions.user_id', '=', 2)
-            ->count_all();
+        $items = $conversation->getCountOfMessagesBy(1);
 
         echo Debug::vars($items);
     }

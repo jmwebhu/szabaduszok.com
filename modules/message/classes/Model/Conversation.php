@@ -172,13 +172,7 @@ class Model_Conversation extends ORM implements Conversation
      */
     protected function getCountOfAllMessagesBy($userId)
     {
-        return $this->messages
-            ->join('message_interactions', 'left')
-            ->on('message_interactions.message_id', '=', 'message.message_id')
-
-            ->where('message_interactions.is_deleted', '=', 0)
-            ->and_where('message_interactions.user_id', '=', $userId)
-            ->count_all();
+        return $this->baseCountSelectBy($userId)->count_all();
     }
 
     /**
@@ -187,12 +181,25 @@ class Model_Conversation extends ORM implements Conversation
      */
     protected function getCountOfAllUnreadMessagesBy($userId)
     {
+        return $this->baseCountSelectBy($userId)
+            ->and_where('message_interactions.is_readed', '=', 0)
+            ->count_all();
+    }
+
+    /**
+     * Uzenetek szamahoz alap lekerdezes
+     *
+     * @param int $userId
+     * @return ORM
+     */
+    protected function baseCountSelectBy($userId)
+    {
         return $this->messages
             ->join('message_interactions', 'left')
-                ->on('message_interactions.message_id', '=', 'message.message_id')
+            ->on('message_interactions.message_id', '=', 'message.message_id')
 
-            ->and_where('message_interactions.user_id', '!=', $userId)
-            ->count_all();
+            ->where('message_interactions.is_deleted', '=', 0)
+            ->and_where('message_interactions.user_id', '=', $userId);
     }
 
     /**
