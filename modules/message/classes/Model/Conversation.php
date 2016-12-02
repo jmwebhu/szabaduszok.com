@@ -170,7 +170,7 @@ class Model_Conversation extends ORM implements Conversation
      * @param int $userId
      * @return bool
      */
-    public function hasDeletedInteractionBy($userId)
+    protected function hasDeletedInteractionBy($userId)
     {
         return ($this->interactions->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
     }
