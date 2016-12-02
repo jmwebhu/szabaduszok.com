@@ -154,11 +154,16 @@ class Model_Conversation extends ORM implements Conversation
     /**
      * UZENETEK SZAMA
      * Osszes es olvasatlan kulon
+     *
+     * @param int $userId
      * @return array
      */
-    public function getCountOfMessages()
+    public function getCountOfMessagesBy($userId)
     {
-
+        return [
+            'all'       => $this->getCountOfAllMessagesBy($userId),
+            'unread'    => $this->getCountOfAllUnreadMessagesBy($userId)
+        ];
     }
 
     /**
@@ -169,17 +174,25 @@ class Model_Conversation extends ORM implements Conversation
     {
         return $this->messages
             ->join('message_interactions', 'left')
-                ->on('message_interactions.message_id', '=', 'message.message_id')
+            ->on('message_interactions.message_id', '=', 'message.message_id')
 
-            ->and_where('message_interactions.user_id', '!=', $userId)
+            ->where('message_interactions.is_deleted', '=', 0)
+            ->and_where('message_interactions.user_id', '=', $userId)
             ->count_all();
     }
 
     /**
+     * @param int $userId
      * @return int
      */
-    protected function getCounOfAllUnreadMessages()
+    protected function getCountOfAllUnreadMessagesBy($userId)
     {
+        return $this->messages
+            ->join('message_interactions', 'left')
+                ->on('message_interactions.message_id', '=', 'message.message_id')
+
+            ->and_where('message_interactions.user_id', '!=', $userId)
+            ->count_all();
     }
 
     /**

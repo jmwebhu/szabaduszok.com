@@ -4,15 +4,17 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $model  = new Model_Conversation(9);
+        $conversation = new Model_Conversation(9);
 
-        $items = $model->messages
+        $items = $conversation->messages
             ->join('message_interactions', 'left')
                 ->on('message_interactions.message_id', '=', 'message.message_id')
 
-            ->and_where('message_interactions.user_id', '!=', 1)
-
+            ->where('message_interactions.is_deleted', '=', 0)
+            ->and_where('message_interactions.user_id', '=', 2)
             ->count_all();
+
+        echo Debug::vars($items);
     }
 
     public function action_message()
@@ -26,8 +28,6 @@ class Controller_Test extends Controller_DefaultTemplate
         $conversation = new Entity_Conversation();
         $conversation->submit($data);
 
-        exit;
-
         // Uzenet kuldese
         $data = [
             'message'           => 'Megkaptam',
@@ -37,6 +37,8 @@ class Controller_Test extends Controller_DefaultTemplate
 
         $message = new Entity_Message();
         $message->submit($data);
+
+        exit;
 
         // Elkuldott uzenet torlese
         $deleter = new Entity_User_Freelancer(1);
