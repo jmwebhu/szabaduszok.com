@@ -1,6 +1,6 @@
 <?php
 
-class Message_Transaction_Delete_Type_Outgoing extends Message_Transaction_Delete_Type
+class Message_Transaction_Delete_Outgoing extends Message_Transaction_Delete
 {
     public function delete()
     {

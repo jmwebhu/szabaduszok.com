@@ -1,6 +1,6 @@
 <?php
 
-class Message_Transaction_Delete_Type_Incoming extends Message_Transaction_Delete_Type
+class Message_Transaction_Delete_Incoming extends Message_Transaction_Delete
 {
     /**
      * @return void

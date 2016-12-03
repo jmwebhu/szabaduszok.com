@@ -1,6 +1,6 @@
 <?php
 
-class Message_Transaction_Delete
+abstract class Message_Transaction_Delete
 {
     /**
      * @var Message
@@ -13,11 +13,6 @@ class Message_Transaction_Delete
     protected $_user    = null;
 
     /**
-     * @var Message_Transaction_Delete_Type
-     */
-    protected $_type    = null;
-
-    /**
      * @param Message $message
      * @param Conversation_Participant $user
      */
@@ -25,11 +20,10 @@ class Message_Transaction_Delete
     {
         $this->_message = $message;
         $this->_user    = $user;
-        $this->_type    = Message_Transaction_Delete_Type_Factory::createType($message, $user);
     }
 
-    public function delete()
-    {
-        return $this->_type->delete();
-    }
+    /**
+     * @return void
+     */
+    abstract public function delete();
 }

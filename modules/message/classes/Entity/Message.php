@@ -3,11 +3,6 @@
 class Entity_Message extends Entity implements Message
 {
     /**
-     * @var Message_Transaction_Delete
-     */
-    protected $_transactionDelete = null;
-
-    /**
      * @var int
      */
     protected $_message_id;
@@ -119,7 +114,7 @@ class Entity_Message extends Entity implements Message
      */
     public function deleteMessage(Conversation_Participant $user)
     {
-        $this->_transactionDelete = new Message_Transaction_Delete($this, $user);
-        $this->_transactionDelete->delete();
+        $delete = Message_Transaction_Delete_Factory::createDelete($this, $user);
+        $delete->delete();
     }
 }
