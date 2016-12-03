@@ -143,6 +143,9 @@ class Model_Conversation extends ORM implements Conversation
         $forLeftPanel   = [];
 
         foreach ($allByUser as $item) {
+            /**
+             * @var Model_Conversation $item
+             */
             if (!$item->hasDeletedInteractionBy($userId)) {
                 $forLeftPanel[] = $item;
             }
@@ -161,45 +164,9 @@ class Model_Conversation extends ORM implements Conversation
     public function getCountOfMessagesBy($userId)
     {
         return [
-            'all'       => $this->getCountOfAllMessagesBy($userId),
-            'unread'    => $this->getCountOfAllUnreadMessagesBy($userId)
+            'all'       => (new Message_Transaction_Count_All($this, $userId))->getCount(),
+            'unread'    => (new Message_Transaction_Count_Unread($this, $userId))->getCount()
         ];
-    }
-
-    /**
-     * @param int $userId
-     * @return int
-     */
-    protected function getCountOfAllMessagesBy($userId)
-    {
-        return $this->baseCountSelectBy($userId)->count_all();
-    }
-
-    /**
-     * @param int $userId
-     * @return int
-     */
-    protected function getCountOfAllUnreadMessagesBy($userId)
-    {
-        return $this->baseCountSelectBy($userId)
-            ->and_where('message_interactions.is_readed', '=', 0)
-            ->count_all();
-    }
-
-    /**
-     * Uzenetek szamahoz alap lekerdezes
-     *
-     * @param int $userId
-     * @return ORM
-     */
-    protected function baseCountSelectBy($userId)
-    {
-        return $this->messages
-            ->join('message_interactions', 'left')
-            ->on('message_interactions.message_id', '=', 'message.message_id')
-
-            ->where('message_interactions.is_deleted', '=', 0)
-            ->and_where('message_interactions.user_id', '=', $userId);
     }
 
     /**
@@ -224,6 +191,9 @@ class Model_Conversation extends ORM implements Conversation
      */
     protected function hasDeletedInteractionBy($userId)
     {
+        /**
+         * @todo torolni
+         */
         return ($this->interactions->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
     }
 
