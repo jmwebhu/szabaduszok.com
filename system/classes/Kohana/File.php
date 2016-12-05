@@ -13,6 +13,7 @@ class Kohana_File {
 	public static function validateByMimes($filename, array $mimes)
 	{
 		$mime = self::mime($filename);
+		echo Debug::vars($mime);
 
 		return in_array($mime, $mimes);
 	}

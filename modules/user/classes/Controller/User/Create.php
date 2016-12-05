@@ -46,7 +46,7 @@ abstract class Controller_User_Create extends Controller_User implements Control
                 Auth_ORM::instance()->logout();
                 Session::instance()->delete('auth_user');
             }
-            
+
             $this->finallyRedirect($this->getProfileUrl());
         }
     }

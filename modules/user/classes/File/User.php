@@ -59,7 +59,7 @@ abstract class File_User
 
     /**
      * @return array|bool
-     * @throws Exception_UserRegistration
+     * @throws ORM_Validation_Exception
      */
     protected function uploadProfilePicture()
     {
@@ -87,13 +87,22 @@ abstract class File_User
 
     /**
      * @param mixed $expression
-     * @param string $message
-     * @throws Exception_UserRegistration
+     * @param string $field
+     * @throws ORM_Validation_Exception
      */
-    protected function throwException($expression, $message)
+    protected function throwException($expression, $field)
     {
         if (!$expression) {
-            throw new Exception_UserRegistration($message);
+            $array = [
+                $field => ''
+            ];
+
+            $validation = Validation::factory($array);
+            $validation->rule($field, 'not_empty');
+
+            if (!$validation->check()) {
+                throw new ORM_Validation_Exception('user', $validation);
+            }
         }
     }
 

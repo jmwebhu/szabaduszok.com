@@ -18,4 +18,10 @@ return [
         'numeric'     	=> 'Az irányítószám csak számokat tartalmazzon',
         'min_length'	=> 'Az irányítószám legyen legalább 4 számjegy'       
     ],
+    'profile_picture_path' => [
+        'not_empty'     => 'Hibás képformátum, kérlek próbáld meg újra. JPG vagy PNG az elfogadott.'
+    ],
+    'cv_path' => [
+        'not_empty'     => 'Hibás önéletrajz formátum, kérlek próbáld meg újra.  .pdf, .doc, .docx, .pages, .odt az elfogadott.'
+    ]
 ];

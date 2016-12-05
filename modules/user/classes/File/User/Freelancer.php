@@ -29,16 +29,15 @@ class File_User_Freelancer extends File_User
      */
     protected function uploadCv()
     {
-        $this->throwException($this->validateCvFile(), 'Hibás önéletrajz formátum. Kérjük próbáld meg újra.');
+        $this->throwException($this->validateCvFile(), 'cv_path');
 
         $extension      = Upload::getExt($this->_cvFile);
         $filename       = strtolower(self::FILE_PREFFIX .  $this->_user->slug . self::CV_SUFFIX . '.' . $extension);
         $fullFilename   = Upload::save($this->_cvFile, $filename, DOCROOT . self::PATH_CV);
+        $this->throwException($fullFilename, 'cv_path');
 
-        $this->throwException($fullFilename, 'Hiba történt az önéletrajz feltöltése során. Kérjük próbáld meg újra.');
-
-        if (!File::validateByMimes($fullFilename, ['application/msword', 'application/pdf', 'application/x-iwork-pages-sffpages', 'application/vnd.apple.pages', 'application/vnd.oasis.opendocument.text'])) {
-            $this->throwException(false, 'Hibás önéletrajz formátum. Kérjük próbáld meg újra.');
+        if (!File::validateByMimes($fullFilename, ['application/msword', 'application/pdf', 'application/x-iwork-pages-sffpages', 'application/vnd.apple.pages', 'application/vnd.oasis.opendocument.text', 'application/zip'])) {
+            $this->throwException(false, 'cv_path');
             unlink($fullFilename);
         }
 
