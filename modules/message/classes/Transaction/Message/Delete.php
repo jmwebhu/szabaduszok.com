@@ -1,6 +1,6 @@
 <?php
 
-abstract class Message_Transaction_Delete
+abstract class Transaction_Message_Delete
 {
     /**
      * @var Message

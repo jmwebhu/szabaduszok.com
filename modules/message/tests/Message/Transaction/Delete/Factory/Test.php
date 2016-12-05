@@ -1,6 +1,6 @@
 <?php
 
-class Message_Transaction_Delete_Factory_Test extends Unittest_TestCase
+class Transaction_Message_Delete_Factory_Test extends Unittest_TestCase
 {
     protected $_messageMock;
 
@@ -9,21 +9,21 @@ class Message_Transaction_Delete_Factory_Test extends Unittest_TestCase
     protected $_receiverParticipantMock;
 
     /**
-     * @covers Message_Transaction_Delete_Factory::createDelete()
+     * @covers Transaction_Message_Delete_Factory::createDelete()
      */
     public function testcreateDeleteOutgoing()
     {
-        $type = Message_Transaction_Delete_Factory::createDelete($this->_messageMock, $this->_senderParticipantMock);
-        $this->assertTrue($type instanceof Message_Transaction_Delete_Outgoing);
+        $type = Transaction_Message_Delete_Factory::createDelete($this->_messageMock, $this->_senderParticipantMock);
+        $this->assertTrue($type instanceof Transaction_Message_Delete_Outgoing);
     }
 
     /**
-     * @covers Message_Transaction_Delete_Factory::createDelete()
+     * @covers Transaction_Message_Delete_Factory::createDelete()
      */
     public function testcreateDeleteIncoming()
     {
-        $type = Message_Transaction_Delete_Factory::createDelete($this->_messageMock, $this->_receiverParticipantMock);
-        $this->assertTrue($type instanceof Message_Transaction_Delete_Incoming);
+        $type = Transaction_Message_Delete_Factory::createDelete($this->_messageMock, $this->_receiverParticipantMock);
+        $this->assertTrue($type instanceof Transaction_Message_Delete_Incoming);
     }
 
     public function setUp()
