@@ -1,6 +1,6 @@
 <?php
 
-abstract class Transaction_Message_Delete
+abstract class Transaction_Message_Delete implements Transaction
 {
     /**
      * @var Message
@@ -21,9 +21,4 @@ abstract class Transaction_Message_Delete
         $this->_message = $message;
         $this->_user    = $user;
     }
-
-    /**
-     * @return void
-     */
-    abstract public function delete();
 }

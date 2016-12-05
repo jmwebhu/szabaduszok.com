@@ -164,8 +164,8 @@ class Model_Conversation extends ORM implements Conversation
     public function getCountOfMessagesBy($userId)
     {
         return [
-            'all'       => (new Message_Transaction_Count_All($this, $userId))->getCount(),
-            'unread'    => (new Message_Transaction_Count_Unread($this, $userId))->getCount()
+            'all'       => (new Transaction_Message_Count_All($this, $userId))->execute(),
+            'unread'    => (new Transaction_Message_Count_Unread($this, $userId))->execute()
         ];
     }
 

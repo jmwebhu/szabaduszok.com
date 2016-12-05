@@ -115,6 +115,6 @@ class Entity_Message extends Entity implements Message
     public function deleteMessage(Conversation_Participant $user)
     {
         $delete = Transaction_Message_Delete_Factory::createDelete($this, $user);
-        $delete->delete();
+        $delete->execute();
     }
 }

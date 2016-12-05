@@ -1,6 +1,6 @@
 <?php
 
-abstract class Message_Transaction_Count
+abstract class Transaction_Message_Count implements Transaction
 {
     /**
      * @var Model_Conversation
@@ -21,11 +21,6 @@ abstract class Message_Transaction_Count
         $this->_conversation    = $conversation;
         $this->_userId          = $userId;
     }
-
-    /**
-     * @return int
-     */
-    abstract public function getCount();
 
     /**
      * @return ORM

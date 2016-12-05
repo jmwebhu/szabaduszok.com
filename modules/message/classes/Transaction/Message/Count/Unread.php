@@ -1,11 +1,11 @@
 <?php
 
-class Message_Transaction_Count_Unread extends Message_Transaction_Count
+class Transaction_Message_Count_Unread extends Transaction_Message_Count
 {
     /**
      * @return int
      */
-    public function getCount()
+    public function execute()
     {
         return $this->baseSelect()
             ->and_where('message_interactions.is_readed', '=', 0)
