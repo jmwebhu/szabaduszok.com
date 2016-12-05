@@ -117,4 +117,14 @@ class Entity_Message extends Entity implements Message
         $delete = Transaction_Message_Delete_Factory::createDelete($this, $user);
         $delete->execute();
     }
+
+    /**
+     * @param array $data
+     */
+    public function submit(array $data)
+    {
+        $transaction    = new Transaction_Message_Insert(new Model_Message(), $data);
+        $this->_model   = $transaction->execute();
+        $this->mapModelToThis();
+    }
 }

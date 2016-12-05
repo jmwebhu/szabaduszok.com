@@ -105,27 +105,4 @@ class Model_Message extends ORM implements Message
     {
         // TODO: Implement send() method.
     }
-
-    /**
-     * @param array $data
-     */
-    public function submit(array $data)
-    {
-        parent::submit($data);
-
-        $this->addInteractions();
-    }
-
-    protected function addInteractions()
-    {
-        foreach ($this->conversation->users->find_all() as $user) {
-            $interaction                = new Model_Message_Interaction();
-            $interaction->message_id    = $this->message_id;
-            $interaction->user_id       = $user->user_id;
-            $interaction->is_deleted    = false;
-            $interaction->is_readed     = ($user->user_id == $this->sender_id) ? true : false;
-
-            $interaction->save();
-        }
-    }
 }
