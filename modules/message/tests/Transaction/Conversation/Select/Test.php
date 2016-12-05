@@ -1,97 +1,79 @@
 <?php
 
-class Model_Conversation_Test extends Unittest_TestCase
+class Transaction_Conversation_Select_Test extends Unittest_TestCase
 {
     protected static $_users = [];
     protected static $_conversations = [];
     protected static $_messages = [];
 
     /**
-     * @covers Model_Conversation::rules()
+     * @covers Transaction_Conversation_Select::getForLeftPanelBy()
      */
-    public function testRules()
+    public function testGetForLeftPanelByOneDeleted()
     {
-        $conversation   = new Model_Conversation();
-        $rules          = $conversation->rules();
+        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $conversations  = $transaction->getForLeftPanelBy(self::$_users[0]->user_id);
 
-        $this->assertArrayHasKey('name', $rules);
+        $this->assertEquals(count(self::$_conversations['active']), count($conversations));
+        $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
+        $this->assertNotEmpty($conversations[0]->getSlug());
 
-        $this->assertTrue(in_array(['not_empty'], $rules['name']));
+        $this->assertEquals('Joó Martin, Nagy Béla', $conversations[1]->getName());
+        $this->assertNotEmpty($conversations[1]->getSlug());
+
+        $this->assertUserHasInteraction(
+            self::$_users[0]->user_id, self::$_conversations['deleted'][0]->getId(), ['is_deleted' => 1]);
     }
 
     /**
-     * @covers Model_Conversation::getCountOfMessagesBy()
+     * @covers Transaction_Conversation_Select::getForLeftPanelBy()
      */
-    public function testGetCountOfMessagesByStandardConversationReceiver()
+    public function testGetForLeftPanelByAllActive()
     {
-        $model  = new Model_Conversation(self::$_conversations['active'][0]->getId());
-        $count  = $model->getCountOfMessagesBy(self::$_users[0]->user_id);
+        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $conversations  = $transaction->getForLeftPanelBy(self::$_users[1]->user_id);
 
-        $this->assertEquals(1, $count['all']);
-        $this->assertEquals(1, $count['unread']);
+        $this->assertEquals(1, count($conversations));
+        $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
+        $this->assertNotEmpty($conversations[0]->getSlug());
+
+        $this->assertUserHasNoInteraction(
+            self::$_users[1]->user_id, self::$_conversations['active'][0]->getId());
     }
 
     /**
-     * @covers Model_Conversation::getCountOfMessagesBy()
+     * @covers Transaction_Conversation_Select::getForLeftPanelBy()
      */
-    public function testGetCountOfMessagesByStandardConversationSender()
+    public function testGetForLeftPanelByAllDeletedReceiver()
     {
-        $model  = new Model_Conversation(self::$_conversations['active'][0]->getId());
-        $count  = $model->getCountOfMessagesBy(self::$_users[1]->user_id);
+        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $conversations  = $transaction->getForLeftPanelBy(self::$_users[3]->user_id);
 
-        $this->assertEquals(1, $count['all']);
-        $this->assertEquals(0, $count['unread']);
+        $this->assertEquals(1, count($conversations));
+
+        $this->assertUserHasNoInteraction(
+            self::$_users[3]->user_id, self::$_conversations['deleted'][0]->getId());
     }
 
     /**
-     * @covers Model_Conversation::getCountOfMessagesBy()
+     * @covers Transaction_Conversation_Select::getForLeftPanelBy()
      */
-    public function testGetCountOfMessagesByEmptyConversation()
+    public function testGetForLeftPanelByAllDeletedSenderReceiver()
     {
-        $model  = new Model_Conversation(self::$_conversations['active'][1]->getId());
-        $count  = $model->getCountOfMessagesBy(self::$_users[0]->user_id);
+        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $conversations  = $transaction->getForLeftPanelBy(self::$_users[3]->user_id);
 
-        $this->assertEquals(0, $count['all']);
-        $this->assertEquals(0, $count['unread']);
+        $this->assertEquals(1, count($conversations));
 
-        $count  = $model->getCountOfMessagesBy(self::$_users[2]->user_id);
+        $this->assertUserHasNoInteraction(
+            self::$_users[3]->user_id, self::$_conversations['deleted'][0]->getId());
 
-        $this->assertEquals(0, $count['all']);
-        $this->assertEquals(0, $count['unread']);
-    }
+        $transaction->setConversation(new Model_Conversation());
+        $conversations  = $transaction->getForLeftPanelBy(self::$_users[0]->user_id);
+        $this->assertEquals(3, count($conversations));
 
-    /**
-     * @covers Model_Conversation::getCountOfMessagesBy()
-     */
-    public function testGetCountOfMessagesByDeletedConversation()
-    {
-        $model  = new Model_Conversation(self::$_conversations['deleted'][0]->getId());
-        $count  = $model->getCountOfMessagesBy(self::$_users[0]->user_id);
-
-        $this->assertEquals(0, $count['all']);
-        $this->assertEquals(0, $count['unread']);
-
-        $count  = $model->getCountOfMessagesBy(self::$_users[3]->user_id);
-
-        $this->assertEquals(0, $count['all']);
-        $this->assertEquals(0, $count['unread']);
-    }
-
-    /**
-     * @covers Model_Conversation::getCountOfMessagesBy()
-     */
-    public function testGetCountOfMessagesByMultipleMessages()
-    {
-        $model  = new Model_Conversation(self::$_conversations['active'][2]->getId());
-        $count  = $model->getCountOfMessagesBy(self::$_users[0]->user_id);
-
-        $this->assertEquals(3, $count['all']);
-        $this->assertEquals(1, $count['unread']);
-
-        $count  = $model->getCountOfMessagesBy(self::$_users[4]->user_id);
-
-        $this->assertEquals(3, $count['all']);
-        $this->assertEquals(2, $count['unread']);
+        $this->assertUserHasInteraction(
+            self::$_users[0]->user_id, self::$_conversations['deleted'][0]->getId(), ['is_deleted' => 1]);
     }
 
     /**
@@ -169,47 +151,6 @@ class Model_Conversation_Test extends Unittest_TestCase
         self::$_conversations['active'][] = $conversation1;
         self::$_conversations['active'][] = $conversation3;
         self::$_conversations['deleted'][] = $conversation2;
-
-        $data = [
-            'message'           => 'Első üzenet',
-            'sender_id'         => self::$_users[1]->user_id,
-            'conversation_id'   => $conversation->getId()
-        ];
-
-        $message = new Entity_Message();
-        $message->submit($data);
-
-        $data = [
-            'message'           => 'Megkeresés',
-            'sender_id'         => self::$_users[4]->user_id,
-            'conversation_id'   => $conversation3->getId()
-        ];
-
-        $message1 = new Entity_Message();
-        $message1->submit($data);
-
-        $data = [
-            'message'           => 'Válasz megkeresésre',
-            'sender_id'         => self::$_users[0]->user_id,
-            'conversation_id'   => $conversation3->getId()
-        ];
-
-        $message2 = new Entity_Message();
-        $message2->submit($data);
-
-        $data = [
-            'message'           => 'Még egy válasz megkeresésre',
-            'sender_id'         => self::$_users[0]->user_id,
-            'conversation_id'   => $conversation3->getId()
-        ];
-
-        $message3 = new Entity_Message();
-        $message3->submit($data);
-
-        self::$_messages[] = $message;
-        self::$_messages[] = $message1;
-        self::$_messages[] = $message2;
-        self::$_messages[] = $message3;
     }
 
     protected static function setUpUsers()
@@ -289,10 +230,6 @@ class Model_Conversation_Test extends Unittest_TestCase
             foreach ($array as $item) {
                 DB::delete('conversations')->where('conversation_id', '=', $item->getId())->execute();
             }
-        }
-
-        foreach (self::$_messages as $message) {
-            DB::delete('messages')->where('message_id', '=', $message->getMessageId())->execute();
         }
     }
 }

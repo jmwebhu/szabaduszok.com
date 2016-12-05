@@ -104,6 +104,14 @@ class Entity_Conversation extends Entity implements Conversation
         // TODO: Implement setParticipants() method.
     }
 
+    public function submit(array $data)
+    {
+        $transaction    = new Transaction_Conversation_Insert(new Model_Conversation(), $data);
+        $this->_model   = $transaction->execute();
+        $this->mapModelToThis();
+    }
+
+
     /**
      * @param Conversation_Participant $user
      */

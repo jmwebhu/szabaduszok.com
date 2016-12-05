@@ -66,7 +66,7 @@ class ORM extends Kohana_ORM
      * 
      * @return void
      */
-    protected function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
+    public function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
     {
         $thisPk                             = $this->primary_key();
         $relationIds                        = [];

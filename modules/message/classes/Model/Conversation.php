@@ -110,51 +110,6 @@ class Model_Conversation extends ORM implements Conversation
     }
 
     /**
-     * @param array $data
-     */
-    public function submit(array $data)
-    {
-        $entities = [];
-        foreach ($data['users'] as $id) {
-            $model      = new Model_User($id);
-            $entities[] = Entity_User::createUser($model->type, $model);
-        }
-
-        $data['name'] = Text_Conversation::getNameFromUsers($entities);
-
-        parent::submit($data);
-
-        $this->saveSlug();
-        $this->addRelations($data);
-    }
-
-    /**
-     * BAL OLDALI PANEL
-     * Visszaadja az uzenetek oldal bal oldali paneleben megjeleno beszelgeteseket.
-     * Azokat, amikben szerepel a felasznalo, ES nincs hozza torolt interacio
-     *
-     * @param int $userId
-     * @return array
-     */
-    public function getForLeftPanelBy($userId)
-    {
-        $model          = new Model_Conversation();
-        $allByUser      = $model->getAllBy($userId);
-        $forLeftPanel   = [];
-
-        foreach ($allByUser as $item) {
-            /**
-             * @var Model_Conversation $item
-             */
-            if (!$item->hasDeletedInteractionBy($userId)) {
-                $forLeftPanel[] = $item;
-            }
-        }
-
-        return $forLeftPanel;
-    }
-
-    /**
      * UZENETEK SZAMA
      * Osszes es olvasatlan kulon
      *
@@ -167,42 +122,5 @@ class Model_Conversation extends ORM implements Conversation
             'all'       => (new Transaction_Message_Count_All($this, $userId))->execute(),
             'unread'    => (new Transaction_Message_Count_Unread($this, $userId))->execute()
         ];
-    }
-
-    /**
-     * @param int $userId
-     * @return array
-     */
-    protected function getAllBy($userId)
-    {
-        $model = new Model_Conversation();
-
-        return $model
-            ->join('conversations_users', 'left')
-                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
-
-            ->where('conversations_users.user_id', '=', $userId)
-            ->find_all();
-    }
-
-    /**
-     * @param int $userId
-     * @return bool
-     */
-    protected function hasDeletedInteractionBy($userId)
-    {
-        /**
-         * @todo torolni
-         */
-        return ($this->interactions->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
-    }
-
-    /**
-     * @param array $data
-     */
-    protected function addRelations(array $data)
-    {
-        $this->removeAll('conversations_users', 'conversation_id');
-        $this->addRelation($data, new Model_Conversation_User(), new Model_User());
     }
 }
