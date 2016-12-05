@@ -111,7 +111,6 @@ class Entity_Conversation extends Entity implements Conversation
         $this->mapModelToThis();
     }
 
-
     /**
      * @param Conversation_Participant $user
      */

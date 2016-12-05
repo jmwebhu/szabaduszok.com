@@ -108,19 +108,4 @@ class Model_Conversation extends ORM implements Conversation
         $entity = new Entity_Message();
         return $entity->getEntitiesFromModels($this->messages->find_all());
     }
-
-    /**
-     * UZENETEK SZAMA
-     * Osszes es olvasatlan kulon
-     *
-     * @param int $userId
-     * @return array
-     */
-    public function getCountOfMessagesBy($userId)
-    {
-        return [
-            'all'       => (new Transaction_Message_Count_All($this, $userId))->execute(),
-            'unread'    => (new Transaction_Message_Count_Unread($this, $userId))->execute()
-        ];
-    }
 }
