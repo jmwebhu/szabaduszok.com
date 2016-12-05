@@ -63,17 +63,17 @@ abstract class File_User
      */
     protected function uploadProfilePicture()
     {
-        $this->throwException($this->validateImageFile(), 'Hibás kép formátum. Kérjük próbáld meg újra.');
+        $this->throwException($this->validateImageFile(), 'profile_picture_path');
         $extension = Upload::getExt($this->_profilePictureFile);
 
         $this->setProfilePictureFilenameWith($extension);
         $this->setProfilePictureListFilenameWith($extension);
 
         $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, DOCROOT . self::PATH_PROFILE_PICTURE);
-        $this->throwException($sourceFilename, 'Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
+        $this->throwException($sourceFilename, 'profile_picture_path');
 
         if (!File::validateByMimes($sourceFilename, ['image/jpeg', 'image/pjpeg', 'image/png'])) {
-            $this->throwException(false, 'Hibás kép formátum. Kérjük próbáld meg újra.');
+            $this->throwException(false, 'profile_picture_path');
             unlink($sourceFilename);
         }
 
