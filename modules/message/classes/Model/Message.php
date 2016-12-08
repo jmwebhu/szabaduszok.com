@@ -5,6 +5,11 @@ class Model_Message extends ORM implements Message
     protected $_table_name  = 'messages';
     protected $_primary_key = 'message_id';
 
+    /**
+     * @var bool
+     */
+    protected $_isDeleted = false;
+
     protected $_created_column = [
         'column' => 'created_at',
         'format' => 'Y-m-d H:i'

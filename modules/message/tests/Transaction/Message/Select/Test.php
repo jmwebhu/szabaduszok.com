@@ -97,6 +97,17 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
     }
 
     /**
+     * @covers Transaction_Message_Select::getLastId()
+     */
+    public function testGetLastId()
+    {
+        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $lastId         = $this->invokeMethod($transaction, 'getLastId');
+
+        $this->assertEquals($this->_messages[count($this->_messages) - 1]->getMessageId(), $lastId);
+    }
+
+    /**
      * @param string[] $expectedMessages
      * @param Model_Message[] $actualMessages
      */
