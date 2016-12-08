@@ -70,7 +70,7 @@ class Transaction_Message_Select
             return [];
         }
 
-        $index = $this->getIndexBeforeIdNotContinous($messages);
+        $index = Business_Message::getIndexBeforeIdNotContinous($messages);
 
         return array_slice($messages, $index, count($messages) - $index);
     }
@@ -101,27 +101,5 @@ class Transaction_Message_Select
             ->order_by($this->_message->primary_key(), 'DESC')
             ->limit(1)
             ->execute()->get($this->_message->primary_key());
-    }
-
-    /**
-     * Visszaadja azt az indexet, ami utan az adott tombben mar nem egymas utan kovetkeznek az azonositok
-     *
-     * @param Model_Message[] $messages
-     */
-    protected function getIndexBeforeIdNotContinous(array $messages)
-    {
-        $index = 0;
-        for ($i = count($messages) - 1; $i > 0; $i--) {
-            $index      = $i;
-            /**
-             * @var $message Model_Message
-             */
-            $message    = $messages[$i];
-            if ($message[$i - 1]->message_id != $message->message_id - 1) {
-                break;
-            }
-        }
-
-        return $index;
     }
 }
