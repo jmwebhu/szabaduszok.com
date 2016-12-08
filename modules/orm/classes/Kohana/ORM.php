@@ -1075,7 +1075,7 @@ class Kohana_ORM extends Model implements serializable {
 	 * Finds multiple database rows and returns an iterator of the rows found.
 	 *
 	 * @throws Kohana_Exception
-	 * @return Database_Result
+	 * @return array
 	 */
 	public function find_all()
 	{

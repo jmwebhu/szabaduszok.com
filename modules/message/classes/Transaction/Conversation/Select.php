@@ -8,11 +8,26 @@ class Transaction_Conversation_Select
     protected $_conversation = null;
 
     /**
-     * @param Model_Conversation $_conversation
+     * @var Model_Message
      */
-    public function __construct(Model_Conversation $_conversation)
+    protected $_message = null;
+
+    /**
+     * @var Transaction_Message_Select
+     */
+    protected $_transactionMessageSelect = null;
+
+    /**
+     * @param Model_Conversation $conversation
+     * @param Model_Message $message
+     * @param Transaction_Message_Select $messageSelect
+     */
+    public function __construct(
+        Model_Conversation $conversation, Model_Message $message, Transaction_Message_Select $messageSelect)
     {
-        $this->_conversation = $_conversation;
+        $this->_conversation                = $conversation;
+        $this->_message                     = $message;
+        $this->_transactionMessageSelect    = $messageSelect;
     }
 
     /**
@@ -48,6 +63,14 @@ class Transaction_Conversation_Select
         }
 
         return $forLeftPanel;
+    }
+
+    /**
+     * UZENETEK EGY ADOTT BESZELGETESHEZ
+     */
+    public function getMessages()
+    {
+        $activeMessages = $this->_transactionMessageSelect->getAllActiveBy($this->_conversation->getId());
     }
 
     /**
