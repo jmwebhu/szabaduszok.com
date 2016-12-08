@@ -22,10 +22,14 @@ class Business_Message_Test extends Unittest_TestCase
         $notContinousIdsMoreResult = [23, 24, 26, 27, 28];
         $notContinousMessagesMoreResult = $this->getMessagesArray($notContinousIdsMoreResult);
 
+        $notContinousIdsMoreResultFirst = [33, 34];
+        $notContinousMessagesMoreResultFirst = $this->getMessagesArray($notContinousIdsMoreResultFirst);
+
         return [
             [1, Business_Message::getIndexBeforeIdNotContinous($continousMessages)],
             [4, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesOneResult)],
             [2, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesMoreResult)],
+            [0, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesMoreResultFirst)]
         ];
     }
 

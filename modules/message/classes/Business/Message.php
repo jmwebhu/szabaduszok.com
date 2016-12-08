@@ -23,6 +23,10 @@ class Business_Message extends Business
             }
         }
 
+        if (count($messages) == 2) {
+            $index--;
+        }
+
         return $index;
     }
 }

@@ -15,11 +15,11 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
         $transaction    = new Transaction_Message_Select(new Model_Message());
 
         $activeMessages = $transaction->getAllActiveBy($conversationId);
-        $this->assertEquals(5, count($activeMessages));
+        $this->assertEquals(6, count($activeMessages));
 
         $this->assertEqualsMessages([
             'Hello, ráérsz?', 'Hello, igen, mi a projekt?', 'Közösségi oldal',
-            'Bocsi, de az nem érdekel', 'szabadúszó pls...'
+            'Bocsi, de az nem érdekel', 'szabadúszó pls...', 'pls...'
         ], $activeMessages);
     }
 
@@ -36,10 +36,10 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
 
         $activeMessages = $transaction->getAllActiveBy($conversationId);
 
-        $this->assertEquals(4, count($activeMessages));
+        $this->assertEquals(5, count($activeMessages));
         $this->assertEqualsMessages([
             'Hello, ráérsz?', 'Hello, igen, mi a projekt?', 'Közösségi oldal',
-            'Bocsi, de az nem érdekel'
+            'Bocsi, de az nem érdekel', 'szabadúszó pls...'
         ], $activeMessages);
     }
 
@@ -56,10 +56,10 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
 
         $activeMessages = $transaction->getAllActiveBy($conversationId);
 
-        $this->assertEquals(4, count($activeMessages));
+        $this->assertEquals(5, count($activeMessages));
         $this->assertEqualsMessages([
             'Hello, ráérsz?', 'Hello, igen, mi a projekt?',
-            'Bocsi, de az nem érdekel', 'szabadúszó pls...'
+            'Bocsi, de az nem érdekel', 'szabadúszó pls...', 'pls...'
         ], $activeMessages);
     }
 
@@ -77,7 +77,7 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
         $deletedMessages    = $transaction->getAllToSenderDeletedByReceiver($conversationId, $this->_users[1]->user_id);
 
         $this->assertEquals(1, count($deletedMessages));
-        $this->assertEqualsMessages(['szabadúszó pls...'], $deletedMessages);
+        $this->assertEqualsMessages(['pls...'], $deletedMessages);
     }
 
     /**
@@ -110,7 +110,7 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
     /**
      * @covers Transaction_Message_Select::getAllToReceiverDeletedBySender()
      */
-    public function testGetAllToReceiverDeletedBySenderOneResult()
+    public function testGetAllToReceiverDeletedBySenderOneResultOneDeleted()
     {
         $this->_messages[count($this->_messages) - 1]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
@@ -121,6 +121,52 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
 
         $this->assertEquals(1, count($messages));
         $this->assertMessagesDeleted($messages);
+        $this->assertEqualsMessages(['pls...'], $messages);
+    }
+
+    /**
+     * @covers Transaction_Message_Select::getAllToReceiverDeletedBySender()
+     */
+    public function testGetAllToReceiverDeletedBySenderOneResultMoreDeleted()
+    {
+        $this->_messages[0]->deleteMessage(
+            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
+
+        $this->_messages[2]->deleteMessage(
+            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
+
+        $this->_messages[5]->deleteMessage(
+            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
+
+        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $messages       = $transaction->getLastToReceiverDeletedBySender(
+            $this->_conversations['active'][0]->getId(), $this->_users[0]->user_id);
+
+        $this->assertEquals(1, count($messages));
+        $this->assertMessagesDeleted($messages);
+        $this->assertEqualsMessages(['pls...'], $messages);
+    }
+
+    /**
+     * @covers Transaction_Message_Select::getAllToReceiverDeletedBySender()
+     */
+    public function testGetAllToReceiverDeletedBySenderMoreResultMoreDeleted()
+    {
+        $this->_messages[4]->deleteMessage(
+            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
+
+        $this->_messages[5]->deleteMessage(
+            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
+
+        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $messages       = $transaction->getLastToReceiverDeletedBySender(
+            $this->_conversations['active'][0]->getId(), $this->_users[0]->user_id);
+
+        $this->assertEquals(2, count($messages));
+        $this->assertMessagesDeleted($messages);
+        $this->assertEqualsMessages([
+            'szabadúszó pls...', 'pls...'
+        ], $messages);
     }
 
     /**
@@ -159,12 +205,14 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
         self::createConversation([$this->_users[0]->user_id, $this->_users[2]->user_id]);
         self::createConversation([$this->_users[0]->user_id, $this->_users[3]->user_id], 'deleted');
         self::createConversation([$this->_users[0]->user_id, $this->_users[4]->user_id]);
+        self::createConversation([$this->_users[5]->user_id, $this->_users[4]->user_id]);
 
         self::sendMessage($this->_users[1]->user_id, $this->_conversations['active'][0]->getId(), 'Hello, ráérsz?');
         self::sendMessage($this->_users[0]->user_id, $this->_conversations['active'][0]->getId(), 'Hello, igen, mi a projekt?');
         self::sendMessage($this->_users[1]->user_id, $this->_conversations['active'][0]->getId(), 'Közösségi oldal');
         self::sendMessage($this->_users[0]->user_id, $this->_conversations['active'][0]->getId(), 'Bocsi, de az nem érdekel');
         self::sendMessage($this->_users[1]->user_id, $this->_conversations['active'][0]->getId(), 'szabadúszó pls...');
+        self::sendMessage($this->_users[1]->user_id, $this->_conversations['active'][0]->getId(), 'pls...');
     }
 
     /**
@@ -268,11 +316,22 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
 
         $employer3->save();
 
+        $freelancer1 = new Model_User_Freelancer();
+        $freelancer1->lastname       = 'Joó';
+        $freelancer1->firstname      = 'Martin';
+        $freelancer1->email          = uniqid() . '@gmail.com';
+        $freelancer1->password       = 'Password123';
+        $freelancer1->min_net_hourly_wage       = '3000';
+        $freelancer1->type = Entity_User::TYPE_FREELANCER;
+
+        $freelancer1->save();
+
         $this->_users[] = $freelancer;
         $this->_users[] = $employer;
         $this->_users[] = $employer1;
         $this->_users[] = $employer2;
         $this->_users[] = $employer3;
+        $this->_users[] = $freelancer1;
     }
 
     public function tearDown()
