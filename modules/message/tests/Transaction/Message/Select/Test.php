@@ -108,6 +108,35 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
     }
 
     /**
+     * @covers Transaction_Message_Select::getAllToReceiverDeletedBySender()
+     */
+    public function testGetAllToReceiverDeletedBySenderOneResult()
+    {
+        $this->_messages[count($this->_messages) - 1]->deleteMessage(
+            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
+
+        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $messages       = $transaction->getLastToReceiverDeletedBySender(
+            $this->_conversations['active'][0]->getId(), $this->_users[0]->user_id);
+
+        $this->assertEquals(1, count($messages));
+        $this->assertMessagesDeleted($messages);
+    }
+
+    /**
+     * @param Model_Message[] $messages
+     */
+    protected function assertMessagesDeleted(array $messages)
+    {
+        foreach ($messages as $message) {
+            /**
+             * @var $message Model_Message
+             */
+            $this->assertTrue($message->isDeleted);
+        }
+    }
+
+    /**
      * @param string[] $expectedMessages
      * @param Model_Message[] $actualMessages
      */

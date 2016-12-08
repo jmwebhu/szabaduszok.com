@@ -53,26 +53,37 @@ class Transaction_Message_Select
      * @param int $userId
      * @return Model_Message[]
      */
-    public function getAllToReceiverDeletedBySender($conversationId, $userId)
+    public function getLastToReceiverDeletedBySender($conversationId, $userId)
     {
         $messages = $this->deletedMessagesBaseSelectBy($conversationId)
             ->and_where('message.sender_id', '!=', $userId)
             ->and_where('mi_sender.is_deleted', '=', 1)
-            ->and_where('mi_receiver.is_deleted', '=', 0)
+            ->and_where('mi_receiver.is_deleted', '=', 1)
             ->find_all();
 
         /**
-         * @todo ATHELYEZNI BUSINESS -BE
+         * @todo athelyezni Business -be
          */
 
-        $lastId = $this->getLastId();
-        if ($messages[count($messages) - 1]->message_id != $lastId) {
+        if (empty($messages)) {
             return [];
         }
 
-        $index = Business_Message::getIndexBeforeIdNotContinous($messages);
+        $lastId = $this->getLastId();
+        $count  = (count($messages) == 0) ? 0 : count($messages) - 1;
 
-        return array_slice($messages, $index, count($messages) - $index);
+        if ($messages[$count]->message_id != $lastId) {
+            return [];
+        }
+
+        $index                  = Business_Message::getIndexBeforeIdNotContinous($messages);
+        $lastDeletedMessages    = array_slice($messages, $index, count($messages) - $index);
+
+        foreach ($lastDeletedMessages as $lastDeletedMessage) {
+            $lastDeletedMessage->isDeleted = true;
+        }
+
+        return $lastDeletedMessages;
     }
 
     /**

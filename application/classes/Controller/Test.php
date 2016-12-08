@@ -4,7 +4,27 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        exit;
+        $data = [
+            'users'     => [1, 2]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        // Uzenet kuldese
+        $data = [
+            'message'           => 'Első',
+            'sender_id'         => 1,
+            'conversation_id'   => $conversation->getConversationId()
+        ];
+
+        $message = new Entity_Message();
+        $message->submit($data);
+
+        // Elkuldott uzenet torlese
+        $deleter = new Entity_User_Freelancer(1);
+        $message = new Entity_Message($message->getMessageId());
+        $message->deleteMessage($deleter);
     }
 
     public function action_message()
