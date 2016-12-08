@@ -68,9 +68,11 @@ class Transaction_Conversation_Select
     /**
      * UZENETEK EGY ADOTT BESZELGETESHEZ
      */
-    public function getMessages()
+    public function getMessagesBy($userId)
     {
-        $activeMessages = $this->_transactionMessageSelect->getAllActiveBy($this->_conversation->getId());
+        $activeMessages             = $this->_transactionMessageSelect->getAllActiveBy($this->_conversation->getId());
+        $deletedByReceiverMessages  = $this->_transactionMessageSelect->getAllToSenderDeletedByReceiver(
+            $this->_conversation->getId(), $userId);
     }
 
     /**
@@ -81,7 +83,7 @@ class Transaction_Conversation_Select
     {
         return $this->_conversation
             ->join('conversations_users', 'left')
-            ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
+                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
 
             ->where('conversations_users.user_id', '=', $userId)
             ->find_all();
@@ -94,6 +96,6 @@ class Transaction_Conversation_Select
     protected function hasDeletedInteractionBy($userId)
     {
         return ($this->_conversation->interactions
-                ->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
+            ->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
     }
 }
