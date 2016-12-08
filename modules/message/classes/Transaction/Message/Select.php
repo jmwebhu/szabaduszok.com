@@ -25,7 +25,8 @@ class Transaction_Message_Select
             ->join(['message_interactions', 'mi'], 'left')
                 ->on('mi.message_id', '=', 'message.message_id')
             ->where('conversation_id', '=', $conversationId)
-            ->and_where('mi.is_deleted', '=', 0)
+            ->group_by('message.message_id')
+            ->having(DB::expr('SUM(mi.is_deleted)'), '=', 0)
             ->find_all();
     }
 

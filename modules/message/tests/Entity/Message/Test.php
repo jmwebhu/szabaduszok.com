@@ -8,6 +8,8 @@ class Entity_Messge_Test extends Unittest_TestCase
 
     protected static $_message = null;
 
+    protected static $_messageIds = [];
+
     /**
      * @covers Entity_Message::submit()
      */
@@ -150,8 +152,8 @@ class Entity_Messge_Test extends Unittest_TestCase
             DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
         }
 
-        if (self::$_message != null) {
-            DB::delete('messages')->where('message_id', '=', self::$_message->getMessageId())->execute();
+        foreach (self::$_messageIds as $id) {
+            DB::delete('messages')->where('message_id', '=', $id)->execute();
         }
     }
 
@@ -176,5 +178,6 @@ class Entity_Messge_Test extends Unittest_TestCase
         $message->submit($data);
 
         self::$_message = $message;
+        self::$_messageIds[] = $message->getMessageId();
     }
 }

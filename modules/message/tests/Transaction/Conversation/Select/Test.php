@@ -11,7 +11,8 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
      */
     public function testGetForLeftPanelByOneDeleted()
     {
-        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $transaction    = new Transaction_Conversation_Select(
+            new Model_Conversation(), new Model_Message(), new Transaction_Message_Select(new Model_Message()));
         $conversations  = $transaction->getForLeftPanelBy(self::$_users[0]->user_id);
 
         $this->assertEquals(count(self::$_conversations['active']), count($conversations));
@@ -30,7 +31,8 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
      */
     public function testGetForLeftPanelByAllActive()
     {
-        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $transaction    = new Transaction_Conversation_Select(
+            new Model_Conversation(), new Model_Message(), new Transaction_Message_Select(new Model_Message()));
         $conversations  = $transaction->getForLeftPanelBy(self::$_users[1]->user_id);
 
         $this->assertEquals(1, count($conversations));
@@ -46,7 +48,8 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
      */
     public function testGetForLeftPanelByAllDeletedReceiver()
     {
-        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $transaction    = new Transaction_Conversation_Select(
+            new Model_Conversation(), new Model_Message(), new Transaction_Message_Select(new Model_Message()));
         $conversations  = $transaction->getForLeftPanelBy(self::$_users[3]->user_id);
 
         $this->assertEquals(1, count($conversations));
@@ -60,7 +63,8 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
      */
     public function testGetForLeftPanelByAllDeletedSenderReceiver()
     {
-        $transaction    = new Transaction_Conversation_Select(new Model_Conversation());
+        $transaction    = new Transaction_Conversation_Select(
+            new Model_Conversation(), new Model_Message(), new Transaction_Message_Select(new Model_Message()));
         $conversations  = $transaction->getForLeftPanelBy(self::$_users[3]->user_id);
 
         $this->assertEquals(1, count($conversations));
@@ -230,6 +234,10 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
             foreach ($array as $item) {
                 DB::delete('conversations')->where('conversation_id', '=', $item->getId())->execute();
             }
+        }
+
+        foreach (self::$_messages as $message) {
+            DB::delete('messages')->where('message_id', '=', $message->getMessageId())->execute();
         }
     }
 }

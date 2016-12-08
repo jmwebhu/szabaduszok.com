@@ -4,11 +4,7 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $conversation = new Model_Conversation(9);
-
-        $items = $conversation->getCountOfMessagesBy(1);
-
-        echo Debug::vars($items);
+        exit;
     }
 
     public function action_message()
