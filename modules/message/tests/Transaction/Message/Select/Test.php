@@ -64,6 +64,39 @@ class Transaction_Message_Select_Text extends Unittest_TestCase
     }
 
     /**
+     * @covers Transaction_Message_Select::getAllToSenderDeletedByReceiver()
+     */
+    public function testGetAllToSenderDeletedByReceiverHasDeleted()
+    {
+        $this->_messages[count($this->_messages) - 1]->deleteMessage(
+            Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
+
+        $conversationId     = $this->_conversations['active'][0]->getId();
+        $transaction        = new Transaction_Message_Select(new Model_Message());
+
+        $deletedMessages    = $transaction->getAllToSenderDeletedByReceiver($conversationId, $this->_users[1]->user_id);
+
+        $this->assertEquals(1, count($deletedMessages));
+        $this->assertEqualsMessages(['szabadúszó pls...'], $deletedMessages);
+    }
+
+    /**
+     * @covers Transaction_Message_Select::getAllToSenderDeletedByReceiver()
+     */
+    public function testGetAllToSenderDeletedByReceiverNoDeleted()
+    {
+        $this->_messages[count($this->_messages) - 1]->deleteMessage(
+            Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
+
+        $conversationId     = $this->_conversations['active'][0]->getId();
+        $transaction        = new Transaction_Message_Select(new Model_Message());
+
+        $deletedMessages    = $transaction->getAllToSenderDeletedByReceiver($conversationId, $this->_users[0]->user_id);
+
+        $this->assertEquals(0, count($deletedMessages));
+    }
+
+    /**
      * @param string[] $expectedMessages
      * @param Model_Message[] $actualMessages
      */
