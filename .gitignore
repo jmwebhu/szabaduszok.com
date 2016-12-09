@@ -18,3 +18,4 @@ report
 /application/config/database.php
 /application/classes/Controller/Test.php
 /application/views/Test/*
+.phpintel

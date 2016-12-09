@@ -4,27 +4,11 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $data = [
-            'users'     => [1, 2]
-        ];
-
         $conversation = new Entity_Conversation();
-        $conversation->submit($data);
+        $user = new Entity_User();
 
-        // Uzenet kuldese
-        $data = [
-            'message'           => 'Első',
-            'sender_id'         => 1,
-            'conversation_id'   => $conversation->getConversationId()
-        ];
-
-        $message = new Entity_Message();
-        $message->submit($data);
-
-        // Elkuldott uzenet torlese
-        $deleter = new Entity_User_Freelancer(1);
-        $message = new Entity_Message($message->getMessageId());
-        $message->deleteMessage($deleter);
+        $transaction = Transaction_Message_Select_Factory::createSelect();
+        $transaction->getAllVisibleBy($conversation->getId(), $user->getId());
     }
 
     public function action_message()

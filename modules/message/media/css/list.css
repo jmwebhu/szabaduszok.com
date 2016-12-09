@@ -70,7 +70,7 @@
 
 #bloc-26 {
 	width: 33.33333333% !important;
-	background-color: rgb(247, 247, 247);
+	background-color: rgb(250, 250, 250);
 	padding: 0 5px 0 0 !important;
 }
 
@@ -80,25 +80,55 @@
 
 #bloc-27 {
 	width: 67.67777777% !important;
-	border-left: 1px solid grey;
+	border-left: 1px solid rgb(220, 220, 220); 
 }
 
 #bloc-27 .container {
 	padding-top: 10px !important;
+    overflow-y: scroll;
+    height: 75vh;
+}
+
+#bloc-26 .container {
+    overflow-y: scroll;
+    height: 75vh;
 }
 
 #message-text {
 	border-radius: 0 !important;
-	
+    border: none;
+}
+
+.message-text-container {
+	border: 1px solid #3272FF;
 }
 
 #send {
 	border-radius: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.user-container {
+	border-bottom: 1px solid rgb(220, 220, 220);
 }
 
 .user-container:hover {
-	background-color: #f1f6ff;
+	background-color: rgb(209, 238, 253);
 	cursor: pointer;
+	color: black;
+}
+
+.user-container.selected {
+	background-color: rgb(26, 161, 220);
+}
+
+.user-container.selected * {
+	color: white !important;
+}
+
+.unread-dot {
+    margin-top: 42px;
+    margin-left: 250%;
 }
 
 @media (max-width: 770px)

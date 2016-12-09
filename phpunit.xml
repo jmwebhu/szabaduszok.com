@@ -1,0 +1,40 @@
+<!--
+	This is an example phpunit.xml file to get you started
+	Copy it to a directory, update the relative paths and rename to phpunit.xml
+	Then to run tests cd into it's directory and just run
+		phpunit
+	(it'll automatically use any phpunit.xml file in the current directory)
+
+	Any options you specify when calling phpunit will override the ones in here
+-->
+<phpunit colors="true" bootstrap="./modules/unittest/bootstrap.php">
+	<testsuites>
+		<testsuite name="Application Tests">
+			<directory>./application/tests/</directory>
+		</testsuite>
+
+		<testsuite name="Project Tests">
+			<directory>./modules/project/tests/</directory>
+		</testsuite>
+
+		<testsuite name="User Tests">
+			<directory>./modules/user/tests/</directory>
+		</testsuite>
+
+		<testsuite name="ArrayBuilder Tests">
+			<directory>./modules/arraybuilder/tests/</directory>
+		</testsuite>
+
+		<testsuite name="Listview Tests">
+			<directory>./modules/listview/tests/</directory>
+		</testsuite>
+
+		<testsuite name="Search Tests">
+			<directory>./modules/search/tests/</directory>
+		</testsuite>
+
+		<testsuite name="Notification Tests">
+			<directory>./modules/notification/tests/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
