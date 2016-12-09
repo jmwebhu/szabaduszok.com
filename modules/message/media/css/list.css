@@ -1,3 +1,24 @@
+.triangle-obtuse {
+  position:relative;
+  padding:15px;
+  /*margin:1em 0 3em;*/
+  color:#000;
+  background:#c81e2b;
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+.bubble.blue {
+  /*background-color: #89C4F4;*/
+  background-color: rgb(209, 238, 253);
+}
+
+.bubble.gray {
+  /*background-color: #F2F1EF;*/
+  background-color: rgb(247, 247, 247);
+}
+
 .divider-h.message-day {
 	padding: 0 !important;
 }
@@ -34,8 +55,30 @@
 
 #bloc-26 {
 	width: 33.33333333% !important;
+	background-color: rgb(243, 243, 243);
+	padding: 0 !important;
+}
+
+#bloc-26 .container {
+	padding-top: 0 !important;
 }
 
 #bloc-27 {
 	width: 67.67777777% !important;
+	border-left: 1px solid grey;
+}
+
+#bloc-27 .container {
+	padding-top: 10px !important;
+}
+
+@media (max-width: 770px)
+{
+	#bloc-26 {
+		width: 100% !important;
+	}
+
+	#bloc-27 {
+		width: 100% !important;
+	}
 }
