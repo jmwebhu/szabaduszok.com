@@ -32,25 +32,6 @@ class Transaction_Message_Select
     }
 
     /**
-     * Minden olyan uzenet, amit az adott user kuldott, es a fogado torolt
-     *
-     * @param int $conversationId
-     * @param int $userId
-     * @return Model_Message[]
-     */
-    public function getAllToSenderDeletedByReceiver($conversationId, $userId)
-    {
-        /**
-         * @todo osszevonni self::getAllActiveBy() lekerdezessel
-         */
-        return $this->deletedMessagesBaseSelectBy($conversationId)
-            ->and_where('message.sender_id', '=', $userId)
-            ->and_where('mi_sender.is_deleted', '=', 0)
-            ->and_where('mi_receiver.is_deleted', '=', 1)
-            ->find_all();
-    }
-
-    /**
      * Minden olyan uzenet, amit az adott user fogadott, es a kuldo torolt. Csak az utolsokat adja vissza.
      *
      * @param int $conversationId

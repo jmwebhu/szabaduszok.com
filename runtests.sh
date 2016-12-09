@@ -6,4 +6,3 @@
 ./vendor/bin/phpunit ./modules/search/tests/ --bootstrap=modules/unittest/bootstrap.php
 ./vendor/bin/phpunit ./modules/message/tests/ --bootstrap=modules/unittest/bootstrap.php
 ./vendor/bin/phpunit ./modules/notification/tests/ --bootstrap=modules/unittest/bootstrap.php
-./vendor/bin/phpunit ./modules/message/tests/ --bootstrap=modules/unittest/bootstrap.php

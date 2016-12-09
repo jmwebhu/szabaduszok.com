@@ -7,101 +7,6 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
     protected $_messages = [];
 
     /**
-     * @covers Transaction_Message_Select::getAllActiveBy()
-     */
-    public function testGetAllActiveByEveryMessage()
-    {
-        $this->markTestSkipped();
-        $conversationId = $this->_conversations[0]->getId();
-        $transaction    = new Transaction_Message_Select(new Model_Message());
-
-        $activeMessages = $transaction->getAllActiveBy($conversationId);
-        $this->assertEquals(6, count($activeMessages));
-
-        $this->assertEqualsMessages([
-            'Hello, ráérsz?', 'Hello, igen, mi a projekt?', 'Közösségi oldal',
-            'Bocsi, de az nem érdekel', 'szabadúszó pls...', 'pls...'
-        ], $activeMessages);
-    }
-
-    /**
-     * @covers Transaction_Message_Select::getAllActiveBy()
-     */
-    public function testGetAllActiveByHasDeletedByReceiver()
-    {
-        $this->markTestSkipped();
-        $this->_messages[count($this->_messages) - 1]->deleteMessage(
-            Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
-
-        $conversationId = $this->_conversations[0]->getId();
-        $transaction    = new Transaction_Message_Select(new Model_Message());
-
-        $activeMessages = $transaction->getAllActiveBy($conversationId);
-
-        $this->assertEquals(5, count($activeMessages));
-        $this->assertEqualsMessages([
-            'Hello, ráérsz?', 'Hello, igen, mi a projekt?', 'Közösségi oldal',
-            'Bocsi, de az nem érdekel', 'szabadúszó pls...'
-        ], $activeMessages);
-    }
-
-    /**
-     * @covers Transaction_Message_Select::getAllActiveBy()
-     */
-    public function testGetAllActiveByHasDeletedBySender()
-    {
-        $this->markTestSkipped();
-        $this->_messages[2]->deleteMessage(
-            Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
-
-        $conversationId = $this->_conversations[0]->getId();
-        $transaction    = new Transaction_Message_Select(new Model_Message());
-
-        $activeMessages = $transaction->getAllActiveBy($conversationId);
-
-        $this->assertEquals(5, count($activeMessages));
-        $this->assertEqualsMessages([
-            'Hello, ráérsz?', 'Hello, igen, mi a projekt?',
-            'Bocsi, de az nem érdekel', 'szabadúszó pls...', 'pls...'
-        ], $activeMessages);
-    }
-
-    /**
-     * @covers Transaction_Message_Select::getAllToSenderDeletedByReceiver()
-     */
-    public function testGetAllToSenderDeletedByReceiverHasDeleted()
-    {
-        $this->markTestSkipped();
-        $this->_messages[count($this->_messages) - 1]->deleteMessage(
-            Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
-
-        $conversationId     = $this->_conversations[0]->getId();
-        $transaction        = new Transaction_Message_Select(new Model_Message());
-
-        $deletedMessages    = $transaction->getAllToSenderDeletedByReceiver($conversationId, $this->_users[1]->user_id);
-
-        $this->assertEquals(1, count($deletedMessages));
-        $this->assertEqualsMessages(['pls...'], $deletedMessages);
-    }
-
-    /**
-     * @covers Transaction_Message_Select::getAllToSenderDeletedByReceiver()
-     */
-    public function testGetAllToSenderDeletedByReceiverNoDeleted()
-    {
-        $this->markTestSkipped();
-        $this->_messages[count($this->_messages) - 1]->deleteMessage(
-            Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
-
-        $conversationId     = $this->_conversations[0]->getId();
-        $transaction        = new Transaction_Message_Select(new Model_Message());
-
-        $deletedMessages    = $transaction->getAllToSenderDeletedByReceiver($conversationId, $this->_users[0]->user_id);
-
-        $this->assertEquals(0, count($deletedMessages));
-    }
-
-    /**
      * @covers Transaction_Message_Select::getLastId()
      */
     public function testGetLastId()
@@ -117,7 +22,6 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
      */
     public function testGetAllToReceiverDeletedBySenderOneResultOneDeleted()
     {
-        $this->markTestSkipped();
         $this->_messages[count($this->_messages) - 1]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
@@ -128,6 +32,11 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->assertEquals(1, count($messages));
         $this->assertMessagesDeleted($messages);
         $this->assertEqualsMessages(['pls...'], $messages);
+
+        $messagesByEmployer   = $transaction->getLastToReceiverDeletedBySender(
+            $this->_conversations[0]->getId(), $this->_users[1]->user_id);
+
+        $this->assertEquals(0, count($messagesByEmployer));
     }
 
     /**
@@ -135,14 +44,13 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
      */
     public function testGetAllToReceiverDeletedBySenderOneResultMoreDeleted()
     {
-        $this->markTestSkipped();
         $this->_messages[0]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
         $this->_messages[2]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $this->_messages[5]->deleteMessage(
+        $this->_messages[count($this->_messages) - 1]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
         $transaction    = new Transaction_Message_Select(new Model_Message());
@@ -152,6 +60,11 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->assertEquals(1, count($messages));
         $this->assertMessagesDeleted($messages);
         $this->assertEqualsMessages(['pls...'], $messages);
+
+        $messagesByEmployer       = $transaction->getLastToReceiverDeletedBySender(
+            $this->_conversations[0]->getId(), $this->_users[1]->user_id);
+
+        $this->assertEquals(0, count($messagesByEmployer));
     }
 
     /**
@@ -159,11 +72,10 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
      */
     public function testGetAllToReceiverDeletedBySenderMoreResultMoreDeleted()
     {
-        $this->markTestSkipped();
-        $this->_messages[4]->deleteMessage(
+        $this->_messages[7]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $this->_messages[5]->deleteMessage(
+        $this->_messages[8]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
         $transaction    = new Transaction_Message_Select(new Model_Message());
@@ -175,6 +87,10 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->assertEqualsMessages([
             'szabadúszó pls...', 'pls...'
         ], $messages);
+
+        $messagesByEmployer       = $transaction->getLastToReceiverDeletedBySender(
+            $this->_conversations[0]->getId(), $this->_users[1]->user_id);
+        $this->assertEquals(0, count($messagesByEmployer));
     }
 
     /**
@@ -498,7 +414,13 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $freelancer->min_net_hourly_wage       = '3000';
         $freelancer->type = Entity_User::TYPE_FREELANCER;
 
-        $freelancer->save();
+        try {
+            $freelancer->save();
+        } catch (ORM_Validation_Exception $ovex) {
+            var_dump($ovex->errors());
+            exit;
+        }
+
 
         $employer = new Model_User_Employer();
         $employer->lastname       = 'Kis';
