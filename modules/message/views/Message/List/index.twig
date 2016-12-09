@@ -15,24 +15,30 @@
                 {% for i in 1..25 %}
                 <div class="row user-container {% if i == 2 %}selected{% endif %}">
                     <div class="col-sm-1 text-center">     
-                        {% set unread = random(1) %}                   
+                        {% set unread = random(1) %}                  
                         {% if unread == 1 %}
                             <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot"></span>
                         {% endif %}
                     </div>
-                    <div class="col-sm-3 text-center">
+                    <div class="col-sm-3 text-center hidden-xs">
                         <span class="helper"></span>
                         <img src="{{ ROOT }}uploads/picture/nagyon_kicsi.jpg" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin">
                     </div>
                     <div class="col-sm-6">
-                        <h3 class="mg-sm message-user-header tc-black">
+                        <h3 class="mg-sm message-user-header tc-black hidden-xs">
                             Joó Martin
                         </h3>
-                        <p class="message-preview">
-                            Ez itt az utolsó üzenet első x karaktere... Ez ittsafsdafsdfa az utolsó üzenet első x karaktsadfsdafsere...
-                        </p>                    
+                        <h3 class="mg-sm message-user-header tc-black visible-xs">
+                            Martin
+                        </h3>
+                        <p class="message-preview hidden-xs">
+                            Ez itt az utolsó üzenet első 100 karaktere... első 100 karaktere... első 100 karaktere... első 100 k
+                        </p>          
+                        <p class="message-preview visible-xs">
+                            Ez itt az utolsó üzenet első 44 karaktere...
+                        </p>                              
                     </div>            
-                    <div class="col-sm-2 text-center message-time">
+                    <div class="col-sm-2 text-center message-time hidden-xs">
                         ma
                     </div>
                 </div>

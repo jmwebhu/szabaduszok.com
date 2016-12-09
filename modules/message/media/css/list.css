@@ -76,6 +76,8 @@
 
 #bloc-26 .container {
 	padding-top: 0 !important;
+    overflow-y: scroll;
+    height: 75vh;
 }
 
 #bloc-27 {
@@ -85,11 +87,6 @@
 
 #bloc-27 .container {
 	padding-top: 10px !important;
-    overflow-y: scroll;
-    height: 75vh;
-}
-
-#bloc-26 .container {
     overflow-y: scroll;
     height: 75vh;
 }
@@ -128,8 +125,8 @@
 }
 
 .unread-dot {
-    /*margin-top: 71px;*/
-    margin-left: 250%;
+    margin-left: 10px;
+    margin-top: 33.5px;
 }
 
 .user-container img {
@@ -140,11 +137,31 @@
 
 @media (max-width: 767px)
 {
+    #bloc-26 {
+        width: 40% !important;
+        max-width: 300px !important;
+    }
+
+    #bloc-26 .col-sm-6 {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    #bloc-26 .col-sm-12 {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
 	#bloc-27 {
-		width: 350px !important;
+		width: 60% !important;
 	}
 
     .bloc-group .bloc {
         display: table-cell !important;
+    }
+
+    .unread-dot {
+        margin-left: 0 !important;
+        margin-top: 5px !important;
     }
 }
