@@ -10,12 +10,12 @@
   border-radius:10px;
 }
 
-.blue-bubble {
+.bubble.blue {
   /*background-color: #89C4F4;*/
   background-color: rgb(209, 238, 253);
 }
 
-.gray-bubble {
+.bubble.gray {
   /*background-color: #F2F1EF;*/
   background-color: rgb(247, 247, 247);
 }

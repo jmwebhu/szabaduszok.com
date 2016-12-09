@@ -6,3 +6,23 @@
 	margin-bottom: 10px;
 	font-size: 18px;
 }
+
+.bubble.outgoing {
+	margin-left: 20%;
+}
+
+.bubble.incoming {
+	margin-right: 20%;
+}
+
+.bubble.time.outgoing {
+	text-align: right;
+}
+
+.bubble.time.incoming {
+	text-align: left;
+}
+
+.bubble.time {
+	margin-bottom: 0 !important;
+}
