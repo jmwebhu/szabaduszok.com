@@ -16,6 +16,14 @@ class Transaction_Message_Select
     }
 
     /**
+     * @return Model_Message
+     */
+    public function getMessage()
+    {
+        return $this->_message;
+    }
+
+    /**
      * @param int $conversationId
      * @param int $userId
      * @return Model_Message[]

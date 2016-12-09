@@ -40,7 +40,7 @@ class Business_Message extends Business
             return [];
         }
 
-        $lastId = (new Transaction_Message_Select(new Model_Message()))->getLastId();
+        $lastId = Transaction_Message_Select_Factory::createSelect()->getLastId();
         $count  = (count($messages) == 0) ? 0 : count($messages) - 1;
 
         if ($messages[$count]->message_id != $lastId) {

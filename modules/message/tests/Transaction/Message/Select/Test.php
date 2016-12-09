@@ -11,7 +11,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
      */
     public function testGetLastId()
     {
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $lastId         = $this->invokeMethod($transaction, 'getLastId');
 
         $this->assertEquals($this->_messages[count($this->_messages) - 1]->getMessageId(), $lastId);
@@ -25,7 +25,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[count($this->_messages) - 1]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getLastToReceiverDeletedBySender(
             $this->_conversations[0]->getId(), $this->_users[0]->user_id);
 
@@ -53,7 +53,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[count($this->_messages) - 1]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getLastToReceiverDeletedBySender(
             $this->_conversations[0]->getId(), $this->_users[0]->user_id);
 
@@ -78,7 +78,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[8]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getLastToReceiverDeletedBySender(
             $this->_conversations[0]->getId(), $this->_users[0]->user_id);
 
@@ -124,7 +124,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
      */
     public function testGetAllVisibleByAllMessagesVisible()
     {
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(9, count($messages));
@@ -153,7 +153,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[6]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(9, count($messages));
@@ -180,7 +180,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[0]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(8, count($messages));
@@ -210,7 +210,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[4]->deleteMessage(
             Entity_User::createUser($this->_users[1]->type, $this->_users[1]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(7, count($messages));
@@ -237,7 +237,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[1]->deleteMessage(
             Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(8, count($messages));
@@ -267,7 +267,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[6]->deleteMessage(
             Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(7, count($messages));
@@ -297,7 +297,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[4]->deleteMessage(
             Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(7, count($messages));
@@ -324,7 +324,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         $this->_messages[2]->deleteMessage(
             Entity_User::createUser($this->_users[0]->type, $this->_users[0]));
 
-        $transaction    = new Transaction_Message_Select(new Model_Message());
+        $transaction    = Transaction_Message_Select_Factory::createSelect();
         $messages       = $transaction->getAllVisibleBy($this->_conversations[0]->getId(), $this->_users[0]);
 
         $this->assertEquals(8, count($messages));

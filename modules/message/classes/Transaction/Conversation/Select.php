@@ -39,6 +39,30 @@ class Transaction_Conversation_Select
     }
 
     /**
+     * @return Model_Conversation
+     */
+    public function getConversation()
+    {
+        return $this->_conversation;
+    }
+
+    /**
+     * @return Model_Message
+     */
+    public function getMessage()
+    {
+        return $this->_message;
+    }
+
+    /**
+     * @return Transaction_Message_Select
+     */
+    public function getTransactionMessageSelect()
+    {
+        return $this->_transactionMessageSelect;
+    }
+
+    /**
      * BAL OLDALI PANEL
      * Visszaadja az uzenetek oldal bal oldali paneleben megjeleno beszelgeteseket.
      * Azokat, amikben szerepel a felasznalo, ES nincs hozza torolt interacio

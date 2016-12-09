@@ -1,14 +1,116 @@
 {% extends "Templates/default.twig" %}
 
 {% block content %}
-    <div class="bloc bgc-anti-flash-white tc-black">
-        <div class="container bloc-lg">
-            <div class="col-sm-4">
-                25
-            </div>
-            <div class="col-sm-8">
-                75
+    <!-- Main container -->
+<div class="page-container">
+    
+<!-- Bloc Group -->
+<div class='bloc-group'>
+
+<!-- bloc-26 -->
+<div class="bloc bloc-tile-2 tc-black bgc-white " id="bloc-26">
+    <div class="container bloc-lg">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row" style="border: 1px solid black">
+                    <div class="col-sm-2">
+                        <div class="tebxt-center">
+                            <span class="ion ion-record icon-md icon-ultramarine-blue" style="mar" title="This is a tooltip"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <img src="{{ ROOT }}media/img/szabaduszok-placeholder.png" class="img-circle img-responsive center-block" height="86" width="86" data-placement="top" data-toggle="tooltip" title="Joó Martin" />
+                    </div>
+                    <div class="col-sm-6">
+                        <h3 class="mg-sm message-user-header tc-black">
+                            Joó Martin
+                        </h3>
+                        <p class="message-preview">
+                            Ez itt az utolsó üzenet első 20 karaktere...
+                        </p>
+                    </div>
+                    <div class="col-sm-2" style="line-height: 92px; vertical-align: middle;">
+                        <p>
+                            ma, 12:33
+                        </p>
+                    </div>
+                </div>
+                <div class="row voffset bgc-ultramarine-blue">
+                    <div class="col-sm-1">
+                        <div class="text-center">
+                            <span class="ion ion-record icon-md icon-ultramarine-blue" title="This is a tooltip"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <img src="img/placeholder-user.png" class="img-circle img-responsive center-block" height="86" width="86" data-placement="top" data-toggle="tooltip" title="This is a tooltip" />
+                    </div>
+                    <div class="col-sm-6">
+                        <h3 class="mg-sm project-title-header tc-black">
+                            Joó Martin (kiválasztott, minden fehér)
+                        </h3>
+                        <p class="project-short-description">
+                            Ez itt az utolsó üzenet első 20 karaktere...
+                        </p>
+                    </div>
+                    <div class="col-sm-3">
+                        <p>
+                            ma, 12:33
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
+<!-- bloc-26 END -->
+
+<!-- bloc-27 -->
+<div class="bloc bloc-tile-2 bgc-white l-bloc" id="bloc-27">
+    <div class="container bloc-lg">
+        <div class="row">
+            <div class="col-sm-12">
+                <form id="form_39619" novalidate>
+                    <div class="message-day text-center">
+                        December 4, hétfő                  
+                    </div>                      
+
+                    <span>10:12</span>
+                    <p class="triangle-obtuse top blue-bubble">Elküldött üzenet</p>
+                      
+                    <span>14:26</span>
+                    <p class="triangle-obtuse top gray-bubble">Fogadott üzenet</p>
+                    
+                    <div class="message-day text-center">
+                        Tegnap                                
+                    </div>            
+                                     
+                    <p class="triangle-obtuse top blue-bubble">Elküldött üzenet</p>
+                    <span>08:33</span>
+                    
+                    <p>
+                        <p class="triangle-obtuse top gray-bubble">Fogadott üzenet</p>
+                        <span>09:17</span>
+                    </p>
+
+                    <span>ma</span>
+                    <p>
+                        <p class="triangle-obtuse top blue-bubble">Elküldött üzenet</p>
+                        <span>16:47</span>
+                    </p>
+                    <p>
+                        <p class="triangle-obtuse top gray-bubble">Fogadott üzenet</p>
+                        <span>17:21</span>
+                    </p>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
+                    </div><a href="#" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- bloc-27 END -->
+</div>
+<!-- Bloc Group END -->
+</div>
 {% endblock content %}
