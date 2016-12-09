@@ -70,9 +70,14 @@ class Transaction_Conversation_Select
      */
     public function getMessagesBy($userId)
     {
-        $activeMessages             = $this->_transactionMessageSelect->getAllActiveBy($this->_conversation->getId());
-        $deletedByReceiverMessages  = $this->_transactionMessageSelect->getAllToSenderDeletedByReceiver(
+        $activeMessages                 = $this->_transactionMessageSelect->getAllActiveBy($this->_conversation->getId());
+        $deletedByReceiverMessages      = $this->_transactionMessageSelect->getAllToSenderDeletedByReceiver(
             $this->_conversation->getId(), $userId);
+
+        $lastDeletedMessagesBySender    = $this->_transactionMessageSelect->getLastToReceiverDeletedBySender(
+            $this->_conversation->getId(), $userId);
+
+        return array_merge($activeMessages, $deletedByReceiverMessages, $lastDeletedMessagesBySender);
     }
 
     /**

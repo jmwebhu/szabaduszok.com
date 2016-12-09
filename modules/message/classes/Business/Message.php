@@ -29,4 +29,31 @@ class Business_Message extends Business
 
         return $index;
     }
+
+    /**
+     * @param Model_Message[] $messages
+     * @return Model_Message[]
+     */
+    public static function getLastDeletedFrom(array $messages)
+    {
+        if (empty($messages)) {
+            return [];
+        }
+
+        $lastId = (new Transaction_Message_Select(new Model_Message()))->getLastId();
+        $count  = (count($messages) == 0) ? 0 : count($messages) - 1;
+
+        if ($messages[$count]->message_id != $lastId) {
+            return [];
+        }
+
+        $index                  = Business_Message::getIndexBeforeIdNotContinous($messages);
+        $lastDeletedMessages    = array_slice($messages, $index, count($messages) - $index);
+
+        foreach ($lastDeletedMessages as $lastDeletedMessage) {
+            $lastDeletedMessage->isDeleted = true;
+        }
+
+        return $lastDeletedMessages;
+    }
 }
