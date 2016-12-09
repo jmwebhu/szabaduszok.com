@@ -19,6 +19,21 @@
   background-color: rgb(247, 247, 247);
 }
 
+.message-user-header{
+	font-weight:bold;
+	letter-spacing:1px;
+	font-size: 18px;
+}
+.message-preview{
+	color: #4d565d;	
+	font-size: 10px;
+}
+.message-time {
+	font-size: 10px;	
+	padding-top: 12px;
+	padding-left: 0 !important;
+}
+
 .divider-h.message-day {
 	padding: 0 !important;
 }
@@ -55,8 +70,8 @@
 
 #bloc-26 {
 	width: 33.33333333% !important;
-	background-color: rgb(243, 243, 243);
-	padding: 0 !important;
+	background-color: rgb(247, 247, 247);
+	padding: 0 5px 0 0 !important;
 }
 
 #bloc-26 .container {
@@ -70,6 +85,20 @@
 
 #bloc-27 .container {
 	padding-top: 10px !important;
+}
+
+#message-text {
+	border-radius: 0 !important;
+	
+}
+
+#send {
+	border-radius: 0 !important;
+}
+
+.user-container:hover {
+	background-color: #f1f6ff;
+	cursor: pointer;
 }
 
 @media (max-width: 770px)

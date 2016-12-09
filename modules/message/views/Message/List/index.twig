@@ -12,53 +12,28 @@
     <div class="container bloc-lg">
         <div class="row">
             <div class="col-sm-12">
-                <div class="row" style="border: 1px solid black">
-                    <div class="col-sm-2">
-                        <div class="tebxt-center">
-                            <span class="ion ion-record icon-md icon-ultramarine-blue" style="mar" title="This is a tooltip"></span>
-                        </div>
+
+                {% for i in 1..5 %}
+                <div class="row user-container" style="border-bottom: 1px solid silver">
+                    <div class="col-sm-1 text-center">
+                        <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue"></span>
                     </div>
-                    <div class="col-sm-2">
-                        <img src="{{ ROOT }}media/img/szabaduszok-placeholder.png" class="img-circle img-responsive center-block" height="86" width="86" data-placement="top" data-toggle="tooltip" title="Joó Martin" />
+                    <div class="col-sm-3 text-center">
+                        <img style="margin-top: 24px;width: 55px; height: 55px;" src="{{ ROOT }}media/img/szabaduszok-placeholder.png" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin" />
                     </div>
                     <div class="col-sm-6">
                         <h3 class="mg-sm message-user-header tc-black">
                             Joó Martin
                         </h3>
                         <p class="message-preview">
-                            Ez itt az utolsó üzenet első 20 karaktere...
-                        </p>
-                    </div>
-                    <div class="col-sm-2">
-                        <p>
-                            ma, 17:55
-                        </p>
+                            Ez itt az utolsó üzenet első x karaktere... Ez ittsafsdafsdfa az utolsó üzenet első x karaktsadfsdafsere...
+                        </p>                    
+                    </div>            
+                    <div class="col-sm-2 text-center message-time">
+                        ma
                     </div>
                 </div>
-                
-                <div class="row voffset bgc-ultramarine-blue">
-                    <div class="col-sm-1">
-                        <div class="text-center">
-                            <span class="ion ion-record icon-md icon-ultramarine-blue" title="This is a tooltip"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <img src="img/placeholder-user.png" class="img-circle img-responsive center-block" height="86" width="86" data-placement="top" data-toggle="tooltip" title="This is a tooltip" />
-                    </div>
-                    <div class="col-sm-6">
-                        <h3 class="mg-sm project-title-header tc-black">
-                            Joó Martin (kiválasztott, minden fehér)
-                        </h3>
-                        <p class="project-short-description">
-                            Ez itt az utolsó üzenet első 20 karaktere...
-                        </p>
-                    </div>
-                    <div class="col-sm-3">
-                        <p>
-                            ma, 12:33
-                        </p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -101,9 +76,10 @@
                     <p class="bubble time incoming">17:55</p>
                     <p class="triangle-obtuse top gray bubble incoming">Fogadott üzenet</p>
 
-                    <div class="form-group" style="margin-top: 30px;">
-                        <textarea class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
-                    </div><a href="#" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
+                    <div class="form-group message-text-container" style="margin-top: 30px;">
+                        <textarea id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
+                    </div>
+                    <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
                 </form>
             </div>
         </div>
