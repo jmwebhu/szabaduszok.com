@@ -3,8 +3,13 @@
 }
 
 .message-day {
-	margin-bottom: 10px;
+	margin-bottom: 0;
+	margin-top: 20px;
 	font-size: 18px;
+}
+
+.message-day:first-child {
+	margin-top: 0 !important;
 }
 
 .bubble.outgoing {
