@@ -5,7 +5,7 @@ class Date extends Kohana_Date
     /**
      * @var int
      */
-    protected static $_textifyMaxInterval = 6;
+    public static $_textifyMaxInterval = 6;
 
     /**
      * @param  string

@@ -16,43 +16,38 @@ class Business_Message_Test extends Unittest_TestCase
      */
     public function testGroupGivenMessagesByDays()
     {
-        $messageMonday1 = new Model_Message();
-        $messageMonday1->created_at = '2016-12-05 14:37'; 
-        $messageMonday1->message_id = 1;
+        $now            = date('Y-m-d', time());
+        $timestamps     = [];
+        $days           = [];
+        $messages       = [];
 
-        $messageMonday2 = new Model_Message();
-        $messageMonday2->created_at = '2016-12-05 16:23';
-        $messageMonday2->message_id = 2;
+        for ($i = 0; $i < 20; $i++) {
+            $timestamp      = strtotime($now . '-' . $i . ' days');
+            $timestamps[]   = $timestamp;
+            $dateTime       = new DateTime(date('Y-m-d', $timestamp));
+            $days[]         = $dateTime->format('l');
 
-        $messageTuesday = new Model_Message();
-        $messageTuesday->created_at = '2016-12-06 18:52';          
-        $messageTuesday->message_id = 3;
+            $message                = new Model_Message();
+            $message->created_at    = $dateTime->format('Y-m-d');
+            $message->message_id    = $i + 1;
 
-        $messageThursday1 = new Model_Message();
-        $messageThursday1->created_at = '2016-12-08 09:13';
-        $messageThursday1->message_id = 4;
-
-        $messageThursday2 = new Model_Message();
-        $messageThursday2->created_at = '2016-12-08 10:05';
-        $messageThursday2->message_id = 5;
-
-        $groupedMessages = Business_Message::groupGivenMessagesByDays([$messageMonday1, $messageMonday2, $messageTuesday, $messageThursday1, $messageThursday2]);
-
-        $this->assertEquals(['2016-12-05', '2016-12-06', '2016-12-08'], array_keys($groupedMessages));
-
-        foreach ($groupedMessages['2016-12-05'] as $message) {
-            $this->assertTrue(in_array($message->message_id, [1, 2]));
+            $messages[]             = $message;
         }
 
-        foreach ($groupedMessages['2016-12-06'] as $message) {
-            $this->assertEquals($message->message_id, 3);
-        }
+        $groupedMessages    = Business_Message::groupGivenMessagesByTextifiedDays($messages);
+        $keys               = $days;
 
-        foreach ($groupedMessages['2016-12-08'] as $message) {
-            $this->assertTrue(in_array($message->message_id, [4, 5]));
+        foreach ($keys as $j => $key) {
+            if ($j == 0) {
+                $this->assertEquals($messages[$j]->message_id, $groupedMessages['Today'][0]->message_id);
+            } elseif ($j <= Date::$_textifyMaxInterval) {
+                $this->assertEquals($messages[$j]->message_id, $groupedMessages[$key][0]->message_id);
+            } else {
+                $date = date('Y-m-d', $timestamps[$j]);
+                $this->assertEquals($messages[$j]->message_id, $groupedMessages[$date][0]->message_id);
+            }
         }
     }
-    
     
 
     public function getIndexBeforeIdNotContinousDataProvider()

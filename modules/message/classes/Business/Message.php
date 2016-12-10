@@ -59,19 +59,19 @@ class Business_Message extends Business
 
     /**
      * @param  Model_Message[]
-     * @return Model_Message[]
+     * @return array
      */
-    public static function groupGivenMessagesByDays(array $messages)
+    public static function groupGivenMessagesByTextifiedDays(array $messages)
     {
         $groupedMessages = [];
         foreach ($messages as $message) {
             /**
              * @var $message Model_Message
              */
-            $date                       = date('Y-m-d', strtotime($message->created_at));
-            $groupedMessages            = Arr::setKey($groupedMessages, $date);
-            $groupedMessages[$date][]   = $message;
-        }        
+            $textifiedDay                       = Date::textifyDay(date('Y-m-d', strtotime($message->created_at)));
+            $groupedMessages                    = Arr::setKey($groupedMessages, $textifiedDay);
+            $groupedMessages[$textifiedDay][]   = $message;
+        }    
 
         return $groupedMessages;
     }

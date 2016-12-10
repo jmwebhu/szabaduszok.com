@@ -48,5 +48,9 @@
 		<testsuite name="DateTests">
 			<directory>./system/tests/Date/</directory>
 		</testsuite>
+
+		<testsuite name="CurrentTests">
+			<directory>./modules/message/tests/Business/Message</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>
