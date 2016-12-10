@@ -263,15 +263,4 @@ class Model_User extends Model_Auth_User
     {
         return SB::create($this->lastname)->append(' ')->append($this->firstname)->get();
     }
-
-    /**
-     * @param  mixed $value
-     * @param  ORM    $emptyModel
-     * @return Model_User
-     */
-    protected function getOrCreate($value, ORM $emptyModel)
-    {
-        return $value;
-    }
-    
 }
