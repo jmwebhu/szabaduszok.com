@@ -77,6 +77,47 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
     }
 
     /**
+     * @covers Transaction_Conversation_Select::testGetConversationBetween()
+     */
+    public function testGetConversationBetweenAlreadyExists()
+    {
+        $transaction    = Transaction_Conversation_Select_Factory::createSelect();
+        $conversation   = $transaction->getConversationBetween([self::$_users[0]->user_id, self::$_users[1]->user_id]);
+
+        $this->assertEquals(self::$_conversations['active'][0]->getId(), $conversation->conversation_id);
+    }
+
+    /**
+     * @covers Transaction_Conversation_Select::testGetConversationBetween()
+     */
+    public function testGetConversationBetweenNotExists()
+    {
+        $transaction    = Transaction_Conversation_Select_Factory::createSelect();
+        $conversation   = $transaction->getConversationBetween([self::$_users[0]->user_id, self::$_users[5]->user_id]);
+
+        $this->assertNotEmpty($conversation->conversation_id);
+        $this->assertNotInArray($conversation->conversation_id, $this->getConversationIds());
+
+        self::$_conversations['active'][] = new Entity_Conversation($conversation);
+    }
+
+    /**
+     * @return int[]
+     */
+    protected function getConversationIds()
+    {
+        $ids = [];
+        foreach (self::$_conversations as $array) {
+            foreach ($array as $item) {
+                $ids[] = $item->getId();
+            }
+        }
+
+        return $ids;
+    }
+    
+
+    /**
      * @param $userId
      * @param $conversationId
      * @param array $flags
@@ -213,11 +254,24 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
 
         $employer3->save();
 
+        $employer4 = new Model_User_Employer();
+        $employer4->lastname       = 'Lukács';
+        $employer4->firstname      = 'Laci';
+        $employer4->address_postal_code      = '9700';
+        $employer4->address_city      = 'Szombathely';
+        $employer4->email          = uniqid() . '@gmail.com';
+        $employer4->phonenumber          = '06301923380';
+        $employer4->password       = 'Password123';
+        $employer4->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer4->save();
+
         self::$_users[] = $freelancer;
         self::$_users[] = $employer;
         self::$_users[] = $employer1;
         self::$_users[] = $employer2;
         self::$_users[] = $employer3;
+        self::$_users[] = $employer4;
     }
 
     public static function tearDownAfterClass()
