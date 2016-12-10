@@ -122,4 +122,23 @@ class Entity_Conversation extends Entity implements Conversation
         $interaction->is_deleted        = true;
         $interaction->save();
     }
+
+    /**
+     * @param  int $conversationId
+     * @param  array  $userIds
+     * @return [type]
+     */
+    public static function getOrCreateWithUsersBy($conversationId, array $userIds)
+    {
+        $conversation = new Entity_Conversation($conversationId);
+        if (!$conversation->loaded()) {
+            $conversation = new Entity_Conversation();
+            $conversation->submit(['users' => $userIds]);
+        }
+
+        $conversation->getModel()->removeAll('conversation_interactions', 'conversation_id');
+
+        return $conversation;
+    }
+    
 }

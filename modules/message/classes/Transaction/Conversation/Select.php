@@ -136,15 +136,8 @@ class Transaction_Conversation_Select
             LIMIT 1;
         ')->execute()->get('conversation_id');
 
-        $conversation = new Model_Conversation($conversationId);
-        if (!$conversation->loaded()) {
-            $entity = new Entity_Conversation();
-            $entity->submit($userIds);
-
-            $conversation = $entity->getModel();
-        }
-
-        $conversation->removeAll('conversation_interactions', 'conversation_id');
+        $entity = Entity_Conversation::getOrCreateWithUsersBy($conversationId, $userIds);
+        return $entity->getModel();
     }
     
 

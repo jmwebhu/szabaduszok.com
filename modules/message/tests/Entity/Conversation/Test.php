@@ -41,19 +41,31 @@ class Entity_Conversation_Test extends Unittest_TestCase
             $conversation->getConversationId(), self::$_users[1]);
     }
 
-    private function givenConversation()
+    /**
+     * @covers Entity_Conversation::GetOrCreateWithUsersBy()
+     */
+    public function testGetOrCreateWithUsersByGet()
     {
-        $data = [
-            'users' => [self::$_users[0]->user_id, self::$_users[1]->user_id]
-        ];
+        $conversationGiven      = $this->givenConversation();
+        $conversationCreated    = Entity_Conversation::getOrCreateWithUsersBy(
+            $conversationGiven->getConversationId(), [self::$_users[0]->user_id, self::$_users[1]->user_id]);
 
-        $conversation = new Entity_Conversation();
-        $conversation->submit($data);
-
-        self::$_conversations[] = $conversation;
-
-        return $conversation;
+        $this->assertEquals($conversationCreated->getConversationId(), $conversationGiven->getConversationId());
     }
+
+    /**
+     * @covers Entity_Conversation::GetOrCreateWithUsersBy()
+     */
+    public function testGetOrCreateWithUsersByCreate()
+    {
+        $conversationCreated    = Entity_Conversation::getOrCreateWithUsersBy(
+            '', [self::$_users[0]->user_id, self::$_users[1]->user_id]);
+
+        $this->assertNotEmpty($conversationCreated->getConversationId());
+
+        self::$_conversations[] = $conversationCreated;
+    }
+    
 
     /**
      * @param int $conversationId
@@ -152,5 +164,19 @@ class Entity_Conversation_Test extends Unittest_TestCase
         foreach (self::$_conversations as $conversation) {
             DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
         }
+    }
+
+    private function givenConversation()
+    {
+        $data = [
+            'users' => [self::$_users[0]->user_id, self::$_users[1]->user_id]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        self::$_conversations[] = $conversation;
+
+        return $conversation;
     }
 }
