@@ -135,6 +135,10 @@
     height: 75px;
 }
 
+.message-user-header.visible-xs.unread {
+  margin-top: 0 !important;
+}
+
 @media (max-width: 767px)
 {
     #bloc-26 {
