@@ -44,5 +44,9 @@
 		<testsuite name="ArrTests">
 			<directory>./system/tests/Arr/</directory>
 		</testsuite>
+
+		<testsuite name="DateTests">
+			<directory>./system/tests/Date/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>

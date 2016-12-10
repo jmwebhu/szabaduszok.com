@@ -4,11 +4,7 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $conversation = new Entity_Conversation();
-        $user = new Entity_User();
-
-        $transaction = Transaction_Message_Select_Factory::createSelect();
-        $transaction->getAllVisibleBy($conversation->getId(), $user->getId());
+        echo Debug::vars(Date::textifyDay('2016-12-10'));
     }
 
     public function action_message()
