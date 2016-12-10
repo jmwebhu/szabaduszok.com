@@ -8,7 +8,6 @@ class Date_Test extends Unittest_TestCase
      */
     public function testTextifyDay($expected, $actual)
     {
-        var_dump($actual);
         $this->assertEquals($expected, $actual);
     }
 
@@ -32,7 +31,7 @@ class Date_Test extends Unittest_TestCase
 
         return [
             ['Today', Date::textifyDay($dates[0])],
-            [$days[1], Date::textifyDay($dates[1])],
+            ['Yesterday', Date::textifyDay($dates[1])],
             [$days[2], Date::textifyDay($dates[2])],
             [$days[3], Date::textifyDay($dates[3])],
             [$days[4], Date::textifyDay($dates[4])],

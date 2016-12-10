@@ -18,6 +18,8 @@ class Date extends Kohana_Date
 
         if ($differenceDays == 0) {
             $day = 'Today';
+        } elseif ($differenceDays == 1) {
+            $day = 'Yesterday';
         } elseif ($differenceDays <= self::$_textifyMaxInterval) {
             $dateTime   = new DateTime($date);
             $day        = $dateTime->format('l');
