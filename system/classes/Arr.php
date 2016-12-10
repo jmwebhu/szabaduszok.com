@@ -44,5 +44,39 @@ class Arr extends Kohana_Arr
 
         return $result;
     }
+
+    /**
+     * @param  array  $array
+     * @param  string $separator
+     * @return string
+     */
+    public static function concatValues(array $array, $separator = ',')
+    {
+        $concatValue = '';
+        foreach ($array as $i => $value) {
+           if (is_scalar($value)) {
+                $concatValue    .= self::getAppendedValueByIndex($array, $i, $value, $separator);
+           }
+       }   
+
+       return $concatValue;
+    }
+
+    /**
+     * @param  array  $array
+     * @param  mixed $index
+     * @param  mixed $value
+     * @param  mixed $append
+     * @return mixed
+     */
+    public static function getAppendedValueByIndex(array $array, $index, $value, $append)
+    {
+        $result = $value;
+        if (!self::isLastIndex($index, $array)) {
+            $result = $value . $append;
+        }
+
+        return $result;
+    }
     
 }

@@ -29,6 +29,29 @@ class Arr_Test extends Unittest_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @covers Arr::concatValues()
+     * @dataProvider concatValuesDataProvider
+     */
+    public function testConcatValues($expected, $actual)
+    {
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function concatValuesDataProvider()
+    {
+        return [
+            ['1,2,3', Arr::concatValues([1, 2, 3])],
+            ['1.2.3', Arr::concatValues([1, 2, 3], '.')],
+            ['one,two', Arr::concatValues(['one', 'two'])],
+            ['one', Arr::concatValues(['one'])],
+            ['one', Arr::concatValues(['one'], '.')],
+            ['1', Arr::concatValues([1], '.')]
+        ];
+    }
+    
+    
+
     public function setKeyDataProvider()
     {
         return [

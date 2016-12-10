@@ -118,6 +118,26 @@ class Transaction_Conversation_Select
             ->find_all();
     }
 
+    public function getConversationBetween(array $userIds)
+    {
+        
+
+        /*
+                    SELECT conversation_id
+            FROM (
+              SELECT conversation_id, GROUP_CONCAT(DISTINCT user_id) user_ids
+              FROM conversations_users
+
+              GROUP BY conversation_id
+              HAVING COUNT(user_id) = 2
+            ) A
+            WHERE user_ids = "1,2"
+            OR user_ids = "2,1"
+            LIMIT 1;
+         */
+    }
+    
+
     /**
      * @param int $userId
      * @return bool
