@@ -139,6 +139,14 @@ class Transaction_Conversation_Select
         ')->execute()->get('conversation_id');
 
         $conversation = new Model_Conversation($conversationId);
+        if (!$conversation->loaded()) {
+            $entity = new Entity_Conversation();
+            $entity->submit($userIds);
+
+            $conversation = $entity->getModel();
+        }
+
+        $conversation->removeAll('conversation_interactions', 'conversation_id');
     }
     
 
