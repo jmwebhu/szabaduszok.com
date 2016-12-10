@@ -35,8 +35,6 @@ class ORM extends Kohana_ORM
         $className  = 'Model_' . ucfirst($singular);
         $modelTemp  = new $className();		
 
-        //var_dump(gettype($value));
-
         // Azonosito, tehat letezik
         if (is_numeric($value)) {
             $model = $modelTemp->findByPk($value);                
@@ -80,9 +78,6 @@ class ORM extends Kohana_ORM
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
         $postData = Arr::uniqueString($postData);
 
-        /*var_dump('postData');
-        var_dump($postData);*/
-		
 		if (!empty($postData)) {
 			foreach ($postData as $value) {
 				$relation       = $this->getOrCreate($value, $relationEndModel);

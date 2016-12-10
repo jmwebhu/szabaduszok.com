@@ -56,10 +56,6 @@ class Transaction_Conversation_Insert implements Transaction
     protected function addRelations(array $data)
     {
         $this->_conversation->removeAll('conversations_users', 'conversation_id');
-
-        /*var_dump('addRelations');
-        var_dump($data);*/
-
         $this->_conversation->addRelation($data, new Model_Conversation_User(), new Model_User());
     }
 }
