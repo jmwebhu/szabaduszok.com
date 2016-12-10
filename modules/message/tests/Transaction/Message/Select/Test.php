@@ -342,6 +342,40 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         ], $messagesByEmployer);
     }
 
+    /**
+     * @covers Transaction_Message_Select::hasUnreadMessage()
+     */
+    public function testHasUnreadMessageHas()
+    {       
+        $transactionUnreadFreelancer    = new Transaction_Message_Count_Unread($this->_conversations[0]->getModel(), $this->_users[0]->user_id);
+        $transactionUnreadEmployer      = new Transaction_Message_Count_Unread($this->_conversations[0]->getModel(), $this->_users[1]->user_id);
+        $transactionSelect              = new Transaction_Message_Select(new Model_Message());
+
+        $freelancerHas                  = $transactionSelect->hasUnreadMessage($transactionUnreadFreelancer);
+        $employerHas                    = $transactionSelect->hasUnreadMessage($transactionUnreadEmployer);
+
+        $this->assertTrue($freelancerHas);
+        $this->assertTrue($employerHas);
+    }
+    
+    /**
+     * @covers Transaction_Message_Select::hasUnreadMessage()
+     */
+    public function testHasUnreadMessageHasNo()
+    {       
+        DB::update('message_interactions')->set(['is_readed' => 1])->execute();
+
+        $transactionUnreadFreelancer    = new Transaction_Message_Count_Unread($this->_conversations[0]->getModel(), $this->_users[0]->user_id);
+        $transactionUnreadEmployer      = new Transaction_Message_Count_Unread($this->_conversations[0]->getModel(), $this->_users[1]->user_id);
+        $transactionSelect              = new Transaction_Message_Select(new Model_Message());
+
+        $freelancerHas                  = $transactionSelect->hasUnreadMessage($transactionUnreadFreelancer);
+        $employerHas                    = $transactionSelect->hasUnreadMessage($transactionUnreadEmployer);
+
+        $this->assertFalse($freelancerHas);
+        $this->assertFalse($employerHas);
+    }
+
     public function setUp()
     {
         $this->setUpUsers();

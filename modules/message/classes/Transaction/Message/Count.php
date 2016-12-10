@@ -29,7 +29,7 @@ abstract class Transaction_Message_Count implements Transaction
     {
         return $this->_conversation->messages
             ->join('message_interactions', 'left')
-            ->on('message_interactions.message_id', '=', 'message.message_id')
+                ->on('message_interactions.message_id', '=', 'message.message_id')
 
             ->where('message_interactions.is_deleted', '=', 0)
             ->and_where('message_interactions.user_id', '=', $this->_userId);

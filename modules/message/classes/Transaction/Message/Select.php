@@ -70,6 +70,26 @@ class Transaction_Message_Select
     }
 
     /**
+     * @param  int $conversationId
+     * @param  int $userId  
+     * @return Model_Message
+     */
+    public function getLastVisibleMessageBy($conversationId, $userId)
+    {
+        $allVisible = $this->getAllVisibleBy($conversationId, $userId);
+        return $allVisible[count($allVisible) - 1];
+    }
+
+    /**
+     * @param  Transaction_Message_Count_Unread $transaction
+     * @return boolean                                      
+     */
+    public function hasUnreadMessage(Transaction_Message_Count_Unread $transaction)
+    {
+        return ($transaction->execute() != 0);
+    }
+    
+    /**
      * @param int $conversationId
      * @return Model_Message
      */
