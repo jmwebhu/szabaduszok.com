@@ -20,6 +20,28 @@ class Arr_Test extends Unittest_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * @covers Arr::setKey()
+     * @dataProvider setKeyDataProvider
+     */
+    public function testSetKey($expected, $actual)
+    {
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function setKeyDataProvider()
+    {
+        return [
+            [['one' => 1, 'two' => 2, 'three' => []], Arr::setKey(['one' => 1, 'two' => 2], 'three')],
+            [['one' => 1, 'two' => 2, 'three' => 3], Arr::setKey(['one' => 1, 'two' => 2], 'three', 3)],
+            [['one' => 1, 'two' => 2, 'three' => 3], Arr::setKey(['one' => 1, 'two' => 2, 'three' => 3], 'three', 2)],
+            [['one' => 1, 'two' => 2, 3 => []], Arr::setKey(['one' => 1, 'two' => 2], 3)],
+            [['one' => 1, 'two' => 2, 3 => 3], Arr::setKey(['one' => 1, 'two' => 2], 3, 3)],
+            [['one' => 1, 'two' => 2, 3 => 3], Arr::setKey(['one' => 1, 'two' => 2, 3 => 3], 3, 2)]
+        ];
+    }
+    
+
     public function uniqueStringProvider()
     {
         return [

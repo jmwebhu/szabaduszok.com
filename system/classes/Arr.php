@@ -28,4 +28,21 @@ class Arr extends Kohana_Arr
         $count = (count($array) == 0) ? 0 : count($array) - 1;
         return $index == $count;
     }
+
+    /**
+     * @param array
+     * @param string|int
+     * @param mixed
+     * @return array
+     */
+    public static function setKey(array $array, $key, $value = [])
+    {
+        $result = $array;
+        if (!isset($result[$key])) {
+            $result[$key] = $value;
+        }
+
+        return $result;
+    }
+    
 }

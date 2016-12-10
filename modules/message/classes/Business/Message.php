@@ -56,4 +56,24 @@ class Business_Message extends Business
 
         return $lastDeletedMessages;
     }
+
+    /**
+     * @param  Model_Message[]
+     * @return Model_Message[]
+     */
+    public static function groupGivenMessagesByDays(array $messages)
+    {
+        $groupedMessages = [];
+        foreach ($messages as $message) {
+            /**
+             * @var $message Model_Message
+             */
+            $date                       = date('Y-m-d', strtotime($message->created_at));
+            $groupedMessages            = Arr::setKey($groupedMessages, $date);
+            $groupedMessages[$date][]   = $message;
+        }        
+
+        return $groupedMessages;
+    }
+    
 }

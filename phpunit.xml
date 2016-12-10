@@ -9,32 +9,40 @@
 -->
 <phpunit colors="true" bootstrap="./modules/unittest/bootstrap.php">
 	<testsuites>
-		<testsuite name="Application Tests">
+		<testsuite name="ApplicationTests">
 			<directory>./application/tests/</directory>
 		</testsuite>
 
-		<testsuite name="Project Tests">
+		<testsuite name="ProjectTests">
 			<directory>./modules/project/tests/</directory>
 		</testsuite>
 
-		<testsuite name="User Tests">
+		<testsuite name="UserTests">
 			<directory>./modules/user/tests/</directory>
 		</testsuite>
 
-		<testsuite name="ArrayBuilder Tests">
+		<testsuite name="ArrayBuilderTests">
 			<directory>./modules/arraybuilder/tests/</directory>
 		</testsuite>
 
-		<testsuite name="Listview Tests">
+		<testsuite name="ListviewTests">
 			<directory>./modules/listview/tests/</directory>
 		</testsuite>
 
-		<testsuite name="Search Tests">
+		<testsuite name="SearchTests">
 			<directory>./modules/search/tests/</directory>
 		</testsuite>
 
-		<testsuite name="Notification Tests">
+		<testsuite name="NotificationTests">
 			<directory>./modules/notification/tests/</directory>
+		</testsuite>
+
+		<testsuite name="MessageTests">
+			<directory>./modules/message/tests/</directory>
+		</testsuite>
+
+		<testsuite name="ArrTests">
+			<directory>./system/tests/Arr/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
