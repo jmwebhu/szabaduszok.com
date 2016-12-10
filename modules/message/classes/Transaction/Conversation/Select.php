@@ -120,10 +120,12 @@ class Transaction_Conversation_Select
 
     public function getConversationBetween(array $userIds)
     {
-        
+        $reversedUserIds            = array_reverse($userIds);
+        $concatedUserIds            = Arr::concatValues($userIds);
+        $concatedReversedUserIds    = Arr::concatValues($reversedUserIds);
 
-        /*
-                    SELECT conversation_id
+        $conversationId = DB::query(Database::SELECT, '
+            SELECT conversation_id
             FROM (
               SELECT conversation_id, GROUP_CONCAT(DISTINCT user_id) user_ids
               FROM conversations_users
@@ -131,10 +133,12 @@ class Transaction_Conversation_Select
               GROUP BY conversation_id
               HAVING COUNT(user_id) = 2
             ) A
-            WHERE user_ids = "1,2"
-            OR user_ids = "2,1"
+            WHERE user_ids = "' . $concatedUserIds . '"
+            OR user_ids = "' . $concatedReversedUserIds . '"
             LIMIT 1;
-         */
+        ')->execute()->get('conversation_id');
+
+        $conversation = new Model_Conversation($conversationId);
     }
     
 

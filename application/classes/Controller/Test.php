@@ -4,7 +4,25 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        echo Debug::vars(Date::textifyDay('2016-12-10'));
+        $concatedUserIds            = '1,2';
+        $concatedReversedUserIds    = '2,1';
+
+        $res = DB::query(Database::SELECT, '
+            SELECT conversation_id
+            FROM (
+              SELECT conversation_id, GROUP_CONCAT(DISTINCT user_id) user_ids
+              FROM conversations_users
+
+              GROUP BY conversation_id
+              HAVING COUNT(user_id) = 2
+            ) A
+            WHERE user_ids = "' . $concatedUserIds . '"
+            OR user_ids = "' . $concatedReversedUserIds . '"
+            LIMIT 1;
+        ')->execute()->get('conversation_id');
+
+        echo Debug::vars($res);
+        exit;
     }
 
     public function action_message()
