@@ -145,11 +145,11 @@ class Entity_Conversation extends Entity implements Conversation
      * @param  array  $userIds
      * @return Entity_Conversation
      */
-    public function getConversationBetween(array $userIds)
+    public static function getConversationBetween(array $userIds)
     {
         $concatedUserIds    = Business_Conversation::getConcatedUserIdsFrom($userIds);
         $transaction        = Transaction_Conversation_Select_Factory::createSelect();
-        $conversationId     = $transaction->getConversationBetween($concatedUserIds);
+        $conversationId     = $transaction->getConversationIdBetween($concatedUserIds);
 
         return Entity_Conversation::getOrCreateWithUsersBy(
             $conversationId, $userIds);

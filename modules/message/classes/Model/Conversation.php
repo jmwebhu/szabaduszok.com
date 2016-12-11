@@ -93,7 +93,7 @@ class Model_Conversation extends ORM implements Conversation
     public function getParticipants()
     {
         $users = [];
-        foreach ($this->users->find_all as $user) {
+        foreach ($this->users->find_all() as $user) {
             $users[] = Entity_User::createUser($user->type, $user);
         }
 

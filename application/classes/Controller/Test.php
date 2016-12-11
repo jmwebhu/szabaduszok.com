@@ -4,14 +4,10 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $userIds            = '1,2';
-        $concatedReversedUserIds    = '2,1';
+        $userIds = [1, 805];
+        $conversation = Entity_Conversation::getConversationBetween($userIds);
 
-        $transaction = Transaction_Conversation_Select_Factory::createSelect();
-        $concatedUserIds = Business_Conversation::getConcatedUserIdsFrom([1,2 ]);
-        $id = $transaction->getConversationIdBetween($concatedUserIds);
-
-        echo Debug::vars($id);
+        echo Debug::vars($conversation);
         exit;
     }
 

@@ -65,7 +65,38 @@ class Entity_Conversation_Test extends Unittest_TestCase
 
         self::$_conversations[] = $conversationCreated;
     }
+
+    /**
+     * @covers Entity_Conversation::getConversationBetween()
+     */
+    public function testGetConversationBetweenAlreadyExists()
+    {
+        DB::delete('conversations')->execute();
+
+        $conversationGiven = $this->givenConversation();
+        $conversationBetween = Entity_Conversation::getConversationBetween([self::$_users[0]->user_id, self::$_users[1]->user_id]);
+
+        $this->assertNotEmpty($conversationBetween->getConversationId());
+        $this->assertEquals($conversationGiven->getConversationId(), $conversationBetween->getConversationId());
+    }
     
+    /**
+     * @covers Entity_Conversation::getConversationBetween()
+     */
+    public function testGetConversationBetweenNotExists()
+    {
+        DB::delete('conversations')->execute();
+        $conversationBetween = Entity_Conversation::getConversationBetween([self::$_users[0]->user_id, self::$_users[1]->user_id]);
+
+        $this->assertNotEmpty($conversationBetween->getConversationId());
+
+        $ids = [];
+        foreach (self::$_conversations as $conversation) {
+            $ids[] = $conversation->getConversationId();
+        }
+
+        $this->assertNotInArray($conversationBetween->getConversationId(), $ids);
+    }
 
     /**
      * @param int $conversationId
@@ -124,11 +155,6 @@ class Entity_Conversation_Test extends Unittest_TestCase
 
     public static function setUpBeforeClass()
     {
-        self::setUpUsers();
-    }
-
-    protected static function setUpUsers()
-    {
         $freelancer = new Model_User_Freelancer();
         $freelancer->lastname       = 'Joó';
         $freelancer->firstname      = 'Martin';
@@ -166,10 +192,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
         }
     }
 
-    private function givenConversation()
+    private function givenConversation($userIndex = 0, $otherUserIndex = 1)
     {
         $data = [
-            'users' => [self::$_users[0]->user_id, self::$_users[1]->user_id]
+            'users' => [self::$_users[$userIndex]->user_id, self::$_users[$otherUserIndex]->user_id]
         ];
 
         $conversation = new Entity_Conversation();
