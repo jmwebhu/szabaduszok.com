@@ -79,26 +79,33 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
     /**
      * @covers Transaction_Conversation_Select::testGetConversationBetween()
      */
-    public function testGetConversationBetweenAlreadyExists()
+    public function testGetConversationIdBetweenAlreadyExists()
     {
         $transaction    = Transaction_Conversation_Select_Factory::createSelect();
-        $conversation   = $transaction->getConversationBetween([self::$_users[0]->user_id, self::$_users[1]->user_id]);
+        $concatIds      = [
+            'original'  => self::$_users[0]->user_id . ',' . self::$_users[1]->user_id,
+            'reverse'   => self::$_users[1]->user_id . ',' . self::$_users[0]->user_id
+        ];
 
-        $this->assertEquals(self::$_conversations['active'][0]->getId(), $conversation->conversation_id);
+        $conversationId = $transaction->getConversationIdBetween($concatIds);
+
+        $this->assertEquals(self::$_conversations['active'][0]->getId(), $conversationId);
     }
 
     /**
      * @covers Transaction_Conversation_Select::testGetConversationBetween()
      */
-    public function testGetConversationBetweenNotExists()
+    public function testGetConversationIdBetweenNotExists()
     {
         $transaction    = Transaction_Conversation_Select_Factory::createSelect();
-        $conversation   = $transaction->getConversationBetween([self::$_users[0]->user_id, self::$_users[5]->user_id]);
+        $concatIds      = [
+            'original'  => self::$_users[0]->user_id . ',' . self::$_users[5]->user_id,
+            'reverse'   => self::$_users[5]->user_id . ',' . self::$_users[0]->user_id
+        ];
 
-        $this->assertNotEmpty($conversation->conversation_id);
-        $this->assertNotInArray($conversation->conversation_id, $this->getConversationIds());
+        $conversationId = $transaction->getConversationIdBetween($concatIds);
 
-        self::$_conversations['active'][] = new Entity_Conversation($conversation);
+        $this->assertNull($conversationId);
     }
 
     /**

@@ -5,3 +5,9 @@ Route::set('messagesList', 'uzenetek(/<slug>)')
         'controller'    => 'Message_List',
         'action'        => 'index'
     ]);
+
+Route::set('messagesContact', 'kapcsolatfelvetel/<userslug>')
+    ->defaults([
+        'controller'    => 'Message',
+        'action'        => 'contact'
+    ]);

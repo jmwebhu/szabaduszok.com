@@ -105,24 +105,12 @@ class Transaction_Conversation_Select
     }
 
     /**
-     * @param int $userId
-     * @return array
+     * @param  array  $concatedUserIds
+     * @return int
      */
-    protected function getAllBy($userId)
+    public function getConversationIdBetween(array $concatedUserIds)
     {
-        return $this->_conversation
-            ->join('conversations_users', 'left')
-                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
-
-            ->where('conversations_users.user_id', '=', $userId)
-            ->find_all();
-    }
-
-    public function getConversationBetween(array $userIds)
-    {
-        $concatedUserIds = Business_Conversation::getConcatedUserIdsFrom($userIds);
-
-        $conversationId = DB::query(Database::SELECT, '
+        return DB::query(Database::SELECT, '
             SELECT conversation_id
             FROM (
               SELECT conversation_id, GROUP_CONCAT(DISTINCT user_id) user_ids
@@ -135,11 +123,21 @@ class Transaction_Conversation_Select
             OR user_ids = "' . Arr::get($concatedUserIds, 'reversed', '') . '"
             LIMIT 1;
         ')->execute()->get('conversation_id');
-
-        $entity = Entity_Conversation::getOrCreateWithUsersBy($conversationId, $userIds);
-        return $entity->getModel();
     }
-    
+
+    /**
+     * @param int $userId
+     * @return array
+     */
+    protected function getAllBy($userId)
+    {
+        return $this->_conversation
+            ->join('conversations_users', 'left')
+                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
+
+            ->where('conversations_users.user_id', '=', $userId)
+            ->find_all();
+    }
 
     /**
      * @param int $userId

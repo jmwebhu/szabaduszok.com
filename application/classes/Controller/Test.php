@@ -4,24 +4,14 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $concatedUserIds            = '1,2';
+        $userIds            = '1,2';
         $concatedReversedUserIds    = '2,1';
 
-        $res = DB::query(Database::SELECT, '
-            SELECT conversation_id
-            FROM (
-              SELECT conversation_id, GROUP_CONCAT(DISTINCT user_id) user_ids
-              FROM conversations_users
+        $transaction = Transaction_Conversation_Select_Factory::createSelect();
+        $concatedUserIds = Business_Conversation::getConcatedUserIdsFrom([1,2 ]);
+        $id = $transaction->getConversationIdBetween($concatedUserIds);
 
-              GROUP BY conversation_id
-              HAVING COUNT(user_id) = 2
-            ) A
-            WHERE user_ids = "' . $concatedUserIds . '"
-            OR user_ids = "' . $concatedReversedUserIds . '"
-            LIMIT 1;
-        ')->execute()->get('conversation_id');
-
-        echo Debug::vars($res);
+        echo Debug::vars($id);
         exit;
     }
 

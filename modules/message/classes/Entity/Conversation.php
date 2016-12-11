@@ -104,6 +104,24 @@ class Entity_Conversation extends Entity implements Conversation
         // TODO: Implement setParticipants() method.
     }
 
+    /**
+     * @param  int $conversationId
+     * @param  array  $userIds
+     * @return [type]
+     */
+    public static function getOrCreateWithUsersBy($conversationId, array $userIds)
+    {
+        $conversation = new Entity_Conversation($conversationId);
+        if (!$conversation->loaded()) {
+            $conversation = new Entity_Conversation();
+            $conversation->submit(['users' => $userIds]);
+        }
+
+        $conversation->getModel()->removeAll('conversation_interactions', 'conversation_id');
+
+        return $conversation;
+    }
+
     public function submit(array $data)
     {
         $transaction    = new Transaction_Conversation_Insert(new Model_Conversation(), $data);
@@ -124,21 +142,16 @@ class Entity_Conversation extends Entity implements Conversation
     }
 
     /**
-     * @param  int $conversationId
      * @param  array  $userIds
-     * @return [type]
+     * @return Entity_Conversation
      */
-    public static function getOrCreateWithUsersBy($conversationId, array $userIds)
+    public function getConversationBetween(array $userIds)
     {
-        $conversation = new Entity_Conversation($conversationId);
-        if (!$conversation->loaded()) {
-            $conversation = new Entity_Conversation();
-            $conversation->submit(['users' => $userIds]);
-        }
+        $concatedUserIds    = Business_Conversation::getConcatedUserIdsFrom($userIds);
+        $transaction        = Transaction_Conversation_Select_Factory::createSelect();
+        $conversationId     = $transaction->getConversationBetween($concatedUserIds);
 
-        $conversation->getModel()->removeAll('conversation_interactions', 'conversation_id');
-
-        return $conversation;
+        return Entity_Conversation::getOrCreateWithUsersBy(
+            $conversationId, $userIds);
     }
-    
 }
