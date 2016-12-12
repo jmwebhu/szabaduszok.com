@@ -15,5 +15,4 @@ class Controller_Message extends Controller
         header('Location: ' . Route::url('messagesList', ['slug' => $conversation->getSlug()]), true, 302);
         die();
     }
-    
 }

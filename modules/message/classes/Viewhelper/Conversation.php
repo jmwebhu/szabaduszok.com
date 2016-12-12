@@ -18,8 +18,8 @@ class Viewhelper_Conversation
      */
     public function __construct(Conversation $_conversation, Model_User $authUser)
     {        
-        $this->_conversation = $_conversation;
-        $this->_type = Viewhelper_Conversation_Type_Factory::createType($_conversation, $authUser);
+        $this->_conversation    = $_conversation;
+        $this->_type            = Viewhelper_Conversation_Type_Factory::createType($_conversation, $authUser);
     }
 
     /**

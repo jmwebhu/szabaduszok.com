@@ -3,7 +3,7 @@
 class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
 {
     /**
-     * @param  string $whichname 'first'|'last'|'name'
+     * @param  string $whichname 'firstName'|'lastName'|'name'
      * @return string
      */
     public function getParticipantNames($whichname = 'name')

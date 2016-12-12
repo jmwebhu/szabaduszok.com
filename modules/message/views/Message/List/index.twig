@@ -23,14 +23,14 @@
                     </div>
                     <div class="col-sm-3 text-center hidden-xs">
                         <span class="helper"></span>
-                        <img src="{{ ROOT }}uploads/picture/nagyon_kicsi.jpg" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin">
+                        {#<img src="{{ ROOT }}uploads/picture/nagyon_kicsi.jpg" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin">#}
                     </div>
                     <div class="col-sm-6">
                         <h3 class="mg-sm message-user-header tc-black hidden-xs">
-                            {{ conversation.getParticipantNamesExcludeAuthUser() }}
+                            {{ conversation.getParticipantNames() }}
                         </h3>
                         <h3 class="mg-sm message-user-header tc-black visible-xs {% if unread %}unread{% endif %}">
-                            {{ conversation.getParticipantNamesExcludeAuthUser() }}            
+                            {{ conversation.getParticipantNames('lastName') }}            
                         </h3>
                         <p class="message-preview hidden-xs">
                             Ez itt az utolsó üzenet első 100 karaktere... első 100 karaktere... első 100 karaktere... első 100 k

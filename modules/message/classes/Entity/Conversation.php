@@ -3,6 +3,11 @@
 class Entity_Conversation extends Entity implements Conversation
 {
     /**
+     * @var Viewhelper_Conversation
+     */
+    protected $_viewhelper;
+
+    /**
      * @var int
      */
     protected $_conversation_id;
@@ -81,6 +86,12 @@ class Entity_Conversation extends Entity implements Conversation
     public function getParticipants()
     {
         return $this->_model->getParticipants();
+    }
+
+    public function __construct($value = null)
+    {
+        parent::__construct($value);
+        $this->_viewhelper = new Viewhelper_Conversation($this, Auth::instance()->get_user());
     }
 
     /**
@@ -178,4 +189,14 @@ class Entity_Conversation extends Entity implements Conversation
         return Entity_Conversation::getOrCreateWithUsersBy(
             $conversationId, $userIds);
     }
+
+    /**
+     * @param  string $whichname 'lastName'|'firstName'|'name'
+     * @return string            
+     */
+    public function getParticipantNames($whichname = 'name')
+    {
+        return $this->_viewhelper->getParticipantNames($whichname);
+    }
+    
 }

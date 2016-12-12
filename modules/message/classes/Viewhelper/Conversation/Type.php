@@ -25,18 +25,17 @@ abstract class Viewhelper_Conversation_Type
     {
         $this->_conversation    = $_conversation;
         $this->_authUser        = $_authUser;
-        
         $this->_participants    = $_conversation->getParticipants();            
     }
 
     /**
-     * @param  string $whichname 'first'|'last'|'name'
+     * @param  string $whichname 'firstName'|'lastName'|'name'
      * @return string
      */
-    public abstract function getParticipantNames($whichname);
+    abstract public function getParticipantNames($whichname);
 
     /**
      * @return mixed
      */
-    public abstract function getParticipantProfilePictures();   
+    abstract public function getParticipantProfilePictures();   
 }
