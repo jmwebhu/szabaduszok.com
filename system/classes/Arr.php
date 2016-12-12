@@ -23,9 +23,13 @@ class Arr extends Kohana_Arr
      * @param array $array
      * @return bool
      */
-    public static function isLastIndex($index, array $array)
+    public static function isLastIndex($index, array $array, $negativeModifier = 0)
     {
         $count = (count($array) == 0) ? 0 : count($array) - 1;
+        if ($negativeModifier) {
+            $count -= $negativeModifier;
+        }
+        
         return $index == $count;
     }
 

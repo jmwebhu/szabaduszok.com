@@ -132,10 +132,15 @@ class Transaction_Conversation_Select
     protected function getAllBy($userId)
     {
         return $this->_conversation
-            ->join('conversations_users', 'left')
-                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
+            ->join(['conversations_users', 'cu'], 'left')
+                ->on('cu.conversation_id', '=', 'conversation.conversation_id')
 
-            ->where('conversations_users.user_id', '=', $userId)
+            ->join(['messages', 'm'], 'left')
+                ->on('m.conversation_id', '=', 'conversation.conversation_id')
+
+            ->order_by('m.created_at', 'desc')
+
+            ->where('cu.user_id', '=', $userId)
             ->find_all();
     }
 

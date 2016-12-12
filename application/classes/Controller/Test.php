@@ -4,10 +4,9 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $userIds = [1, 805];
-        $conversation = Entity_Conversation::getConversationBetween($userIds);
-
-        echo Debug::vars($conversation);
+        $conversation = new Entity_Conversation(1051);
+        $parts = $conversation->getParticipantNamesExcludeAuthUser('firstName');
+        echo Debug::vars($parts);
         exit;
     }
 

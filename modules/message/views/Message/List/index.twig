@@ -12,8 +12,9 @@
     <div class="container bloc-lg">
         <div class="row">
             <div class="col-sm-12">
-                {% for i in 1..25 %}
-                <div class="row user-container {% if i == 2 %}selected{% endif %}">
+
+                {% for conversation in conversations %}
+                    <div class="row user-container {% if i == 2 %}selected{% endif %}">
                     <div class="col-sm-1 text-center">     
                         {% set unread = random(1) %}                  
                         {% if unread == 1 %}
@@ -22,14 +23,14 @@
                     </div>
                     <div class="col-sm-3 text-center hidden-xs">
                         <span class="helper"></span>
-                        <img src="{{ ROOT }}uploads/picture/nagyon_kicsi.jpg" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin">
+                        {#<img src="{{ ROOT }}uploads/picture/nagyon_kicsi.jpg" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin">#}
                     </div>
                     <div class="col-sm-6">
                         <h3 class="mg-sm message-user-header tc-black hidden-xs">
-                            Joó Martin
+                            {{ conversation.getParticipantNamesExcludeAuthUser() }}
                         </h3>
                         <h3 class="mg-sm message-user-header tc-black visible-xs {% if unread %}unread{% endif %}">
-                            Martin
+                            {{ conversation.getParticipantNamesExcludeAuthUser() }}            
                         </h3>
                         <p class="message-preview hidden-xs">
                             Ez itt az utolsó üzenet első 100 karaktere... első 100 karaktere... első 100 karaktere... első 100 k
@@ -41,7 +42,9 @@
                     <div class="col-sm-2 text-center message-time hidden-xs">
                         ma
                     </div>
-                </div>
+                </div>    
+                {% else %}
+                    <div class="text-center">Még nincsenenk beszélgetések</div>
                 {% endfor %}
             </div>
         </div>
