@@ -198,5 +198,13 @@ class Entity_Conversation extends Entity implements Conversation
     {
         return $this->_viewhelper->getParticipantNames($whichname);
     }
+
+    /**
+     * @return string[]
+     */
+    public function getParticipantProfilePictures()
+    {
+        return $this->_viewhelper->getParticipantProfilePictures();
+    }
     
 }

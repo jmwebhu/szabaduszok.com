@@ -4,8 +4,10 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $vh = new Viewhelper_Conversation_Type;
-        echo Debug::vars($vh);
+        $conversation = new Entity_Conversation(1264);
+
+        echo Debug::vars($conversation->getParticipantNames());
+        echo Debug::vars($conversation->getParticipantProfilePictures());
         exit;
     }
 

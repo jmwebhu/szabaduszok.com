@@ -30,4 +30,12 @@ class Viewhelper_Conversation
     {
         return $this->_type->getParticipantNames($whichname);
     }
+
+    /**
+     * @return string[]
+     */
+    public function getParticipantProfilePictures()
+    {
+        return $this->_type->getParticipantProfilePictures();
+    }
 }
