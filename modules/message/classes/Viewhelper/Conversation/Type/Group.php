@@ -2,6 +2,10 @@
 
 class Viewhelper_Conversation_Type_Group extends Viewhelper_Conversation_Type
 {
+    /**
+     * @param  string $whichname 'first'|'last'|'name'
+     * @return string
+     */
     public function getParticipantNames($whichname = 'name')
     {
         $nameMethod     = 'get' . ucfirst($whichname);

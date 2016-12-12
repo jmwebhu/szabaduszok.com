@@ -30,7 +30,8 @@ abstract class Viewhelper_Conversation_Type
     }
 
     /**
-     * @return array
+     * @param  string $whichname 'first'|'last'|'name'
+     * @return string
      */
     public abstract function getParticipantNames($whichname);
 

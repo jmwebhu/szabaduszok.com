@@ -4,7 +4,7 @@ class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
 {
     /**
      * @param  string $whichname 'first'|'last'|'name'
-     * @return array
+     * @return string
      */
     public function getParticipantNames($whichname = 'name')
     {
@@ -12,7 +12,7 @@ class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
 
         foreach ($this->_participants as $i => $participant) {
             if ($participant->getId() != Auth::instance()->get_user()->user_id) {
-                return [$participant->{$nameMethod}()];
+                return $participant->{$nameMethod}();
             }
         }
     }
