@@ -243,4 +243,17 @@ class Entity_Conversation extends Entity implements Conversation
         $messages   = $this->getMessagesBy($userId);
         return Arr::last($messages);
     }
+
+    /**
+     * @param  int  $userId
+     * @return boolean
+     */
+    public function hasUnreadMessageBy($userId = null)
+    {
+        $userId         = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
+        $transaction    = new Transaction_Conversation_Count($this->_model, $userId);
+        $counts         = $transaction->execute();
+
+        return ($counts['unread'] != 0);
+    }
 }

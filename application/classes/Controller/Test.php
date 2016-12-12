@@ -5,9 +5,9 @@ class Controller_Test extends Controller_DefaultTemplate
     public function action_index()
     {
         $conversation = new Entity_Conversation(1264);
-        $lastMessage  = $conversation->getLastMessageBy();
+        $has  = $conversation->hasUnreadMessageBy(Auth::instance()->get_user()->user_id);
 
-        echo Debug::vars(Date::textifyDay($lastMessage->getCreatedAt()->format('Y-m-d H:i')));
+        echo Debug::vars($has);
         exit;
     }
 

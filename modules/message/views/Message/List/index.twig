@@ -15,9 +15,9 @@
 
                 {% for conversation in conversations %}
                     <div class="row user-container {% if i == 2 %}selected{% endif %}">
-                    <div class="col-sm-1 text-center">     
-                        {% set unread = random(1) %}                  
-                        {% if unread == 1 %}
+                    <div class="col-sm-1 text-center">                   
+                        {% set isUnread = conversation.hasUnreadMessageBy() %}
+                        {% if isUnread %}
                             <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot"></span>
                         {% endif %}
                     </div>
@@ -29,7 +29,7 @@
                         <h3 class="mg-sm message-user-header tc-black hidden-xs">
                             {{ conversation.getParticipantNames() }}
                         </h3>
-                        <h3 class="mg-sm message-user-header tc-black visible-xs {% if unread %}unread{% endif %}">
+                        <h3 class="mg-sm message-user-header tc-black visible-xs {% if isUnread %}unread{% endif %}">
                             {{ conversation.getParticipantNames('lastName') }}            
                         </h3>
                         <p class="message-preview hidden-xs">
