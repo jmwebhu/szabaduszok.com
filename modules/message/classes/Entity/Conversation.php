@@ -241,6 +241,7 @@ class Entity_Conversation extends Entity implements Conversation
     {
         $userId     = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
         $messages   = $this->getMessagesBy($userId);
+        
         return Arr::last($messages);
     }
 
