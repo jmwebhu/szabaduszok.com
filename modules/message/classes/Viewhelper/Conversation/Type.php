@@ -8,25 +8,31 @@ abstract class Viewhelper_Conversation_Type
     protected $_conversation;
     
     /**
-     * @var Conversation_Participant
+     * @var Model_User
      */
     protected $_authUser;
 
+    /**
+     * @var Conversation_Participant[]
+     */
+    protected $_participants = [];
 
     /**
-     * @param Conversation                  $_conversation   
-     * @param Conversation_Participant      $_authUser   
+     * @param Conversation  $_conversation   
+     * @param Model_User    $_authUser   
      */
-    public function __construct($_conversation, $_authUser)
+    public function __construct(Conversation $_conversation, Model_User $_authUser)
     {
         $this->_conversation    = $_conversation;
         $this->_authUser        = $_authUser;
+        
+        $this->_participants    = $_conversation->getParticipants();            
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public abstract function getParticipantNames();
+    public abstract function getParticipantNames($whichname);
 
     /**
      * @return mixed
