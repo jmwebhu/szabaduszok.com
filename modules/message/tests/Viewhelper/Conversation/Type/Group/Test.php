@@ -73,6 +73,48 @@ class Viewhelper_Conversation_Type_Group_Test extends Unittest_TestCase
         $this->assertEquals('Szabadúszó, Szabadúszó2', $lastName);
     }
 
+    /**
+     * @covers Viewhelper_Conversation_Type_Single::getParticipantProfilePictures()
+     */
+    public function testGetParticipantProfilePicturesFromFreelancer()
+    {
+        $viewhelper = new Viewhelper_Conversation_Type_Group(
+            self::$_conversation, self::$_freelancer);
+
+        $pictures = $viewhelper->getParticipantProfilePictures();
+        
+        $this->assertEquals('megbizo-bela-list.jpg', $pictures[0]);
+        $this->assertEquals('szabaduszo2-imre-list.jpg', $pictures[1]);
+    }
+
+    /**
+     * @covers Viewhelper_Conversation_Type_Single::getParticipantProfilePictures()
+     */
+    public function testGetParticipantProfilePicturesFromFreelancerOther()
+    {
+        $viewhelper = new Viewhelper_Conversation_Type_Group(
+            self::$_conversation, self::$_freelancerOther);
+
+        $pictures = $viewhelper->getParticipantProfilePictures();
+        
+        $this->assertEquals('szabaduszo-janos-list.jpg', $pictures[0]);
+        $this->assertEquals('megbizo-bela-list.jpg', $pictures[1]);
+    }
+
+    /**
+     * @covers Viewhelper_Conversation_Type_Single::getParticipantProfilePictures()
+     */
+    public function testGetParticipantProfilePicturesFromEmployer()
+    {
+        $viewhelper = new Viewhelper_Conversation_Type_Group(
+            self::$_conversation, self::$_employer);
+
+        $pictures = $viewhelper->getParticipantProfilePictures();
+        
+        $this->assertEquals('szabaduszo-janos-list.jpg', $pictures[0]);
+        $this->assertEquals('szabaduszo2-imre-list.jpg', $pictures[1]);
+    }
+
     public static function setUpBeforeClass()
     {
         $freelancer = new Model_User_Freelancer();
@@ -82,6 +124,7 @@ class Viewhelper_Conversation_Type_Group_Test extends Unittest_TestCase
         $freelancer->password       = 'Password123';
         $freelancer->min_net_hourly_wage       = '3000';
         $freelancer->type = Entity_User::TYPE_FREELANCER;
+        $freelancer->list_picture_path  = 'szabaduszo-janos-list.jpg';
 
         $freelancer->save();
 
@@ -92,6 +135,7 @@ class Viewhelper_Conversation_Type_Group_Test extends Unittest_TestCase
         $freelancerOther->password       = 'Password123';
         $freelancerOther->min_net_hourly_wage       = '3000';
         $freelancerOther->type = Entity_User::TYPE_FREELANCER;
+        $freelancerOther->list_picture_path  = 'szabaduszo2-imre-list.jpg';
 
         $freelancerOther->save();
 
@@ -105,6 +149,7 @@ class Viewhelper_Conversation_Type_Group_Test extends Unittest_TestCase
         $employer->phonenumber          = '06301923380';
         $employer->password       = 'Password123';
         $employer->type = Entity_User::TYPE_EMPLOYER;
+        $employer->list_picture_path  = 'megbizo-bela-list.jpg';
 
         $employer->save();    
 

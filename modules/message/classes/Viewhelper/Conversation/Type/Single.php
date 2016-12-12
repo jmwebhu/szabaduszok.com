@@ -17,8 +17,15 @@ class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
         }
     }
     
+    /**
+     * @return string[]
+     */
     public function getParticipantProfilePictures()
     {
-        
+        foreach ($this->_participants as $i => $participant) {
+            if ($participant->getId() != $this->_authUser->user_id) {
+                return [$participant->getListPicturePath()];
+            }
+        }
     }
 }

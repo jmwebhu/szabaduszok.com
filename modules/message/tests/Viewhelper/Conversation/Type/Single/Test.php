@@ -51,6 +51,32 @@ class Viewhelper_Conversation_Type_Single_Test extends Unittest_TestCase
         $this->assertEquals('Szabadúszó', $lastName);
     }
 
+    /**
+     * @covers Viewhelper_Conversation_Type_Single::getParticipantProfilePictures()
+     */
+    public function testGetParticipantProfilePicturesFromFreelancer()
+    {
+        $viewhelper = new Viewhelper_Conversation_Type_Single(
+            self::$_conversation, self::$_freelancer);
+
+        $pictures = $viewhelper->getParticipantProfilePictures();
+        
+        $this->assertEquals('megbizo-bela-list.jpg', $pictures[0]);
+    }
+
+    /**
+     * @covers Viewhelper_Conversation_Type_Single::getParticipantProfilePictures()
+     */
+    public function testGetParticipantProfilePicturesFromEmployer()
+    {
+        $viewhelper = new Viewhelper_Conversation_Type_Single(
+            self::$_conversation, self::$_employer);
+
+        $pictures = $viewhelper->getParticipantProfilePictures();
+        
+        $this->assertEquals('szabaduszo-janos-list.jpg', $pictures[0]);
+    }
+
     public static function setUpBeforeClass()
     {
         $freelancer = new Model_User_Freelancer();
@@ -59,6 +85,7 @@ class Viewhelper_Conversation_Type_Single_Test extends Unittest_TestCase
         $freelancer->email          = uniqid() . '@gmail.com';
         $freelancer->password       = 'Password123';
         $freelancer->min_net_hourly_wage       = '3000';
+        $freelancer->list_picture_path  = 'szabaduszo-janos-list.jpg';
         $freelancer->type = Entity_User::TYPE_FREELANCER;
 
         $freelancer->save();
@@ -72,6 +99,7 @@ class Viewhelper_Conversation_Type_Single_Test extends Unittest_TestCase
         $employer->email          = uniqid() . '@gmail.com';
         $employer->phonenumber          = '06301923380';
         $employer->password       = 'Password123';
+        $employer->list_picture_path  = 'megbizo-bela-list.jpg';
         $employer->type = Entity_User::TYPE_EMPLOYER;
 
         $employer->save();    
