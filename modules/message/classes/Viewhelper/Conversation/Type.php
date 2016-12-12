@@ -37,5 +37,5 @@ abstract class Viewhelper_Conversation_Type
     /**
      * @return mixed
      */
-    abstract public function getParticipantProfilePictures();   
+    abstract public function getParticipantProfilePictures();
 }

@@ -11,7 +11,7 @@ class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
         $nameMethod     = 'get' . ucfirst($whichname);
 
         foreach ($this->_participants as $i => $participant) {
-            if ($participant->getId() != Auth::instance()->get_user()->user_id) {
+            if ($participant->getId() != $this->_authUser->user_id) {
                 return $participant->{$nameMethod}();
             }
         }
@@ -19,21 +19,6 @@ class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
     
     public function getParticipantProfilePictures()
     {
-        $names          = '';
-        $nameMethod     = 'get' . ucfirst($whichname);
-
-        foreach ($this->_participants as $i => $participant) {
-            if ($participant->getId() != Auth::instance()->get_user()->user_id) {
-                $tmp = $participant->{$nameMethod}();
-
-                if (!Arr::isLastIndex($i, $participants, 1)) {
-                    $tmp .= ', ';
-                }
-
-                $names .= $tmp;
-            }
-        }
-
-        return $names;   
+        
     }
 }

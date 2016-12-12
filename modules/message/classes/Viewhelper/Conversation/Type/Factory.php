@@ -6,10 +6,10 @@ abstract class Viewhelper_Conversation_Type_Factory
      * @param  Conversatoin $conversation 
      * @return Conversation_Viewhelper_Type                     
      */
-    public static function createType(Conversation $conversation, Model_User $authUser = null)
+    public static function createType(Conversation $conversation, $authUser = null)
     {
         if ($authUser == null) {
-            $authUser = Auth::instance()->get_user()->user_id;
+            $authUser = Auth::instance()->get_user();
         }
 
         $participants   = $conversation->getParticipants();
