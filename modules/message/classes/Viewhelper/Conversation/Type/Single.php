@@ -1,6 +1,6 @@
 <?php
 
-class Conversation_Viewhelper_Type_Single extends Conversation_Viewhelper_Type
+class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
 {
     public function getParticipantNames()
     {

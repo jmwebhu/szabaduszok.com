@@ -4,9 +4,8 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $conversation = new Entity_Conversation(1051);
-        $parts = $conversation->getParticipantNamesExcludeAuthUser('firstName');
-        echo Debug::vars($parts);
+        $vh = new Viewhelper_Conversation_Type;
+        echo Debug::vars($vh);
         exit;
     }
 

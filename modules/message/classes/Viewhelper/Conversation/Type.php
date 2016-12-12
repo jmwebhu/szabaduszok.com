@@ -1,6 +1,6 @@
 <?php 
 
-abstract class Conversation_Viewhelper_Type 
+abstract class Viewhelper_Conversation_Type 
 {
     /**
      * @var Conversation
