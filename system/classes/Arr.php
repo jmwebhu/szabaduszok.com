@@ -83,4 +83,12 @@ class Arr extends Kohana_Arr
         return $result;
     }
     
+    /**
+     * @param  array  $array
+     * @return mixed
+     */
+    public static function last(array $array)
+    {
+        return Arr::get($array, count($array) - 1, null);
+    }
 }

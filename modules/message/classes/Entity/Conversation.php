@@ -206,5 +206,41 @@ class Entity_Conversation extends Entity implements Conversation
     {
         return $this->_viewhelper->getParticipantProfilePictures();
     }
-    
+
+    /**
+     * @param  int $userId
+     * @return Entity_Conversation[]
+     */
+    public static function getForLeftPanelBy($userId)
+    {
+        $transaction    = Transaction_Conversation_Select_Factory::createSelect();
+        $models         = $transaction->getForLeftPanelBy($userId);
+        $entity         = new Entity_Conversation;
+
+        return $entity->getEntitiesFromModels($models);
+    }
+
+    /**
+     * @param  int $userId
+     * @return Entity_Conversation[]
+     */
+    public function getMessagesBy($userId)
+    {
+        $transaction    = Transaction_Conversation_Select_Factory::createSelect($this->getModel());
+        $models         = $transaction->getMessagesBy($userId);
+        $entity         = new Entity_Message;
+
+        return $entity->getEntitiesFromModels($models);   
+    }
+
+    /**
+     * @param  int $userId
+     * @return Entity_Message
+     */
+    public function getLastMessageBy($userId = null)
+    {
+        $userId     = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
+        $messages   = $this->getMessagesBy($userId);
+        return Arr::last($messages);
+    }
 }
