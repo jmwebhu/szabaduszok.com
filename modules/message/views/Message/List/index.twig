@@ -67,8 +67,8 @@
                             </div>      
 
                             {% for message in messagesByDate %}
-                                <p class="bubble time {{ message.getTypeBy() }}">{{ message.getCreatedAt()|date('H:i') }}</p>                                    
-                                <p class="triangle-obtuse top bubble {{ message.getColorBy() }} {{ message.getTypeBy() }}">{{ message.getMessage() }}</p>
+                                <p class="bubble time {{ message.getType() }}">{{ message.getCreatedAt()|date('H:i') }}</p>                                    
+                                <p class="triangle-obtuse top bubble {{ message.getColor() }} {{ message.getType() }}">{{ message.getMessage() }}</p>
                             {% endfor %}  
                         {% endfor %}
                     {% endfor %}

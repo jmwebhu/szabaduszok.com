@@ -2,8 +2,11 @@
 
 class Entity_Message extends Entity implements Message
 {
-    const TYPE_INCOMING = 'incoming';
-    const TYPE_OUTGOING = 'outgoing';
+    /**
+     * @var Viewhelper_Message
+     */
+    protected $_viewhelper;
+    
 
     /**
      * @var int
@@ -112,6 +115,13 @@ class Entity_Message extends Entity implements Message
         // TODO: Implement send() method.
     }
 
+    public function __construct($value = null)
+    {
+        parent::__construct($value);
+        $this->_viewhelper = Viewhelper_Message_Factory::createViewhelper($this, Auth::instance()->get_user()->user_id);
+    }
+    
+
     /**
      * @param Conversation_Participant $user
      */
@@ -132,22 +142,18 @@ class Entity_Message extends Entity implements Message
     }
 
     /**
-     * @param  int  $userId
-     * @return boolean
+     * @return string
      */
-    public function getTypeBy($userId = null)
+    public function getType()
     {
-        $userId = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
-        return ($this->_sender_id == $userId) ? self::TYPE_OUTGOING : self::TYPE_INCOMING;
+        return $this->_viewhelper->getType();
     }
 
     /**
-     * @param  int  $userId
-     * @return boolean
+     * @return string
      */
-    public function getColorBy($userId = null)
+    public function getColor($userId = null)
     {
-        $type = $this->getTypeBy($userId);
-        return ($type == self::TYPE_OUTGOING) ? 'blue' : 'gray';
+        return $this->_viewhelper->getColor();
     }
 }
