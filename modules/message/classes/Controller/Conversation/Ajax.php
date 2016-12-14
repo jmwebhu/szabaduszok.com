@@ -41,4 +41,11 @@ class Controller_Conversation_Ajax extends Controller_Ajax
         
         $this->_jsonResponse    = json_encode($result);
     }
+
+    protected function flagAsRead()
+    {
+        $conversation           = new Entity_Conversation(Input::post('id'));
+        $this->_jsonResponse    = json_encode($conversation->flagMessagesAsRead());
+    }
+    
 }

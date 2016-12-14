@@ -273,4 +273,14 @@ class Entity_Conversation extends Entity implements Conversation
 
         return ($counts['unread'] != 0);
     }
+
+    /**
+     * @return boolean
+     */
+    public function flagMessagesAsRead()
+    {
+        return (new Transaction_Conversation_Update($this->getModel()))
+            ->flagMessagesAsRead(Auth::instance()->get_user()->user_id);
+    }
+    
 }

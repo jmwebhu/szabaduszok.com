@@ -91,4 +91,16 @@ class Arr extends Kohana_Arr
     {
         return Arr::get($array, count($array) - 1, null);
     }
+
+    public static function DBQueryConvertSingleArray($array)
+    {
+        $result = array();
+        foreach($array as $item) {
+            foreach($item as $element) {
+                $result[] = $element;
+            }
+        }
+        
+        return $result;
+    } 
 }

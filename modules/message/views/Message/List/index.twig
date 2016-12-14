@@ -14,11 +14,12 @@
             <div class="col-sm-12">
 
                 {% for conversation in conversations %}
-                <div data-id="{{ conversation.getId() }}" class="row user-container conversation {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %}">
+                {% set isUnread = conversation.hasUnreadMessageBy() %}
+                <div data-id="{{ conversation.getId() }}" class="row user-container conversation {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %} {% if isUnread %}unread{% endif %}">
                     <div class="col-sm-1 text-center">                   
-                        {% set isUnread = conversation.hasUnreadMessageBy() %}
+                        
                         {% if isUnread %}
-                            <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot"></span>
+                            <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot unread"></span>
                         {% endif %}
                     </div>
                     <div class="col-sm-3 text-center hidden-xs">
