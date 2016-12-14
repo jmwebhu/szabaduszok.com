@@ -18,5 +18,17 @@ class Controller_Message_List extends Controller_DefaultTemplate
         }
         
         $this->context->messages = $messagesByConversations;
+
+        /*foreach ($messagesByConversations as $conversationId => $messagesByConversation) {
+            foreach ($messagesByConversation as $date => $messagesByDate) {
+                echo Debug::vars($date);
+
+                foreach ($messagesByDate as $message) {
+                    echo Debug::vars($message->getTypeBy());
+                    echo Debug::vars($message->getCreatedAt()->format('H:i'));
+                    echo Debug::vars($message->getmessage());
+                }
+            }
+        }*/
     }
 }

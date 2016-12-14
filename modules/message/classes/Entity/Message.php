@@ -2,6 +2,9 @@
 
 class Entity_Message extends Entity implements Message
 {
+    const TYPE_INCOMING = 'incoming';
+    const TYPE_OUTGOING = 'outgoing';
+
     /**
      * @var int
      */
@@ -126,5 +129,25 @@ class Entity_Message extends Entity implements Message
         $transaction    = new Transaction_Message_Insert(new Model_Message(), $data);
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
+    }
+
+    /**
+     * @param  int  $userId
+     * @return boolean
+     */
+    public function getTypeBy($userId = null)
+    {
+        $userId = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
+        return ($this->_sender_id == $userId) ? self::TYPE_OUTGOING : self::TYPE_INCOMING;
+    }
+
+    /**
+     * @param  int  $userId
+     * @return boolean
+     */
+    public function getColorBy($userId = null)
+    {
+        $type = $this->getTypeBy($userId);
+        return ($type == self::TYPE_OUTGOING) ? 'blue' : 'gray';
     }
 }

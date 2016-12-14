@@ -4,7 +4,14 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        var_dump(Date::textifyDay());
+        $data = [
+            'message'           => 'Hello, mi út van?',
+            'sender_id'         => 5,
+            'conversation_id'   => 1362
+        ];
+
+        $message = new Entity_Message();
+        $message->submit($data);
     }
 
     public function action_message()

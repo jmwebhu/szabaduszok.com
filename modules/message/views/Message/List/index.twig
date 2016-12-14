@@ -60,6 +60,18 @@
         <div class="row">
             <div class="col-sm-12">
 
+                    {% for conversationId, messagesByConversation in messages %}   
+                        {% for date, messagesByDate in messagesByConversation %}
+                            <div class="message-day text-center">
+                                {{ date|i18n }}
+                            </div>      
+
+                            {% for message in messagesByDate %}
+                                <p class="bubble time {{ message.getTypeBy() }}">{{ message.getCreatedAt()|date('H:i') }}</p>                                    
+                                <p class="triangle-obtuse top bubble {{ message.getColorBy() }} {{ message.getTypeBy() }}">{{ message.getMessage() }}</p>
+                            {% endfor %}  
+                        {% endfor %}
+                    {% endfor %}
                     
                     {#<div class="message-day text-center">
                         December 4, hétfő                  
