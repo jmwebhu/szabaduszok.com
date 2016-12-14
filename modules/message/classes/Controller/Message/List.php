@@ -6,7 +6,7 @@ class Controller_Message_List extends Controller_DefaultTemplate
     {
         $user                   = Auth::instance()->get_user();
         $this->context->title   = 'Üzenetek ' . $user->name();
-        $entity = new Entity_Conversation;
+        $entity                 = new Entity_Conversation;
 
         $this->context->conversationUrl = $entity->getBySlug($this->request->param('slug'));
 

@@ -67,13 +67,16 @@ class Business_Message extends Business
         foreach ($messages as $message) {
             
             if ($message instanceof Model_Message) {
-                $textifiedDay                       = Date::textifyDay(date('Y-m-d', strtotime($message->created_at)));
+                $textifiedDay   = Date::textifyDay(date('Y-m-d', strtotime($message->created_at)));
+                $entity         = new Entity_Message($message);
             } else {
-                $textifiedDay                       = Date::textifyDay(date('Y-m-d', strtotime($message->getCreatedAt()->format('Y-m-d H:i'))));
+                $textifiedDay   = Date::textifyDay(date('Y-m-d', strtotime($message->getCreatedAt()->format('Y-m-d H:i'))));
+                $entity         = $message;
             }
-            
-            $groupedMessages                    = Arr::setKey($groupedMessages, $textifiedDay);
-            $groupedMessages[$textifiedDay][]   = $message;
+
+            $forView                        = $entity->getCreatedAtForView();
+            $groupedMessages                = Arr::setKey($groupedMessages, $forView);
+            $groupedMessages[$forView][]    = $message;
         }    
 
         return $groupedMessages;

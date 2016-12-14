@@ -19,6 +19,11 @@ var MessageList = {
     },
     conversationClick: function () {
         var $this = $(this);
+
+        if ($this.hasClass('selected')) {
+            return false;
+        }
+
         MessageList.getMessagesAjax($this.data('id'));
         MessageList.$conversation.removeClass('selected');
         $this.addClass('selected');

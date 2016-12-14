@@ -156,4 +156,12 @@ class Entity_Message extends Entity implements Message
     {
         return $this->_viewhelper->getColor();
     }
+
+    /**
+     * @return string
+     */
+    public function getCreatedatForView()
+    {
+        return $this->_viewhelper->getCreatedAt();
+    }
 }

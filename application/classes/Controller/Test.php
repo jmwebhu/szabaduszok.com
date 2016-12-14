@@ -4,18 +4,12 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $conversation           = new Entity_Conversation(1362);
-        $data = Business_Message::groupGivenMessagesByTextifiedDays(
-            $conversation->getMessagesBy(Auth::instance()->get_user()->user_id));
+        $day = 'Today';
+        $date = '2016-12-07';
 
-        $result = [];
-
-        foreach ($data as $day => $messages) {
-            foreach ($messages as $message) {
-                echo Debug::vars($message->object());
-                $resutl = Arr::setKey($result, $day, $message->object());   
-            }            
-        }
+        echo Debug::vars(is_string($day));
+        echo Debug::vars(is_string($date));
+        exit;
     }
 
     public function action_message()

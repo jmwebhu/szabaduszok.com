@@ -29,11 +29,13 @@ class Controller_Conversation_Ajax extends Controller_Ajax
 
         foreach ($data as $day => $messages) {
             foreach ($messages as $i => $message) {
-                $result['messages'] = Arr::setKey($result['messages'], $day, []);
-                $result['messages'][$day][$i] = $message->object();   
+                $index = $message->getCreatedAtForView();
 
-                $result['messages'][$day][$i]['type'] = $message->getType();   
-                $result['messages'][$day][$i]['color'] = $message->getColor();   
+                $result['messages'] = Arr::setKey($result['messages'], $index, []);
+                $result['messages'][$index][$i] = $message->object();   
+
+                $result['messages'][$index][$i]['type'] = $message->getType();   
+                $result['messages'][$index][$i]['color'] = $message->getColor();   
             }            
         }
         

@@ -50,7 +50,7 @@
 		</testsuite>
 
 		<testsuite name="CurrentTests">
-			<directory>./modules/message/tests/Viewhelper/Message</directory>
+			<directory>./modules/message/tests/Business/Message</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

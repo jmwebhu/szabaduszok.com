@@ -42,7 +42,7 @@
                         </p>                              
                     </div>            
                     <div class="col-sm-2 text-center message-time hidden-xs">
-                        {{ textify_day(lastMessage.getCreatedAt().format('Y-m-d'))|i18n }}
+                        {{ lastMessage.getCreatedatForView() }}
                     </div>
                 </div>    
                 {% else %}

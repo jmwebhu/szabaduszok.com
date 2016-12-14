@@ -39,13 +39,13 @@ class Business_Message_Test extends Unittest_TestCase
 
         foreach ($keys as $j => $key) {
             if ($j == 0) {
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages['Today'][0]->message_id);
+                $this->assertEquals($messages[$j]->message_id, $groupedMessages['ma'][0]->message_id);
             } elseif ($j == 1) {
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages['Yesterday'][0]->message_id);
+                $this->assertEquals($messages[$j]->message_id, $groupedMessages['tegnap'][0]->message_id);
             } elseif ($j <= Date::$_textifyMaxInterval) {
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages[$key][0]->message_id);
+                $this->assertEquals($messages[$j]->message_id, $groupedMessages[__($key)][0]->message_id);
             } else {
-                $date = date('Y-m-d', $timestamps[$j]);
+                $date = date('m.d', $timestamps[$j]);
                 $this->assertEquals($messages[$j]->message_id, $groupedMessages[$date][0]->message_id);
             }
         }

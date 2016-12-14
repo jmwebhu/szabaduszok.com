@@ -37,4 +37,20 @@ abstract class Viewhelper_Message
      * @return string
      */
     abstract public function getColor();
+
+    /**
+     * @return string
+     */
+    public function getCreatedAt()
+    {
+        $textify = Date::textifyDay($this->_message->getCreatedAt()->format('Y-m-d'));
+
+        if (strpos($textify, '-') === false) {
+            $createdAt = __($textify);
+        } else {
+            $createdAt = date('m.d', strtotime($textify));
+        }
+
+        return $createdAt;
+    }
 }
