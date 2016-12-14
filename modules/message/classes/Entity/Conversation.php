@@ -234,6 +234,22 @@ class Entity_Conversation extends Entity implements Conversation
     }
 
     /**
+     * @param  array  $conversations
+     * @param  int $userId
+     * @return array
+     */
+    public static function getMessagesByConversationsAndUser(array $conversations, $userId)
+    {
+        $messages = [];
+        foreach ($conversations as $conversation) {
+            $messages[$conversation->getId()] = $conversation->getMessagesBy($userId);
+        }
+
+        return $messages;
+    }
+    
+
+    /**
      * @param  int $userId
      * @return Entity_Message
      */
