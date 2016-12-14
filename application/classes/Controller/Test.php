@@ -5,7 +5,7 @@ class Controller_Test extends Controller_DefaultTemplate
     public function action_index()
     {
         $data = [
-            'message'           => 'Hello, mi út van?',
+            'message'           => 'Benne vagyok! 06301923380 keress, és megbeszéljük a többit. Köszi!',
             'sender_id'         => 5,
             'conversation_id'   => 1362
         ];
