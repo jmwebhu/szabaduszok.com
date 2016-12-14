@@ -4,11 +4,7 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $conversation = new Entity_Conversation(1264);
-        $has  = $conversation->hasUnreadMessageBy(Auth::instance()->get_user()->user_id);
-
-        echo Debug::vars($has);
-        exit;
+        var_dump(Date::textifyDay());
     }
 
     public function action_message()
@@ -90,4 +86,10 @@ class Controller_Test extends Controller_DefaultTemplate
         $delete = Cache::instance()->delete_all();
         var_dump($delete);
     }
+
+    public function action_clearsession()
+    {
+        Session::instance()->destroy();
+    }
+    
 }

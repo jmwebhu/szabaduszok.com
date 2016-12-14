@@ -11,8 +11,12 @@ class Date extends Kohana_Date
      * @param  string
      * @return string
      */
-    public static function textifyDay($date)
+    public static function textifyDay($date = null)
     {
+        if (!$date) {
+            return '';
+        }
+
         $differenceDays = self::differnce($date);
         $day            = $date;
 
