@@ -16,9 +16,6 @@ class Controller_Message_List extends Controller_DefaultTemplate
         foreach ($messagesByConversations as &$messages) {
             $messages = Business_Message::groupGivenMessagesByTextifiedDays($messages);
         }
-
-        echo Debug::vars($messagesByConversations);
-        exit;
         
         $this->context->messages = $messagesByConversations;
     }
