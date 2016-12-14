@@ -58,7 +58,7 @@
 <div class="bloc bloc-tile-2 bgc-white l-bloc" id="bloc-27">
     <div class="container bloc-lg">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 messages-container">
 
                 {% if conversationUrl.getId() %}
                     {% for date, messagesByConversation in messages %}
@@ -72,7 +72,7 @@
                         {% endfor %}
                     {% endfor %}
 
-                    <form id="form_39619" novalidate>
+                    <form id="message" novalidate>
                         <div class="form-group message-text-container" style="margin-top: 30px;">
                             <textarea autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
                             <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
@@ -90,9 +90,9 @@
 <!-- Bloc Group END -->
 </div>
 
-<script id="messagesTemplate" type="text/twig">
+<script id="messages-template" type="text/twig">
     {% verbatim %}
-    {% for date, messages in messagesByDate %}
+    {% for date, messages in data %}
         <div class="message-day text-center">
             {{ date }}
         </div>      
@@ -102,6 +102,13 @@
             <p class="triangle-obtuse top bubble {{ message.color }} {{ message.type }}">{{ message.message }}</p>
         {% endfor %}
     {% endfor %}
+
+    <form id="message" novalidate>
+        <div class="form-group message-text-container" style="margin-top: 30px;">
+            <textarea autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
+            <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
+        </div>                
+    </form>
     {% endverbatim %}
 </script>
 
