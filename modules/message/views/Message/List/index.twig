@@ -61,7 +61,7 @@
             <div class="col-sm-12">
 
                 {% if conversationUrl.getId() %}
-                    {% for date, messagesByConversation in messages[conversationUrl.getId()] %}
+                    {% for date, messagesByConversation in messages %}
                         <div class="message-day text-center">
                             {{ date }}
                         </div>      
