@@ -25,15 +25,15 @@ class Controller_Conversation_Ajax extends Controller_Ajax
         $data = Business_Message::groupGivenMessagesByTextifiedDays(
             $conversation->getMessagesBy(Auth::instance()->get_user()->user_id));
 
-        $result = [];
+        $result = ['messages' => [], 'conversation' => $conversation->object()];
 
         foreach ($data as $day => $messages) {
             foreach ($messages as $i => $message) {
-                $result = Arr::setKey($result, $day, []);
-                $result[$day][$i] = $message->object();   
+                $result['messages'] = Arr::setKey($result['messages'], $day, []);
+                $result['messages'][$day][$i] = $message->object();   
 
-                $result[$day][$i]['type'] = $message->getType();   
-                $result[$day][$i]['color'] = $message->getColor();   
+                $result['messages'][$day][$i]['type'] = $message->getType();   
+                $result['messages'][$day][$i]['color'] = $message->getColor();   
             }            
         }
         

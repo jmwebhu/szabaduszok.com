@@ -63,7 +63,7 @@
                 {% if conversationUrl.getId() %}
                     {% for date, messagesByConversation in messages %}
                         <div class="message-day text-center">
-                            {{ date }}
+                            {{ date|i18n }}
                         </div>      
 
                         {% for message in messagesByConversation %}                    

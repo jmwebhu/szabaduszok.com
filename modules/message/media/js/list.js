@@ -26,14 +26,11 @@ var MessageList = {
     getMessagesAjax: function (id) {
         var ajax = new AjaxBuilder;
         var success = function (data) {
-            MessageList.replaceMessagesInContainer(data);
+            MessageList.replaceMessagesInContainer(data.messages);
+            window.history.pushState('page2', 'Title', ROOT + 'uzenetek/' + data.conversation.slug);
         };
 
-        var error = function () {
-            console.log('error');
-        };
-
-        ajax.data({id: id}).url(ROOT + 'conversation/ajax/getMessages').success(success).error(error).send();
+        ajax.data({id: id}).url(ROOT + 'conversation/ajax/getMessages').success(success).send();
     },
     replaceMessagesInContainer: function (data) {
         var html = twig({ref: 'messages-template'}).render({data: data});
