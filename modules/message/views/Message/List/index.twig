@@ -14,7 +14,7 @@
             <div class="col-sm-12">
 
                 {% for conversation in conversations %}
-                    <div class="row user-container {% if i == 2 %}selected{% endif %}">
+                    <div class="row user-container {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %}">
                     <div class="col-sm-1 text-center">                   
                         {% set isUnread = conversation.hasUnreadMessageBy() %}
                         {% if isUnread %}
@@ -60,7 +60,28 @@
         <div class="row">
             <div class="col-sm-12">
 
-                    {% for conversationId, messagesByConversation in messages %}   
+                {% if conversationUrl.getId() %}
+                    {% for date, messagesByConversation in messages[conversationUrl.getId()] %}
+                        <div class="message-day text-center">
+                            {{ date }}
+                        </div>      
+
+                        {% for message in messagesByConversation %}                    
+                            <p class="bubble time {{ message.getType() }}">{{ message.getCreatedAt()|date('H:i') }}</p>                                    
+                            <p class="triangle-obtuse top bubble {{ message.getColor() }} {{ message.getType() }}">{{ message.getMessage() }}</p>
+                        {% endfor %}
+                    {% endfor %}
+
+                    <form id="form_39619" novalidate>
+                        <div class="form-group message-text-container" style="margin-top: 30px;">
+                            <textarea autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
+                            <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
+                        </div>                
+                    </form>
+                {% else %}  
+                    Nincs kijelölt beszélgetés
+                {% endif %}
+                    {#{% for conversationId, messagesByConversation in messages %}   
                         {% for date, messagesByDate in messagesByConversation %}
                             <div class="message-day text-center">
                                 {{ date|i18n }}
@@ -71,7 +92,7 @@
                                 <p class="triangle-obtuse top bubble {{ message.getColor() }} {{ message.getType() }}">{{ message.getMessage() }}</p>
                             {% endfor %}  
                         {% endfor %}
-                    {% endfor %}
+                    {% endfor %}#}
                     
                     {#<div class="message-day text-center">
                         December 4, hétfő                  
@@ -102,13 +123,6 @@
                       
                     <p class="bubble time incoming">17:55</p>
                     <p class="triangle-obtuse top gray bubble incoming">Fogadott üzenet</p>#}
-
-                    <form id="form_39619" novalidate>
-                        <div class="form-group message-text-container" style="margin-top: 30px;">
-                            <textarea autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
-                            <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
-                        </div>                
-                    </form>
             </div>
         </div>
     </div>
