@@ -14,7 +14,7 @@
             <div class="col-sm-12">
 
                 {% for conversation in conversations %}
-                    <div class="row user-container {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %}">
+                <div data-id="{{ conversation.getId() }}" class="row user-container conversation {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %}">
                     <div class="col-sm-1 text-center">                   
                         {% set isUnread = conversation.hasUnreadMessageBy() %}
                         {% if isUnread %}
