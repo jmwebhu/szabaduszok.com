@@ -35,7 +35,7 @@ class Arr extends Kohana_Arr
 
     /**
      * @param array
-     * @param string|int
+     * @param mixed
      * @param mixed
      * @return array
      */

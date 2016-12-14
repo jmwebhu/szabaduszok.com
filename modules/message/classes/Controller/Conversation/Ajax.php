@@ -22,11 +22,19 @@ class Controller_Conversation_Ajax extends Controller_Ajax
     protected function getMessages()
     {
         $conversation           = new Entity_Conversation(Input::post('id'));
-        $messages = $conversation->getMessagesBy(Auth::instance()->get_user()->user_id);
+        $data = Business_Message::groupGivenMessagesByTextifiedDays(
+            $conversation->getMessagesBy(Auth::instance()->get_user()->user_id));
+
         $result = [];
 
-        foreach ($messages as $message) {
-            $result[] = $message->object();
+        foreach ($data as $day => $messages) {
+            foreach ($messages as $i => $message) {
+                $result = Arr::setKey($result, $day, []);
+                $result[$day][$i] = $message->object();   
+
+                $result[$day][$i]['type'] = $message->getType();   
+                $result[$day][$i]['color'] = $message->getColor();   
+            }            
         }
         
         $this->_jsonResponse    = json_encode($result);

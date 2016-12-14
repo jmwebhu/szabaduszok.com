@@ -4,14 +4,18 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $data = [
-            'message'           => 'Benne vagyok! 06301923380 keress, és megbeszéljük a többit. Köszi!',
-            'sender_id'         => 5,
-            'conversation_id'   => 1362
-        ];
+        $conversation           = new Entity_Conversation(1362);
+        $data = Business_Message::groupGivenMessagesByTextifiedDays(
+            $conversation->getMessagesBy(Auth::instance()->get_user()->user_id));
 
-        $message = new Entity_Message();
-        $message->submit($data);
+        $result = [];
+
+        foreach ($data as $day => $messages) {
+            foreach ($messages as $message) {
+                echo Debug::vars($message->object());
+                $resutl = Arr::setKey($result, $day, $message->object());   
+            }            
+        }
     }
 
     public function action_message()
