@@ -1,6 +1,6 @@
 <?php
 
-class Viewhelper_Message_Type_Outgoing extends Viewhelper_Message_Type
+class Viewhelper_Message_Outgoing extends Viewhelper_Message
 {
     /**
      * @return string

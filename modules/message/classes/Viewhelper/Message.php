@@ -1,7 +1,13 @@
 <?php
 
-class Viewhelper_Message
+abstract class Viewhelper_Message
 {
+    const TYPE_INCOMING = 'incoming';
+    const TYPE_OUTGOING = 'outgoing';
+
+    const COLOR_INCOMING = 'gray';
+    const COLOR_OUTGOING = 'blue';
+    
     /**
      * @var Entity_Message
      */
@@ -13,18 +19,22 @@ class Viewhelper_Message
     protected $_userId;
 
     /**
-     * @var Viewhelper_Message_Type
-     */
-    protected $_type;
-    
-
-    /**
      * @param Entity_Message   $_message   
      * @param int   $_userId   
      */
-    public function __construct($_message, $_userId)
+    public function __construct(Entity_Message $_message, $_userId)
     {
         $this->_message = $_message;
-        $this->_userId = $_userId;
+        $this->_userId  = $_userId;
     }
+
+    /**
+     * @return string
+     */
+    abstract public function getType();
+
+    /**
+     * @return string
+     */
+    abstract public function getColor();
 }
