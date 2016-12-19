@@ -25,7 +25,7 @@ interface Message
     /**
      * @return void
      */
-    public function send();
+    public function send(array $data);
 
     /**
      * @return DateTime

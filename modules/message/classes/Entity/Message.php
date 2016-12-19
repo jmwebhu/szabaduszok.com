@@ -110,9 +110,9 @@ class Entity_Message extends Entity implements Message
         return $this->_model->getUpdatedAt();
     }
 
-    public function send()
+    public function send(array $data)
     {
-        // TODO: Implement send() method.
+        return $this->submit($data);
     }
 
     public function __construct($value = null)
@@ -139,6 +139,8 @@ class Entity_Message extends Entity implements Message
         $transaction    = new Transaction_Message_Insert(new Model_Message(), $data);
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
+
+        return $this->_message_id;
     }
 
     /**

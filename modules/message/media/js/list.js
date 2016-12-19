@@ -23,9 +23,25 @@ var MessageList = {
         this.$conversation          = $('div.conversation');
         this.$messagesContainer     = $('div.messages-container');
         this.$selectedConversation  = $('div.conversation.selected');
+        this.$send                  = $('a#send');
+        this.$messageText           = $('textarea#message-text');
     },
     bindEvents: function () {
         this.$conversation.click(MessageList.conversationClick);
+        this.$send.click(MessageList.sendClick);
+    },
+    sendClick: function () {
+        MessageList.sendMessageAjax(MessageList.$messageText.val(), MessageList.$selectedConversation.data('id'));
+        MessageList.$messageText.val(null);
+        return false;
+    },
+    sendMessageAjax: function (message, conversationId) {
+        var ajax = new AjaxBuilder;
+        var success = function (data) {
+            console.log(data);
+        };
+
+        ajax.data({message: message, conversation_id: conversationId}).url(ROOT + 'message/ajax/send').success(success).send();
     },
     conversationClick: function () {
         var $this = $(this);
