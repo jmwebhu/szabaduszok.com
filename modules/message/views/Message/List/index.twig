@@ -113,4 +113,11 @@
     {% endverbatim %}
 </script>
 
+<script id="outgoing-message-template" type="text/twig">
+    {% verbatim %}
+        <p class="bubble time outgoing">{{ 'now'|date('H:i') }}</p>                                    
+        <p class="triangle-obtuse top bubble blue outgoing">{{ message }}</p>
+    {% endverbatim %}
+</script>
+
 {% endblock content %}

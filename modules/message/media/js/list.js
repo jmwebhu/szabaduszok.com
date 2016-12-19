@@ -28,17 +28,37 @@ var MessageList = {
     },
     bindEvents: function () {
         this.$conversation.click(MessageList.conversationClick);
-        this.$send.click(MessageList.sendClick);
+        $('body').on('click', 'a#send', MessageList.sendClick);
     },
     sendClick: function () {
-        MessageList.sendMessageAjax(MessageList.$messageText.val(), MessageList.$selectedConversation.data('id'));
-        MessageList.$messageText.val(null);
+        var $this = $(this);
+        var $messageText = $this.prev('textarea');
+
+        if ($.trim($messageText.val()).length == 0) {
+            $messageText.focus();
+            return false;
+        }
+
+        var $selectedConversation = $('div.conversation.selected');
+
+        MessageList.sendMessageAjax($messageText.val(), $selectedConversation.data('id'));
+
+        var html = twig({ref: 'outgoing-message-template'}).render({message: $messageText.val()});
+        var $lastMessageP = MessageList.getLastMessageP();
+
+        $lastMessageP.after(html);
+
+        $messageText.val(null);
+        $messageText.focus();
+
         return false;
+    },
+    getLastMessageP: function () {
+        return $('.triangle-obtuse').last();
     },
     sendMessageAjax: function (message, conversationId) {
         var ajax = new AjaxBuilder;
         var success = function (data) {
-            console.log(data);
         };
 
         ajax.data({message: message, conversation_id: conversationId}).url(ROOT + 'message/ajax/send').success(success).send();
