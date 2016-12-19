@@ -47,7 +47,7 @@
                     </div>
                 </div>    
                 {% else %}
-                    <div class="text-center">Még nincsenenk beszélgetések</div>
+                    <div class="text-center">Még nincsenenk beszélgetések</div>                
                 {% endfor %}
             </div>
         </div>
@@ -80,7 +80,21 @@
                         </div>                
                     </form>
                 {% else %}  
-                    Nincs kijelölt beszélgetés
+                    <div class="form-group">
+                        <label for="user">Új beszélgetés</label>
+                        <select class="form-control" name="user" id="user">
+                            <option value="0" disabled="disabled" selected>Válassz egy felhasználót.</option>
+                            {% for user in users %}
+                            <option value="{{ user.slug }}">
+                                {{ user.getName() }}
+                            </option>                       
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button id="new-conversation" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Mehet</button>
+                    </div>
                 {% endif %}
             </div>
         </div>

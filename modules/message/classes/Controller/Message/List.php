@@ -22,6 +22,20 @@ class Controller_Message_List extends Controller_DefaultTemplate
 
             $this->context->conversations   = Entity_Conversation::getForLeftPanelBy($user->user_id);
 
+            $user = new Model_User;
+            //$allUser  = $user->getAll();
+            $users = [];
+
+            $users = AB::select()->from($user)->where('user_id', '!=', Auth::instance()->get_user()->user_id)->order_by('lastname')->execute()->as_array();
+
+            /*foreach ($allUser as $oneUser) {
+                if ($oneUser->user_id != Auth::instance()->get_user()->user_id) {
+                    $users[] = $oneUser;
+                }
+            }*/
+
+            $this->context->users = $users;
+
         } catch (HTTP_Exception_403 $exforbidden) {
             $exforbidden->setRedirectRoute($this->request->route());
             $exforbidden->setRedirectSlug($this->request->param('slug'));

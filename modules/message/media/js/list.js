@@ -4,6 +4,7 @@ var MessageList = {
         this.cacheElements();
         this.initTop();
         this.bindEvents();
+        this.addWidgets();
 
         this.flagAsReadSelectedConversation();
     },
@@ -23,10 +24,27 @@ var MessageList = {
         this.$send                  = $('a#send');
         this.$messageText           = $('textarea#message-text');
         this.$rightContainer        = $('#bloc-27 .container');
+        this.$user                  = $('select#user');
+        this.$newConversation       = $('button#new-conversation');
     },
     bindEvents: function () {
         this.$conversation.click(MessageList.conversationClick);
+        this.$newConversation.click(MessageList.newConversationClick);
         $('body').on('click', 'a#send', MessageList.sendClick);
+    },
+    addWidgets: function () {
+       this.$user.select2({
+            theme: "bootstrap"
+        });     
+    },
+    newConversationClick: function () {
+        var slug = $('select#user').val();
+        
+        if (slug) {
+            window.location = ROOT + 'kapcsolatfelvetel/' + slug;
+        }
+
+        return false;
     },
     sendClick: function () {
         var $this = $(this);
