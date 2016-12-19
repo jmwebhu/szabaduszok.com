@@ -23,7 +23,7 @@ class Authorization_Conversation extends Authorization
      */
     protected function isIn()
     {
-        return $this->_model->has('users', $this->_user->user_id);
+        return $this->_model->has('users', $this->_user);
     }
     
 }

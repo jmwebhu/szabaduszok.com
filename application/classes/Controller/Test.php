@@ -4,12 +4,11 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $model = new Model_Conversation;
-        echo Debug::vars($model->getAll());
-        //$bySlug = $model->getBySlug('joo-martin-kis-pista');
-
-        //echo Debug::vars($bySlug);
-        exit;
+        try {
+            throw new Exception('Nem szabad');
+        } catch (Exception $ex) {
+            Log::instance()->addException($ex);
+        }
     }
 
     public function action_message()
