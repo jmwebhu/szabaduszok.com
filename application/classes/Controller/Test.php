@@ -4,12 +4,7 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $day = 'Today';
-        $date = '2016-12-07';
-
-        echo Debug::vars(is_string($day));
-        echo Debug::vars(is_string($date));
-        exit;
+        Session::instance()->destroy();
     }
 
     public function action_message()

@@ -1,8 +1,11 @@
 var MessageList = {
+    lastReadedConversationId: null,
     init: function () {
         this.initTop();
         this.cacheElements();
         this.bindEvents();
+
+        this.flagAsReadSelectedConversation();
     },
     initTop: function () {
         var $div = $('#bloc-27 .container');
@@ -10,9 +13,16 @@ var MessageList = {
 
         $div.animate({ scrollTop: n }, 0);
     },
+    flagAsReadSelectedConversation: function () {
+        if (MessageList.$selectedConversation.length && MessageList.$selectedConversation.hasClass('unread')) {
+            MessageList.lastReadedConversationId = MessageList.$selectedConversation.data('id');
+            setTimeout(MessageList.flagAsReadAjax, 2000);
+        }
+    },
     cacheElements: function () {
-        this.$conversation      = $('div.conversation');
-        this.$messagesContainer = $('div.messages-container');
+        this.$conversation          = $('div.conversation');
+        this.$messagesContainer     = $('div.messages-container');
+        this.$selectedConversation  = $('div.conversation.selected');
     },
     bindEvents: function () {
         this.$conversation.click(MessageList.conversationClick);
@@ -29,7 +39,8 @@ var MessageList = {
         $this.addClass('selected');
 
         if ($this.hasClass('unread')) {
-            MessageList.flagAsReadAjax($this.data('id'));
+            MessageList.lastReadedConversationId = $this.data('id');
+            MessageList.flagAsReadAjax();
         }
     },
     getMessagesAjax: function (id) {
@@ -45,19 +56,20 @@ var MessageList = {
         var html = twig({ref: 'messages-template'}).render({data: data});
         MessageList.$messagesContainer.html(html);
     },
-    flagAsReadAjax: function (id) {
+    flagAsReadAjax: function () {
         var ajax = new AjaxBuilder;
         var success = function (data) {
-            MessageList.clearUnread(id);
+            MessageList.clearUnread(MessageList.lastReadedConversationId);
         };
 
-        ajax.data({id: id}).url(ROOT + 'conversation/ajax/flagAsRead').success(success).send();
+        ajax.data({id: MessageList.lastReadedConversationId}).url(ROOT + 'conversation/ajax/flagAsRead').success(success).send();
     },
     clearUnread: function (id) {
         var $conversationDiv = $('div[data-id="' + id + '"]');
         $conversationDiv.removeClass('unread');
-        $conversationDiv.find('.unread-dot').hide();
         $conversationDiv.find('.message-user-header').removeClass('unread');
+
+        $conversationDiv.find('.unread-dot').hide('slow');
     },
 };
 
