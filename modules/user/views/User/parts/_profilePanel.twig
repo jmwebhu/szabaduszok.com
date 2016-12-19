@@ -10,6 +10,10 @@
             {% block imageContainer %}
                 <img src="{% if user.getProfilePicturePath() %}{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
             {% endblock imageContainer %}
+        
+            {% if conversationAuth.canContact() %}
+                <a href="{{ ROOT }}kapcsolatfelvetel/{{ user.getSlug() }}" class="btn btn-lg btn-block btn-ultramarine-blue"><span class="fa fa-comments-o icon-spacer icon-white"></span>Kapcsolatfelvétel</a>
+            {% endif %}            
         </div>
 
         <div class="col-sm-3 details-container">

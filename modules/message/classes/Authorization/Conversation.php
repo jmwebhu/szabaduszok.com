@@ -17,6 +17,11 @@ class Authorization_Conversation extends Authorization
     {
         return $this->isIn();   
     }
+
+    public function canContact()
+    {
+        return ($this->_model->user_id != $this->_user->user_id);
+    }
     
     /**
      * @return bool

@@ -109,6 +109,36 @@ class Authorization_Conversation_Test extends Unittest_TestCase
         $this->assertFalse($auth->canSendMessage());
     }
 
+    /**
+     * @covers Authorization_Conversation::canContact()
+     */
+    public function testCanContactOk()
+    {
+        $auth = new Authorization_Conversation(self::$_users[0], self::$_users[1]);
+        $this->assertTrue($auth->canContact());
+
+        $auth = new Authorization_Conversation(self::$_users[0], self::$_users[2]);
+        $this->assertTrue($auth->canContact());
+
+        $auth = new Authorization_Conversation(self::$_users[1], self::$_users[2]);
+        $this->assertTrue($auth->canContact());
+    }
+
+    /**
+     * @covers Authorization_Conversation::canContact()
+     */
+    public function testCanContactNotOk()
+    {
+        $auth = new Authorization_Conversation(self::$_users[0], self::$_users[0]);
+        $this->assertFalse($auth->canContact());
+
+        $auth = new Authorization_Conversation(self::$_users[1], self::$_users[1]);
+        $this->assertFalse($auth->canContact());
+
+        $auth = new Authorization_Conversation(self::$_users[2], self::$_users[2]);
+        $this->assertFalse($auth->canContact());
+    }    
+
     public static function setUpBeforeClass()
     {
         self::setUpUsers();
