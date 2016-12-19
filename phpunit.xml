@@ -50,7 +50,7 @@
 		</testsuite>
 
 		<testsuite name="CurrentTests">
-			<directory>./modules/message/tests/Authorization</directory>
+			<directory>./modules/message/tests/Entity</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

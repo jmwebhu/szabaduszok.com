@@ -263,25 +263,6 @@ class Model_Project_Partner_Test extends Unittest_TestCase
         $this->assertPartnerTypeIs(Model_Project_Partner::TYPE_PARTICIPANT);
     }
 
-    /**
-     * @param array $data
-     */
-    protected function assertNotificationExistsInDatabaseWith(array $data)
-    {
-        $notification = DB::select()
-            ->from('notifications')
-            ->where('notifier_user_id', '=', $data['notifier_user_id'])
-            ->where('notified_user_id', '=', $data['notified_user_id'])
-            ->where('subject_id', '=', $data['subject_id'])
-            ->where('event_id', '=', $data['event_id'])
-            ->limit(1)
-            ->execute()->current();
-
-        $this->assertNotNull($notification['notification_id']);
-        $this->assertNotEmpty($notification['notification_id']);
-        $this->assertTrue($notification['is_archived'] != 1);
-    }
-
     protected function assertPartnerTypeIs($type)
     {
         $this->assertEquals($type, self::$_partner->type);

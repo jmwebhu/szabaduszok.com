@@ -1,6 +1,6 @@
 <?php
 
-class Entity_Message extends Entity implements Message
+class Entity_Message extends Entity implements Message, Notification_Subject
 {
     /**
      * @var Viewhelper_Message
@@ -140,6 +140,8 @@ class Entity_Message extends Entity implements Message
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
 
+        $this->sendNotification();
+
         return $this->_message_id;
     }
 
@@ -165,5 +167,44 @@ class Entity_Message extends Entity implements Message
     public function getCreatedatForView()
     {
         return $this->_viewhelper->getCreatedAt();
+    }
+
+    public function sendNotification()
+    {
+        $senderModel    = $this->getSender()->getModel();
+        $notifierEntity = Entity_User::createUser($senderModel->type, $senderModel);
+        $extraData      = ['message' => $this->getMessage()];
+
+        foreach ($this->_model->conversation->users->where('conversations_users.user_id', '!=', $senderModel->user_id)->find_all() as $user) {
+            $notifiedEntity     = Entity_User::createUser($user->type, $user);
+            $notification       = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, $extraData);    
+
+            $notifiedEntity->setNotification($notification);
+            $notifiedEntity->sendNotification();
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubjectType()
+    {
+        return 'message';
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->_model->object();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationUrl()
+    {
+        return Route::url('messagesList', ['slug' => $this->getModel()->conversation->slug]);
     }
 }

@@ -35,6 +35,13 @@ class Entity_Messge_Test extends Unittest_TestCase
         $this->assertMessageInteractionExistsWithFlags(
             $message->getMessageId(), self::$_users[1], ['is_readed' => 0, 'is_deleted' => 0]);
 
+        $this->assertNotificationExistsInDatabaseWith([
+            'notifier_user_id'  => self::$_users[0]->user_id,
+            'notified_user_id'  => self::$_users[1]->user_id,
+            'subject_id'        => $message->getId(),
+            'event_id'          => Model_Event_Factory::createEvent(Model_Event::TYPE_MESSAGE_NEW)->event_id
+        ]);
+
         $message->delete();
     }
 

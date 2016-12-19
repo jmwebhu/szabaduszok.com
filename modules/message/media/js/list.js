@@ -1,17 +1,14 @@
 var MessageList = {
     lastReadedConversationId: null,
     init: function () {
-        this.initTop();
         this.cacheElements();
+        this.initTop();
         this.bindEvents();
 
         this.flagAsReadSelectedConversation();
     },
     initTop: function () {
-        var $div = $('#bloc-27 .container');
-        var n = $div.height();
-
-        $div.animate({ scrollTop: n }, 0);
+        MessageList.$rightContainer.scrollTop(MessageList.$rightContainer.prop("scrollHeight"));
     },
     flagAsReadSelectedConversation: function () {
         if (MessageList.$selectedConversation.length && MessageList.$selectedConversation.hasClass('unread')) {
@@ -25,6 +22,7 @@ var MessageList = {
         this.$selectedConversation  = $('div.conversation.selected');
         this.$send                  = $('a#send');
         this.$messageText           = $('textarea#message-text');
+        this.$rightContainer        = $('#bloc-27 .container');
     },
     bindEvents: function () {
         this.$conversation.click(MessageList.conversationClick);
@@ -55,12 +53,11 @@ var MessageList = {
         var success = function (data) {
 
             var html            = twig({ref: 'outgoing-message-template'}).render({message: $messageTextarea.val()});
-            // var $lastMessageP   = MessageList.getLastMessageP();
-
             $messageTextarea.parents('form#message').before(html)
 
-            //$lastMessageP.after(html);
             MessageList.replaceLastMessagePreview($messageTextarea.val().substring(0, 100));
+
+            MessageList.$rightContainer.scrollTop(MessageList.$rightContainer.prop("scrollHeight"));
 
             $messageTextarea.val(null);
             $messageTextarea.focus();
