@@ -40,28 +40,31 @@ var MessageList = {
         }
 
         var $selectedConversation = $('div.conversation.selected');
-
-        MessageList.sendMessageAjax($messageText.val(), $selectedConversation.data('id'));
-
-        var html = twig({ref: 'outgoing-message-template'}).render({message: $messageText.val()});
-        var $lastMessageP = MessageList.getLastMessageP();
-
-        $lastMessageP.after(html);
-
-        $messageText.val(null);
-        $messageText.focus();
+        MessageList.sendMessageAjax($messageText, $selectedConversation.data('id'));
 
         return false;
+    },
+    replaceLastMessagePreview: function (message) {        
+        $('div.conversation.selected p.message-preview:first').text(message);
     },
     getLastMessageP: function () {
         return $('.triangle-obtuse').last();
     },
-    sendMessageAjax: function (message, conversationId) {
+    sendMessageAjax: function ($messageTextarea, conversationId) {
         var ajax = new AjaxBuilder;
         var success = function (data) {
+
+            var html            = twig({ref: 'outgoing-message-template'}).render({message: $messageTextarea.val()});
+            var $lastMessageP   = MessageList.getLastMessageP();
+
+            $lastMessageP.after(html);
+            MessageList.replaceLastMessagePreview($messageTextarea.val().substring(0, 100));
+
+            $messageTextarea.val(null);
+            $messageTextarea.focus();
         };
 
-        ajax.data({message: message, conversation_id: conversationId}).url(ROOT + 'message/ajax/send').success(success).send();
+        ajax.data({message: $messageTextarea.val(), conversation_id: conversationId}).url(ROOT + 'message/ajax/send').success(success).send();
     },
     conversationClick: function () {
         var $this = $(this);
