@@ -4,7 +4,12 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        Session::instance()->destroy();
+        $model = new Model_Conversation;
+        echo Debug::vars($model->getAll());
+        //$bySlug = $model->getBySlug('joo-martin-kis-pista');
+
+        //echo Debug::vars($bySlug);
+        exit;
     }
 
     public function action_message()

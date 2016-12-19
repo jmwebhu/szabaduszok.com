@@ -150,6 +150,11 @@ class Entity_Conversation extends Entity implements Conversation
         if (!$conversation->loaded()) {
             $conversation = new Entity_Conversation();
             $conversation->submit(['users' => $userIds]);
+
+            $conversations                          = Cache::instance()->get('conversations');
+            $conversations[$conversation->getId()]  = $conversation->getModel();
+
+            Cache::instance()->set('conversations', $conversations);
         }
 
         $conversation->getModel()->removeAll('conversation_interactions', 'conversation_id');

@@ -55,9 +55,11 @@ var MessageList = {
         var success = function (data) {
 
             var html            = twig({ref: 'outgoing-message-template'}).render({message: $messageTextarea.val()});
-            var $lastMessageP   = MessageList.getLastMessageP();
+            // var $lastMessageP   = MessageList.getLastMessageP();
 
-            $lastMessageP.after(html);
+            $messageTextarea.parents('form#message').before(html)
+
+            //$lastMessageP.after(html);
             MessageList.replaceLastMessagePreview($messageTextarea.val().substring(0, 100));
 
             $messageTextarea.val(null);

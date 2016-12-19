@@ -10,8 +10,16 @@ class Controller_Message_List extends Controller_DefaultTemplate
 
         $this->context->conversationUrl = $entity->getBySlug($this->request->param('slug'));
 
+        if ($this->context->conversationUrl->loaded()) {
+            $auth = new Authorization_Conversation($this->context->conversationUrl->getModel());
+
+            $this->throwForbiddenExceptionIfNot(
+                $auth->canView(), 'Nincs jogosultságod a beszélgetés megtekintéséhez');
+
+            $this->context->messages        = Business_Message::groupGivenMessagesByTextifiedDays(
+                $this->context->conversationUrl->getMessagesBy($user->user_id));
+        }
+
         $this->context->conversations   = Entity_Conversation::getForLeftPanelBy($user->user_id);
-        $this->context->messages        = Business_Message::groupGivenMessagesByTextifiedDays(
-            $this->context->conversationUrl->getMessagesBy($user->user_id));
     }
 }

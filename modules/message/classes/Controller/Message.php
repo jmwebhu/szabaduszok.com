@@ -10,7 +10,8 @@ class Controller_Message extends Controller
         $user               = new Model_User();
         $user               = $user->getBySlug($slug);
 
-        $conversation = Entity_Conversation::getConversationBetween([$user->user_id, Auth::instance()->get_user()->user_id]);
+        $conversation       = Entity_Conversation::getConversationBetween(
+            [$user->user_id, Auth::instance()->get_user()->user_id]);
 
         header('Location: ' . Route::url('messagesList', ['slug' => $conversation->getSlug()]), true, 302);
         die();
