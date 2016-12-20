@@ -28,12 +28,18 @@ interface Conversation
     public function getUpdatedAt();
 
     /**
-     * @return array of Conversation_Participant
+     * @return Conversation_Participant[]
      */
     public function getParticipants();
 
     /**
-     * @return array of Message
+     * @param int[]
+     * @return Conversation_Participant[]
+     */
+    public function getParticipantsExcept(array $userIds);
+
+    /**
+     * @return Message[]
      */
     public function getMessages();
 

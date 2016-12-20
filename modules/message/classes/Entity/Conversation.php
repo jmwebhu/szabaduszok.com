@@ -88,6 +88,15 @@ class Entity_Conversation extends Entity implements Conversation
         return $this->_model->getParticipants();
     }
 
+    /**
+     * @param int[]
+     * @return Conversation_Participant[]
+     */
+    public function getParticipantsExcept(array $userIds)
+    {
+        return $this->_model->getParticipantsExcept($userIds);
+    }
+
     public function __construct($value = null)
     {
         parent::__construct($value);

@@ -140,6 +140,12 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
 
+        $conversation   = new Entity_Conversation($this->_model->conversation);
+        $message        = new Entity_Message($this->_model);
+        $socket         = new Gateway_Socket_Message($conversation, $message);
+        
+        $socket->signal();
+
         $this->sendNotification();
 
         return $this->_message_id;

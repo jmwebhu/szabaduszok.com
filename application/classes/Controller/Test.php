@@ -4,8 +4,15 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $socket = new Gateway_Socket_Message;
-        $socket->sendPost(['message' => 'Teszt']);
+        // Uzenet kuldese
+        $data = [
+            'message'           => 'Socket teszt válasz',
+            'sender_id'         => 1,
+            'conversation_id'   => 2904
+        ];
+
+        $message = new Entity_Message();
+        $message->submit($data);
 
         exit;
     }

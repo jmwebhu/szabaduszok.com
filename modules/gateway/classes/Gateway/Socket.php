@@ -20,7 +20,7 @@ abstract class Gateway_Socket
      */
     abstract protected function getUri();
 
-    public function sendPost($data, $action = '')
+    protected function sendPost($data, $action = '')
     {
         $options = [
             'http' => [ 

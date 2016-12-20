@@ -101,6 +101,20 @@ class Model_Conversation extends ORM implements Conversation
     }
 
     /**
+     * @param int[]
+     * @return array of Conversation_Participant
+     */
+    public function getParticipantsExcept(array $userIds)
+    {
+        $users = [];
+        foreach ($this->users->where('user.user_id', 'NOT IN', $userIds)->find_all() as $user) {
+            $users[] = Entity_User::createUser($user->type, $user);
+        }
+
+        return $users;
+    }
+
+    /**
      * @return array of Message
      */
     public function getMessages()
