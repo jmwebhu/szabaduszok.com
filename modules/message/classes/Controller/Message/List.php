@@ -9,7 +9,9 @@ class Controller_Message_List extends Controller_DefaultTemplate
             $this->context->title   = 'Üzenetek ' . $user->name();
             $model                  = ORM::factory('Conversation')->where('slug', '=', $this->request->param('slug'))->limit(1)->find();
 
+            $conversations                  = Entity_Conversation::getForLeftPanelBy($user->user_id);
             $this->context->conversationUrl = new Entity_Conversation($model);
+
             if ($this->context->conversationUrl->loaded()) {
                 $auth = new Authorization_Conversation($this->context->conversationUrl->getModel());
 
@@ -18,12 +20,13 @@ class Controller_Message_List extends Controller_DefaultTemplate
 
                 $this->context->messages        = Business_Message::groupGivenMessagesByTextifiedDays(
                     $this->context->conversationUrl->getMessagesBy($user->user_id));
+
+                // Kijelolt beszelgetes elolre helyezese
+                $conversations = Business_Conversation::putIntoFirstPlace(
+                    $conversations, $this->request->param('slug'));
             }
 
-            $this->context->conversations   = Entity_Conversation::getForLeftPanelBy($user->user_id);
-            /**
-             * Aktuális beszélgetés legyen az első
-             */
+            $this->context->conversations = $conversations;
 
             $users = Model_User::getAllWithValidName();
             $this->context->users = $users;
