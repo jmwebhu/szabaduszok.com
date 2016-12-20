@@ -12,7 +12,6 @@ class Viewhelper_Conversation
      */
     protected $_conversation;
 
-
     /**
      * @param Conversation   $_conversation   
      */

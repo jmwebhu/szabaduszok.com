@@ -106,7 +106,7 @@ var MessageList = {
             window.history.pushState('page2', 'Title', ROOT + 'uzenetek/' + data.conversation.slug);
         };
 
-        ajax.data({id: id}).url(ROOT + 'conversation/ajax/getMessages').success(success).send();
+        ajax.type('GET').data({id: id}).url(ROOT + 'conversation/ajax/getMessages').success(success).send();
     },
     replaceMessagesInContainer: function (data) {
         var html = twig({ref: 'messages-template'}).render({data: data});

@@ -4,11 +4,38 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        try {
-            throw new Exception('Nem szabad');
-        } catch (Exception $ex) {
-            Log::instance()->addException($ex);
+        $conversations   = Entity_Conversation::getForLeftPanelBy(Auth::instance()->get_user()->user_id);
+        
+
+        $conversations = Business_Conversation::putIntoFirstPlace($conversations, 'joo-martin-lakatos-david');
+
+        foreach ($conversations as $conversation) {
+            echo Debug::vars($conversation->getSlug());
         }
+
+        exit;
+        // $ownUserId = 1;
+        // $userIds = DB::select('user_id')->from('users')->where('user_id', '!=', $ownUserId)->offset(0)->limit(100)->execute()->as_array();
+        // $userIds = Arr::DBQueryConvertSingleArray($userIds);
+
+        // foreach ($userIds as $userId) {
+        //     $conversation = new Entity_Conversation();
+        //     $conversation->submit(['users' => [$ownUserId, $userId]]);
+        // }
+
+        // $conversationIds = DB::select('conversation_id')->from('conversations')->offset(0)->limit(100)->execute()->as_array();
+        // $conversationIds = Arr::DBQueryConvertSingleArray($conversationIds);
+
+        // foreach ($conversationIds as $conversationId) {
+        //     $data = [
+        //         'message'           => 'Hello! Mi a helyzet?',
+        //         'sender_id'         => $ownUserId,
+        //         'conversation_id'   => $conversationId
+        //     ];
+
+        //     $message = new Entity_Message();
+        //     $message->submit($data);
+        // }
     }
 
     public function action_message()

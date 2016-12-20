@@ -21,7 +21,7 @@ class Controller_Conversation_Ajax extends Controller_Ajax
 
     protected function getMessages()
     {
-        $conversation           = new Entity_Conversation(Input::post('id'));
+        $conversation           = new Entity_Conversation(Input::get('id'));
         $data = Business_Message::groupGivenMessagesByTextifiedDays(
             $conversation->getMessagesBy(Auth::instance()->get_user()->user_id));
 

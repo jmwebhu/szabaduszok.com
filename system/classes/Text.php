@@ -29,4 +29,10 @@ class Text extends Kohana_Text
     {
         return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
     }
+
+    public static function randomString($length = 10)
+    {
+        return substr(str_shuffle(md5(time())), 0, $length);
+    }
+    
 }
