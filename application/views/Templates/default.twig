@@ -80,7 +80,9 @@
 
 	    	var ROOT    = '{{ ROOT }}'
             var TOKEN   = '{{ token }}'
+            var SOCKETURL = '{{ socketUrl }}'
             var temp    = '{{ loggedUser.getModel().asJson() }}'
+            var USERID  = '{{ loggedUser.getId() }}'
 
             temp = temp.replaceAll("&quot;", "\"");
 

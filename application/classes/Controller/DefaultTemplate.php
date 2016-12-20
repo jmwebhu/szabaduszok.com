@@ -17,6 +17,7 @@ class Controller_DefaultTemplate extends Controller_Twig
         $this->context->ROOT 		= URL::base(null, true);
         $this->context->title 		= 'A magyar freelancer platform';
         $this->context->env		    = Kohana::$environment;
+        $this->context->socketUrl   = Kohana::$config->load('socket')->get('url');
 
         if (!$this->request->is_ajax()) {
             $this->context->token       = Security::token(true);

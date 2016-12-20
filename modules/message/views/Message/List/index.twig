@@ -12,7 +12,6 @@
     <div class="container bloc-lg">
         <div class="row">
             <div class="col-sm-12">
-
                 {% for conversation in conversations %}
                 {% set isUnread = conversation.hasUnreadMessageBy() %}
                 <div data-id="{{ conversation.getId() }}" class="row user-container conversation {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %} {% if isUnread %}unread{% endif %}">
@@ -131,6 +130,13 @@
     {% verbatim %}
         <p class="bubble time outgoing">{{ 'now'|date('H:i') }}</p>                                    
         <p class="triangle-obtuse top bubble blue outgoing">{{ message }}</p>
+    {% endverbatim %}
+</script>
+
+<script id="incoming-message-template" type="text/twig">
+    {% verbatim %}
+        <p class="bubble time incoming">{{ 'now'|date('H:i') }}</p>                                    
+        <p class="triangle-obtuse top bubble gray incoming">{{ message }}</p>
     {% endverbatim %}
 </script>
 

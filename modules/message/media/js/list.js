@@ -7,13 +7,31 @@ var MessageList = {
         this.addWidgets();
 
         this.flagAsReadSelectedConversation();
+
+        this.socket = io.connect(SOCKETURL, {
+            query: 'room=' + USERID ,
+            autoConnect: true
+        });
+
+        this.socket.on("message", function(data) {
+            var $selectedConversation = $('div.conversation.selected');
+
+            if (data.conversation_id == $selectedConversation.data('id')) {
+                MessageList.appendMessage('incoming-message-template', data.message);
+            } else {
+                /**
+                 * FRISSÍTENI KELL PREVIEW -t ES UNREAD STATUSZT
+                 */
+            }
+        });
     },
     initTop: function () {
         MessageList.$rightContainer.scrollTop(MessageList.$rightContainer.prop("scrollHeight"));
     },
     flagAsReadSelectedConversation: function () {
-        if (MessageList.$selectedConversation.length && MessageList.$selectedConversation.hasClass('unread')) {
-            MessageList.lastReadedConversationId = MessageList.$selectedConversation.data('id');
+        var $selectedConversation = $('div.conversation.selected');
+        if ($selectedConversation.length && $selectedConversation.hasClass('unread')) {
+            MessageList.lastReadedConversationId = $selectedConversation.data('id');
             setTimeout(MessageList.flagAsReadAjax, 2000);
         }
     },
@@ -61,21 +79,23 @@ var MessageList = {
         return false;
     },
     replaceLastMessagePreview: function (message) {        
-        $('div.conversation.selected p.message-preview:first').text(message);
+        $('div.conversation.selected p.message-preview.hidden-xs').text(message);
+        $('div.conversation.selected p.message-preview.visible-xs').text(message.substring(0, 44));
     },
     getLastMessageP: function () {
         return $('.triangle-obtuse').last();
     },
+    appendMessage: function (template, message) {
+        var html = twig({ref: template}).render({message: message});
+        $('textarea#message-text').parents('form#message').before(html);
+
+        MessageList.replaceLastMessagePreview(message.substring(0, 100));
+        MessageList.$rightContainer.scrollTop(MessageList.$rightContainer.prop("scrollHeight"));
+    },
     sendMessageAjax: function ($messageTextarea, conversationId) {
         var ajax = new AjaxBuilder;
         var success = function (data) {
-
-            var html            = twig({ref: 'outgoing-message-template'}).render({message: $messageTextarea.val()});
-            $messageTextarea.parents('form#message').before(html)
-
-            MessageList.replaceLastMessagePreview($messageTextarea.val().substring(0, 100));
-
-            MessageList.$rightContainer.scrollTop(MessageList.$rightContainer.prop("scrollHeight"));
+            MessageList.appendMessage('outgoing-message-template', $messageTextarea.val());
 
             $messageTextarea.val(null);
             $messageTextarea.focus();

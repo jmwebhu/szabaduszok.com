@@ -270,7 +270,7 @@ class Model_User extends Model_Auth_User
     public static function getAllWithValidName()
     {
         return DB::select(
-                [DB::expr('IF(CONCAT_WS(" ", lastname, firstname) <> "", CONCAT_WS(" ", lastname, firstname), company_name)'), 'name'], 'slug'
+                [DB::expr('IF(CONCAT_WS(" ", lastname, firstname) <> "", CONCAT_WS(" ", lastname, firstname, IF(type=1, "- Szabadúszó", "- Megbízó")), CONCAT_WS(" - ", company_name, "Megbízó"))'), 'name'], 'slug'
             )
             ->from('users')
             ->where(DB::expr('CONCAT_WS(" ", lastname, firstname)'), '!=', '')

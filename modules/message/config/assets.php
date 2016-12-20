@@ -5,8 +5,9 @@
  */
 AssetCollection::instance()
     ->setCss('list', 'list.css')
-    ->setJs('list', 'list.js')
     ->setJs('twig', ['twig.min.js', 'twig.config.js'])
+    ->setJs('socketio', 'socket.io.js')
+    ->setJs('list', 'list.js')
 ;
 
 /**
@@ -16,5 +17,5 @@ AssetManager::instance()
     ->addController('message_list')
         ->addAction('index')
             ->addCss(['list'])
-            ->addJs(['twig' ,'list'])
+            ->addJs(['twig', 'socketio', 'list'])
 ;
