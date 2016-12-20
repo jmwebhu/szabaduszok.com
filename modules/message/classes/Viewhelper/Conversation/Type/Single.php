@@ -12,7 +12,13 @@ class Viewhelper_Conversation_Type_Single extends Viewhelper_Conversation_Type
 
         foreach ($this->_participants as $i => $participant) {
             if ($participant->getId() != $this->_authUser->user_id) {
-                return $participant->{$nameMethod}();
+                $name = $participant->{$nameMethod}();
+
+                if (empty(trim($name))) {
+                    $name = $participant->getCompanyName();
+                }
+
+                return $name;
             }
         }
     }

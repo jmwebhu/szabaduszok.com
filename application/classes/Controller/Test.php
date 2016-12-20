@@ -4,16 +4,6 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $conversations   = Entity_Conversation::getForLeftPanelBy(Auth::instance()->get_user()->user_id);
-        
-
-        $conversations = Business_Conversation::putIntoFirstPlace($conversations, 'joo-martin-lakatos-david');
-
-        foreach ($conversations as $conversation) {
-            echo Debug::vars($conversation->getSlug());
-        }
-
-        exit;
         // $ownUserId = 1;
         // $userIds = DB::select('user_id')->from('users')->where('user_id', '!=', $ownUserId)->offset(0)->limit(100)->execute()->as_array();
         // $userIds = Arr::DBQueryConvertSingleArray($userIds);
