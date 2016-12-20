@@ -19,9 +19,10 @@ var MessageList = {
             if (data.conversation_id == $selectedConversation.data('id')) {
                 MessageList.appendMessage('incoming-message-template', data.message);
             } else {
-                /**
-                 * FRISSÍTENI KELL PREVIEW -t ES UNREAD STATUSZT
-                 */
+                MessageList.replaceLastMessagePreviewNonSelectedConversation(
+                    data.message.substring(0, 100), data.conversation_id);
+
+                MessageList.addUnread(data.conversation_id);            
             }
         });
     },
@@ -81,6 +82,10 @@ var MessageList = {
     replaceLastMessagePreview: function (message) {        
         $('div.conversation.selected p.message-preview.hidden-xs').text(message);
         $('div.conversation.selected p.message-preview.visible-xs').text(message.substring(0, 44));
+    },
+    replaceLastMessagePreviewNonSelectedConversation: function (message, conversationId) {        
+        $('div.conversation[data-id="' + conversationId + '"] p.message-preview.hidden-xs').text(message);
+        $('div.conversation[data-id="' + conversationId + '"] p.message-preview.visible-xs').text(message.substring(0, 44));
     },
     getLastMessageP: function () {
         return $('.triangle-obtuse').last();
@@ -146,6 +151,13 @@ var MessageList = {
         $conversationDiv.find('.message-user-header').removeClass('unread');
 
         $conversationDiv.find('.unread-dot').hide('slow');
+    },
+    addUnread: function (id) {
+        var $conversationDiv = $('div[data-id="' + id + '"]');
+        $conversationDiv.addClass('unread');
+        $conversationDiv.find('.message-user-header').addClass('unread');
+
+        $conversationDiv.find('.unread-dot').show();
     },
 };
 
