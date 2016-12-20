@@ -4,28 +4,10 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        // $ownUserId = 1;
-        // $userIds = DB::select('user_id')->from('users')->where('user_id', '!=', $ownUserId)->offset(0)->limit(100)->execute()->as_array();
-        // $userIds = Arr::DBQueryConvertSingleArray($userIds);
+        $socket = new Gateway_Socket_Message;
+        $socket->sendPost(['message' => 'Teszt']);
 
-        // foreach ($userIds as $userId) {
-        //     $conversation = new Entity_Conversation();
-        //     $conversation->submit(['users' => [$ownUserId, $userId]]);
-        // }
-
-        // $conversationIds = DB::select('conversation_id')->from('conversations')->offset(0)->limit(100)->execute()->as_array();
-        // $conversationIds = Arr::DBQueryConvertSingleArray($conversationIds);
-
-        // foreach ($conversationIds as $conversationId) {
-        //     $data = [
-        //         'message'           => 'Hello! Mi a helyzet?',
-        //         'sender_id'         => $ownUserId,
-        //         'conversation_id'   => $conversationId
-        //     ];
-
-        //     $message = new Entity_Message();
-        //     $message->submit($data);
-        // }
+        exit;
     }
 
     public function action_message()
