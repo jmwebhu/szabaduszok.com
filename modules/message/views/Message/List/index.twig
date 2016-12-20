@@ -15,11 +15,8 @@
                 {% for conversation in conversations %}
                 {% set isUnread = conversation.hasUnreadMessageBy() %}
                 <div data-id="{{ conversation.getId() }}" class="row user-container conversation {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %} {% if isUnread %}unread{% endif %}">
-                    <div class="col-sm-1 text-center">                   
-                        
-                        {% if isUnread %}
-                            <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot unread"></span>
-                        {% endif %}
+                    <div class="col-sm-1 text-center">                                       
+                        <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot unread {% if isUnread %}{% else %}hidden{% endif %}"></span>
                     </div>
                     <div class="col-sm-3 text-center hidden-xs">
                         <span class="helper"></span>

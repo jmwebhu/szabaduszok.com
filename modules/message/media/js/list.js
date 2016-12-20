@@ -18,13 +18,28 @@ var MessageList = {
 
             if (data.conversation_id == $selectedConversation.data('id')) {
                 MessageList.appendMessage('incoming-message-template', data.message);
+                MessageList.flagAsReadAjax(data.conversation_id);
             } else {
                 MessageList.replaceLastMessagePreviewNonSelectedConversation(
                     data.message.substring(0, 100), data.conversation_id);
 
-                MessageList.addUnread(data.conversation_id);            
+                MessageList.moveConversationToTop(data.conversation_id);                                        
             }
         });
+    },
+    moveConversationToTop: function (id) {
+        var $div = $('div.conversation[data-id="' + id + '"]');
+
+        var $first = $('div.conversation:first');
+        $first.before($div);
+
+        //var $conversationDiv = $('div.conversation:first');
+
+        $div.addClass('unread');
+        $div.find('.message-user-header').addClass('unread');
+        $div.find('div.col-sm-1').append();
+
+        $div.find('.unread-dot').removeClass('hidden');
     },
     initTop: function () {
         MessageList.$rightContainer.scrollTop(MessageList.$rightContainer.prop("scrollHeight"));
@@ -137,28 +152,25 @@ var MessageList = {
         var html = twig({ref: 'messages-template'}).render({data: data});
         MessageList.$messagesContainer.html(html);
     },
-    flagAsReadAjax: function () {
+    flagAsReadAjax: function (id) {
+        if (typeof id === 'undefined') {
+            id = MessageList.lastReadedConversationId;
+        }
+
         var ajax = new AjaxBuilder;
         var success = function (data) {
-            MessageList.clearUnread(MessageList.lastReadedConversationId);
+            MessageList.clearUnread(id);
         };
 
-        ajax.data({id: MessageList.lastReadedConversationId}).url(ROOT + 'conversation/ajax/flagAsRead').success(success).send();
+        ajax.data({id: id}).url(ROOT + 'conversation/ajax/flagAsRead').success(success).send();
     },
     clearUnread: function (id) {
         var $conversationDiv = $('div[data-id="' + id + '"]');
         $conversationDiv.removeClass('unread');
         $conversationDiv.find('.message-user-header').removeClass('unread');
 
-        $conversationDiv.find('.unread-dot').hide('slow');
-    },
-    addUnread: function (id) {
-        var $conversationDiv = $('div[data-id="' + id + '"]');
-        $conversationDiv.addClass('unread');
-        $conversationDiv.find('.message-user-header').addClass('unread');
-
-        $conversationDiv.find('.unread-dot').show();
-    },
+        $conversationDiv.find('.unread-dot').addClass('hidden');
+    }
 };
 
 $(document).ready(function () {
