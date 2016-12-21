@@ -4,10 +4,10 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $userIds = [1, 805];
-        $conversation = Entity_Conversation::getConversationBetween($userIds);
+        $arr = ['php', 'PHP'];
+        $uniqueArr = Arr::uniqueString($arr);
 
-        echo Debug::vars($conversation);
+        echo Debug::vars($uniqueArr);
         exit;
     }
 
