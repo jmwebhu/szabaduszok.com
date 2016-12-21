@@ -114,6 +114,27 @@ class Transaction_Message_Select
         return $this->isThisFirstMessageTo($userId) 
             || $this->isThisFirstMessageInLastHourTo($userId);
     }
+
+    /**
+     * @param  int $userId
+     * @return int
+     */
+    public static function getCountOfUnreadBy($userId)
+    {
+        return DB::select(
+                [DB::expr('COUNT(m.message_id)'), 'count_unread']
+            )
+            ->from(['messages', 'm'])
+
+            ->join('message_interactions', 'left')
+                ->on('message_interactions.message_id', '=', 'm.message_id')
+
+            ->where('message_interactions.is_deleted', '=', 0)
+            ->and_where('message_interactions.user_id', '=', $userId)
+            ->and_where('message_interactions.is_readed', '=', 0)
+            ->execute()->get('count_unread');
+    }
+    
     
     /**
      * @param  int  $userId
