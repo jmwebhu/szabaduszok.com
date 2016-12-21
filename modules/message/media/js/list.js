@@ -7,13 +7,16 @@ var MessageList = {
         this.addWidgets();
 
         this.flagAsReadSelectedConversation();
-
-        this.socket = io.connect(SOCKETURL, {
+        this.initSocket();
+        
+    },
+    initSocket: function () {
+        MessageList.socket = io.connect(SOCKETURL, {
             query: 'room=' + USERID ,
             autoConnect: true
         });
 
-        this.socket.on("message", function(data) {
+        MessageList.socket.on("new_message", function(data) {
             var $selectedConversation = $('div.conversation.selected');
 
             if (data.conversation_id == $selectedConversation.data('id')) {
@@ -25,6 +28,10 @@ var MessageList = {
 
                 MessageList.moveConversationToTop(data.conversation_id);                                        
             }
+        });
+
+        MessageList.socket.on("new_conversation", function(data) {
+            console.log(data);
         });
     },
     moveConversationToTop: function (id) {

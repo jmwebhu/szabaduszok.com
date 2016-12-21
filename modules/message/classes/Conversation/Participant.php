@@ -11,4 +11,9 @@ interface Conversation_Participant
      * @return string
      */
     public function getName();
+
+    /**
+     * @return array
+     */
+    public function getData();
 }

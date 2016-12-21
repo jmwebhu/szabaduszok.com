@@ -8,11 +8,19 @@ abstract class Gateway_Socket
     protected $_config;
 
     /**
-     * Class Constructor
+     * @var Conversation
      */
-    public function __construct()
+    protected $_conversation;
+
+
+    /**
+     * Class Constructor
+     * @param Conversation   $_conversation   
+     */
+    public function __construct($_conversation)
     {
-        $this->_config = Kohana::$config->load('socket');
+        $this->_config          = Kohana::$config->load('socket');
+        $this->_conversation    = $_conversation;
     }
 
     /**

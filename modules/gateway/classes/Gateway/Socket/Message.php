@@ -1,12 +1,7 @@
 <?php
 
 class Gateway_Socket_Message extends Gateway_Socket
-{    
-    /**
-     * @var Conversation
-     */
-    protected $_conversation;
-
+{     
     /**
      * @var Message
      */
@@ -17,8 +12,7 @@ class Gateway_Socket_Message extends Gateway_Socket
      */
     public function __construct(Conversation $conversation, Message $message)
     {
-        parent::__construct();
-        $this->_conversation    = $conversation;
+        parent::__construct($conversation);
         $this->_message         = $message;
     }
 

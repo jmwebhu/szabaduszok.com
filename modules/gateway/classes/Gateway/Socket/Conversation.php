@@ -3,28 +3,15 @@
 class Gateway_Socket_Conversation extends Gateway_Socket
 {
     /**
-     * @var Conversation
+     * @return array
      */
-    protected $_conversation;
-
-    /**
-     * Class Constructor
-     * @param Conversation   $_conversation   
-     */
-    public function __construct($_conversation)
+    protected function getDataToSignal(Conversation_Participant $participant)
     {
-        $this->_conversation = $_conversation;
-    }
-
-    public function signal()
-    {
-        $participants = $this->_conversation->getParticipantsExcept([
-            Auth::instance()->get_user()->user_id
-        ]);
-
-        foreach ($participants as $participant) {
-            $this->signalOneParticipant($participant);
-        }
+        return [
+            'conversation'      => $this->_conversation->getId(),
+            'participant'       => $participant->getData(),
+            'room'              => $participant->getId()
+        ];
     }
 
     /**
