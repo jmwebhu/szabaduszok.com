@@ -32,6 +32,10 @@ var MessageList = {
 
         MessageList.socket.on("new_conversation", function(data) {
             console.log(data);
+            var html    = twig({ref: 'conversation-template'}).render({data: data});            
+            var $first  = $('div.conversation:first');
+
+            $first.before(html);
         });
     },
     moveConversationToTop: function (id) {
@@ -39,8 +43,6 @@ var MessageList = {
 
         var $first = $('div.conversation:first');
         $first.before($div);
-
-        //var $conversationDiv = $('div.conversation:first');
 
         $div.addClass('unread');
         $div.find('.message-user-header').addClass('unread');
@@ -69,7 +71,7 @@ var MessageList = {
         this.$newConversation       = $('button#new-conversation');
     },
     bindEvents: function () {
-        this.$conversation.click(MessageList.conversationClick);
+        $('body').on('click', 'div.conversation', MessageList.conversationClick);
         this.$newConversation.click(MessageList.newConversationClick);
         $('body').on('click', 'a#send', MessageList.sendClick);
     },
@@ -138,7 +140,7 @@ var MessageList = {
         }
 
         MessageList.getMessagesAjax($this.data('id'));
-        MessageList.$conversation.removeClass('selected');
+        $('div.conversation').removeClass('selected');
         $this.addClass('selected');
 
         if ($this.hasClass('unread')) {

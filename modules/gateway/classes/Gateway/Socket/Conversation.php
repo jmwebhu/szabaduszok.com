@@ -7,10 +7,14 @@ class Gateway_Socket_Conversation extends Gateway_Socket
      */
     protected function getDataToSignal(Conversation_Participant $participant)
     {
+        $user = Auth::instance()->get_user();
         return [
-            'conversation'      => $this->_conversation->getId(),
-            'participant'       => $participant->getData(),
-            'room'              => $participant->getId()
+            'conversation_id'   => $this->_conversation->getId(),
+            'room'              => $participant->getId(),
+            'firstname'         => $user->firstname,
+            'lastname'          => $user->lastname,
+            'picture'           => $user->list_picture_path,
+            'root'              => URL::base(true, false)
         ];
     }
 

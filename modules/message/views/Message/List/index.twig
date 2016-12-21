@@ -137,4 +137,35 @@
     {% endverbatim %}
 </script>
 
+<script id="conversation-template" type="text/twig">
+    {% verbatim %}
+    <div data-id="{{ data.conversation_id }}" class="row user-container conversation">
+        <div class="col-sm-1 text-center">                                       
+            <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot unread hidden"></span>
+        </div>
+        <div class="col-sm-3 text-center hidden-xs">
+            <span class="helper"></span>
+            <img src="{{ data.root }}{% if data.picture %}uploads/picture/{{ data.picture }}{% else %}media/img/szabaduszok-placeholder.png{% endif %}" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="{{ data.lastname }} {{ data.firstname }}">
+        </div>
+        <div class="col-sm-6">
+            <h3 class="mg-sm message-user-header tc-black hidden-xs">
+                {{ data.lastname }} {{ data.firstname }}
+            </h3>
+            <h3 class="mg-sm message-user-header tc-black visible-xs">
+                {{ data.lastname }}
+            </h3>
+            <p class="message-preview hidden-xs">
+                Még nincs üzenet
+            </p>          
+            <p class="message-preview visible-xs">
+                Még nincs üzenet
+            </p>                              
+        </div>            
+        <div class="col-sm-2 text-center message-time hidden-xs">
+            épp most
+        </div>
+    </div>
+    {% endverbatim %}
+</script>
+
 {% endblock content %}
