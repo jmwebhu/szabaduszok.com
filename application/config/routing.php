@@ -71,3 +71,11 @@ Route::set('testClearcache', 'test/clearcache')
 	'controller' => 'Test',
 	'action'     => 'clearcache',
 ));
+
+Route::set('testClearsession', 'test/clearsession')
+->defaults(array(
+	'controller' => 'Test',
+	'action'     => 'clearsession',
+));
+
+

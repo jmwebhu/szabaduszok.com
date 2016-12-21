@@ -3,17 +3,22 @@
 class Text_Conversation
 {
     /**
-     * @param array of Conversation_Participant $users
+     * @param Entity_User[]
      */
     public static function getNameFromUsers(array $users)
     {
         $name = '';
         foreach ($users as $i => $user) {
             /**
-             * @var Conversation_Participant $user
+             * @var Entity_User $user
              */
 
-            $name .= $user->getName();
+            $userFullName = $user->getName();
+            if (empty(trim($userFullName))) {
+                $userFullName = $user->getCompanyName();
+            }
+
+            $name .= $userFullName;
             if (!Arr::isLastIndex($i, $users)) {
                 $name .= ', ';
             }

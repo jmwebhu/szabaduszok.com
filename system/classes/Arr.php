@@ -23,15 +23,19 @@ class Arr extends Kohana_Arr
      * @param array $array
      * @return bool
      */
-    public static function isLastIndex($index, array $array)
+    public static function isLastIndex($index, array $array, $negativeModifier = 0)
     {
         $count = (count($array) == 0) ? 0 : count($array) - 1;
+        if ($negativeModifier) {
+            $count -= $negativeModifier;
+        }
+        
         return $index == $count;
     }
 
     /**
      * @param array
-     * @param string|int
+     * @param mixed
      * @param mixed
      * @return array
      */
@@ -79,4 +83,24 @@ class Arr extends Kohana_Arr
         return $result;
     }
     
+    /**
+     * @param  array  $array
+     * @return mixed
+     */
+    public static function last(array $array)
+    {
+        return Arr::get($array, count($array) - 1, null);
+    }
+
+    public static function DBQueryConvertSingleArray($array)
+    {
+        $result = array();
+        foreach($array as $item) {
+            foreach($item as $element) {
+                $result[] = $element;
+            }
+        }
+        
+        return $result;
+    } 
 }

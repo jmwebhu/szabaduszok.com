@@ -48,12 +48,12 @@ class Controller_Ajax extends Controller_DefaultTemplate
     /**
      * @param Exception $ex
      */
-    protected function handleException(Exception $ex)
+    protected function handleException(Exception $ex, $response = null)
     {
         Log::instance()->addException($ex);
 
         $this->_error           = true;
-        $this->_jsonResponse    = json_encode(['error' => $this->_error]);
+        $this->_jsonResponse    = json_encode(['error' => ($response) ? $response : $this->_error]);
 
         $this->response->status(500);
     }

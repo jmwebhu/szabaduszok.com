@@ -71,7 +71,9 @@ class Entity_Conversation_Test extends Unittest_TestCase
      */
     public function testGetConversationBetweenAlreadyExists()
     {
-        DB::delete('conversations')->execute();
+        foreach (self::$_conversations as $conversation) {
+            DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
+        }
 
         $conversationGiven = $this->givenConversation();
         $conversationBetween = Entity_Conversation::getConversationBetween([self::$_users[0]->user_id, self::$_users[1]->user_id]);
@@ -85,7 +87,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
      */
     public function testGetConversationBetweenNotExists()
     {
-        DB::delete('conversations')->execute();
+        foreach (self::$_conversations as $conversation) {
+            DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
+        }
+
         $conversationBetween = Entity_Conversation::getConversationBetween([self::$_users[0]->user_id, self::$_users[1]->user_id]);
 
         $this->assertNotEmpty($conversationBetween->getConversationId());
@@ -96,6 +101,8 @@ class Entity_Conversation_Test extends Unittest_TestCase
         }
 
         $this->assertNotInArray($conversationBetween->getConversationId(), $ids);
+
+        self::$_conversations[] = $conversationBetween;
     }
 
     /**

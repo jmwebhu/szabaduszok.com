@@ -264,6 +264,11 @@ class Kohana_ORM extends Model implements serializable {
         return $this->_table_columns;
     }
 
+    public function setCreatedColumn($createdColumn)
+    {
+        $this->_created_column = $createdColumn;
+    }
+
     /**
      * @param Database $db
      */

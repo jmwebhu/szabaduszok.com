@@ -59,4 +59,23 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
 
         return $mock;
     }
+
+    /**
+     * @param array $data
+     */
+    protected function assertNotificationExistsInDatabaseWith(array $data)
+    {
+        $notification = DB::select()
+            ->from('notifications')
+            ->where('notifier_user_id', '=', $data['notifier_user_id'])
+            ->where('notified_user_id', '=', $data['notified_user_id'])
+            ->where('subject_id', '=', $data['subject_id'])
+            ->where('event_id', '=', $data['event_id'])
+            ->limit(1)
+            ->execute()->current();
+
+        $this->assertNotNull($notification['notification_id']);
+        $this->assertNotEmpty($notification['notification_id']);
+        $this->assertTrue($notification['is_archived'] != 1);
+    }
 }

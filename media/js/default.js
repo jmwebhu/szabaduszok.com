@@ -2,7 +2,7 @@ var Default = {
 	getSelect2Object: function (url) {
 		return {
 			theme: "bootstrap",
-		    placeholder: "Kezdj el gépelni...",
+		    placeholder: 'Kezdj el gépelni...',
 		    ajax: {
 		        url: url,
 		        type: 'get',
@@ -13,7 +13,7 @@ var Default = {
 		                term: params.term // search term
 		            };
 		        },
-		        processResults: function (data) {
+		        processResults: function (data) {            
 		            return {
 		                results: data
 		            };

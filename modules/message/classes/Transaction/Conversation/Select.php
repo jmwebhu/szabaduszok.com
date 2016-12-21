@@ -90,18 +90,15 @@ class Transaction_Conversation_Select
     }
 
     /**
-     * UZENETEK EGY ADOTT BESZELGETESHEZ
+     * UZENETEK EGY ADOTT BESZELGETESHEZ 
      */
     public function getMessagesBy($userId)
     {
-        $activeMessages                 = $this->_transactionMessageSelect->getAllActiveBy($this->_conversation->getId());
-        $deletedByReceiverMessages      = $this->_transactionMessageSelect->getAllToSenderDeletedByReceiver(
-            $this->_conversation->getId(), $userId);
-
+        $visibleMessages                = $this->_transactionMessageSelect->getAllVisibleBy($this->_conversation->getId(), $userId);
         $lastDeletedMessagesBySender    = $this->_transactionMessageSelect->getLastToReceiverDeletedBySender(
             $this->_conversation->getId(), $userId);
 
-        return array_merge($activeMessages, $deletedByReceiverMessages, $lastDeletedMessagesBySender);
+        return array_merge($visibleMessages, $lastDeletedMessagesBySender);
     }
 
     /**
@@ -132,10 +129,16 @@ class Transaction_Conversation_Select
     protected function getAllBy($userId)
     {
         return $this->_conversation
-            ->join('conversations_users', 'left')
-                ->on('conversations_users.conversation_id', '=', 'conversation.conversation_id')
+            ->join(['conversations_users', 'cu'], 'left')
+                ->on('cu.conversation_id', '=', 'conversation.conversation_id')
 
-            ->where('conversations_users.user_id', '=', $userId)
+            ->join(['messages', 'm'], 'left')
+                ->on('m.conversation_id', '=', 'conversation.conversation_id')
+
+            ->order_by('m.created_at', 'desc')
+            ->group_by('conversation_id')
+
+            ->where('cu.user_id', '=', $userId)
             ->find_all();
     }
 

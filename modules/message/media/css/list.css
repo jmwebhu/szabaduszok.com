@@ -7,6 +7,7 @@
   -webkit-border-radius:10px;
   -moz-border-radius:10px;
   border-radius:10px;
+  word-break: break-word
 }
 
 .bubble.blue {
@@ -75,20 +76,24 @@
 }
 
 #bloc-26 .container {
-	padding-top: 0 !important;
+	   padding-top: 0 !important;
     overflow-y: scroll;
+    overflow-x: hidden;
     height: 75vh;
 }
 
 #bloc-27 {
 	width: 67.67777777% !important;
 	border-left: 1px solid rgb(220, 220, 220); 
+  padding-left: 25px;
 }
 
 #bloc-27 .container {
 	padding-top: 10px !important;
     overflow-y: scroll;
     height: 75vh;
+    overflow-x: hidden;
+
 }
 
 #message-text {

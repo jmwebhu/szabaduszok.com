@@ -127,4 +127,10 @@ class Twigextension {
         $twig = Kohana_Twig::instance();
         return $twig->loadTemplate($template)->render($params);
     }
+
+    public static function textifyDay($date)
+    {
+        return Date::textifyDay($date);
+    }
+    
 }

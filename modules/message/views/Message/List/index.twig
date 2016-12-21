@@ -12,36 +12,38 @@
     <div class="container bloc-lg">
         <div class="row">
             <div class="col-sm-12">
-                {% for i in 1..25 %}
-                <div class="row user-container {% if i == 2 %}selected{% endif %}">
-                    <div class="col-sm-1 text-center">     
-                        {% set unread = random(1) %}                  
-                        {% if unread == 1 %}
-                            <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot"></span>
-                        {% endif %}
+                {% for conversation in conversations %}
+                {% set isUnread = conversation.hasUnreadMessageBy() %}
+                <div data-id="{{ conversation.getId() }}" class="row user-container conversation {% if conversation.getId() == conversationUrl.getId() %}selected{% endif %} {% if isUnread %}unread{% endif %}">
+                    <div class="col-sm-1 text-center">                                       
+                        <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot unread {% if isUnread %}{% else %}hidden{% endif %}"></span>
                     </div>
                     <div class="col-sm-3 text-center hidden-xs">
                         <span class="helper"></span>
-                        <img src="{{ ROOT }}uploads/picture/nagyon_kicsi.jpg" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="Joó Martin">
+                        <img src="{{ ROOT }}{% if conversation.getParticipantProfilePictures()[0] %}uploads/picture/{{ conversation.getParticipantProfilePictures()[0] }}{% else %}media/img/szabaduszok-placeholder.png{% endif %}" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="{{ conversation.getParticipantNames() }}">
                     </div>
                     <div class="col-sm-6">
                         <h3 class="mg-sm message-user-header tc-black hidden-xs">
-                            Joó Martin
+                            {{ conversation.getParticipantNames() }}
                         </h3>
-                        <h3 class="mg-sm message-user-header tc-black visible-xs {% if unread %}unread{% endif %}">
-                            Martin
+                        <h3 class="mg-sm message-user-header tc-black visible-xs {% if isUnread %}unread{% endif %}">
+                            {{ conversation.getParticipantNames('lastName') }}            
                         </h3>
                         <p class="message-preview hidden-xs">
-                            Ez itt az utolsó üzenet első 100 karaktere... első 100 karaktere... első 100 karaktere... első 100 k
+                            {% set lastMessage = conversation.getLastMessageBy() %}
+                            {{ lastMessage.getMessage()|slice(0, 100) }}
+                            
                         </p>          
                         <p class="message-preview visible-xs">
-                            Ez itt az utolsó üzenet első 44 karaktere...
+                            {{ lastMessage.getMessage()|slice(0, 44) }}
                         </p>                              
                     </div>            
                     <div class="col-sm-2 text-center message-time hidden-xs">
-                        ma
+                        {{ lastMessage.getCreatedatForView() }}
                     </div>
-                </div>
+                </div>    
+                {% else %}
+                    <div class="text-center">Még nincsenenk beszélgetések</div>                
                 {% endfor %}
             </div>
         </div>
@@ -53,43 +55,43 @@
 <div class="bloc bloc-tile-2 bgc-white l-bloc" id="bloc-27">
     <div class="container bloc-lg">
         <div class="row">
-            <div class="col-sm-12">
-                    <div class="message-day text-center">
-                        December 4, hétfő                  
-                    </div>                      
+            <div class="col-sm-12 messages-container">
 
-                    <p class="bubble time outgoing">10:12</p>
-                    <p class="triangle-obtuse top blue bubble outgoing">Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú. Elküldött üzenet, nagyon hosszú.</p>
-                      
-                    <p class="bubble time incoming">14:26</p>
-                    <p class="triangle-obtuse top gray bubble incoming">Fogadott üzenet</p>
-                    
-                    <div class="message-day text-center">
-                        Tegnap                                
-                    </div>            
-                                     
-                    <p class="bubble time outgoing">08:33</p>
-                    <p class="triangle-obtuse top blue bubble outgoing">Elküldött üzenet</p>
-                      
-                    <p class="bubble time incoming">09:17</p>
-                    <p class="triangle-obtuse top gray bubble incoming">Fogadott üzenet</p>
+                {% if conversationUrl.getId() %}
+                    {% for date, messagesByConversation in messages %}
+                        <div class="message-day text-center">
+                            {{ date|i18n }}
+                        </div>      
 
-                    <div class="message-day text-center">
-                        Ma
-                    </div>            
+                        {% for message in messagesByConversation %}                    
+                            <p class="bubble time {{ message.getType() }}">{{ message.getCreatedAt()|date('H:i') }}</p>                                    
+                            <p class="triangle-obtuse top bubble {{ message.getColor() }} {{ message.getType() }}">{{ message.getMessage() }}</p>
+                        {% endfor %}
+                    {% endfor %}
 
-                    <p class="bubble time outgoing">16:49</p>
-                    <p class="triangle-obtuse top blue bubble outgoing">Elküldött üzenet</p>
-                      
-                    <p class="bubble time incoming">17:55</p>
-                    <p class="triangle-obtuse top gray bubble incoming">Fogadott üzenet</p>
-
-                    <form id="form_39619" novalidate>
+                    <form id="message">
                         <div class="form-group message-text-container" style="margin-top: 30px;">
-                            <textarea autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
+                            <textarea required autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
                             <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
                         </div>                
                     </form>
+                {% else %}  
+                    <div class="form-group">
+                        <label for="user">Új beszélgetés</label>
+                        <select class="form-control" name="user" id="user">
+                            <option value="0" disabled="disabled" selected>Válassz egy felhasználót.</option>
+                            {% for user in users %}
+                                <option value="{{ user.slug }}">
+                                    {{ user.name }}
+                                </option>                       
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button id="new-conversation" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq"><span class="fa fa-comments-o icon-spacer icon-white"></span>Kapcsolatfelvétel</button>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -98,4 +100,72 @@
 </div>
 <!-- Bloc Group END -->
 </div>
+
+<script id="messages-template" type="text/twig">
+    {% verbatim %}
+    {% for date, messages in data %}
+        <div class="message-day text-center">
+            {{ date }}
+        </div>      
+
+        {% for message in messages %}
+            <p class="bubble time {{ message.type }}">{{ message.created_at|date('H:i') }}</p>                                    
+            <p class="triangle-obtuse top bubble {{ message.color }} {{ message.type }}">{{ message.message }}</p>
+        {% endfor %}
+    {% endfor %}
+
+    <form id="message" novalidate>
+        <div class="form-group message-text-container" style="margin-top: 30px;">
+            <textarea autofocus id="message-text" class="form-control" rows="4" cols="50" placeholder="Ide írd az üzenetet..." id="textarea_1946"></textarea>
+            <a href="#" id="send" class="btn btn-lg btn-block btn-ultramarine-blue btn-sq">Küldés</a>
+        </div>                
+    </form>
+    {% endverbatim %}
+</script>
+
+<script id="outgoing-message-template" type="text/twig">
+    {% verbatim %}
+        <p class="bubble time outgoing">{{ 'now'|date('H:i') }}</p>                                    
+        <p class="triangle-obtuse top bubble blue outgoing">{{ message }}</p>
+    {% endverbatim %}
+</script>
+
+<script id="incoming-message-template" type="text/twig">
+    {% verbatim %}
+        <p class="bubble time incoming">{{ 'now'|date('H:i') }}</p>                                    
+        <p class="triangle-obtuse top bubble gray incoming">{{ message }}</p>
+    {% endverbatim %}
+</script>
+
+<script id="conversation-template" type="text/twig">
+    {% verbatim %}
+    <div data-id="{{ data.conversation_id }}" class="row user-container conversation">
+        <div class="col-sm-1 text-center">                                       
+            <span class="ion icon-responsive ion-record icon-sm icon-ultramarine-blue unread-dot unread hidden"></span>
+        </div>
+        <div class="col-sm-3 text-center hidden-xs">
+            <span class="helper"></span>
+            <img src="{{ data.root }}{% if data.picture %}uploads/picture/{{ data.picture }}{% else %}media/img/szabaduszok-placeholder.png{% endif %}" class="img-circle center-block" data-placement="top" data-toggle="tooltip" title="{{ data.lastname }} {{ data.firstname }}">
+        </div>
+        <div class="col-sm-6">
+            <h3 class="mg-sm message-user-header tc-black hidden-xs">
+                {{ data.lastname }} {{ data.firstname }}
+            </h3>
+            <h3 class="mg-sm message-user-header tc-black visible-xs">
+                {{ data.lastname }}
+            </h3>
+            <p class="message-preview hidden-xs">
+                Még nincs üzenet
+            </p>          
+            <p class="message-preview visible-xs">
+                Még nincs üzenet
+            </p>                              
+        </div>            
+        <div class="col-sm-2 text-center message-time hidden-xs">
+            épp most
+        </div>
+    </div>
+    {% endverbatim %}
+</script>
+
 {% endblock content %}

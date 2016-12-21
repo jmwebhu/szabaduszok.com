@@ -39,7 +39,8 @@ class Date_Test extends Unittest_TestCase
             [$days[6], Date::textifyDay($dates[6])],
             [$dates[7], Date::textifyDay($dates[7])],
             [$dates[8], Date::textifyDay($dates[8])],
-            [$dates[9], Date::textifyDay($dates[9])]
+            [$dates[9], Date::textifyDay($dates[9])],
+            ['', Date::textifyDay()]
         ];
     }
     

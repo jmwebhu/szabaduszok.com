@@ -106,8 +106,8 @@ class Model_Message extends ORM implements Message
         return new DateTime($this->updated_at);
     }
 
-    public function send()
+    public function send(array $data)
     {
-        // TODO: Implement send() method.
+        return $this->submit($data);
     }
 }

@@ -9,7 +9,7 @@
 
     {% block message %}
     {% if notification.getFromExtraData("message") %}
-    <p>{{ notifier.getName() }} üzeni: {{ notification.getFromExtraData("message") }}</p>
+    <p>{{ notification.getFromExtraData("message") }}</p>
     {% endif %}
     {% endblock message %}
 

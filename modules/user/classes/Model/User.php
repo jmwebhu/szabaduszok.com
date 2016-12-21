@@ -263,4 +263,19 @@ class Model_User extends Model_Auth_User
     {
         return SB::create($this->lastname)->append(' ')->append($this->firstname)->get();
     }
+
+    /**
+     * @return array[]
+     */
+    public static function getAllWithValidName()
+    {
+        return DB::select(
+                [DB::expr('IF(CONCAT_WS(" ", lastname, firstname) <> "", CONCAT_WS(" ", lastname, firstname, IF(type=1, "- Szabadúszó", "- Megbízó")), CONCAT_WS(" - ", company_name, "Megbízó"))'), 'name'], 'slug'
+            )
+            ->from('users')
+            ->where(DB::expr('CONCAT_WS(" ", lastname, firstname)'), '!=', '')
+            ->or_where('company_name', '!=', '')
+            ->execute()->as_array();
+    }
+    
 }

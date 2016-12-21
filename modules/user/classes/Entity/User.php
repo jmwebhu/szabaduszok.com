@@ -607,4 +607,13 @@ abstract class Entity_User extends Entity implements Notifiable, Conversation_Pa
     {
         return $this->_model->getJson();
     }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->object();
+    }
+    
 }

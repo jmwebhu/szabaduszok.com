@@ -11,3 +11,15 @@ Route::set('messagesContact', 'kapcsolatfelvetel/<userslug>')
         'controller'    => 'Message',
         'action'        => 'contact'
     ]);
+
+Route::set('conversationAjax', 'conversation/ajax/<actiontarget>(/<maintarget>)')
+    ->defaults([
+        'controller'    => 'Conversation_Ajax',
+        'action'        => 'index'
+    ]);
+
+Route::set('messageAjax', 'message/ajax/<actiontarget>(/<maintarget>)')
+    ->defaults([
+        'controller'    => 'Message_Ajax',
+        'action'        => 'index'
+    ]);

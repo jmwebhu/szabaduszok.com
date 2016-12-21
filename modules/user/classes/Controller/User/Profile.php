@@ -56,5 +56,7 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
         $loggedUser                 = Auth::instance()->get_user();
         $ownRating                  = Model_User_Rating::getRating($loggedUser, $this->_user->getModel());
         $this->context->myRating    = ($ownRating) ? $ownRating : '-';
+
+        $this->context->conversationAuth = new Authorization_Conversation($this->_user->getModel());
     }
 }

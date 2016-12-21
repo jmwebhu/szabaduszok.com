@@ -4,11 +4,6 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $arr = ['php', 'PHP'];
-        $uniqueArr = Arr::uniqueString($arr);
-
-        echo Debug::vars($uniqueArr);
-        exit;
     }
 
     public function action_message()
@@ -90,4 +85,10 @@ class Controller_Test extends Controller_DefaultTemplate
         $delete = Cache::instance()->delete_all();
         var_dump($delete);
     }
+
+    public function action_clearsession()
+    {
+        Session::instance()->destroy();
+    }
+    
 }

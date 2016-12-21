@@ -1,7 +1,13 @@
 <?php
 
-class Entity_Message extends Entity implements Message
+class Entity_Message extends Entity implements Message, Notification_Subject
 {
+    /**
+     * @var Viewhelper_Message
+     */
+    protected $_viewhelper;
+    
+
     /**
      * @var int
      */
@@ -104,10 +110,17 @@ class Entity_Message extends Entity implements Message
         return $this->_model->getUpdatedAt();
     }
 
-    public function send()
+    public function send(array $data)
     {
-        // TODO: Implement send() method.
+        return $this->submit($data);
     }
+
+    public function __construct($value = null)
+    {
+        parent::__construct($value);
+        $this->_viewhelper = Viewhelper_Message_Factory::createViewhelper($this, Auth::instance()->get_user()->user_id);
+    }
+    
 
     /**
      * @param Conversation_Participant $user
@@ -121,10 +134,98 @@ class Entity_Message extends Entity implements Message
     /**
      * @param array $data
      */
-    public function submit(array $data)
+    public function submit(array $data, Gateway_Socket_Message $socket = null)
     {
-        $transaction    = new Transaction_Message_Insert(new Model_Message(), $data);
+        $transaction    = new Transaction_Message_Insert($this->_model, $data);
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
+
+        $conversation   = new Entity_Conversation($this->_model->conversation);
+        $message        = new Entity_Message($this->_model);
+
+        if (!$socket) {
+            $socket         = new Gateway_Socket_Message($conversation, $message);    
+        }
+    
+        $socket->signal();
+
+        $this->sendNotification(new Transaction_Message_Select($this->_model));
+
+        return $this->_message_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_viewhelper->getType();
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor($userId = null)
+    {
+        return $this->_viewhelper->getColor();
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedatForView()
+    {
+        return $this->_viewhelper->getCreatedAt();
+    }
+
+    public function sendNotification(Transaction_Message_Select $selectTransaction)
+    {
+        $senderModel    = $this->getSender()->getModel();  
+        $users          = $this->_model->conversation->users
+            ->where('conversations_users.user_id', '!=', $senderModel->user_id)->find_all();
+
+        foreach ($users as $user) {
+            $this->sendNotificationToOneUserIfRequired($selectTransaction, $user);
+        }
+    }
+
+    protected function sendNotificationToOneUserIfRequired(Transaction_Message_Select $selectTransaction, Model_User $user)
+    {
+        if ($selectTransaction->shouldSendNotificationTo($user->user_id)) {                
+            $senderModel        = $this->getSender()->getModel();  
+            $extraData          = ['message' => $this->getMessage()];
+
+            $notifierEntity     = Entity_User::createUser($senderModel->type, $senderModel);
+            $notifiedEntity     = Entity_User::createUser($user->type, $user);
+            $notification       = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, $extraData);    
+
+            $notifiedEntity->setNotification($notification);
+            $notifiedEntity->sendNotification();
+        }
+    }
+    
+
+    /**
+     * @return string
+     */
+    public function getSubjectType()
+    {
+        return 'message';
+    }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->_model->object();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationUrl()
+    {
+        return Route::url('messagesList', ['slug' => $this->getModel()->conversation->slug]);
     }
 }

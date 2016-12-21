@@ -3,6 +3,11 @@
 class Entity_Conversation extends Entity implements Conversation
 {
     /**
+     * @var Viewhelper_Conversation
+     */
+    protected $_viewhelper;
+
+    /**
      * @var int
      */
     protected $_conversation_id;
@@ -76,11 +81,50 @@ class Entity_Conversation extends Entity implements Conversation
     }
 
     /**
-     * @return array of Conversation_Participant
+     * @return Conversation_Participant[]
      */
     public function getParticipants()
     {
         return $this->_model->getParticipants();
+    }
+
+    /**
+     * @param int[]
+     * @return Conversation_Participant[]
+     */
+    public function getParticipantsExcept(array $userIds)
+    {
+        return $this->_model->getParticipantsExcept($userIds);
+    }
+
+    public function __construct($value = null)
+    {
+        parent::__construct($value);
+        $this->_viewhelper = new Viewhelper_Conversation($this, Auth::instance()->get_user());
+    }
+
+    /**
+     * @return string
+     */
+    public function getParticipantNamesExcludeAuthUser($whichname = 'name')
+    {
+        $participants   = $this->getParticipants();
+        $names          = '';
+        $nameMethod     = 'get' . ucfirst($whichname);
+
+        foreach ($participants as $i => $participant) {
+            if ($participant->getId() != Auth::instance()->get_user()->user_id) {
+                $tmp = $participant->{$nameMethod}();
+
+                if (!Arr::isLastIndex($i, $participants, 1)) {
+                    $tmp .= ', ';
+                }
+
+                $names .= $tmp;
+            }
+        }
+
+        return $names;
     }
 
     /**
@@ -115,6 +159,14 @@ class Entity_Conversation extends Entity implements Conversation
         if (!$conversation->loaded()) {
             $conversation = new Entity_Conversation();
             $conversation->submit(['users' => $userIds]);
+
+            $conversations                          = Cache::instance()->get('conversations');
+            $conversations[$conversation->getId()]  = $conversation->getModel();
+
+            Cache::instance()->set('conversations', $conversations);
+
+            $socket = new Gateway_Socket_Conversation($conversation);
+            $socket->signal();            
         }
 
         $conversation->getModel()->removeAll('conversation_interactions', 'conversation_id');
@@ -154,4 +206,98 @@ class Entity_Conversation extends Entity implements Conversation
         return Entity_Conversation::getOrCreateWithUsersBy(
             $conversationId, $userIds);
     }
+
+    /**
+     * @param  string $whichname 'lastName'|'firstName'|'name'
+     * @return string            
+     */
+    public function getParticipantNames($whichname = 'name')
+    {
+        return $this->_viewhelper->getParticipantNames($whichname);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getParticipantProfilePictures()
+    {
+        return $this->_viewhelper->getParticipantProfilePictures();
+    }
+
+    /**
+     * @param  int $userId
+     * @return Entity_Conversation[]
+     */
+    public static function getForLeftPanelBy($userId)
+    {
+        $transaction    = Transaction_Conversation_Select_Factory::createSelect();
+        $models         = $transaction->getForLeftPanelBy($userId);
+        $entity         = new Entity_Conversation;
+
+        return $entity->getEntitiesFromModels($models);
+    }
+
+    /**
+     * @param  int $userId
+     * @return Entity_Conversation[]
+     */
+    public function getMessagesBy($userId)
+    {
+        $transaction    = Transaction_Conversation_Select_Factory::createSelect($this->getModel());
+        $models         = $transaction->getMessagesBy($userId);
+        $entity         = new Entity_Message;
+
+        return $entity->getEntitiesFromModels($models);   
+    }
+
+    /**
+     * @param  array  $conversations
+     * @param  int $userId
+     * @return array
+     */
+    public static function getMessagesByConversationsAndUser(array $conversations, $userId)
+    {
+        $messages = [];
+        foreach ($conversations as $conversation) {
+            $messages[$conversation->getId()] = $conversation->getMessagesBy($userId);
+        }
+
+        return $messages;
+    }
+    
+
+    /**
+     * @param  int $userId
+     * @return Entity_Message
+     */
+    public function getLastMessageBy($userId = null)
+    {
+        $userId     = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
+        $messages   = $this->getMessagesBy($userId);
+        
+        return Arr::last($messages);
+    }
+
+    /**
+     * @param  int  $userId
+     * @return boolean
+     */
+    public function hasUnreadMessageBy($userId = null)
+    {
+        $userId         = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
+        $transaction    = new Transaction_Conversation_Count($this->_model, $userId);
+        $counts         = $transaction->execute();
+
+        return ($counts['unread'] != 0);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function flagMessagesAsRead()
+    {
+        return (new Transaction_Conversation_Update($this->getModel()))
+            ->flagMessagesAsRead(Auth::instance()->get_user()->user_id);
+    }
+    
 }

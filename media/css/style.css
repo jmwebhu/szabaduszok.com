@@ -870,8 +870,8 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 @media (max-width:  1300px)
 {
 	.hero-transition {	
-		padding-top: 300px !important;
-		transition: padding-top 0.5s ease;
+		padding-top: 450px !important;
+		transition: padding-top 0.2s ease;
 	}
 	.navbar-collapse.collapse {
 	    display: none !important;

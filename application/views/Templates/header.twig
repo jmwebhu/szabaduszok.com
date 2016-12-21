@@ -14,11 +14,14 @@
 				{# Menu szabaduszok eseten #}
 				{% if loggedUser.type == 1 %}
 				<li class="hidden-nav-item text-centeri fs20">
+					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span style="color:#C0392B"> (új)</span></a>			
+				</li>
+				<li class="hidden-nav-item text-centeri fs20">
 					<a id="projects-anchor" href="{{ ROOT }}szabaduszo-projektek" class="ltc-white">Projektek</a>					
 				</li>
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="profile-anchor" href="{{ ROOT }}szabaduszo/{{ loggedUser.slug }}" class="ltc-white">Profilom</a>					
-				</li>
+				</li>				
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="freelancers-anchor" href="{{ ROOT }}szabaduszok" class="ltc-white">Szabadúszók</a>					
 				</li>
@@ -27,6 +30,9 @@
 				</li>			
 				{% else %}
 				{# Menu Megbizok eseten #}
+				<li class="hidden-nav-item text-centeri fs20">
+					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span style="color:#C0392B"> (új)</span></a>			
+				</li>
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="new-project-anchor" href="{{ ROOT }}uj-szabaduszo-projekt" class="ltc-white">Új projekt</a>					
 				</li>
@@ -39,9 +45,6 @@
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="projects-anchor" href="{{ ROOT }}szabaduszo-projektek" class="ltc-white">Projektek</a>					
 				</li>								
-				<li class="hidden-nav-item text-centeri fs20">
-					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span style="color:#C0392B"> (új)</span></a>			
-				</li>
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="logout-anchor" href="{{ ROOT }}szabaduszok-kilepes" class="ltc-white">Kilépés</a>					
 				</li>
