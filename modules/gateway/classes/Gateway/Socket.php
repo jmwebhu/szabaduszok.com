@@ -24,6 +24,7 @@ abstract class Gateway_Socket
      */
     protected function sendPost($data, $action)
     {
+        $this->addKeyTo($data);
         $options = [
             'http' => [ 
                 'header'  => "Content-type: application/x-www-form-urlencoded; charset=UTF-8\r\n",
@@ -40,5 +41,13 @@ abstract class Gateway_Socket
             Log::instance()->add(Log::ERROR, 'SOCKET URI: ' . $this->getUri() . ' ACTION: ' . $action . ' DATA: ' . json_encode($data));
             return false;
         }
+    }
+
+    /**
+     * @param array &$data
+     */
+    private function addKeyTo(array &$data)
+    {
+        $data['public_key'] = $this->_config->get('public_key');
     }
 }
