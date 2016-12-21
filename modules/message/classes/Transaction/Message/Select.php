@@ -104,4 +104,23 @@ class Transaction_Message_Select
                 ->on('mi_receiver.user_id', '!=', 'message.sender_id')
             ->where('message.conversation_id', '=', $conversationId);
     }
+
+    public function shouldSendNotificationTo($userId)
+    {
+        
+    }
+    
+    /**
+     * @param  int  $userId
+     * @return boolean
+     */
+    protected function isThisFirstMessageTo($userId)
+    {
+        $count = $this->_message
+            ->where('message.conversation_id', '=', $this->_message->conversation_id)
+            ->and_where('sender_id', '!=', $userId)
+            ->count_all();
+
+        return ($count == 1);
+    }
 }
