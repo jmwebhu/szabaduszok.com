@@ -11,7 +11,6 @@ class Gateway_Socket_Message extends Gateway_Socket
      * @var Message
      */
     protected $_message;
-    
 
     /**
      * @param Conversation   $conversation   
@@ -23,25 +22,16 @@ class Gateway_Socket_Message extends Gateway_Socket
         $this->_message         = $message;
     }
 
-    public function signal()
-    {        
-        $participants = $this->_conversation->getParticipantsExcept([Auth::instance()->get_user()->user_id]);
-        foreach ($participants as $participant) {
-            $this->signalOneParticipant($participant);
-        }
-    }
-
     /**
-     * @param  Conversation_Participant   $participant
-     * @return void
+     * @return array
      */
-    protected function signalOneParticipant(Conversation_Participant $participant)
+    protected function getDataToSignal(Conversation_Participant $participant)
     {
-        $this->sendPost([
+        return [
             'message'           => $this->_message->getMessage(),
             'conversation_id'   => $this->_conversation->getId(),
             'room'              => $participant->getId()
-        ]);
+        ];
     }
     
     /**

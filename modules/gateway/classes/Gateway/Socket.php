@@ -14,14 +14,44 @@ abstract class Gateway_Socket
     {
         $this->_config = Kohana::$config->load('socket');
     }
-    
-    abstract public function signal();
 
     /**
      * @return string
      */
     abstract protected function getUri();
 
+    /**
+     * @return array
+     */
+    abstract protected function getDataToSignal(Conversation_Participant $participant);
+    
+    public function signal()
+    {
+        $participants = $this->_conversation->getParticipantsExcept([
+            Auth::instance()->get_user()->user_id
+        ]);
+        
+        foreach ($participants as $participant) {
+            $this->signalOneParticipant($participant);
+        }
+    }
+
+    /**
+     * @param  Conversation_Participant $participant
+     * @return void
+     */
+    protected function signalOneParticipant(Conversation_Participant $participant)
+    {
+        $this->sendPost(
+            $this->getDataToSignal($participant)
+        );
+    }    
+
+    /**
+     * @param  array $data
+     * @param  string $action
+     * @return void
+     */
     protected function sendPost($data, $action = '')
     {
         $options = [
@@ -41,5 +71,4 @@ abstract class Gateway_Socket
             return false;
         }
     }
-    
 }
