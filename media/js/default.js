@@ -6,15 +6,30 @@ var Default = {
         });
 
         Default.socket.on("new_message", function(data) {
-            var $span = $('#unread-message-number');
             
-            if (data.unread_count != 0) {
-                $span.find('i').text(data.unread_count);    
-                $span.removeClass('hidden');
-            } else {
-                $span.addClass('hidden');
+            var $div = $('div.conversation[data-id="' + data.conversation_id + '"]');            
+
+            // Egyaltalan nincs ilyen div az oldalon (mert nem az uzenetek oldalon van a user)
+            // Vagy az uzenetek oldalon van, de nem ez a kijeleolt beszelgetes
+            // Ha ez a kijelolt, akkor nem kell az olvasatlan uzenetek szamat frissiteni
+            if ($div.length == 0 || !$div.hasClass('selected')) {
+                Default.updateUreadNumber(data.unread_count);    
             }
         });
+
+        Default.socket.on("update-count", function(data) {
+           Default.updateUreadNumber(data); 
+        });
+    },
+    updateUreadNumber: function (count) {
+        var $span = $('#unread-message-number');
+
+        if (count != 0) {
+            $span.find('i').text(count);    
+            $span.removeClass('hidden');
+        } else {
+            $span.addClass('hidden');
+        }
     },
 	getSelect2Object: function (url) {
 		return {

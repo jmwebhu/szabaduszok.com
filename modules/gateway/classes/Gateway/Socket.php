@@ -7,20 +7,9 @@ abstract class Gateway_Socket
      */
     protected $_config;
 
-    /**
-     * @var Conversation
-     */
-    protected $_conversation;
-
-
-    /**
-     * Class Constructor
-     * @param Conversation   $_conversation   
-     */
-    public function __construct($_conversation)
+    public function __construct()
     {
         $this->_config          = Kohana::$config->load('socket');
-        $this->_conversation    = $_conversation;
     }
 
     /**
@@ -29,38 +18,11 @@ abstract class Gateway_Socket
     abstract protected function getUri();
 
     /**
-     * @return array
-     */
-    abstract protected function getDataToSignal(Conversation_Participant $participant);
-    
-    public function signal()
-    {
-        $participants = $this->_conversation->getParticipantsExcept([
-            Auth::instance()->get_user()->user_id
-        ]);
-        
-        foreach ($participants as $participant) {
-            $this->signalOneParticipant($participant);
-        }
-    }
-
-    /**
-     * @param  Conversation_Participant $participant
-     * @return void
-     */
-    protected function signalOneParticipant(Conversation_Participant $participant)
-    {
-        $this->sendPost(
-            $this->getDataToSignal($participant)
-        );
-    }    
-
-    /**
      * @param  array $data
      * @param  string $action
      * @return void
      */
-    protected function sendPost($data, $action = '')
+    protected function sendPost($data, $action)
     {
         $options = [
             'http' => [ 

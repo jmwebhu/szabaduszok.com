@@ -135,7 +135,6 @@ class Transaction_Message_Select
             ->execute()->get('count_unread');
     }
     
-    
     /**
      * @param  int  $userId
      * @return boolean

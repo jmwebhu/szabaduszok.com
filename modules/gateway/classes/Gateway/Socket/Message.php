@@ -1,32 +1,64 @@
 <?php
 
 class Gateway_Socket_Message extends Gateway_Socket
-{     
+{    
     /**
-     * @var Message
+     * @param  Conversation $conversation
+     * @param  Message      $message
+     * @return void
      */
-    protected $_message;
-
-    /**
-     * @param Conversation   $conversation   
-     */
-    public function __construct(Conversation $conversation, Message $message)
+    public function signalNew(Conversation $conversation, Message $message)
     {
-        parent::__construct($conversation);
-        $this->_message         = $message;
+        $participants = $conversation->getParticipantsExcept([
+            Auth::instance()->get_user()->user_id
+        ]);
+        
+        foreach ($participants as $participant) {
+            $this->sendPost(
+                $this->getDataToNewSignal($conversation, $participant, $message),
+                'new'
+            );
+        }
     }
 
     /**
-     * @return array
+     * @param  int $userId
+     * @return void
      */
-    protected function getDataToSignal(Conversation_Participant $participant)
+    public function signalUpdateCount($userId)
+    {
+        $this->sendPost(
+            $this->getDataToUpdateCount($userId),
+            'update-count'
+        );
+    }
+    
+    /**
+     * @param  Conversation             $conversation
+     * @param  Conversation_Participant $participant
+     * @param  Message                  $message
+     * @return void
+     */
+    protected function getDataToNewSignal(Conversation $conversation, Conversation_Participant $participant, Message $message)
     {
         return [
-            'message'           => $this->_message->getMessage(),
-            'conversation_id'   => $this->_conversation->getId(),
+            'message'           => $message->getMessage(),
+            'conversation_id'   => $conversation->getId(),
             'room'              => $participant->getId(),
             'unread_count'      => Transaction_Message_Select::getCountOfUnreadBy($participant->getId())
         ];
+    }
+
+    /**
+     * @param  int $userId
+     * @return array
+     */
+    protected function getDataToUpdateCount($userId)
+    {
+        return [
+            'room'          => $userId,
+            'unread_count'  => Transaction_Message_Select::getCountOfUnreadBy($userId)
+        ];        
     }
     
     /**

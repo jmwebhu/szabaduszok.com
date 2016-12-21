@@ -165,8 +165,8 @@ class Entity_Conversation extends Entity implements Conversation
 
             Cache::instance()->set('conversations', $conversations);
 
-            $socket = new Gateway_Socket_Conversation($conversation);
-            $socket->signal();            
+            $socket = new Gateway_Socket_Conversation;
+            $socket->signalNew($conversation);            
         }
 
         $conversation->getModel()->removeAll('conversation_interactions', 'conversation_id');

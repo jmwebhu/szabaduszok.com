@@ -3,13 +3,33 @@
 class Gateway_Socket_Conversation extends Gateway_Socket
 {
     /**
+     * @param  Conversation $conversation
+     * @return void
+     */
+    public function signalNew(Conversation $conversation)
+    {
+        $participants = $conversation->getParticipantsExcept([
+            Auth::instance()->get_user()->user_id
+        ]);
+        
+        foreach ($participants as $participant) {
+            $this->sendPost(
+                $this->getDataToNewSignal($participant, $conversation),
+                'new'
+            );
+        }
+    }
+
+    /**
+     * @param  Conversation_Participant $participant
+     * @param  Conversation             $conversation
      * @return array
      */
-    protected function getDataToSignal(Conversation_Participant $participant)
+    protected function getDataToNewSignal(Conversation_Participant $participant, Conversation $conversation)
     {
         $user = Auth::instance()->get_user();
         return [
-            'conversation_id'   => $this->_conversation->getId(),
+            'conversation_id'   => $conversation->getId(),
             'room'              => $participant->getId(),
             'firstname'         => $user->firstname,
             'lastname'          => $user->lastname,

@@ -45,7 +45,14 @@ class Controller_Conversation_Ajax extends Controller_Ajax
     protected function flagAsRead()
     {
         $conversation           = new Entity_Conversation(Input::post('id'));
-        $this->_jsonResponse    = json_encode($conversation->flagMessagesAsRead());
+        $result                 = $conversation->flagMessagesAsRead();
+
+        if (Input::post('isActiveConversation') == '0') {
+            $socket                 = new Gateway_Socket_Message;
+            $socket->signalUpdateCount(Auth::instance()->get_user()->user_id);
+        }
+
+        $this->_jsonResponse    = json_encode($result);
     }
     
 }

@@ -144,10 +144,10 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         $message        = new Entity_Message($this->_model);
 
         if (!$socket) {
-            $socket         = new Gateway_Socket_Message($conversation, $message);    
+            $socket         = new Gateway_Socket_Message;
         }
     
-        $socket->signal();
+        $socket->signalNew($conversation, $message);
 
         $this->sendNotification(new Transaction_Message_Select($this->_model));
 

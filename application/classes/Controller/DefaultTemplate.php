@@ -31,6 +31,8 @@ class Controller_DefaultTemplate extends Controller_Twig
         $this->context->validation_errors   = Session::instance()->get_once('validation_errors');
         $this->context->post_session        = Session::instance()->get_once('post_session');
         $this->context->get_session         = Session::instance()->get_once('get_session');
+
+        $this->context->countOfUnreadMessages = Transaction_Message_Select::getCountOfUnreadBy(Auth::instance()->get_user()->user_id);
     }
 
     public function after()
