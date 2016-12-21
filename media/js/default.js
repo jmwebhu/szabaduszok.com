@@ -6,12 +6,13 @@ var Default = {
         });
 
         Default.socket.on("new_message", function(data) {
-            var $i = $('#unread-message-number i');
+            var $span = $('#unread-message-number');
+            
             if (data.unread_count != 0) {
-                $i.removeClass('hidden');
-                $i.text(data.unread_count);    
+                $span.find('i').text(data.unread_count);    
+                $span.removeClass('hidden');
             } else {
-                $i.addClass('hidden');
+                $span.addClass('hidden');
             }
         });
     },

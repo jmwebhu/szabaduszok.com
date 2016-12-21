@@ -14,7 +14,7 @@
 				{# Menu szabaduszok eseten #}
 				{% if loggedUser.type == 1 %}
 				<li class="hidden-nav-item text-centeri fs20">
-					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span id="unread-message-number"><i>1</i></span></a>			
+					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span class="hidden" id="unread-message-number"><i></i></span></a>			
 				</li>
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="projects-anchor" href="{{ ROOT }}szabaduszo-projektek" class="ltc-white">Projektek</a>					
@@ -31,7 +31,7 @@
 				{% else %}
 				{# Menu Megbizok eseten #}
 				<li class="hidden-nav-item text-centeri fs20">
-					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span id="unread-message-number"><i>1</i></span></a>			
+					<a id="messages-anchor" href="{{ ROOT }}uzenetek" class="ltc-white">Üzenetek<span class="hidden" id="unread-message-number"><i></i></span></a>			
 				</li>
 				<li class="hidden-nav-item text-centeri fs20">
 					<a id="new-project-anchor" href="{{ ROOT }}uj-szabaduszo-projekt" class="ltc-white">Új projekt</a>					
