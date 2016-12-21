@@ -146,7 +146,7 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         
         $socket->signal();
 
-        $this->sendNotification();
+        $this->sendNotification(new Transaction_Message_Select($this->_model));
 
         return $this->_message_id;
     }
@@ -175,13 +175,24 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         return $this->_viewhelper->getCreatedAt();
     }
 
-    public function sendNotification()
+    public function sendNotification(Transaction_Message_Select $selectTransaction)
     {
-        $senderModel    = $this->getSender()->getModel();
-        $notifierEntity = Entity_User::createUser($senderModel->type, $senderModel);
-        $extraData      = ['message' => $this->getMessage()];
+        $senderModel    = $this->getSender()->getModel();  
+        $users          = $this->_model->conversation->users
+            ->where('conversations_users.user_id', '!=', $senderModel->user_id)->find_all();
 
-        foreach ($this->_model->conversation->users->where('conversations_users.user_id', '!=', $senderModel->user_id)->find_all() as $user) {
+        foreach ($users as $user) {
+            $this->sendNotificationToOneUserIfRequired($selectTransaction, $user);
+        }
+    }
+
+    protected function sendNotificationToOneUserIfRequired(Transaction_Message_Select $selectTransaction, Model_User $user)
+    {
+        if ($selectTransaction->shouldSendNotificationTo($user->user_id)) {                
+            $senderModel        = $this->getSender()->getModel();  
+            $extraData          = ['message' => $this->getMessage()];
+
+            $notifierEntity     = Entity_User::createUser($senderModel->type, $senderModel);
             $notifiedEntity     = Entity_User::createUser($user->type, $user);
             $notification       = Entity_Notification::createFor(Model_Event::TYPE_MESSAGE_NEW, $this, $notifierEntity, $notifiedEntity, $extraData);    
 
@@ -189,6 +200,7 @@ class Entity_Message extends Entity implements Message, Notification_Subject
             $notifiedEntity->sendNotification();
         }
     }
+    
 
     /**
      * @return string

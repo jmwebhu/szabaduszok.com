@@ -112,7 +112,7 @@ class Transaction_Message_Select
     public function shouldSendNotificationTo($userId)
     {
         return $this->isThisFirstMessageTo($userId) 
-            || $this->isThisFirstMessageSinceAnHourTo($userId);
+            || $this->isThisFirstMessageInLastHourTo($userId);
     }
     
     /**
