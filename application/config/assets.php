@@ -19,6 +19,7 @@ AssetCollection::instance()
     ->setJs('ajax-builder', 'ajaxBuilder.js')   
     ->setJs('jquery-confirm', 'jquery-confirm.js')    
     ->setJs('fancybox', 'jquery.fancybox.pack.js', ['css' => ['fancybox']])
+    ->setJs('socketio', 'socket.io.js')
 
     ->setCss('isloading', 'isloading.css')      
     ->setCss('font-awesome', 'font-awesome.min.css')
@@ -30,7 +31,7 @@ AssetCollection::instance()
 
     ;
 
-$defaultJs = ['jquery', 'blocs', 'bootstrap', 'validator', 'isloading', 'default', 'tabs', 'select2', 'ajax-builder', 'jquery-confirm'];
+$defaultJs = ['jquery', 'blocs', 'bootstrap', 'validator', 'isloading', 'default', 'tabs', 'select2', 'ajax-builder', 'jquery-confirm', 'socketio'];
 $defaultCss = ['font-awesome', 'ionicons', 'select2', 'select2-bootstrap', 'isloading', 'jquery-confirm'];
 
 AssetManager::instance()

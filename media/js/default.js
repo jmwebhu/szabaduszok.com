@@ -1,4 +1,20 @@
 var Default = {
+    initSocket: function () {
+        Default.socket = io.connect(SOCKETURL, {
+            query: 'room=' + USERID,
+            autoConnect: true
+        });
+
+        Default.socket.on("new_message", function(data) {
+            var $i = $('#unread-message-number i');
+            if (data.unread_count != 0) {
+                $i.removeClass('hidden');
+                $i.text(data.unread_count);    
+            } else {
+                $i.addClass('hidden');
+            }
+        });
+    },
 	getSelect2Object: function (url) {
 		return {
 			theme: "bootstrap",
@@ -128,7 +144,9 @@ var fancyBoxOptions = {
 
 
 $(document).ready(function() {	                
-        
+    
+    Default.initSocket();    
+
 	$('button#nav-toggle').click(function () {		
 		
 		if ($('div.navbar-1').hasClass('in')) {

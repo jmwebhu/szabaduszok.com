@@ -1618,3 +1618,28 @@ img.freelancer-placeholder-img {
 .divider-h span{
 	border-color:rgba(255,255,255,.2);
 }
+
+#unread-message-number {
+	color: #C0392B;
+}
+
+#unread-message-number i {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	background-color: #fa3e3e;
+	border-radius: 2px;
+	color: #fff;
+	font-style: normal;
+	font: 11px Helvetica;
+	font-weight: bold;
+	text-align: center;
+	line-height: 15px;
+	margin: 2.5px 0 0 3px;
+}
+
+a#messages-anchor {
+	padding-right: 22px !important;
+	padding-left: 22px !important;
+}
+
