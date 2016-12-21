@@ -4,17 +4,18 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
+
         // Uzenet kuldese
         $data = [
-            'message'           => 'Socket teszt válasz',
+            'message'           => 'Egy órával ezelőtt',
             'sender_id'         => 1,
-            'conversation_id'   => 2904
+            'conversation_id'   => 2904,
+            'created_at'        => date('Y-m-d H:i', strtotime('-1 hour'))
         ];
 
-        $message = new Entity_Message();
+        $message = new Entity_Message;
+        $message->getModel()->setCreatedColumn(null);
         $message->submit($data);
-
-        exit;
     }
 
     public function action_message()

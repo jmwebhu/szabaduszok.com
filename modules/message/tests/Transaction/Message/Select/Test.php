@@ -419,7 +419,6 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         
         $freelancer->save();
 
-
         $employer = new Model_User_Employer();
         $employer->lastname       = 'Kis';
         $employer->firstname      = 'Pista';
@@ -472,6 +471,99 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
 
         $conversation->getModel()->delete();
         $message->getModel()->delete();
+        $freelancer->delete();
+        $employer->delete();
+    }
+
+    /**
+     * @covers Transaction_Message_Select::isThisFirstMessageInLastHourTo()
+     */
+    public function testIsThisFirstMessageInLastHourToNotOk()
+    {
+        $transactionSelect  = new Transaction_Message_Select(
+            $this->_messages[count($this->_messages) - 1]->getModel());
+
+        $isFirst            = $this->invokeMethod(
+            $transactionSelect, 
+            'isThisFirstMessageInLastHourTo', 
+            [$this->_users[0]->user_id]
+        );
+
+        $this->assertFalse($isFirst);
+    }
+
+    /**
+     * @covers Transaction_Message_Select::isThisFirstMessageInLastHourTo()
+     */
+    public function testIsThisFirstMessageInLastHourToOk()
+    {
+        $freelancer = new Model_User_Freelancer();
+        $freelancer->lastname       = 'Joó';
+        $freelancer->firstname      = 'Martin';
+        $freelancer->email          = uniqid() . '@gmail.com';
+        $freelancer->password       = 'Password123';
+        $freelancer->min_net_hourly_wage       = '3000';
+        $freelancer->type = Entity_User::TYPE_FREELANCER;
+        
+        $freelancer->save();
+
+        $employer = new Model_User_Employer();
+        $employer->lastname       = 'Kis';
+        $employer->firstname      = 'Pista';
+        $employer->address_postal_code      = '9700';
+        $employer->address_city      = 'Szombathely';
+        $employer->email          = uniqid() . '@gmail.com';
+        $employer->phonenumber          = '06301923380';
+        $employer->password       = 'Password123';
+        $employer->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer->save();
+
+        $data = [
+            'users' => [$freelancer->user_id, $employer->user_id]
+        ];
+
+        $conversation = new Entity_Conversation;
+        $conversation->submit($data);
+
+        // Ket oraval ezelott
+
+        $data = [
+            'message'           => 'Első',
+            'sender_id'         => $employer->user_id,
+            'conversation_id'   => $conversation->getConversationId(),
+            'created_at'        => date('Y-m-d H:i', strtotime('-2 hour'))
+        ];
+
+        $message = new Entity_Message;
+        $message->getModel()->setCreatedColumn(null);
+        $message->submit($data);
+
+        // Most
+
+        $data = [
+            'message'           => 'Második',
+            'sender_id'         => $employer->user_id,
+            'conversation_id'   => $conversation->getConversationId()
+        ];
+
+        $message1 = new Entity_Message;
+        $message1->submit($data);
+
+        $transactionSelect  = new Transaction_Message_Select(
+            $message1->getModel());
+
+        $isFirst            = $this->invokeMethod(
+            $transactionSelect, 
+            'isThisFirstMessageInLastHourTo', 
+            [$freelancer->user_id]
+        );
+
+        $this->assertTrue($isFirst);
+
+        $conversation->getModel()->delete();
+        $message->getModel()->delete();
+        $message1->getModel()->delete();
         $freelancer->delete();
         $employer->delete();
     }

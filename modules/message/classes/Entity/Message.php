@@ -136,7 +136,7 @@ class Entity_Message extends Entity implements Message, Notification_Subject
      */
     public function submit(array $data)
     {
-        $transaction    = new Transaction_Message_Insert(new Model_Message(), $data);
+        $transaction    = new Transaction_Message_Insert($this->_model, $data);
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
 

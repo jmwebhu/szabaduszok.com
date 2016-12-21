@@ -105,9 +105,14 @@ class Transaction_Message_Select
             ->where('message.conversation_id', '=', $conversationId);
     }
 
+    /**
+     * @param  int $userId
+     * @return boolean
+     */
     public function shouldSendNotificationTo($userId)
     {
-        
+        return $this->isThisFirstMessageTo($userId) 
+            || $this->isThisFirstMessageSinceAnHourTo($userId);
     }
     
     /**
@@ -123,4 +128,25 @@ class Transaction_Message_Select
 
         return ($count == 1);
     }
+
+    /**
+     * @param  int  $userId
+     * @return boolean
+     */
+    protected function isThisFirstMessageInLastHourTo($userId)
+    {
+        $lastCreatedAt = DB::select('created_at')
+            ->from('messages')
+            ->where('conversation_id', '=', $this->_message->conversation_id)
+            ->and_where('sender_id', '!=', $userId)
+            ->and_where('message_id', '!=', $this->_message->message_id)
+            ->order_by('created_at', 'desc')
+            ->limit(1)
+            ->execute()->get('created_at');
+
+        $diff = Date::differnce($this->_message->created_at, $lastCreatedAt, 'h');
+
+        return ($diff >= 1);
+    }
+    
 }

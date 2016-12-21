@@ -81,5 +81,4 @@ class Business_Message extends Business
 
         return $groupedMessages;
     }
-    
 }

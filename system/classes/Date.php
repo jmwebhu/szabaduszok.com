@@ -48,5 +48,4 @@ class Date extends Kohana_Date
         
         return $differenceInterval->{$format};
     }
-    
 }
