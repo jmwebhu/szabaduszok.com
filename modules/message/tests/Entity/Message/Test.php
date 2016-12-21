@@ -15,6 +15,15 @@ class Entity_Messge_Test extends Unittest_TestCase
      */
     public function testSubmit()
     {
+        $socketMock = $this->getMockBuilder('\Gateway_Socket_Message')
+            ->setConstructorArgs([self::$_conversations[0], new Entity_Message])
+            ->setMethods(array('signal'))
+            ->getMock();
+
+        $socketMock->expects($this->once())
+            ->method('signal')
+            ->will($this->returnValue(true));
+
         $data = [
             'message'           => 'Hello',
             'sender_id'         => self::$_users[0]->user_id,
@@ -22,7 +31,7 @@ class Entity_Messge_Test extends Unittest_TestCase
         ];
 
         $message = new Entity_Message();
-        $message->submit($data);
+        $message->submit($data, $socketMock);
 
         $this->assertNotEmpty($message->getMessageId());
         $this->assertEquals($data['message'], $message->getMessage());

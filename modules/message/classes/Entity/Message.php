@@ -134,7 +134,7 @@ class Entity_Message extends Entity implements Message, Notification_Subject
     /**
      * @param array $data
      */
-    public function submit(array $data)
+    public function submit(array $data, Gateway_Socket_Message $socket = null)
     {
         $transaction    = new Transaction_Message_Insert($this->_model, $data);
         $this->_model   = $transaction->execute();
@@ -142,8 +142,11 @@ class Entity_Message extends Entity implements Message, Notification_Subject
 
         $conversation   = new Entity_Conversation($this->_model->conversation);
         $message        = new Entity_Message($this->_model);
-        $socket         = new Gateway_Socket_Message($conversation, $message);
-        
+
+        if (!$socket) {
+            $socket         = new Gateway_Socket_Message($conversation, $message);    
+        }
+    
         $socket->signal();
 
         $this->sendNotification(new Transaction_Message_Select($this->_model));

@@ -14,6 +14,8 @@ abstract class Gateway_Socket
     {
         $this->_config = Kohana::$config->load('socket');
     }
+    
+    abstract public function signal();
 
     /**
      * @return string
