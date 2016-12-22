@@ -270,10 +270,11 @@ class Entity_Conversation extends Entity implements Conversation
     /**
      * @return boolean
      */
-    public function flagMessagesAsRead()
+    public function flagMessagesAsRead($userId = null)
     {
+        $userId         = ($userId) ? $userId : Auth::instance()->get_user()->user_id;
         return (new Transaction_Conversation_Update($this->getModel()))
-            ->flagMessagesAsRead(Auth::instance()->get_user()->user_id);
+            ->flagMessagesAsRead($userId);
     }
     
 }

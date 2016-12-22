@@ -256,6 +256,41 @@ class Entity_Conversation_Test extends Unittest_TestCase
         $this->deleteGivenMessages();
     }
     
+    /**
+     * @covers Entity_Conversation::hasUnreadMessageBy()
+     */
+    public function testHasUnreadMessageByHasUnread()
+    {
+        $this->givenMessages();
+
+        $hasUnreadFreelancer = self::$_conversationsForLeftPanelTest['active'][0]->hasUnreadMessageBy(self::$_usersForLeftPanelTest[0]->getId());
+        $this->assertTrue($hasUnreadFreelancer);
+
+        $hasUnreadEmployer = self::$_conversationsForLeftPanelTest['active'][0]->hasUnreadMessageBy(self::$_usersForLeftPanelTest[1]->getId());
+        $this->assertTrue($hasUnreadEmployer);
+
+        $this->deleteGivenMessages();
+    }
+    
+    /**
+     * @covers Entity_Conversation::hasUnreadMessageBy()
+     * @covers Entity_Conversation::flagMessagesAsRead()
+     */
+    public function testHasUnreadMessageByNotHaveUnread()
+    {
+        $this->givenMessages();
+
+        self::$_conversationsForLeftPanelTest['active'][0]->flagMessagesAsRead(self::$_usersForLeftPanelTest[0]->getId());
+        self::$_conversationsForLeftPanelTest['active'][0]->flagMessagesAsRead(self::$_usersForLeftPanelTest[1]->getId());
+
+        $hasUnreadFreelancer = self::$_conversationsForLeftPanelTest['active'][0]->hasUnreadMessageBy(self::$_usersForLeftPanelTest[0]->getId());
+        $this->assertFalse($hasUnreadFreelancer);
+
+        $hasUnreadEmployer = self::$_conversationsForLeftPanelTest['active'][0]->hasUnreadMessageBy(self::$_usersForLeftPanelTest[1]->getId());
+        $this->assertFalse($hasUnreadEmployer);
+
+        $this->deleteGivenMessages();
+    }
 
     protected function deleteGivenMessages()
     {
