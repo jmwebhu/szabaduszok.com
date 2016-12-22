@@ -195,9 +195,7 @@ class Entity_Conversation_Test extends Unittest_TestCase
         $this->assertEquals($expectedIds, $actualIds);
         $this->assertNotInArray(self::$_messages[3]->getId(), $actualIds);
 
-        foreach (self::$_messages as $message) {
-            $message->getModel()->delete();
-        }
+        $this->deleteGivenMessages();
     }
 
     /**
@@ -236,7 +234,36 @@ class Entity_Conversation_Test extends Unittest_TestCase
                 $this->assertInArray($message->getId(), $messageIds[1]);
             }
         }
+
+        $this->deleteGivenMessages();
     }
+
+    /**
+     * @covers Entity_Conversation::getLastMessageBy()
+     */
+    public function testGetLastMessageBy()
+    {
+        $this->givenMessages();
+
+        $lastMessage = self::$_conversationsForLeftPanelTest['active'][0]->getLastMessageBy(self::$_usersForLeftPanelTest[0]->getId());
+
+        $lastOfAllConversation      = Arr::last(self::$_messages);
+        $lastOfGivenConversation    = self::$_messages[count(self::$_messages) - 2];
+        
+        $this->assertNotEquals($lastOfAllConversation->getId(), $lastMessage->getId());
+        $this->assertEquals($lastOfGivenConversation->getId(), $lastMessage->getId());
+
+        $this->deleteGivenMessages();
+    }
+    
+
+    protected function deleteGivenMessages()
+    {
+        foreach (self::$_messages as $message) {
+            $message->getModel()->delete();
+        }
+    }
+    
 
     protected function givenMessages()
     {
