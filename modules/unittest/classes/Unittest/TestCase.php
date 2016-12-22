@@ -28,6 +28,12 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
        $this->assertFalse(in_array($item, $array));
     }
 
+    public function assertInArray($item, array $array)
+    {
+        $this->assertTrue(in_array($item, $array));   
+    }
+    
+
     public function assertArrayNotSubset(array $subset, array $array)
     {
         foreach ($subset as $item) {

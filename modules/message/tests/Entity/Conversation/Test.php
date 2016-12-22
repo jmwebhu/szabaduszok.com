@@ -7,6 +7,8 @@ class Entity_Conversation_Test extends Unittest_TestCase
 
     protected static $_usersForLeftPanelTest = [];
     protected static $_conversationsForLeftPanelTest = [];
+    
+    protected static $_messages = [];
 
     /**
      * @covers Entity_Conversation::submit()
@@ -178,6 +180,62 @@ class Entity_Conversation_Test extends Unittest_TestCase
      */
     public function testGetMessagesBy()
     {
+        $this->givenMessages();
+        $entity         = self::$_conversationsForLeftPanelTest['active'][0];
+        $messages       = $entity->getMessagesBy(self::$_usersForLeftPanelTest[0]->user_id);
+
+        $expectedIds    = [self::$_messages[0]->getId(), self::$_messages[1]->getId(), self::$_messages[2]->getId()];
+        $actualIds      = [];
+
+        foreach ($messages as $message) {
+            $actualIds[] = $message->getId();
+        }
+
+        $this->assertEquals(3, count($actualIds));
+        $this->assertEquals($expectedIds, $actualIds);
+        $this->assertNotInArray(self::$_messages[3]->getId(), $actualIds);
+    }
+
+    /**
+     * @covers Entity_Conversation::getMessagesByConversationsAndUser()
+     */
+    public function testGetMessagesByConversationsAndUser()
+    {
+        $this->givenMessages();
+        $conversations = [
+            self::$_conversationsForLeftPanelTest['active'][0], 
+            self::$_conversationsForLeftPanelTest['active'][1]
+        ];
+
+        $messages = Entity_Conversation::getMessagesByConversationsAndUser($conversations, self::$_usersForLeftPanelTest[0]->getId());
+
+        $this->assertInArray(self::$_conversationsForLeftPanelTest['active'][0]->getId(), array_keys($messages));
+        $this->assertInArray(self::$_conversationsForLeftPanelTest['active'][1]->getId(), array_keys($messages));
+        $this->assertEquals(2, count(array_keys($messages)));
+
+        $this->assertEquals(3, count($messages[self::$_conversationsForLeftPanelTest['active'][0]->getId()]));
+        $this->assertEquals(1, count($messages[self::$_conversationsForLeftPanelTest['active'][1]->getId()]));
+
+        $messageIds = [
+            self::$_messages[0]->getId(), self::$_messages[1]->getId(), self::$_messages[2]->getId(),
+            self::$_messages[3]->getId()
+        ];
+
+        foreach ($messages[self::$_conversationsForLeftPanelTest['active'][0]->getId()] as $array) {
+            foreach ($array as $message) {
+                $this->assertInArray($message->getId(), $messageIds[0]);
+            }
+        }
+
+        foreach ($messages[self::$_conversationsForLeftPanelTest['active'][1]->getId()] as $array) {
+            foreach ($array as $message) {
+                $this->assertInArray($message->getId(), $messageIds[1]);
+            }
+        }
+    }
+
+    protected function givenMessages()
+    {
         $data = [
             'conversation_id'   => self::$_conversationsForLeftPanelTest['active'][0]->getId(),
             'sender_id'         => self::$_usersForLeftPanelTest[0]->user_id,
@@ -214,25 +272,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
         $message3 = new Entity_Message;
         $message3->send($data);
 
-        $entity         = self::$_conversationsForLeftPanelTest['active'][0];
-        $messages       = $entity->getMessagesBy(self::$_usersForLeftPanelTest[0]->user_id);
-
-        $expectedIds    = [$message->getId(), $message1->getId(), $message2->getId()];
-        $actualIds      = [];
-
-        foreach ($messages as $message) {
-            $actualIds[] = $message->getId();
-        }
-
-        $this->assertEquals(3, count($actualIds));
-        $this->assertEquals($expectedIds, $actualIds);
-        $this->assertNotInArray($message3->getId(), $actualIds);
-
-        $message->getModel()->delete();
-        $message1->getModel()->delete();
-        $message2->getModel()->delete();
-        $message3->getModel()->delete();
+        self::$_messages = [$message, $message1, $message2, $message3];
     }
+    
+    
 
     /**
      * @param int $conversationId
@@ -447,6 +490,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
             foreach ($array as $item) {
                 DB::delete('conversations')->where('conversation_id', '=', $item->getId())->execute();
             }
+        }
+
+        foreach (self::$_messages as $message) {
+            DB::delete('messages')->where('message_id', '=', $message->getId())->execute();
         }
     }
 
