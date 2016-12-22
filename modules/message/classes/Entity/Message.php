@@ -203,7 +203,6 @@ class Entity_Message extends Entity implements Message, Notification_Subject
             $notifiedEntity->sendNotification();
         }
     }
-    
 
     /**
      * @return string

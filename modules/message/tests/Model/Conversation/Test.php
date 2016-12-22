@@ -30,21 +30,21 @@ class Model_Conversation_Test extends Unittest_TestCase
      */
     public function testGetParticipantsExcept()
     {
-           $conversation = self::$_conversations[0]->getModel();
+       $conversation = self::$_conversations[0]->getModel();
 
-           $participants = $conversation->getParticipantsExcept([self::$_users[0]->user_id]);
-           $ids = $this->getParticipantIds($participants);
-           $this->assertEquals([self::$_users[1]->user_id], $ids);
+       $participants = $conversation->getParticipantsExcept([self::$_users[0]->user_id]);
+       $ids = $this->getParticipantIds($participants);
+       $this->assertEquals([self::$_users[1]->user_id], $ids);
 
-           $participants = $conversation->getParticipantsExcept([self::$_users[1]->user_id]);
-           $ids = $this->getParticipantIds($participants);
-           $this->assertEquals([self::$_users[0]->user_id], $ids);
+       $participants = $conversation->getParticipantsExcept([self::$_users[1]->user_id]);
+       $ids = $this->getParticipantIds($participants);
+       $this->assertEquals([self::$_users[0]->user_id], $ids);
 
-           $participants = $conversation->getParticipantsExcept([self::$_users[0]->user_id, self::$_users[1]->user_id]);
-           $this->assertEmpty($participants);
+       $participants = $conversation->getParticipantsExcept([self::$_users[0]->user_id, self::$_users[1]->user_id]);
+       $this->assertEmpty($participants);
 
-           $participants = $conversation->getParticipantsExcept([]);
-           $this->assertEmpty($participants);
+       $participants = $conversation->getParticipantsExcept([]);
+       $this->assertEmpty($participants);
     }
 
     /**
