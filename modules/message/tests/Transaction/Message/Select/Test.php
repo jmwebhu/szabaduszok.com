@@ -722,5 +722,7 @@ class Transaction_Message_Select_Test extends Unittest_TestCase
         foreach ($this->_messages as $message) {
             DB::delete('messages')->where('message_id', '=', $message->getMessageId())->execute();
         }
+
+        parent::tearDown();
     }
 }

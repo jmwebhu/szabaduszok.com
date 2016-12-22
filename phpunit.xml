@@ -50,7 +50,16 @@
 		</testsuite>
 
 		<testsuite name="CurrentTests">
-			<directory>./modules/message/tests/Model/Conversation</directory>
+			<directory>./modules/message/tests/Business/Message</directory>
 		</testsuite>
 	</testsuites>
+
+	<filter>
+        <whitelist>
+            <directory suffix=".php">./</directory>
+            <exclude>
+                <directory>config</directory>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

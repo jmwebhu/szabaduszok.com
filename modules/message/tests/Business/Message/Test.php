@@ -12,9 +12,9 @@ class Business_Message_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Business_Message::getIndexBeforeIdNotContinous()
+     * @covers Business_Message::groupGivenMessagesByTextifiedDays()
      */
-    public function testGroupGivenMessagesByDays()
+    public function testGroupGivenMessagesByTextifiedDays()
     {
         $now            = date('Y-m-d', time());
         $timestamps     = [];

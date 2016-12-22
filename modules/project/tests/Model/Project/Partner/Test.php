@@ -342,5 +342,6 @@ class Model_Project_Partner_Test extends Unittest_TestCase
     public function tearDown()
     {
         DB::delete('projects_partners')->execute();
+        parent::tearDown();
     }
 }

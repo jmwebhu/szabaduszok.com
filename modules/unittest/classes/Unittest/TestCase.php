@@ -78,4 +78,15 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
         $this->assertNotEmpty($notification['notification_id']);
         $this->assertTrue($notification['is_archived'] != 1);
     }
+
+    public function tearDown()
+    {
+        $refl = new ReflectionObject($this);
+        foreach ($refl->getProperties() as $prop) {
+            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $prop->setAccessible(true);
+                $prop->setValue($this, null);
+            }
+        }
+    }
 }

@@ -17,11 +17,11 @@ class Entity_Messge_Test extends Unittest_TestCase
     {
         $socketMock = $this->getMockBuilder('\Gateway_Socket_Message')
             ->setConstructorArgs([self::$_conversations[0], new Entity_Message])
-            ->setMethods(array('signal'))
+            ->setMethods(array('signalNew'))
             ->getMock();
 
         $socketMock->expects($this->once())
-            ->method('signal')
+            ->method('signalNew')
             ->will($this->returnValue(true));
 
         $data = [
