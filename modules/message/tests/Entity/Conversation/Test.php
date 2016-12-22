@@ -174,6 +174,67 @@ class Entity_Conversation_Test extends Unittest_TestCase
     }
 
     /**
+     * @covers Entity_Conversation::getMessagesBy()
+     */
+    public function testGetMessagesBy()
+    {
+        $data = [
+            'conversation_id'   => self::$_conversationsForLeftPanelTest['active'][0]->getId(),
+            'sender_id'         => self::$_usersForLeftPanelTest[0]->user_id,
+            'message'           => 'Első'
+        ];   
+
+        $message = new Entity_Message;
+        $message->send($data);
+
+        $data = [
+            'conversation_id'   => self::$_conversationsForLeftPanelTest['active'][0]->getId(),
+            'sender_id'         => self::$_usersForLeftPanelTest[1]->user_id,
+            'message'           => 'Második'
+        ];   
+
+        $message1 = new Entity_Message;
+        $message1->send($data);
+
+        $data = [
+            'conversation_id'   => self::$_conversationsForLeftPanelTest['active'][0]->getId(),
+            'sender_id'         => self::$_usersForLeftPanelTest[1]->user_id,
+            'message'           => 'Harmadik'
+        ];   
+
+        $message2 = new Entity_Message;
+        $message2->send($data);
+
+        $data = [
+            'conversation_id'   => self::$_conversationsForLeftPanelTest['active'][1]->getId(),
+            'sender_id'         => self::$_usersForLeftPanelTest[0]->user_id,
+            'message'           => 'Másik beszélgetés'
+        ];   
+
+        $message3 = new Entity_Message;
+        $message3->send($data);
+
+        $entity         = self::$_conversationsForLeftPanelTest['active'][0];
+        $messages       = $entity->getMessagesBy(self::$_usersForLeftPanelTest[0]->user_id);
+
+        $expectedIds    = [$message->getId(), $message1->getId(), $message2->getId()];
+        $actualIds      = [];
+
+        foreach ($messages as $message) {
+            $actualIds[] = $message->getId();
+        }
+
+        $this->assertEquals(3, count($actualIds));
+        $this->assertEquals($expectedIds, $actualIds);
+        $this->assertNotInArray($message3->getId(), $actualIds);
+
+        $message->getModel()->delete();
+        $message1->getModel()->delete();
+        $message2->getModel()->delete();
+        $message3->getModel()->delete();
+    }
+
+    /**
      * @param int $conversationId
      * @param array $userIds
      */
