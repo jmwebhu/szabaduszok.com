@@ -298,7 +298,6 @@ class Entity_Conversation_Test extends Unittest_TestCase
             $message->getModel()->delete();
         }
     }
-    
 
     protected function givenMessages()
     {
