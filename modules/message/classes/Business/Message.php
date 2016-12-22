@@ -36,12 +36,17 @@ class Business_Message extends Business
      */
     public static function getLastDeletedFrom(array $messages)
     {
+        throw new Exception('Deprecated');
+        /**
+         * @todo EGY UZENETTEL MINDIG TOBBET AD VISSZA (nincs hasznalva)
+         */
+
         if (empty($messages)) {
             return [];
         }
 
         $lastId = Transaction_Message_Select_Factory::createSelect()->getLastId();
-        $count  = (count($messages) == 0) ? 0 : count($messages) - 1;
+        $count  = count($messages) - 1;
 
         if ($messages[$count]->message_id != $lastId) {
             return [];

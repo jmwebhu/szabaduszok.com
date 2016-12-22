@@ -94,11 +94,16 @@ class Transaction_Conversation_Select
      */
     public function getMessagesBy($userId)
     {
-        $visibleMessages                = $this->_transactionMessageSelect->getAllVisibleBy($this->_conversation->getId(), $userId);
-        $lastDeletedMessagesBySender    = $this->_transactionMessageSelect->getLastToReceiverDeletedBySender(
-            $this->_conversation->getId(), $userId);
+        return $this->_transactionMessageSelect->getAllVisibleBy($this->_conversation->getId(), $userId);
 
-        return array_merge($visibleMessages, $lastDeletedMessagesBySender);
+        /**
+         * Meg nincs torles
+         */
+
+        // $lastDeletedMessagesBySender    = $this->_transactionMessageSelect->getLastToReceiverDeletedBySender(
+        //     $this->_conversation->getId(), $userId);
+
+        // return array_merge($visibleMessages, $lastDeletedMessagesBySender);
     }
 
     /**

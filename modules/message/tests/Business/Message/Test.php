@@ -2,6 +2,11 @@
 
 class Business_Message_Test extends Unittest_TestCase
 {
+    protected static $_users;
+    protected static $_conversations;
+    protected static $_messages;
+    
+
     /**
      * @covers Business_Message::getIndexBeforeIdNotContinous()
      */
@@ -45,6 +50,49 @@ class Business_Message_Test extends Unittest_TestCase
         $data['groupedMessages']    = Business_Message::groupGivenMessagesByTextifiedDays($data['messages']);
 
         $this->assertForGroup($data);    
+    }
+
+    /**
+     * @covers Business_Message::getLastDeletedFrom()
+     */
+    public function testGetLastDeletedFromMoreResultOk()
+    {
+       //  $models = [];
+       //  foreach (self::$_messages as $i => $message) {
+       //     $models[] = $message->getModel();
+       // }   
+
+       // $deletedMessages = Business_Message::getLastDeletedFrom($models);
+       // $ids = [];
+       
+       // foreach ($deletedMessages as $deleted) {
+       //      $ids[] = $deleted->message_id;
+       // }
+
+       // $this->assertMessageIdsEqual(
+       //      [self::$_messages[2]->getId(), self::$_messages[3]->getId()], $ids);
+
+       // $this->assertEquals(2, count($ids));
+       // $this->assertTrue($deletedMessages[0]->isDeleted);
+    }
+
+    protected function assertMessageIdsEqual(array $expectedIds, array $actualIds)
+    {
+        // $this->assertEquals(count($expectedIds), count($actualIds));
+        // foreach ($expectedIds as $id) {
+        //     $this->assertInArray($id, $actualIds);
+        // }
+    }
+    
+
+    /**
+     * @covers Business_Message::getLastDeletedFrom()
+     */
+    public function testGetLastDeletedFromNoResultOk()
+    {
+       // $deletedMessages = Business_Message::getLastDeletedFrom([]);
+       // $this->assertEquals([], $deletedMessages);
+       // $this->assertEquals(0, count($deletedMessages));
     }
 
     /**
@@ -120,5 +168,112 @@ class Business_Message_Test extends Unittest_TestCase
         }
 
         return $messages;
+    }
+
+    public static function setUpBeforeClass()
+    {
+        self::setUpUsers();
+        self::setUpConversations();
+    }
+
+    protected static function setUpConversations()
+    {
+        $data = [
+            'users' => [self::$_users[0]->user_id, self::$_users[1]->user_id]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        self::$_conversations[] = $conversation;
+
+        $data = [
+            'message'           => 'Első',
+            'sender_id'         => self::$_users[1]->user_id,
+            'conversation_id'   => $conversation->getId()            
+        ];
+
+        $message = new Entity_Message;
+        $message->send($data);
+
+        $data = [
+            'message'           => 'Második',
+            'sender_id'         => self::$_users[0]->user_id,
+            'conversation_id'   => $conversation->getId()            
+        ];
+
+        $message1 = new Entity_Message;
+        $message1->send($data);
+
+        $data = [
+            'message'           => 'Harmadik',
+            'sender_id'         => self::$_users[1]->user_id,
+            'conversation_id'   => $conversation->getId()            
+        ];
+
+        $message2 = new Entity_Message;
+        $message2->send($data);
+
+        $data = [
+            'message'           => 'Negyedik',
+            'sender_id'         => self::$_users[1]->user_id,
+            'conversation_id'   => $conversation->getId()            
+        ];
+
+        $message3 = new Entity_Message;
+        $message3->send($data);
+
+        // Fogadott uzenet torlese
+        $deleter = new Entity_User_Freelancer(self::$_users[0]);
+        $message2->deleteMessage($deleter);
+        $message3->deleteMessage($deleter);
+
+        self::$_messages[] = $message;
+        self::$_messages[] = $message1;
+        self::$_messages[] = $message2;
+        self::$_messages[] = $message3;
+    }
+
+    protected static function setUpUsers()
+    {
+        $freelancer = new Model_User_Freelancer();
+        $freelancer->lastname       = 'Joó';
+        $freelancer->firstname      = 'Martin';
+        $freelancer->email          = uniqid() . '@gmail.com';
+        $freelancer->password       = 'Password123';
+        $freelancer->min_net_hourly_wage       = '3000';
+        $freelancer->type = Entity_User::TYPE_FREELANCER;
+
+        $freelancer->save();
+
+        $employer = new Model_User_Employer();
+        $employer->lastname       = 'Kis';
+        $employer->firstname      = 'Pista';
+        $employer->address_postal_code      = '9700';
+        $employer->address_city      = 'Szombathely';
+        $employer->email          = uniqid() . '@gmail.com';
+        $employer->phonenumber          = '06301923380';
+        $employer->password       = 'Password123';
+        $employer->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer->save();
+
+        self::$_users[] = $freelancer;
+        self::$_users[] = $employer;
+    }
+
+    public static function tearDownAfterClass()
+    {
+        foreach (self::$_users as $user) {
+            DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
+        }
+
+        foreach (self::$_conversations as $conversation) {
+            DB::delete('conversations')->where('conversation_id', '=', $conversation->getId())->execute();
+        }
+
+        foreach (self::$_messages as $message) {
+            DB::delete('messages')->where('message_id', '=', $message->getMessageId())->execute();
+        }
     }
 }
