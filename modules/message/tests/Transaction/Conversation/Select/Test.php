@@ -21,7 +21,7 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
         $this->assertEquals('Joó Martin, Nagy Béla', $conversations[1]->getName());
         $this->assertNotEmpty($conversations[1]->getSlug());
 
-        $this->assertUserHasInteraction(
+        $this->assertUserHasConversationInteraction(
             self::$_users[0]->user_id, self::$_conversations['deleted'][0]->getId(), ['is_deleted' => 1]);
     }
 
@@ -37,7 +37,7 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
         $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
         $this->assertNotEmpty($conversations[0]->getSlug());
 
-        $this->assertUserHasNoInteraction(
+        $this->assertUserHasNoConversationInteraction(
             self::$_users[1]->user_id, self::$_conversations['active'][0]->getId());
     }
 
@@ -51,7 +51,7 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
 
         $this->assertEquals(1, count($conversations));
 
-        $this->assertUserHasNoInteraction(
+        $this->assertUserHasNoConversationInteraction(
             self::$_users[3]->user_id, self::$_conversations['deleted'][0]->getId());
     }
 
@@ -65,14 +65,14 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
 
         $this->assertEquals(1, count($conversations));
 
-        $this->assertUserHasNoInteraction(
+        $this->assertUserHasNoConversationInteraction(
             self::$_users[3]->user_id, self::$_conversations['deleted'][0]->getId());
 
         $transaction->setConversation(new Model_Conversation());
         $conversations  = $transaction->getForLeftPanelBy(self::$_users[0]->user_id);
         $this->assertEquals(3, count($conversations));
 
-        $this->assertUserHasInteraction(
+        $this->assertUserHasConversationInteraction(
             self::$_users[0]->user_id, self::$_conversations['deleted'][0]->getId(), ['is_deleted' => 1]);
     }
 
@@ -121,40 +121,6 @@ class Transaction_Conversation_Select_Test extends Unittest_TestCase
         }
 
         return $ids;
-    }
-    
-
-    /**
-     * @param $userId
-     * @param $conversationId
-     * @param array $flags
-     */
-    protected function assertUserHasInteraction($userId, $conversationId, array $flags)
-    {
-        $interaction = DB::select()
-            ->from('conversation_interactions')
-            ->where('user_id', '=', $userId)
-            ->and_where('conversation_id', '=', $conversationId)
-            ->execute()->current();
-
-        $this->assertNotNull($interaction);
-        $this->assertNotEmpty($interaction['conversation_interaction_id']);
-        $this->assertEquals(Arr::get($flags, 'is_deleted', 0), $interaction['is_deleted']);
-    }
-
-    /**
-     * @param int $userId
-     * @param int $conversationId
-     */
-    protected function assertUserHasNoInteraction($userId, $conversationId)
-    {
-        $interaction = DB::select()
-            ->from('conversation_interactions')
-            ->where('user_id', '=', $userId)
-            ->and_where('conversation_id', '=', $conversationId)
-            ->execute()->current();
-
-        $this->assertNull($interaction);
     }
 
     public static function setUpBeforeClass()

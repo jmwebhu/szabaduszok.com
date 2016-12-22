@@ -104,30 +104,6 @@ class Entity_Conversation extends Entity implements Conversation
     }
 
     /**
-     * @return string
-     */
-    public function getParticipantNamesExcludeAuthUser($whichname = 'name')
-    {
-        $participants   = $this->getParticipants();
-        $names          = '';
-        $nameMethod     = 'get' . ucfirst($whichname);
-
-        foreach ($participants as $i => $participant) {
-            if ($participant->getId() != Auth::instance()->get_user()->user_id) {
-                $tmp = $participant->{$nameMethod}();
-
-                if (!Arr::isLastIndex($i, $participants, 1)) {
-                    $tmp .= ', ';
-                }
-
-                $names .= $tmp;
-            }
-        }
-
-        return $names;
-    }
-
-    /**
      * @return array of Message
      */
     public function getMessages()

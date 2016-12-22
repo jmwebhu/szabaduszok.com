@@ -79,6 +79,39 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
         $this->assertTrue($notification['is_archived'] != 1);
     }
 
+    /**
+     * @param $userId
+     * @param $conversationId
+     * @param array $flags
+     */
+    protected function assertUserHasConversationInteraction($userId, $conversationId, array $flags)
+    {
+        $interaction = DB::select()
+            ->from('conversation_interactions')
+            ->where('user_id', '=', $userId)
+            ->and_where('conversation_id', '=', $conversationId)
+            ->execute()->current();
+
+        $this->assertNotNull($interaction);
+        $this->assertNotEmpty($interaction['conversation_interaction_id']);
+        $this->assertEquals(Arr::get($flags, 'is_deleted', 0), $interaction['is_deleted']);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $conversationId
+     */
+    protected function assertUserHasNoConversationInteraction($userId, $conversationId)
+    {
+        $interaction = DB::select()
+            ->from('conversation_interactions')
+            ->where('user_id', '=', $userId)
+            ->and_where('conversation_id', '=', $conversationId)
+            ->execute()->current();
+
+        $this->assertNull($interaction);
+    }
+
     public function tearDown()
     {
         $refl = new ReflectionObject($this);

@@ -5,6 +5,9 @@ class Entity_Conversation_Test extends Unittest_TestCase
     protected static $_users = [];
     protected static $_conversations = [];
 
+    protected static $_usersForLeftPanelTest = [];
+    protected static $_conversationsForLeftPanelTest = [];
+
     /**
      * @covers Entity_Conversation::submit()
      */
@@ -106,6 +109,71 @@ class Entity_Conversation_Test extends Unittest_TestCase
     }
 
     /**
+     * @covers Entity_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByOneDeleted()
+    {
+        $conversations  = Entity_Conversation::getForLeftPanelBy(self::$_usersForLeftPanelTest[0]->user_id);
+
+        $this->assertEquals(count(self::$_conversationsForLeftPanelTest['active']), count($conversations));
+        $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
+        $this->assertNotEmpty($conversations[0]->getSlug());
+
+        $this->assertEquals('Joó Martin, Nagy Béla', $conversations[1]->getName());
+        $this->assertNotEmpty($conversations[1]->getSlug());
+
+        $this->assertUserHasConversationInteraction(
+            self::$_usersForLeftPanelTest[0]->user_id, self::$_conversationsForLeftPanelTest['deleted'][0]->getId(), ['is_deleted' => 1]);
+    }
+
+    /**
+     * @covers Entity_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByAllActive()
+    {
+        $conversations  = Entity_Conversation::getForLeftPanelBy(self::$_usersForLeftPanelTest[1]->user_id);
+
+        $this->assertEquals(1, count($conversations));
+        $this->assertEquals('Joó Martin, Kis Pista', $conversations[0]->getName());
+        $this->assertNotEmpty($conversations[0]->getSlug());
+
+        $this->assertUserHasNoConversationInteraction(
+            self::$_usersForLeftPanelTest[1]->user_id, self::$_conversationsForLeftPanelTest['active'][0]->getId());
+    }
+
+    /**
+     * @covers Entity_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByAllDeletedReceiver()
+    {
+        $conversations  = Entity_Conversation::getForLeftPanelBy(self::$_usersForLeftPanelTest[3]->user_id);
+
+        $this->assertEquals(1, count($conversations));
+
+        $this->assertUserHasNoConversationInteraction(
+            self::$_usersForLeftPanelTest[3]->user_id, self::$_conversationsForLeftPanelTest['deleted'][0]->getId());
+    }
+
+    /**
+     * @covers Entity_Conversation::getForLeftPanelBy()
+     */
+    public function testGetForLeftPanelByAllDeletedSenderReceiver()
+    {
+        $conversations  = Entity_Conversation::getForLeftPanelBy(self::$_usersForLeftPanelTest[3]->user_id);
+
+        $this->assertEquals(1, count($conversations));
+
+        $this->assertUserHasNoConversationInteraction(
+            self::$_usersForLeftPanelTest[3]->user_id, self::$_conversationsForLeftPanelTest['deleted'][0]->getId());
+
+        $conversations  = Entity_Conversation::getForLeftPanelBy(self::$_usersForLeftPanelTest[0]->user_id);
+        $this->assertEquals(3, count($conversations));
+
+        $this->assertUserHasConversationInteraction(
+            self::$_usersForLeftPanelTest[0]->user_id, self::$_conversationsForLeftPanelTest['deleted'][0]->getId(), ['is_deleted' => 1]);
+    }
+
+    /**
      * @param int $conversationId
      * @param array $userIds
      */
@@ -186,6 +254,118 @@ class Entity_Conversation_Test extends Unittest_TestCase
 
         self::$_users[] = $freelancer;
         self::$_users[] = $employer;
+
+        $freelancer = new Model_User_Freelancer();
+        $freelancer->lastname       = 'Joó';
+        $freelancer->firstname      = 'Martin';
+        $freelancer->email          = uniqid() . '@gmail.com';
+        $freelancer->password       = 'Password123';
+        $freelancer->min_net_hourly_wage       = '3000';
+        $freelancer->type = Entity_User::TYPE_FREELANCER;
+
+        $freelancer->save();
+
+        $employer = new Model_User_Employer();
+        $employer->lastname       = 'Kis';
+        $employer->firstname      = 'Pista';
+        $employer->address_postal_code      = '9700';
+        $employer->address_city      = 'Szombathely';
+        $employer->email          = uniqid() . '@gmail.com';
+        $employer->phonenumber          = '06301923380';
+        $employer->password       = 'Password123';
+        $employer->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer->save();
+
+        $employer1 = new Model_User_Employer();
+        $employer1->lastname       = 'Nagy';
+        $employer1->firstname      = 'Béla';
+        $employer1->address_postal_code      = '9700';
+        $employer1->address_city      = 'Szombathely';
+        $employer1->email          = uniqid() . '@gmail.com';
+        $employer1->phonenumber          = '06301923380';
+        $employer1->password       = 'Password123';
+        $employer1->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer1->save();
+
+        $employer2 = new Model_User_Employer();
+        $employer2->lastname       = 'Horváth';
+        $employer2->firstname      = 'Péter';
+        $employer2->address_postal_code      = '9700';
+        $employer2->address_city      = 'Szombathely';
+        $employer2->email          = uniqid() . '@gmail.com';
+        $employer2->phonenumber          = '06301923380';
+        $employer2->password       = 'Password123';
+        $employer2->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer2->save();
+
+        $employer3 = new Model_User_Employer();
+        $employer3->lastname       = 'Lukács';
+        $employer3->firstname      = 'Laci';
+        $employer3->address_postal_code      = '9700';
+        $employer3->address_city      = 'Szombathely';
+        $employer3->email          = uniqid() . '@gmail.com';
+        $employer3->phonenumber          = '06301923380';
+        $employer3->password       = 'Password123';
+        $employer3->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer3->save();
+
+        $employer4 = new Model_User_Employer();
+        $employer4->lastname       = 'Lukács';
+        $employer4->firstname      = 'Laci';
+        $employer4->address_postal_code      = '9700';
+        $employer4->address_city      = 'Szombathely';
+        $employer4->email          = uniqid() . '@gmail.com';
+        $employer4->phonenumber          = '06301923380';
+        $employer4->password       = 'Password123';
+        $employer4->type = Entity_User::TYPE_EMPLOYER;
+
+        $employer4->save();
+
+        self::$_usersForLeftPanelTest[] = $freelancer;
+        self::$_usersForLeftPanelTest[] = $employer;
+        self::$_usersForLeftPanelTest[] = $employer1;
+        self::$_usersForLeftPanelTest[] = $employer2;
+        self::$_usersForLeftPanelTest[] = $employer3;
+        self::$_usersForLeftPanelTest[] = $employer4;
+
+        $data = [
+            'users' => [self::$_usersForLeftPanelTest[0]->user_id, self::$_usersForLeftPanelTest[1]->user_id]
+        ];
+
+        $conversation = new Entity_Conversation();
+        $conversation->submit($data);
+
+        $data = [
+            'users' => [self::$_usersForLeftPanelTest[0]->user_id, self::$_usersForLeftPanelTest[2]->user_id]
+        ];
+
+        $conversation1 = new Entity_Conversation();
+        $conversation1->submit($data);
+
+        $data = [
+            'users' => [self::$_usersForLeftPanelTest[0]->user_id, self::$_usersForLeftPanelTest[3]->user_id]
+        ];
+
+        $conversation2 = new Entity_Conversation();
+        $conversation2->submit($data);
+
+        $conversation2->deleteConversation(Entity_User::createUser(self::$_usersForLeftPanelTest[0]->type,self::$_usersForLeftPanelTest[0]));
+
+        $data = [
+            'users' => [self::$_usersForLeftPanelTest[0]->user_id, self::$_usersForLeftPanelTest[4]->user_id]
+        ];
+
+        $conversation3 = new Entity_Conversation();
+        $conversation3->submit($data);
+
+        self::$_conversationsForLeftPanelTest['active'][] = $conversation;
+        self::$_conversationsForLeftPanelTest['active'][] = $conversation1;
+        self::$_conversationsForLeftPanelTest['active'][] = $conversation3;
+        self::$_conversationsForLeftPanelTest['deleted'][] = $conversation2;
     }
 
     public static function tearDownAfterClass()
@@ -194,8 +374,18 @@ class Entity_Conversation_Test extends Unittest_TestCase
             DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
         }
 
+        foreach (self::$_usersForLeftPanelTest as $user) {
+            DB::delete('users')->where('user_id', '=', $user->user_id)->execute();
+        }
+
         foreach (self::$_conversations as $conversation) {
             DB::delete('conversations')->where('conversation_id', '=', $conversation->getConversationId())->execute();
+        }
+
+        foreach (self::$_conversationsForLeftPanelTest as $array) {
+            foreach ($array as $item) {
+                DB::delete('conversations')->where('conversation_id', '=', $item->getId())->execute();
+            }
         }
     }
 
