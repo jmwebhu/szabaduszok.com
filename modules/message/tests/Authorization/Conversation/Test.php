@@ -7,6 +7,7 @@ class Authorization_Conversation_Test extends Unittest_TestCase
 
     /**
      * @covers Authorization_Conversation::canView()
+     * @covers Authorization_Conversation::isIn()
      */
     public function testCanViewOk()
     {
@@ -33,6 +34,7 @@ class Authorization_Conversation_Test extends Unittest_TestCase
 
     /**
      * @covers Authorization_Conversation::canView()
+     * @covers Authorization_Conversation::isIn()
      */
     public function testCanViewNotOk()
     {
@@ -58,7 +60,8 @@ class Authorization_Conversation_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Authorization_Conversation::canView()
+     * @covers Authorization_Conversation::canSendMessage()
+     * @covers Authorization_Conversation::isIn()
      */
     public function testCanSendMessageOk()
     {
@@ -84,7 +87,8 @@ class Authorization_Conversation_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Authorization_Conversation::canView()
+     * @covers Authorization_Conversation::canSendMessage()
+     * @covers Authorization_Conversation::isIn()
      */
     public function testCanSendMessageNotOk()
     {
