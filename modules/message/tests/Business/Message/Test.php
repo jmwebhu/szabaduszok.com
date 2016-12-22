@@ -4,17 +4,74 @@ class Business_Message_Test extends Unittest_TestCase
 {
     /**
      * @covers Business_Message::getIndexBeforeIdNotContinous()
-     * @dataProvider getIndexBeforeIdNotContinousDataProvider
      */
-    public function testGetIndexBeforeIdNotContinous($expected, $actual)
+    public function testGetIndexBeforeIdNotContinous()
     {
-        $this->assertEquals($expected, $actual);
+        $continousIds = [1, 2, 3, 4, 5];
+        $continousMessages = $this->getMessagesArray($continousIds);
+
+        $notContinousIdsOneResult = [11, 12, 15, 16, 19];
+        $notContinousMessagesOneResult = $this->getMessagesArray($notContinousIdsOneResult);
+
+        $notContinousIdsMoreResult = [23, 24, 26, 27, 28];
+        $notContinousMessagesMoreResult = $this->getMessagesArray($notContinousIdsMoreResult);
+
+        $notContinousIdsMoreResultFirst = [33, 34];
+        $notContinousMessagesMoreResultFirst = $this->getMessagesArray($notContinousIdsMoreResultFirst);
+
+        $this->assertEquals(1, Business_Message::getIndexBeforeIdNotContinous($continousMessages));
+        $this->assertEquals(4, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesOneResult));
+        $this->assertEquals(2, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesMoreResult));
+        $this->assertEquals(0, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesMoreResultFirst));
     }
 
     /**
      * @covers Business_Message::groupGivenMessagesByTextifiedDays()
      */
-    public function testGroupGivenMessagesByTextifiedDays()
+    public function testGroupGivenMessagesByTextifiedDaysModels()
+    {
+        $data                       = $this->getMessagesForGroup();
+        $data['groupedMessages']    = Business_Message::groupGivenMessagesByTextifiedDays($data['messages']);
+
+        $this->assertForGroup($data);        
+    }
+
+    /**
+     * @covers Business_Message::groupGivenMessagesByTextifiedDays()
+     */
+    public function testGroupGivenMessagesByTextifiedDaysEntities()
+    {
+        $data                       = $this->getMessagesForGroup('entity');
+        $data['groupedMessages']    = Business_Message::groupGivenMessagesByTextifiedDays($data['messages']);
+
+        $this->assertForGroup($data);    
+    }
+
+    /**
+     * @param  array  $data
+     * @return void
+     */
+    protected function assertForGroup(array $data)
+    {
+        foreach ($data['days'] as $j => $key) {
+            if ($j == 0) {
+                $this->assertEquals($data['messages'][$j]->message_id, $data['groupedMessages']['ma'][0]->message_id);
+            } elseif ($j == 1) {
+                $this->assertEquals($data['messages'][$j]->message_id, $data['groupedMessages']['tegnap'][0]->message_id);
+            } elseif ($j <= Date::$_textifyMaxInterval) {
+                $this->assertEquals($data['messages'][$j]->message_id, $data['groupedMessages'][__($key)][0]->message_id);
+            } else {
+                $date = date('m.d', $data['timestamps'][$j]);
+                $this->assertEquals($data['messages'][$j]->message_id, $data['groupedMessages'][$date][0]->message_id);
+            }
+        }
+    }
+    
+    /**
+     * @param  string $type
+     * @return array
+     */
+    protected function getMessagesForGroup($type = 'model')
     {
         $now            = date('Y-m-d', time());
         $timestamps     = [];
@@ -34,45 +91,18 @@ class Business_Message_Test extends Unittest_TestCase
             $messages[]             = $message;
         }
 
-        $groupedMessages    = Business_Message::groupGivenMessagesByTextifiedDays($messages);
-        $keys               = $days;
-
-        foreach ($keys as $j => $key) {
-            if ($j == 0) {
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages['ma'][0]->message_id);
-            } elseif ($j == 1) {
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages['tegnap'][0]->message_id);
-            } elseif ($j <= Date::$_textifyMaxInterval) {
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages[__($key)][0]->message_id);
-            } else {
-                $date = date('m.d', $timestamps[$j]);
-                $this->assertEquals($messages[$j]->message_id, $groupedMessages[$date][0]->message_id);
-            }
+        if ($type = 'entity') {
+            $entity     = new Entity_Message;
+            $messsages  = $entity->getEntitiesFromModels($messages);
         }
-    }
-    
-
-    public function getIndexBeforeIdNotContinousDataProvider()
-    {
-        $continousIds = [1, 2, 3, 4, 5];
-        $continousMessages = $this->getMessagesArray($continousIds);
-
-        $notContinousIdsOneResult = [11, 12, 15, 16, 19];
-        $notContinousMessagesOneResult = $this->getMessagesArray($notContinousIdsOneResult);
-
-        $notContinousIdsMoreResult = [23, 24, 26, 27, 28];
-        $notContinousMessagesMoreResult = $this->getMessagesArray($notContinousIdsMoreResult);
-
-        $notContinousIdsMoreResultFirst = [33, 34];
-        $notContinousMessagesMoreResultFirst = $this->getMessagesArray($notContinousIdsMoreResultFirst);
 
         return [
-            [1, Business_Message::getIndexBeforeIdNotContinous($continousMessages)],
-            [4, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesOneResult)],
-            [2, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesMoreResult)],
-            [0, Business_Message::getIndexBeforeIdNotContinous($notContinousMessagesMoreResultFirst)]
+            'messages'      => $messages,
+            'days'          => $days,
+            'timestamps'    => $timestamps
         ];
     }
+    
 
     /**
      * @param array $ids
