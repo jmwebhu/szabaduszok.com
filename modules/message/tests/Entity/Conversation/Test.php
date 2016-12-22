@@ -194,6 +194,10 @@ class Entity_Conversation_Test extends Unittest_TestCase
         $this->assertEquals(3, count($actualIds));
         $this->assertEquals($expectedIds, $actualIds);
         $this->assertNotInArray(self::$_messages[3]->getId(), $actualIds);
+
+        foreach (self::$_messages as $message) {
+            $message->getModel()->delete();
+        }
     }
 
     /**
