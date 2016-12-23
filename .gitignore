@@ -16,3 +16,5 @@
 phpmetrics
 report
 /application/config/database.php
+/modules/gateway/config/socket.php
+.phpintel
