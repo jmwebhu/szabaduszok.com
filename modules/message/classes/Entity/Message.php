@@ -118,9 +118,9 @@ class Entity_Message extends Entity implements Message, Notification_Subject
     public function __construct($value = null)
     {
         parent::__construct($value);
-        $this->_viewhelper = Viewhelper_Message_Factory::createViewhelper($this, Auth::instance()->get_user()->user_id);
+        $this->_viewhelper = Viewhelper_Message_Factory::createViewhelper(
+            $this, Auth::instance()->get_user()->user_id);
     }
-    
 
     /**
      * @param Conversation_Participant $user
@@ -148,7 +148,6 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         }
     
         $socket->signalNew($conversation, $message);
-
         $this->sendNotification(new Transaction_Message_Select($this->_model));
 
         return $this->_message_id;
@@ -178,6 +177,9 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         return $this->_viewhelper->getCreatedAt();
     }
 
+    /**
+     * @param Transaction_Message_Select $selectTransaction
+     */
     public function sendNotification(Transaction_Message_Select $selectTransaction)
     {
         $senderModel    = $this->getSender()->getModel();  
@@ -189,6 +191,10 @@ class Entity_Message extends Entity implements Message, Notification_Subject
         }
     }
 
+    /**
+     * @param Transaction_Message_Select $selectTransaction
+     * @param Model_User $user
+     */
     protected function sendNotificationToOneUserIfRequired(Transaction_Message_Select $selectTransaction, Model_User $user)
     {
         if ($selectTransaction->shouldSendNotificationTo($user->user_id)) {                

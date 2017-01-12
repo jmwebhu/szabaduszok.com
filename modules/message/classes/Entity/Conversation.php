@@ -150,9 +150,12 @@ class Entity_Conversation extends Entity implements Conversation
         return $conversation;
     }
 
+    /**
+     * @param array $data
+     */
     public function submit(array $data)
     {
-        $transaction    = new Transaction_Conversation_Insert(new Model_Conversation(), $data);
+        $transaction    = new Transaction_Conversation_Insert(new Model_Conversation, $data);
         $this->_model   = $transaction->execute();
         $this->mapModelToThis();
     }
@@ -162,7 +165,7 @@ class Entity_Conversation extends Entity implements Conversation
      */
     public function deleteConversation(Conversation_Participant $user)
     {
-        $interaction                    = new Model_Conversation_Interaction();
+        $interaction                    = new Model_Conversation_Interaction;
         $interaction->conversation_id   = $this->getId();
         $interaction->user_id           = $user->getId();
         $interaction->is_deleted        = true;
