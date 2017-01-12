@@ -26,20 +26,15 @@ class Business_Conversation extends Business
         $result = $conversations;
         $toPut  = null;
 
-        foreach ($result as $conversation) {
+        foreach ($result as $i => $conversation) {
             if ($conversation->getSlug() == $slug) {
                 $toPut = $conversation;
+                unset($result[$i]);
                 break;
             }
         }
 
         Assert::notNull($toPut);
-
-        foreach ($result as $i => $conversation) {
-            if ($conversation->getSlug() == $slug) {
-                unset($result[$i]);
-            }
-        }
 
         array_unshift($result, $toPut);
 

@@ -21,3 +21,4 @@ coverage
 /application/views/Test/*
 .phpintel
 /modules/gateway/config/socket.php
+tags

@@ -4,6 +4,25 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
+        $users = ORM::factory('User')->where('user_id', '!=', 1)->find_all();
+        $chunks = array_chunk($others, 50);
+
+        foreach ($users as $user) {
+            
+        }
+
+            $data['users'] = [1, $other->user_id];
+            $conversation = new Entity_Conversation();
+            $conversation->submit($data);
+
+            $data = [
+                'message'           => 'Teszt üzenet, Hello',
+                'sender_id'         => 1,
+                'conversation_id'   => $conversation->getId()
+            ];
+
+            $message = new Entity_Message();
+            $message->submit($data);
     }
 
     public function action_message()
