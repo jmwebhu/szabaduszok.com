@@ -1,6 +1,6 @@
 <?php
 
-class Model_Message extends ORM implements Message
+class Model_Message extends ORM implements Message, Entitiable
 {
     /**
      * @var bool
@@ -109,5 +109,13 @@ class Model_Message extends ORM implements Message
     public function send(array $data)
     {
         return $this->submit($data);
+    }
+
+    /**
+     * @return Entity_Message
+     */
+    public function createEntity()
+    {
+        return new Entity_Message($this);
     }
 }

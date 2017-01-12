@@ -227,4 +227,12 @@ class Entity_Message extends Entity implements Message, Notification_Subject
     {
         return Route::url('messagesList', ['slug' => $this->getModel()->conversation->slug]);
     }
+
+    /**
+     * @return Entity_Message
+     */
+    public function createEntity()
+    {
+        return $this;
+    }
 }

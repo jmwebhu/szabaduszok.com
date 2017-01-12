@@ -22,3 +22,4 @@ coverage
 .phpintel
 /modules/gateway/config/socket.php
 tags
+*.swp
