@@ -42,13 +42,27 @@ abstract class Model_User_Project_Notification extends Model_Relation
     public function createBy(array $values)
     {
         $uniqueValues = Arr::uniqueString($values);
-        foreach ($uniqueValues as $value) {
+        $clearedValues = Arr::removeEmptyValues($uniqueValues);
+
+        foreach ($clearedValues as $value) {
             $model                                          = $this->getOrCreateBy($value);
+
+            if (empty(intval($model->{$this->getPrimaryKeyForEndModel()}))) continue;
+
             $relation                                       = $this->createModel();
             $relation->user_id                              = Auth::instance()->get_user()->user_id;
             $relation->{$this->getPrimaryKeyForEndModel()}  = intval($model->{$this->getPrimaryKeyForEndModel()});
-
             $save = $relation->save();        
         }
+    }
+
+    protected function isExists($userId, $relation, $primaryKeyColumn, $primaryKeyValue)
+    {
+        $existing = $relation
+            ->where('user_id', '=', $userId)
+            ->and_where($primaryKeyColumn, '=', $primaryKeyValue)
+            ->find();
+
+        return $existing->loaded();
     }
 }

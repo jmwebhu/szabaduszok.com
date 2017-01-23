@@ -32,10 +32,14 @@ class Model_Conversation_Interaction extends ORM implements Conversation_Interac
         ];
     }
 
+    protected $_load_with = [
+        'conversation', 'user'
+    ];
+
     protected $_belongs_to  = [
-        'message'          => [
-            'model'         => 'Message',
-            'foreign_key'   => 'message_id'
+        'conversation'          => [
+            'model'         => 'Conversation',
+            'foreign_key'   => 'conversation_id'
         ],
         'user'          => [
             'model'         => 'User',

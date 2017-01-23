@@ -50,7 +50,7 @@
 		</testsuite>
 
 		<testsuite name="CurrentTests">
-                    <directory>./modules/message/tests/Message/Entity</directory>
+                    <directory>./modules/message/tests/Message/Business/</directory>
 		</testsuite>
 	</testsuites>
 

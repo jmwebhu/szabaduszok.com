@@ -76,7 +76,8 @@ class ORM extends Kohana_ORM
 
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
-        $postData = Arr::uniqueString($postData);
+                $postData = Arr::uniqueString($postData);
+                $postData = Arr::removeEmptyValues($postData);
 
 		if (!empty($postData)) {
 			foreach ($postData as $value) {

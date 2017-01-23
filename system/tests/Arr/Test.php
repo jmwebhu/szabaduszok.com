@@ -3,6 +3,15 @@
 class Arr_Test extends Unittest_TestCase
 {
     /**
+     * @covers Arr::removeEmptyValues()
+     * @dataProvider removeEmptyValuesDataProvider
+     */
+    public function testRemoveEmptyValues($expected, $actual)
+    {
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
      * @covers Arr::uniqueString()
      * @dataProvider uniqueStringProvider
      */
@@ -71,6 +80,7 @@ class Arr_Test extends Unittest_TestCase
             [['webfejlesztés'], Arr::uniqueString(['webfejlesztés', 'Webfejlesztés'])],
             [['webfejlesztés', 'beágyazott rendszerek'], Arr::uniqueString(['webfejlesztés', 'beágyazott rendszerek'])],
             [['Webfejlesztés', 'java'], Arr::uniqueString(['Webfejlesztés', 'WebFEJLESZTÉS', 'java', 'JAVA'])],
+            [['3d'], Arr::uniqueString(['3d', '3d', '3D'])],
             [[1, 2], Arr::uniqueString(['1', 2])],
         ];
     }
@@ -84,6 +94,15 @@ class Arr_Test extends Unittest_TestCase
             [false, Arr::isLastIndex(1, [])],
             [false, Arr::isLastIndex(3, ['a'])],
             [false, Arr::isLastIndex(1, [1, 2, 3])],
+        ];
+    }
+
+    public function removeEmptyValuesDataProvider()
+    {
+        return [
+            [[0 => '112', 2 => 43], Arr::removeEmptyValues(['112', '0', 43])],  
+            [[0 => 'first', 2 => 2], Arr::removeEmptyValues(['first', '', 2])],  
+            [[], Arr::removeEmptyValues(['0', 0, null, false, ''])],  
         ];
     }
 }

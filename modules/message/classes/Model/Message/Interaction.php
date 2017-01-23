@@ -33,6 +33,10 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
         ];
     }
 
+    protected $_load_with = [
+        'message', 'user'
+    ];
+
     protected $_belongs_to  = [
         'message'          => [
             'model'         => 'Message',
@@ -52,8 +56,8 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
     public static function getByMessageAndUser($messageId, $userId)
     {
         return new Model_Message_Interaction([
-            'message_id'    => $messageId,
-            'user_id'       => $userId
+            'message_interaction.message_id'    => $messageId,
+            'message_interaction.user_id'       => $userId
         ]);
     }
 
@@ -64,7 +68,7 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
     public static function getAllByMessage($messageId)
     {
         $model = new Model_Message_Interaction();
-        return $model->where('message_id', '=', $messageId)->find_all();
+        return $model->where('message_interaction.message_id', '=', $messageId)->find_all();
     }
 
     /**
@@ -75,7 +79,7 @@ class Model_Message_Interaction extends ORM implements Message_Interaction
     public static function getAllByMessageExceptGivenUser($messageId, $userId)
     {
         $model = new Model_Message_Interaction();
-        return $model->where('message_id', '=', $messageId)->and_where('user_id', '!=', $userId)->find_all();
+        return $model->where('message_interaction.message_id', '=', $messageId)->and_where('message_interaction.user_id', '!=', $userId)->find_all();
     }
 
     /**

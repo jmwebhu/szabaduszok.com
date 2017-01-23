@@ -10,6 +10,8 @@ class Model_Message extends ORM implements Message, Entitiable
     protected $_table_name  = 'messages';
     protected $_primary_key = 'message_id';
 
+    protected $_load_with = ['conversation', 'sender'];
+
     protected $_created_column = [
         'column' => 'created_at',
         'format' => 'Y-m-d H:i'

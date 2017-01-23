@@ -19,6 +19,10 @@ class Model_Conversation_User extends ORM implements Conversation_Participant_Li
         ];
     }
 
+    protected $_load_with = [
+        'conversation', 'user'
+    ];
+
     protected $_belongs_to  = [
         'conversation'          => [
             'model'         => 'Conversation',

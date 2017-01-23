@@ -154,6 +154,6 @@ class Transaction_Conversation_Select
     protected function hasDeletedInteractionBy($userId)
     {
         return ($this->_conversation->interactions
-            ->where('user_id', '=', $userId)->and_where('is_deleted', '=', 1)->count_all() > 0);
+            ->where('conversation_interaction.user_id', '=', $userId)->and_where('conversation_interaction.is_deleted', '=', 1)->count_all() > 0);
     }
 }

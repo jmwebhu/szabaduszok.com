@@ -103,4 +103,21 @@ class Arr extends Kohana_Arr
         
         return $result;
     } 
+
+    /**
+     * @param array $array
+     * @return array
+     */
+    public static function removeEmptyValues(array $array)
+    {
+        $result = [];
+
+        foreach ($array as $key => $item) {
+            if (!empty($item)) {
+                $result[$key] = $item;
+            }
+        }
+
+        return $result;
+    }
 }
