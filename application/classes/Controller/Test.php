@@ -9,89 +9,91 @@ class Controller_Test extends Controller_DefaultTemplate
     
     public function action_generatemessagesfreelancer()
     {
-        $offset = $this->request->param('offset');
-        $limit = 50;
+        return false;
+        /* $offset = $this->request->param('offset'); */
+        /* $limit = 50; */
 
-        $users = DB::select('user_id', 'firstname')
-            ->from('users')
-            ->where('user_id', '!=', 1)
-            ->and_where('type', '=', 1)
-            ->offset($limit * ($offset - 1))->limit($limit)
-            ->execute()->as_array();
+        /* $users = DB::select('user_id', 'firstname') */
+        /*     ->from('users') */
+        /*     ->where('user_id', '!=', 1) */
+        /*     ->and_where('type', '=', 1) */
+        /*     ->offset($limit * ($offset - 1))->limit($limit) */
+        /*     ->execute()->as_array(); */
 
-        $count = 0;
+        /* $count = 0; */
 
-        foreach ($users as $user) {
-            $data = [
-                'users'     => [1, $user['user_id']]
-            ];
+        /* foreach ($users as $user) { */
+        /*     $data = [ */
+        /*         'users'     => [1, $user['user_id']] */
+        /*     ]; */
 
-            $conversation = new Entity_Conversation();
-            $conversation->submit($data);
+        /*     $conversation = new Entity_Conversation(); */
+        /*     $conversation->submit($data); */
 
-            $message = 'Szia ' . $user['firstname'] . '! Örömmel értesítelek, hogy mostantól elérhető az oldalon belüli kapcsolatfelvétel, így ezentúl a Megbízók privát üzenetben tudnak megkeresni. Ezenkívül Te is tudsz nekik üzenetet küldeni egy projekt kapcsán. Az üzenetekről értesíteni fogunk, így nem maradsz le semmiről. Ha üzenetet szeretnél írni, menj a felhasználó profiljára, és kattints a \'Kapcsolatfelvétel\' gombra, vagy válaszd ki az \'Üzenetek\' menüt, majd keresd meg a felhasználót. Sok sikert! Üdv, Joó Martin';
+            /* $message = 'Szia ' . $user['firstname'] . '! Örömmel értesítelek, hogy mostantól elérhető az oldalon belüli kapcsolatfelvétel, így ezentúl a Megbízók privát üzenetben tudnak megkeresni. Ezenkívül Te is tudsz nekik üzenetet küldeni egy projekt kapcsán. Az üzenetekről értesíteni fogunk, így nem maradsz le semmiről. Ha üzenetet szeretnél írni, menj a felhasználó profiljára, és kattints a \'Kapcsolatfelvétel\' gombra, vagy válaszd ki az \'Üzenetek\' menüt, majd keresd meg a felhasználót. Sok sikert! Üdv, Joó Martin'; */
 
-            // Uzenet kuldese
-            $data = [
-                'message'           => $message,
-                'sender_id'         => 1,
-                'conversation_id'   => $conversation->getId()
-            ];
+            /* // Uzenet kuldese */
+            /* $data = [ */
+            /*     'message'           => $message, */
+            /*     'sender_id'         => 1, */
+            /*     'conversation_id'   => $conversation->getId() */
+            /* ]; */
 
-            $message = new Entity_Message();
-            $message->submit($data);
+            /* $message = new Entity_Message(); */
+            /* $message->submit($data); */
 
-            $count++;
-        }
+            /* $count++; */
+        /* } */
 
-        echo Debug::vars($count . ' conversations created');
-        exit;
+        /* echo Debug::vars($count . ' conversations created'); */
+        /* exit; */
 
     }
 
     public function action_generatemessagesemployer()
     {
-        $offset = $this->request->param('offset');
-        $limit = 50;
+        return false;
+        /* $offset = $this->request->param('offset'); */
+        /* $limit = 50; */
 
-        $users = DB::select('user_id', 
-                [DB::expr('IF(is_company, company_name, firstname)'), 'name'],
-                'is_company'
-            )
-            ->from('users')
-            ->where('user_id', '!=', 1)
-            ->and_where('type', '=', 2)
-            ->offset($limit * ($offset - 1))->limit($limit)
-            ->execute()->as_array();
+        /* $users = DB::select('user_id', */ 
+        /*         [DB::expr('IF(is_company, company_name, firstname)'), 'name'], */
+        /*         'is_company' */
+        /*     ) */
+        /*     ->from('users') */
+        /*     ->where('user_id', '!=', 1) */
+        /*     ->and_where('type', '=', 2) */
+            /* ->offset($limit * ($offset - 1))->limit($limit) */
+            /* ->execute()->as_array(); */
 
-        $count = 0;
+        /* $count = 0; */
 
-        foreach ($users as $user) {
-            $data = [
-                'users'     => [1, $user['user_id']]
-            ];
+        /* foreach ($users as $user) { */
+            /* $data = [ */
+            /*     'users'     => [1, $user['user_id']] */
+            /* ]; */
 
-            $conversation = new Entity_Conversation();
-            $conversation->submit($data);
+            /* $conversation = new Entity_Conversation(); */
+            /* $conversation->submit($data); */
 
-            $invocation = ($user['is_company']) ? 'Kedves' : 'Szia';
-            $message = $invocation . ' ' . $user['name'] . '! Örömmel értesítelek, hogy mostantól elérhető az oldalon belüli kapcsolatfelvétel, így nem kell többé e-maileket küldened a Szabadúszóknak. Egyszerűen menj a profiljára és kattints a \'Kapcsolatfelvétel\' gombra. Vagy menj az \'Üzenetek\' menüre, és keresd ki a megfelelő embert. Az elküldött üzenetről e-mailben értesítjük a címzettet, így garantáltan meg fogja kapni. A válaszról Téged is értesítünk, így nem maradsz le semmiről. Sok sikert! Üdv, Joó Martin';
+            /* $invocation = ($user['is_company']) ? 'Kedves' : 'Szia'; */
+            /* $message = $invocation . ' ' . $user['name'] . '! Örömmel értesítelek, hogy mostantól elérhető az oldalon belüli kapcsolatfelvétel, így nem kell többé e-maileket küldened a Szabadúszóknak. Egyszerűen menj a profiljára és kattints a \'Kapcsolatfelvétel\' gombra. Vagy menj az \'Üzenetek\' menüre, és keresd ki a megfelelő embert. Az elküldött üzenetről e-mailben értesítjük a címzettet, így garantáltan meg fogja kapni. A válaszról Téged is értesítünk, így nem maradsz le semmiről. Sok sikert! Üdv, Joó Martin'; */
 
-            // Uzenet kuldese
-            $data = [
-                'message'           => $message,
-                'sender_id'         => 1,
-                'conversation_id'   => $conversation->getId()
-            ];
+            /* // Uzenet kuldese */
+            /* $data = [ */
+            /*     'message'           => $message, */
+            /*     'sender_id'         => 1, */
+            /*     'conversation_id'   => $conversation->getId() */
+            /* ]; */
 
-            $message = new Entity_Message();
-            $message->submit($data);
+            /* $message = new Entity_Message(); */
+            /* $message->submit($data); */
 
-            $count++;
-        }
+/*             $count++; */
+/*         } */
 
-        echo Debug::vars($count . ' conversations created');
-        exit;
+/*         echo Debug::vars($count . ' conversations created'); */
+/*         exit; */
     }
 
     public function action_message()
