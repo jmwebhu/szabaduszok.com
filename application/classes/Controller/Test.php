@@ -16,7 +16,7 @@ class Controller_Test extends Controller_DefaultTemplate
             ->from('users')
             ->where('user_id', '!=', 1)
             ->and_where('type', '=', 1)
-            ->offset($limit * $offset)->limit($limit)
+            ->offset($limit * ($offset - 1))->limit($limit)
             ->execute()->as_array();
 
         $count = 0;
@@ -61,7 +61,7 @@ class Controller_Test extends Controller_DefaultTemplate
             ->from('users')
             ->where('user_id', '!=', 1)
             ->and_where('type', '=', 2)
-            ->offset($limit * $offset)->limit($limit)
+            ->offset($limit * ($offset - 1))->limit($limit)
             ->execute()->as_array();
 
         $count = 0;
