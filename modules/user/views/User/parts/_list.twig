@@ -9,7 +9,7 @@
 					<a href="{{ ROOT }}szabaduszo/{{ user.getSlug() }}" class="anchor-no-effect">
 						<div class="row project-row bgc-white">
 							<div class="col-sm-4 project-img mobile-hide text-center vcenter">							
-								<img src="{% if user.getLIstPicturePath() %}{{ ROOT }}uploads/picture/{{ user.getLIstPicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded img-responsive list-image center-block hidden-xs {% if user.list_picture_path is null %}freelancer-placeholder-img{% endif %}" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
+								<img src="{% if user.getListPicturePath() %}{{ ROOT }}uploads/picture/{{ user.getListPicturePath() }}{% else %}{{ ROOT }}media/img/szabaduszok-placeholder.png{% endif %}" class="img-rounded img-responsive list-image center-block hidden-xs {% if user.list_picture_path is null %}freelancer-placeholder-img{% endif %}" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
 							</div>
 							<div class="col-sm-8 list-details">
 								<span class="ion ion-person pull-left icon-sm project-sign icon-lapis-lazuli"></span>

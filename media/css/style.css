@@ -870,8 +870,8 @@ h1,h2,h3,h4,h5,h6,p,label,.btn,a{
 @media (max-width:  1300px)
 {
 	.hero-transition {	
-		padding-top: 300px !important;
-		transition: padding-top 0.5s ease;
+		padding-top: 450px !important;
+		transition: padding-top 0.2s ease;
 	}
 	.navbar-collapse.collapse {
 	    display: none !important;
@@ -1358,6 +1358,18 @@ textarea {
 	padding-top: 10px;
 }
 
+.pt20 {
+	padding-top: 20px;
+}
+
+.pt2 {
+	padding-top: 2px !important;
+}
+
+.pt1 {
+	padding-top: 1px !important;
+}
+
 .mb10 {
 	margin-bottom: 10px;
 }
@@ -1368,6 +1380,10 @@ textarea {
 
 .mr1 {
 	margin-right: -1px; 
+}
+
+.mrp1 {
+	margin-right: 1px !important;
 }
 
 .project-owner-container {
@@ -1411,6 +1427,11 @@ ul.nav li.active {
  .text-centeri {
  	text-align: center !important;
  }
+
+.fs15 {
+	font-size: 15px !important;
+}
+
 
 .fs16 {
 	font-size: 16px !important;
@@ -1566,9 +1587,8 @@ img.freelancer-placeholder-img {
 	margin-top: 6%;
 }
 
-.profile-webpage-icon-container {
-	margin-top: 2px;
-	margin-right: 1px;
+.mlm1 {
+	margin-left: -1px !important;
 }
 
 .w33 {
@@ -1590,3 +1610,36 @@ img.freelancer-placeholder-img {
 .ion-ios-information {
 	cursor: pointer;
 }
+
+.icon-ultramarine-blue{
+	color:#3272FF!important;
+	border-color:#3272FF!important;
+}
+.divider-h span{
+	border-color:rgba(255,255,255,.2);
+}
+
+#unread-message-number {
+	color: #C0392B;
+}
+
+#unread-message-number i {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	background-color: #fa3e3e;
+	border-radius: 2px;
+	color: #fff;
+	font-style: normal;
+	font: 11px Helvetica;
+	font-weight: bold;
+	text-align: center;
+	line-height: 15px;
+	margin: 2.5px 0 0 3px;
+}
+
+a#messages-anchor {
+	padding-right: 22px !important;
+	padding-left: 22px !important;
+}
+

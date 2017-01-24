@@ -184,7 +184,8 @@ class Kohana_Log {
     	$postJson 	=  json_encode(Input::post_all());
         $getJson 	=  json_encode(Input::get_all());
 
-        $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString() . ' GET: ' . $getJson . ' POST: ' . $postJson;
+        $userId 	= (Auth::instance()->get_user()->user_id) ? Auth::instance()->get_user()->user_id : 'NULL';
+        $message = $ex->getMessage() . ' Trace: ' . $ex->getTraceAsString() . ' GET: ' . $getJson . ' POST: ' . $postJson . ' USER ID: ' . $userId;
 
         if ($ex instanceof ORM_Validation_Exception) {
             $message .= ' ERRORS: ' . json_encode($ex->errors());

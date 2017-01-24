@@ -438,7 +438,8 @@ class Entity_Project extends Entity implements Notification_Subject
 
     /**
      * @param array $data
-     * @return Entity_Project|bool
+     * @return $this
+     * @throws Exception
      */
     public function submit(array $data)
     {
@@ -474,5 +475,29 @@ class Entity_Project extends Entity implements Notification_Subject
     public function getData()
     {
         return $this->_model->object();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->_project_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSubjectType()
+    {
+        return $this->_model->object_name();
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationUrl()
+    {
+        return Route::url('projectProfile', ['slug' => $this->_slug]);
     }
 }

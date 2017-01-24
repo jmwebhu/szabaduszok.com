@@ -15,6 +15,11 @@
 .idea
 phpmetrics
 report
+coverage
 /application/config/database.php
-/modules/gateway/config/socket.php
+/application/classes/Controller/Test.php
+/application/views/Test/*
 .phpintel
+/modules/gateway/config/socket.php
+tags
+*.swp

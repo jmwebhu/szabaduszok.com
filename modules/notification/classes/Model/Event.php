@@ -10,6 +10,7 @@ class Model_Event extends ORM implements Event
     const TYPE_PARTICIPATE_REMOVE       = 6;
     const TYPE_PARTICIPATE_PAY          = 7;
     const TYPE_PROFILE_RATE             = 8;
+    const TYPE_MESSAGE_NEW              = 9;
 
     protected $_table_name      = 'events';
     protected $_primary_key     = 'event_id';

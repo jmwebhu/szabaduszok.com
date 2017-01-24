@@ -1,0 +1,176 @@
+.triangle-obtuse {
+  position:relative;
+  padding:15px;
+  /*margin:1em 0 3em;*/
+  color:#000;
+  background:#c81e2b;
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+  word-break: break-word
+}
+
+.bubble.blue {
+  /*background-color: #89C4F4;*/
+  background-color: rgb(209, 238, 253);
+}
+
+.bubble.gray {
+  /*background-color: #F2F1EF;*/
+  background-color: rgb(247, 247, 247);
+}
+
+.message-user-header{
+	font-weight:bold;
+	letter-spacing:1px;
+	font-size: 18px;
+}
+.message-preview{
+	color: #4d565d;	
+	font-size: 10px;
+}
+.message-time {
+	font-size: 10px;	
+	padding-top: 12px;
+	padding-left: 0 !important;
+}
+
+.divider-h.message-day {
+	padding: 0 !important;
+}
+
+.message-day {
+	margin-bottom: 0;
+	margin-top: 20px;
+	font-size: 18px;
+}
+
+.message-day:first-child {
+	margin-top: 0 !important;
+}
+
+.bubble.outgoing {
+	margin-left: 20%;
+}
+
+.bubble.incoming {
+	margin-right: 20%;
+}
+
+.bubble.time.outgoing {
+	text-align: right;
+}
+
+.bubble.time.incoming {
+	text-align: left;
+}
+
+.bubble.time {
+	margin-bottom: 0 !important;
+}
+
+#bloc-26 {
+	width: 420px !important;
+	background-color: rgb(250, 250, 250);
+	padding: 0 !important;
+}
+
+#bloc-26 .container {
+	   padding-top: 0 !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 75vh;
+}
+
+#bloc-27 {
+	width: 67.67777777% !important;
+	border-left: 1px solid rgb(220, 220, 220); 
+  padding-left: 25px;
+}
+
+#bloc-27 .container {
+	padding-top: 10px !important;
+    overflow-y: scroll;
+    height: 75vh;
+    overflow-x: hidden;
+
+}
+
+#message-text {
+	border-radius: 0 !important;
+    border: none;
+}
+
+.message-text-container {
+	border: 1px solid #3272FF;
+}
+
+#send {
+	border-radius: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.user-container {
+	border-bottom: 1px solid rgb(220, 220, 220);
+    height: 87px;
+}
+
+.user-container:hover {
+	background-color: rgb(209, 238, 253);
+	cursor: pointer;
+	color: black;
+}
+
+.user-container.selected {
+	background-color: rgb(26, 161, 220);
+}
+
+.user-container.selected * {
+	color: white !important;
+}
+
+.unread-dot {
+    margin-left: 10px;
+    margin-top: 33.5px;
+}
+
+.user-container img {
+    margin-top: 6px;
+    width: 75px; 
+    height: 75px;
+}
+
+.message-user-header.visible-xs.unread {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 767px)
+{
+    #bloc-26 {
+        width: 40% !important;
+        max-width: 300px !important;
+    }
+
+    #bloc-26 .col-sm-6 {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    #bloc-26 .col-sm-12 {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+	#bloc-27 {
+		width: 60% !important;
+	}
+
+    .bloc-group .bloc {
+        display: table-cell !important;
+    }
+
+    .unread-dot {
+        margin-left: 0 !important;
+        margin-top: 5px !important;
+    }
+}

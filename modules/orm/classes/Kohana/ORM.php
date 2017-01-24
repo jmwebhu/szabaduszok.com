@@ -264,6 +264,11 @@ class Kohana_ORM extends Model implements serializable {
         return $this->_table_columns;
     }
 
+    public function setCreatedColumn($createdColumn)
+    {
+        $this->_created_column = $createdColumn;
+    }
+
     /**
      * @param Database $db
      */
@@ -1075,7 +1080,7 @@ class Kohana_ORM extends Model implements serializable {
 	 * Finds multiple database rows and returns an iterator of the rows found.
 	 *
 	 * @throws Kohana_Exception
-	 * @return Database_Result
+	 * @return array
 	 */
 	public function find_all()
 	{
@@ -2473,7 +2478,7 @@ class Kohana_ORM extends Model implements serializable {
 		// Slug keszitese nevbol
 		$slug = URL::slug($name);
 
-		if (empty(trim($slug)))
+		if (empty(trim($slug)) && $this instanceof Model_User)
 		{
 			$slug = $this->email;
 		}

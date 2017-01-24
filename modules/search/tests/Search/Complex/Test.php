@@ -565,6 +565,8 @@ class Search_Complex_Test extends Unittest_TestCase
 
     public function setUp()
     {
+        error_reporting(E_ALL & ~E_STRICT & ~E_DEPRECATED);
+        ini_set('display_errors', 0);
         $this->setUpEntities();
         $this->setUpRelations();
 

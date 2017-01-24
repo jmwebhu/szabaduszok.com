@@ -28,6 +28,12 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
        $this->assertFalse(in_array($item, $array));
     }
 
+    public function assertInArray($item, array $array)
+    {
+        $this->assertTrue(in_array($item, $array));   
+    }
+    
+
     public function assertArrayNotSubset(array $subset, array $array)
     {
         foreach ($subset as $item) {
@@ -49,14 +55,66 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
         $this->_mock = $mock;
     }
 
-    public function createMock($class, $method, $return)
+    /**
+     * @param array $data
+     */
+    protected function assertNotificationExistsInDatabaseWith(array $data)
     {
-        $mock  = $this->getMockBuilder($class)->getMock();
+        $notification = DB::select()
+            ->from('notifications')
+            ->where('notifier_user_id', '=', $data['notifier_user_id'])
+            ->where('notified_user_id', '=', $data['notified_user_id'])
+            ->where('subject_id', '=', $data['subject_id'])
+            ->where('event_id', '=', $data['event_id'])
+            ->limit(1)
+            ->execute()->current();
 
-        $mock->expects($this->any())
-            ->method($method)
-            ->will($this->returnValue($return));
+        $this->assertNotNull($notification['notification_id']);
+        $this->assertNotEmpty($notification['notification_id']);
+        $this->assertTrue($notification['is_archived'] != 1);
+    }
 
-        return $mock;
+    /**
+     * @param $userId
+     * @param $conversationId
+     * @param array $flags
+     */
+    protected function assertUserHasConversationInteraction($userId, $conversationId, array $flags)
+    {
+        $interaction = DB::select()
+            ->from('conversation_interactions')
+            ->where('user_id', '=', $userId)
+            ->and_where('conversation_id', '=', $conversationId)
+            ->execute()->current();
+
+        $this->assertNotNull($interaction);
+        $this->assertNotEmpty($interaction['conversation_interaction_id']);
+        $this->assertEquals(Arr::get($flags, 'is_deleted', 0), $interaction['is_deleted']);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $conversationId
+     */
+    protected function assertUserHasNoConversationInteraction($userId, $conversationId)
+    {
+        $interaction = DB::select()
+            ->from('conversation_interactions')
+            ->where('user_id', '=', $userId)
+            ->and_where('conversation_id', '=', $conversationId)
+            ->execute()->current();
+
+        $this->assertNull($interaction);
+    }
+
+    public function tearDown()
+    {
+        $refl = new ReflectionObject($this);
+        foreach ($refl->getProperties() as $prop) {
+            if (!$prop->isStatic() && 0 !== strpos($prop->getDeclaringClass()->getName(), 'PHPUnit_')) {
+                $prop->setAccessible(true);
+                $prop->setValue($this, null);
+            }
+        }
     }
 }

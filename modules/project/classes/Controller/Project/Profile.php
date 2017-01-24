@@ -112,6 +112,8 @@ class Controller_Project_Profile extends Controller_User
         $this->context->canRate     = (int)$authorizationUser->canRate();
         $this->context->canEdit     = (int)$authorization->canEdit();
         $this->context->canDelete   = (int)$authorization->canDelete();
+
+        $this->context->conversationAuth = new Authorization_Conversation($this->_project->getModel()->user);
     }
 
     protected function setContextRelations()

@@ -77,6 +77,9 @@ abstract class Gateway_Mailinglist
 	 */
 	protected function sendRequest($url, $data, $header = null, $method = 'POST')
 	{
+        /**
+         * TODO torolni 
+         */
 		if (Kohana::$environment == Kohana::PRODUCTION) {
 			$header = ($header) ? $header : '';
 			$header .= "Content-type: application/json\r\n";

@@ -34,7 +34,7 @@ class ORM extends Kohana_ORM
         $singular   = $emptyModel->object_name();
         $className  = 'Model_' . ucfirst($singular);
         $modelTemp  = new $className();		
-        
+
         // Azonosito, tehat letezik
         if (is_numeric($value)) {
             $model = $modelTemp->findByPk($value);                
@@ -52,8 +52,8 @@ class ORM extends Kohana_ORM
             // Slug generalas, hozzadas cache gyujtemenyhez           
             $model->saveSlug();                       
             $model->cacheToCollection();
-        }        
-        
+        }
+
         return $model;
     }
     
@@ -66,18 +66,19 @@ class ORM extends Kohana_ORM
      * 
      * @return void
      */
-    protected function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
+    public function addRelation(array $post, ORM $relationModel, ORM $relationEndModel)
     {
-        $thisPk                         = $this->primary_key();
-        $relationIds                    = [];    			
-		$cache                          = Cache::instance();   
-		$cacheRelations                 = $relationModel->getAll();    	
-		$cacheRelations[$this->{$thisPk}]    = [];
-        
+        $thisPk                             = $this->primary_key();
+        $relationIds                        = [];
+		$cache                              = Cache::instance();
+		$cacheRelations                     = $relationModel->getAll();
+		$cacheRelations[$this->{$thisPk}]   = [];
+
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
-        $postData = Arr::uniqueString($postData);
-		
+                $postData = Arr::uniqueString($postData);
+                $postData = Arr::removeEmptyValues($postData);
+
 		if (!empty($postData)) {
 			foreach ($postData as $value) {
 				$relation       = $this->getOrCreate($value, $relationEndModel);
@@ -88,7 +89,7 @@ class ORM extends Kohana_ORM
 				}				
 
 				$cacheRelations[$this->{$thisPk}][] = $relation;
-			}                
+			}
 
 			$this->add($relationEndModel->object_plural(), $relationIds);       
 			$cache->set($relationModel->table_name(), $cacheRelations);
@@ -162,6 +163,11 @@ class ORM extends Kohana_ORM
         }
 
         return $sb->get('');
+    }
+
+    public function getJson()
+    {
+        return json_encode($this->object());
     }
 
     public function getRelationBy($name)

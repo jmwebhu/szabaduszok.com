@@ -307,43 +307,34 @@ class Entity_Notification extends Entity implements Notification
         return $this->_model->getFromExtraData($key);
     }
 
-
     /**
      * @param int $eventType
-     * @param Model_Project $project
-     * @param Model_User $user
+     * @param Notification_Subject $subject
+     * @param Notifiable $notifier
+     * @param Notifiable $notified
      * @param array|null $extraData
      * @return Entity_Notification
      */
-    public static function createFor($eventType, Model_Project $project, Model_User $user, $extraData = null)
+    public static function createFor($eventType, Notification_Subject $subject, Notifiable $notifier, Notifiable $notified, $extraData = null)
     {
-        $extraData = ($extraData == null) ? [] : $extraData;
-        $event      = Model_Event_Factory::createEvent($eventType);
-        $notifier   = null;
-        $notified   = null;
+        $extraData      = ($extraData == null) ? [] : $extraData;
+        $event          = Model_Event_Factory::createEvent($eventType);
+        $notifierId     = null;
+        $notifiedId     = null;
 
-        switch ($event->getNotifierClass()) {
-            case Entity_User_Employer::class:
-                $notifier = $project->user_id;
-                $notified = $user->user_id;
-                break;
-
-            case Entity_User_Freelancer::class:
-                $notifier = $user->user_id;
-                $notified = $project->user_id;
-                break;
-        }
+        $notifierId = $notifier->getId();
+        $notifiedId = $notified->getId();
 
         Assert::notNull($notifier);
         Assert::notNull($notified);
 
         $notification = new Entity_Notification();
-        $notification->setNotifierUserId($notifier);
-        $notification->setNotifiedUserId($notified);
+        $notification->setNotifierUserId($notifierId);
+        $notification->setNotifiedUserId($notifiedId);
         $notification->setEventId($event->getId());
-        $notification->setSubjectId($project->project_id);
-        $notification->setSubjectName($project->object_name());
-        $notification->setUrl(Route::url('projectProfile', ['slug' => $project->slug]));
+        $notification->setSubjectId($subject->getId());
+        $notification->setSubjectName($subject->getSubjectType());
+        $notification->setUrl($subject->getNotificationUrl());
 
         if ($extraData) {
             $notification->setExtraDataJson(json_encode($extraData));

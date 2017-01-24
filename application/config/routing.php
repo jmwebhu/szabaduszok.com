@@ -66,8 +66,28 @@ Route::set('testIndex', 'test/index')
 		'action'     => 'index',
 ));
 
+Route::set('testGenerateMessages', 'test/generatemessagesemployer/<offset>')
+->defaults(array(
+		'controller' => 'Test',
+		'action'     => 'generatemessagesemployer',
+));
+
+Route::set('testGenerateMessagesFreelancer', 'test/generatemessagesfreelancer/<offset>')
+->defaults(array(
+		'controller' => 'Test',
+		'action'     => 'generatemessagesfreelancer',
+));
+
 Route::set('testClearcache', 'test/clearcache')
 ->defaults(array(
 	'controller' => 'Test',
 	'action'     => 'clearcache',
 ));
+
+Route::set('testClearsession', 'test/clearsession')
+->defaults(array(
+	'controller' => 'Test',
+	'action'     => 'clearsession',
+));
+
+
