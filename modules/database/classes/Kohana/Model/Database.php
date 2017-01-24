@@ -76,8 +76,12 @@ abstract class Kohana_Model_Database extends Model {
             }
         }
 
-        if ($commit) DB::query(NULL,'COMMIT')->execute();
-        else DB::query(NULL,'ROLLBACK')->execute();
+        if ($commit) {
+            DB::query(NULL,'COMMIT')->execute();
+        } else {
+            DB::query(NULL,'ROLLBACK')->execute();
+            Cache::instance()->delete_all();
+        }
 
         DB::query(NULL,'SET AUTOCOMMIT=1')->execute();
         return $commit;
