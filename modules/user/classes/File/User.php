@@ -59,21 +59,21 @@ abstract class File_User
 
     /**
      * @return array|bool
-     * @throws Exception_UserRegistration
+     * @throws ORM_Validation_Exception
      */
     protected function uploadProfilePicture()
     {
-        $this->throwException($this->validateImageFile(), 'Hibás kép formátum. Kérjük próbáld meg újra.');
+        $this->throwException($this->validateImageFile(), 'profile_picture_path');
         $extension = Upload::getExt($this->_profilePictureFile);
 
         $this->setProfilePictureFilenameWith($extension);
         $this->setProfilePictureListFilenameWith($extension);
 
         $sourceFilename = Upload::save($this->_profilePictureFile, $this->_relativeProfilePictureFilename, DOCROOT . self::PATH_PROFILE_PICTURE);
-        $this->throwException($sourceFilename, 'Hiba történt a profilkép feltöltése során. Kérjük próbáld meg újra.');
+        $this->throwException($sourceFilename, 'profile_picture_path');
 
         if (!File::validateByMimes($sourceFilename, ['image/jpeg', 'image/pjpeg', 'image/png'])) {
-            $this->throwException(false, 'Hibás kép formátum. Kérjük próbáld meg újra.');
+            $this->throwException(false, 'profile_picture_path');
             unlink($sourceFilename);
         }
 
@@ -87,13 +87,22 @@ abstract class File_User
 
     /**
      * @param mixed $expression
-     * @param string $message
-     * @throws Exception_UserRegistration
+     * @param string $field
+     * @throws ORM_Validation_Exception
      */
-    protected function throwException($expression, $message)
+    protected function throwException($expression, $field)
     {
         if (!$expression) {
-            throw new Exception_UserRegistration($message);
+            $array = [
+                $field => ''
+            ];
+
+            $validation = Validation::factory($array);
+            $validation->rule($field, 'not_empty');
+
+            if (!$validation->check()) {
+                throw new ORM_Validation_Exception('user', $validation);
+            }
         }
     }
 
