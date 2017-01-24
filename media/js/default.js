@@ -12,7 +12,7 @@ var Default = {
             // Egyaltalan nincs ilyen div az oldalon (mert nem az uzenetek oldalon van a user)
             // Vagy az uzenetek oldalon van, de nem ez a kijeleolt beszelgetes
             // Ha ez a kijelolt, akkor nem kell az olvasatlan uzenetek szamat frissiteni
-            if ($div.length == 0 || !$div.hasClass('selected')) {
+            if ($div.length == 0 || !$div.hasClass('selected')) {
                 Default.updateUreadNumber(data.unread_count);    
             }
         });
