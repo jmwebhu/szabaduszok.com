@@ -31,4 +31,10 @@ class Controller_User_Ajax extends Controller_Ajax
         $user = Entity_User::createUser(Entity_User::TYPE_FREELANCER, Auth::instance()->get_user()->user_id);
         $this->_jsonResponse = json_encode($user->saveProjectNotification(Input::post_all()));
     }
+
+    protected function getUser()
+    {
+        $user = AB::select()->from(new Model_User)->where('user_id', '=', Input::get('id'))->execute()->current();
+        $this->_jsonResponse = json_encode($user->object());
+    }
 }

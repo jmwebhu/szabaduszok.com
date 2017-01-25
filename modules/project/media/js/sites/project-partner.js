@@ -65,7 +65,15 @@ var ProjectPartner = {
         $.fancybox.open(myOption);
     },
     useShortDescriptionClick: function () {
-        $("textarea#message").val(USER.short_description);
+        var ajax = new AjaxBuilder()
+        var success = function (data) {
+            $("textarea#message").val(data.short_description);
+        };
+
+        ajax.data({
+            id: $('input[name="user_id"]').val()
+        }).type('get').url(ROOT + 'user/ajax/getUser').success(success).send();
+
         return false;
     },
     cancelClick: function () {
