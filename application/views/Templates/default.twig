@@ -78,19 +78,11 @@
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
 
-	    	var ROOT    = '{{ ROOT }}'
+            var ROOT    = '{{ ROOT }}'
             var TOKEN   = '{{ token }}'
             var SOCKETURL = '{{ socketUrl }}'
-            var temp    = '{{ loggedUser.getModel().asJson() }}'
             var USERID  = '{{ loggedUser.getId() }}'
 
-            temp = temp.replaceAll("&quot;", "\"");
-
-            if (temp) {
-                var USER = JSON.parse(temp);
-            }
-
-            delete temp;
 	    </script>
         {% if env == PRODUCTION %}
             {# Google Analytics #}
