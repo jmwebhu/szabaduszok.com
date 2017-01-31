@@ -19,7 +19,7 @@
             Szakterületen belüli konkrét képességek, pl.: php, linux, adwords. Légy minél pontosabb, itt is szem előtt tartva a kereshetőséget.
         </p>
 
-        <select id="skills" class="form-control" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
+        <select id="skills" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
             {% for skill in user.getRelation('skills') %}
                 <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
             {% else %}

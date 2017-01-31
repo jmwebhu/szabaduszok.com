@@ -84,7 +84,7 @@
                                                 <p class="text-justify">
                                                     Általános iparág, pl.: informatika. Többet is választhatsz.
                                                 </p>
-                                                <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
+                                                <select name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
                                                     {% for industry in industries %}
                                                         <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) or industry.industry_id in post_session.industries %}selected{% endif %}>{{ industry.name }}</option>
                                                     {% endfor %}
@@ -103,7 +103,7 @@
                                                 </p>
                                                 {% endblock professionHint %}
 
-                                                <select id="professions" class="form-control" name="professions[]" multiple="multiple">
+                                                <select id="professions" name="professions[]" multiple="multiple">
                                                     {% for profession in user.getRelation('professions') %}
                                                         <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>                                        
                                                     {% else %}
