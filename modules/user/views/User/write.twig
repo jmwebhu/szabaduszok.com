@@ -21,151 +21,167 @@
 
                         {% include 'errors/validation_errors.twig' %}
 
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="mg-clear tc-black">
-                                    Személyes profil
-                                </h3>
-                            </div>
-                            <!-- end panel-heading -->
+                        <ul class="nav nav-tabs" data-current="personal-profile">
+                            <li class="active" data-content="personal-profile">Személyes</li>
+                            <li data-content="professional-profile">Szakmai</li>
+                            <li data-content="external-profiles">Külső profilok</li>
+                            <li data-content="addresses">Cím</li>
+                            <li data-content="credentials">Jelszó</li>
+                        </ul>
 
-                            <div class="panel-body">
-                                <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
+                        <div class="tab-content">
+                            <div id="personal-profile" class="tab-pane fade in active">
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="mg-clear tc-black">
+                                            Személyes profil
+                                        </h3>
+                                    </div>
+                                    <!-- end panel-heading -->
 
-                                {% block personalProfile %}
-                                    {% include "User/Write/baseContact.twig" %}
-                                {% endblock personalProfile %}
+                                    <div class="panel-body">
+                                        <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
 
-                                <span class="ion ion-image pull-left icon-dark-gray icon-sm"></span>
-                                <div class="form-group">
-                                    <label>
-                                        Profilkép
-                                    </label>
-                                    <input class="form-control" id="profile-picture" name="profile_picture" type="file" accept="image/*">
-                                    {% if hasPicture %}
-                                        <img src="{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}" class="img-rounded mt10" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
-                                    {% endif %}
+                                        {% block personalProfile %}
+                                            {% include "User/Write/baseContact.twig" %}
+                                        {% endblock personalProfile %}
+
+                                        <span class="ion ion-image pull-left icon-dark-gray icon-sm"></span>
+                                        <div class="form-group">
+                                            <label>
+                                                Profilkép
+                                            </label>
+                                            <input class="form-control" id="profile-picture" name="profile_picture" type="file" accept="image/*">
+                                            {% if hasPicture %}
+                                                <img src="{{ ROOT }}uploads/picture/{{ user.getProfilePicturePath() }}" class="img-rounded mt10" alt="Szabaduszok.com - A magyar freelancer platform {{ user.getName() }}">
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                    <!-- end panel-body -->
                                 </div>
-
+                                <!-- end panel szemelyes profil -->
                             </div>
-                            <!-- end panel-body -->
-                        </div>
-                        <!-- end panel szemelyes profil -->
-
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="mg-clear tc-black">
-                                    Szakmai profil
-                                </h3>
-                            </div>
-
-                            <div class="panel-body">
-                                {% block professionalProfile %}
-                                    <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
-                                    <div class="form-group">                                
-                                        <label>
-                                            Iparágak*
-                                        </label>
-                                        <p class="text-justify">
-                                            Általános iparág, pl.: informatika. Többet is választhatsz.
-                                        </p>
-                                        <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
-                                            {% for industry in industries %}
-                                                <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) or industry.industry_id in post_session.industries %}selected{% endif %}>{{ industry.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>                    
-
-                                    <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
-                                    <div class="form-group">
-                                        <label>
-                                            Szakterületek
-                                        </label>
-
-                                        {% block professionHint %}
-                                        <p class="text-justify">
-                                            Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés.
-                                        </p>
-                                        {% endblock professionHint %}
-
-                                        <select id="professions" class="form-control" name="professions[]" multiple="multiple">
-                                            {% for profession in user.getRelation('professions') %}
-                                                <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>                                        
-                                            {% else %}
-                                                {% for profession in post_session.professions %}
-                                                <option value="{{ profession }}" selected>
-                                                    {% if profession matches '/^\\d+$/' %}                                          
-                                                        {{ AB.getSelect().from(professionModel).where('profession_id', '=', profession).execute().current().name }}
-                                                    {% else %}
-                                                        {{ profession }}
-                                                    {% endif %}
-                                                </option>
-                                                {% endfor %}
-                                            {% endfor %}
-                                        </select>
-                                    </div>                                    
-
-                                    {% block professionalProfileMisc %}
-                                    {% endblock professionalProfileMisc %}
-
-                                    <span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
-                                    <div class="form-group">
-                                        <label>
-                                            Rövid szakmai bemutatkozás
-                                        </label>
-                                        <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{% if user.getShortDescription() %}{{ user.getShortDescription() }}{% else %}{{ post_session.short_description }}{% endif %}</textarea>
+                            <div id="professional-profile" class="tab-pane fade">
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <h3 class="mg-clear tc-black">
+                                            Szakmai profil
+                                        </h3>
                                     </div>
 
-                                {% endblock professionalProfile %}
-                            </div>
-                            <!-- end panel-body szakmai profil -->
-                        </div>
-                        <!-- end panel szakmai profil -->
+                                    <div class="panel-body">
+                                        {% block professionalProfile %}
+                                            <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
+                                            <div class="form-group">                                
+                                                <label>
+                                                    Iparágak*
+                                                </label>
+                                                <p class="text-justify">
+                                                    Általános iparág, pl.: informatika. Többet is választhatsz.
+                                                </p>
+                                                <select class="form-control" name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
+                                                    {% for industry in industries %}
+                                                        <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) or industry.industry_id in post_session.industries %}selected{% endif %}>{{ industry.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>                    
 
-                        {% block externalProfiles %}
-                        {% endblock externalProfiles %}
+                                            <span class="ion ion-university pull-left icon-sm icon-dark-gray"></span>
+                                            <div class="form-group">
+                                                <label>
+                                                    Szakterületek
+                                                </label>
 
-                        {% block address %}
-                        {% endblock address %}
+                                                {% block professionHint %}
+                                                <p class="text-justify">
+                                                    Iparágon belüli, szűkebb szakterület, pl.: webfejlesztés.
+                                                </p>
+                                                {% endblock professionHint %}
 
-                        {% block credentials %}
-                            <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
-                            <div class="form-group">
-                                <label class="password-label">
-                                    Jelszó*
-                                </label>
-                                <input id="password" name="password" type="password" class="form-control"
+                                                <select id="professions" class="form-control" name="professions[]" multiple="multiple">
+                                                    {% for profession in user.getRelation('professions') %}
+                                                        <option value="{{ profession.profession_id }}" selected>{{ profession.name }}</option>                                        
+                                                    {% else %}
+                                                        {% for profession in post_session.professions %}
+                                                        <option value="{{ profession }}" selected>
+                                                            {% if profession matches '/^\\d+$/' %}                                          
+                                                                {{ AB.getSelect().from(professionModel).where('profession_id', '=', profession).execute().current().name }}
+                                                            {% else %}
+                                                                {{ profession }}
+                                                            {% endif %}
+                                                        </option>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>                                    
 
-                                        {% if hasPasswordRules %}
-                                            required data-rules='{"notEmpty": "true", "longer": {"value": 6}, "sameAs": "#password-confirm"}'
-                                        {% else %}
-                                            data-rules='{"longer": {"value": 6}, "sameAs": "#password-confirm"}'
-                                        {% endif %}
-                                >
+                                            {% block professionalProfileMisc %}
+                                            {% endblock professionalProfileMisc %}
 
-                            </div>
-                            <p class="text-justify">
-                                {{ passwordText }}
-                            </p>
+                                            <span class="ion ion-clipboard pull-left icon-sm icon-dark-gray"></span>
+                                            <div class="form-group">
+                                                <label>
+                                                    Rövid szakmai bemutatkozás
+                                                </label>
+                                                <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{% if user.getShortDescription() %}{{ user.getShortDescription() }}{% else %}{{ post_session.short_description }}{% endif %}</textarea>
+                                            </div>
 
-                            <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
-                            <div class="form-group">
-                                <label class="password-label">
-                                    Jelszó mégegyszer*
-                                </label>
-                                <input class="form-control" type="password" id="password-confirm" name="password_confirm" {% if hasPasswordRules %}required{% endif %}>
-                            </div>
-
-                            {% if hasPrivacyCheckbox %}
-                            <div class="form-group">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" id="accept-conditions" required data-rules='{"notEmptyCheckbox": "true"}' checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
-                                    </label>
+                                        {% endblock professionalProfile %}
+                                    </div>
+                                    <!-- end panel-body szakmai profil -->
                                 </div>
+                                <!-- end panel szakmai profil -->
                             </div>
-                            {% endif %}
-                        {% endblock credentials %}
+                            <div id="external-profiles" class="tab-pane fade">
+                                {% block externalProfiles %}
+                                {% endblock externalProfiles %}
+                            </div>
+                            <div id="addresses" class="tab-pane fade">
+                                {% block address %}
+                                {% endblock address %}
+                            </div>
+                            <div id="credentials" class="tab-pane fade">
+                                {% block credentials %}
+                                    <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+                                    <div class="form-group">
+                                        <label class="password-label">
+                                            Jelszó*
+                                        </label>
+                                        <input id="password" name="password" type="password" class="form-control"
+
+                                                {% if hasPasswordRules %}
+                                                    required data-rules='{"notEmpty": "true", "longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                                {% else %}
+                                                    data-rules='{"longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                                {% endif %}
+                                        >
+
+                                    </div>
+                                    <p class="text-justify">
+                                        {{ passwordText }}
+                                    </p>
+
+                                    <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+                                    <div class="form-group">
+                                        <label class="password-label">
+                                            Jelszó mégegyszer*
+                                        </label>
+                                        <input class="form-control" type="password" id="password-confirm" name="password_confirm" {% if hasPasswordRules %}required{% endif %}>
+                                    </div>
+
+                                    {% if hasPrivacyCheckbox %}
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="accept-conditions" required data-rules='{"notEmptyCheckbox": "true"}' checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endblock credentials %}
+                            </div>
+                        </div>
 
                         {% block buttons %}
                             {% if hasCancel %}
