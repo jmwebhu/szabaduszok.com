@@ -64,6 +64,8 @@ abstract class Controller_User_Create extends Controller_User implements Control
         $this->context->email               = $this->_email;
         $this->context->landingPageName     = Input::get('landing_page_name');
 
+        $this->context->userType            = $this->getUserType();
+
         $industry                           = new Model_Industry();
         $this->context->industries          = $industry->getAll();
         $this->context->AB                  = new AB();

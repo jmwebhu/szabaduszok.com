@@ -24,7 +24,11 @@
                         <ul class="nav nav-tabs" data-current="personal-profile">
                             <li class="active" data-content="personal-profile">Személyes</li>
                             <li data-content="professional-profile">Szakmai</li>
+
+                            {% if userType == 1%}
                             <li data-content="external-profiles">Külső profilok</li>
+                            {% endif %}
+
                             <li data-content="addresses">Cím</li>
                             <li data-content="credentials">Jelszó</li>
                         </ul>
@@ -133,10 +137,12 @@
                                 </div>
                                 <!-- end panel szakmai profil -->
                             </div>
+                            {% if userType == 1 %}
                             <div id="external-profiles" class="tab-pane fade">
                                 {% block externalProfiles %}
                                 {% endblock externalProfiles %}
                             </div>
+                            {% endif %}
                             <div id="addresses" class="tab-pane fade">
                                 {% block address %}
                                 {% endblock address %}
