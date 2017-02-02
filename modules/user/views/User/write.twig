@@ -23,26 +23,26 @@
 
                         <ul class="nav nav-tabs steps {% if userType == 1 %}steps-freelancer{% else %}steps-employer{% endif %}" data-current="personal-profile">
                             <li class="active" data-content="personal-profile">
-                                <strong>1. lépés:</strong><br/>
+                                <strong>1. lépés</strong><br/>
                                 Személyes profil
                             </li>
                             <li data-content="professional-profile">
-                                <strong>2. lépés:</strong><br/>
+                                <strong>2. lépés</strong><br/>
                                 Szakmai profil
                             </li>
 
                             {% if userType == 1 %}
                             <li data-content="external-profiles">
-                                <strong>3. lépés:</strong><br/>
+                                <strong>3. lépés</strong><br/>
                                 Külső profilok
                             </li>
                             {% endif %}
 
                             <li data-content="addresses">
                                 {% if userType == 1 %}
-                                    <strong>4. lépés:</strong><br/>
+                                    <strong>4. lépés</strong><br/>
                                 {% else %}
-                                    <strong>3. lépés:</strong><br/>
+                                    <strong>3. lépés</strong><br/>
                                 {% endif %}
                                 Cím
                             </li>

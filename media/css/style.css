@@ -1655,8 +1655,7 @@ ul.nav.steps li {
     color: #ccc;
     background-color: #fafafa;
     border-right: 1px solid #ddd;
-    /* border-radius: 3px; */
-    /* font-size: 18px; */
+    font-size: 18px;
 }
 
 ul.nav.steps li:last-child {
