@@ -1648,13 +1648,27 @@ a#messages-anchor {
 
 ul.nav.steps {
     border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 ul.nav.steps li {
     color: #ccc;
     background-color: #fafafa;
-    border: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    /* border-radius: 3px; */
     /* font-size: 18px; */
+}
+
+ul.nav.steps li:last-child {
+    border-right: none;
+    border-left: none;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+ul.nav.steps li:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 }
 
 ul.nav.steps li.active {
@@ -1672,4 +1686,8 @@ ul.nav.steps-employer li {
 
 button.next:hover {
     color: #fff;
+}
+
+ul.steps {
+    margin-bottom: 30px;
 }
