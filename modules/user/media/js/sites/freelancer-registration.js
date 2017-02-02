@@ -39,12 +39,19 @@ var FreelancerReg = {
         if ($nextStep.length !== 0) {
             $nextStep.trigger('click');
         }
+
+        FreelancerReg.scrollToStep();
     },
     prevClick: function () {
         var $prevStep = $('ul.steps li.active').prev('li');
         if ($prevStep.length !== 0) {
             $prevStep.trigger('click');
         }
+
+        FreelancerReg.scrollToStep();
+    },
+    scrollToStep: function () {
+        $('html, body').animate({scrollTop:$('ul.steps').position().top}, 10);
     }
 };
 
