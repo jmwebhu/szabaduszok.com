@@ -93,7 +93,6 @@ var Validator = {
                 var $elem = null;
 
                 $.each ($inputs, function (index, value) {			
-
                     var $this = $(this);																
                     result = Validator.validateElem($this);
 
@@ -142,6 +141,7 @@ var Validator = {
                     $form.find('span.error-label:not(.general-error-label)').remove();
 
                     $elem.focus();
+
                     var $formGroup = $elem.parents('.form-group:first');        
 
                     $formGroup.addClass('has-error');													

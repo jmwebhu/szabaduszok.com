@@ -59,19 +59,13 @@ var Default = {
 	},
 	submitClick: function () {
 		$.isLoading({ text: "Folyamatban..." });
-		
-		var $button = $(this);
-		
+
+                var $button = $(this);
 		$button.prop('disabled', true);
-		
-		var isValid = Validator.validateForm($button.parent('form'));			
-		if (!isValid) {
-			$button.prop('disabled', false);
-			
-			$.isLoading("hide"); 
-		}
-		
-		$button.prop('disabled', false);
+		var isValid = Validator.validateForm($button.parents('form:first'));			
+
+                $button.prop('disabled', false);
+                $.isLoading("hide"); 
 		
 		return isValid;
 	},

@@ -20,15 +20,19 @@ var RegistrationCommonApp = {
 var ClickHandlerBase = {
     getStep: function () {},
     scrollToStep: function () {
-        $('html, body').animate({scrollTop:$('ul.steps').position().top}, 10);
+        $('html, body').animate({scrollTop:$('ul.steps').position().bottom}, 10);
     },
     handle: function () {
         var $step = this.getStep();
 
-        if ($step.length !== 0) {
-            $step.trigger('click');
+        if ($step.length === 0) {
+            return false;
         }
 
+        $step.trigger('click');
+        var content = $step.data('content');
+
+        $('div#' + content + ' input:not([type="checkbox"]):visible:first').focus();
         ClickHandlerBase.scrollToStep();
     }
 };

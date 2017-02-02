@@ -19,7 +19,7 @@
             Szakterületen belüli konkrét képességek, pl.: php, linux, adwords. Légy minél pontosabb, itt is szem előtt tartva a kereshetőséget.
         </p>
 
-        <select id="skills" name="skills[]" multiple="multiple" data-rules='{"notEmptySelect": "true"}'>
+        <select id="skills" name="skills[]" multiple="multiple" >
             {% for skill in user.getRelation('skills') %}
                 <option value="{{ skill.skill_id }}" selected>{{ skill.name }}</option>
             {% else %}
@@ -41,7 +41,7 @@
         <label>
             Weboldal
         </label>
-        <input class="form-control" id="webpage" name="webpage" type="text" data-rules='{"url": "true"}' value="{% if user.getWebpage() %}{{ user.getWebpage() }}{% else %}{{post_session.webpage }}{% endif %}">
+        <input class="form-control" id="webpage" name="webpage" type="text"  value="{% if user.getWebpage() %}{{ user.getWebpage() }}{% else %}{{post_session.webpage }}{% endif %}">
     </div>
 
     <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
@@ -49,7 +49,7 @@
         <label>
             Minimum nettó órabér*
         </label>
-        <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control" data-rules='{"notEmpty": "true", "number": "true"}' value="{% if user.getMinNetHourlyWage() %}{{ user.getMinNetHourlyWage() }}{% else %}{{post_session.min_net_hourly_wage }}{% endif %}">
+        <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control"  value="{% if user.getMinNetHourlyWage() %}{{ user.getMinNetHourlyWage() }}{% else %}{{post_session.min_net_hourly_wage }}{% endif %}">
     </div>
 
     <span class="ion ion-android-attach pull-left icon-sm icon-dark-gray"></span>

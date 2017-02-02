@@ -94,7 +94,7 @@
                                                 <p class="text-justify">
                                                     Általános iparág, pl.: informatika. Többet is választhatsz.
                                                 </p>
-                                                <select name="industries[]" id="industries" data-rules='{"notEmptySelect": "true"}' multiple>
+                                                <select name="industries[]" id="industries"  multiple>
                                                     {% for industry in industries %}
                                                         <option value="{{ industry.industry_id }}" {% if user.has('industries', industry) or industry.industry_id in post_session.industries %}selected{% endif %}>{{ industry.name }}</option>
                                                     {% endfor %}
@@ -173,9 +173,8 @@
                                                 <input id="password" name="password" type="password" class="form-control"
 
                                                         {% if hasPasswordRules %}
-                                                            required data-rules='{"notEmpty": "true", "longer": {"value": 6}, "sameAs": "#password-confirm"}'
                                                         {% else %}
-                                                            data-rules='{"longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                                            
                                                         {% endif %}
                                                 >
 
@@ -189,36 +188,29 @@
                                                 <label class="password-label">
                                                     Jelszó mégegyszer*
                                                 </label>
-                                                <input class="form-control" type="password" id="password-confirm" name="password_confirm" {% if hasPasswordRules %}required{% endif %}>
+                                                <input class="form-control" type="password" id="password-confirm" name="password_confirm">
                                             </div>
 
                                             {% if hasPrivacyCheckbox %}
                                             <div class="form-group">
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" id="accept-conditions" required data-rules='{"notEmptyCheckbox": "true"}' checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
+                                                        <input type="checkbox" id="accept-conditions" checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
                                                     </label>
                                                 </div>
                                             </div>
                                             {% endif %}
                                         {% endblock credentials %}
-                                        <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
-                                            <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
-                                        </button>
-                                        <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
+                                        {% block buttons %}
+                                            <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
+                                                <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
+                                            </button>
+                                            <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
+                                        {% endblock %}
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        {% block buttons %}
-                            {% if hasCancel %}
-                                <a href="{{ ROOT }}{{ user.getTypeSlug() }}/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
-                            {% endif %}
-                            <!--<button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
-                                <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
-                            </button>-->
-                        {% endblock buttons %}
                     </form>
                 </div>
                 <!-- end col-sm-12 -->
