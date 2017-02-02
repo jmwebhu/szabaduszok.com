@@ -39,7 +39,10 @@ a,button{outline: none!important;} /* Prevent ugly blue glow on chrome and safar
 /* Sizes */
 
 .bloc-lg{
-	padding:100px 50px;
+        padding-top: 30px;
+        padding-bottom: 100px;
+        padding-left: 50px;
+        padding-right: 50px;
 }
 .bloc-md{
 	padding:50px;
@@ -1665,4 +1668,8 @@ ul.nav.steps-freelancer li {
 
 ul.nav.steps-employer li {
     width: 25%;
+}
+
+button.next:hover {
+    color: #fff;
 }
