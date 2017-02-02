@@ -1643,3 +1643,26 @@ a#messages-anchor {
 	padding-left: 22px !important;
 }
 
+ul.nav.steps {
+    border: 1px solid #ddd;
+}
+
+ul.nav.steps li {
+    color: #ccc;
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    /* font-size: 18px; */
+}
+
+ul.nav.steps li.active {
+    background-color: #fff;
+    color: #000;
+}
+
+ul.nav.steps-freelancer li {
+    width: 20%;
+}
+
+ul.nav.steps-employer li {
+    width: 25%;
+}

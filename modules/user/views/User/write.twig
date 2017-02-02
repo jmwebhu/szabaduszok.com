@@ -21,28 +21,41 @@
 
                         {% include 'errors/validation_errors.twig' %}
 
-                        <ul class="nav nav-tabs" data-current="personal-profile">
-                            <li class="active" data-content="personal-profile">Személyes</li>
-                            <li data-content="professional-profile">Szakmai</li>
+                        <ul class="nav nav-tabs steps {% if userType == 1 %}steps-freelancer{% else %}steps-employer{% endif %}" data-current="personal-profile">
+                            <li class="active" data-content="personal-profile">
+                                <strong>1. lépés:</strong><br/>
+                                Személyes profil
+                            </li>
+                            <li data-content="professional-profile">
+                                <strong>2. lépés:</strong><br/>
+                                Szakmai profil
+                            </li>
 
-                            {% if userType == 1%}
-                            <li data-content="external-profiles">Külső profilok</li>
+                            {% if userType == 1 %}
+                            <li data-content="external-profiles">
+                                <strong>3. lépés:</strong><br/>
+                                Külső profilok
+                            </li>
                             {% endif %}
 
-                            <li data-content="addresses">Cím</li>
-                            <li data-content="credentials">Jelszó</li>
+                            <li data-content="addresses">
+                                {% if userType == 1 %}
+                                    <strong>4. lépés:</strong><br/>
+                                {% else %}
+                                    <strong>3. lépés:</strong><br/>
+                                {% endif %}
+                                Cím
+                            </li>
+
+                            <li data-content="credentials">
+                                <strong>5. lépés:</strong><br/>
+                                Jelszó
+                            </li>
                         </ul>
 
                         <div class="tab-content">
                             <div id="personal-profile" class="tab-pane fade in active">
                                 <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="mg-clear tc-black">
-                                            Személyes profil
-                                        </h3>
-                                    </div>
-                                    <!-- end panel-heading -->
-
                                     <div class="panel-body">
                                         <span class='error-label has-error general-error-label block mb10 text-center'>{{ error }}</span>
 
@@ -68,12 +81,6 @@
                             </div>
                             <div id="professional-profile" class="tab-pane fade">
                                 <div class="panel">
-                                    <div class="panel-heading">
-                                        <h3 class="mg-clear tc-black">
-                                            Szakmai profil
-                                        </h3>
-                                    </div>
-
                                     <div class="panel-body">
                                         {% block professionalProfile %}
                                             <span class="ion ion-briefcase pull-left icon-sm icon-dark-gray"></span>
@@ -148,44 +155,48 @@
                                 {% endblock address %}
                             </div>
                             <div id="credentials" class="tab-pane fade">
-                                {% block credentials %}
-                                    <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
-                                    <div class="form-group">
-                                        <label class="password-label">
-                                            Jelszó*
-                                        </label>
-                                        <input id="password" name="password" type="password" class="form-control"
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        {% block credentials %}
+                                            <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+                                            <div class="form-group">
+                                                <label class="password-label">
+                                                    Jelszó*
+                                                </label>
+                                                <input id="password" name="password" type="password" class="form-control"
 
-                                                {% if hasPasswordRules %}
-                                                    required data-rules='{"notEmpty": "true", "longer": {"value": 6}, "sameAs": "#password-confirm"}'
-                                                {% else %}
-                                                    data-rules='{"longer": {"value": 6}, "sameAs": "#password-confirm"}'
-                                                {% endif %}
-                                        >
+                                                        {% if hasPasswordRules %}
+                                                            required data-rules='{"notEmpty": "true", "longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                                        {% else %}
+                                                            data-rules='{"longer": {"value": 6}, "sameAs": "#password-confirm"}'
+                                                        {% endif %}
+                                                >
 
+                                            </div>
+                                            <p class="text-justify">
+                                                {{ passwordText }}
+                                            </p>
+
+                                            <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
+                                            <div class="form-group">
+                                                <label class="password-label">
+                                                    Jelszó mégegyszer*
+                                                </label>
+                                                <input class="form-control" type="password" id="password-confirm" name="password_confirm" {% if hasPasswordRules %}required{% endif %}>
+                                            </div>
+
+                                            {% if hasPrivacyCheckbox %}
+                                            <div class="form-group">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="accept-conditions" required data-rules='{"notEmptyCheckbox": "true"}' checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endblock credentials %}
                                     </div>
-                                    <p class="text-justify">
-                                        {{ passwordText }}
-                                    </p>
-
-                                    <span class="ion ion-locked pull-left icon-sm icon-dark-gray"></span>
-                                    <div class="form-group">
-                                        <label class="password-label">
-                                            Jelszó mégegyszer*
-                                        </label>
-                                        <input class="form-control" type="password" id="password-confirm" name="password_confirm" {% if hasPasswordRules %}required{% endif %}>
-                                    </div>
-
-                                    {% if hasPrivacyCheckbox %}
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" id="accept-conditions" required data-rules='{"notEmptyCheckbox": "true"}' checked>Elfogadom az <a href="{{ ROOT }}szabaduszok-adatvedelem" target="_blank" title="Szabaduszok.com - Adatvédelem">Adatvédelmi nyilatkozatot</a> és a <a href="{{ ROOT }}szabaduszok-felhasznalasi-feltetelek" target="_blank" title="Szabaduszok.com - Felhasználási feltételek">Felhasználási feltételeket</a>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                {% endblock credentials %}
+                                </div>
                             </div>
                         </div>
 
