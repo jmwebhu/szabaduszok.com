@@ -23,5 +23,12 @@
             </label>
             <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{% if user.getAddressStreet() %}{{ user.getAddressStreet() }}{% else %}{{ post_session.address_street }}{% endif %}">
         </div>
+
+        <button class="btn btn-lg btn-block btn-primary next" type="button">
+            Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
+        </button>
+        <button class="btn btn-lg btn-block btn-gray prev" type="button">
+            <span class="fa fa-chevron-left icon-spacer icon-white fs15"></span> Vissza 
+        </button>
     </div>
 </div>

@@ -74,6 +74,9 @@
                                             {% endif %}
                                         </div>
 
+                                        <button class="btn btn-lg btn-block btn-primary next" type="button">
+                                            Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
+                                        </button>
                                     </div>
                                     <!-- end panel-body -->
                                 </div>
@@ -138,6 +141,12 @@
                                                 <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{% if user.getShortDescription() %}{{ user.getShortDescription() }}{% else %}{{ post_session.short_description }}{% endif %}</textarea>
                                             </div>
 
+                                            <button class="btn btn-lg btn-block btn-primary next" type="button">
+                                                Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
+                                            </button>
+                                            <button class="btn btn-lg btn-block btn-gray prev" type="button">
+                                                <span class="fa fa-chevron-left icon-spacer icon-white fs15"></span> Vissza 
+                                            </button>
                                         {% endblock professionalProfile %}
                                     </div>
                                     <!-- end panel-body szakmai profil -->
@@ -195,6 +204,12 @@
                                             </div>
                                             {% endif %}
                                         {% endblock credentials %}
+                                        <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
+                                            <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
+                                        </button>
+                                        <button class="btn btn-lg btn-block btn-gray prev" type="button">
+                                            <span class="fa fa-chevron-left icon-spacer icon-white fs15"></span> Vissza 
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -204,9 +219,9 @@
                             {% if hasCancel %}
                                 <a href="{{ ROOT }}{{ user.getTypeSlug() }}/{{ user.getSlug() }}" class="btn btn-d btn-lg btn-block btn-gray"><span class="ion ion-android-cancel icon-spacer icon-white"></span>Mégsem</a>
                             {% endif %}
-                            <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
+                            <!--<button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
                                 <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
-                            </button>
+                            </button>-->
                         {% endblock buttons %}
                     </form>
                 </div>
