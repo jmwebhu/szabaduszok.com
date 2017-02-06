@@ -20,10 +20,10 @@ class Authorization_User extends Authorization
 	{
 	    if ($auth == null) {
 	        $auth = Auth::instance();
-        }
+            }
 
-        return !($this->_model->type == $this->_user->type || $this->_model->user_id == $this->_user->user_id
-            || !$auth->logged_in() || $this->_model->has('ratings', $this->_user));
+            return !($this->_model->type == $this->_user->type || $this->_model->user_id == $this->_user->user_id
+                || !$auth->logged_in() || $this->_model->has('ratings', $this->_user));
 	}
 	
 	/**

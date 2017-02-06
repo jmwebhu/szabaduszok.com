@@ -9,7 +9,7 @@
         <label>
             Telefonszám*
         </label>
-        <input class="form-control" id="phonenumber" name="phonenumber" type="tel" required data-rules='{"notEmpty": "true"}' value="{% if user.getPhonenumber() %}{{ user.getPhonenumber() }}{% else %}{{ post_session.phonenumber }}{% endif %}">
+        <input class="form-control" id="phonenumber" name="phonenumber" type="tel" required value="{% if user.getPhonenumber() %}{{ user.getPhonenumber() }}{% else %}{{ post_session.phonenumber }}{% endif %}">
     </div>
 {% endblock personalProfile %}
 
