@@ -41,11 +41,11 @@ AssetManager::instance()
 
     ->addController('user_update_freelancer')
         ->addAction('index')
-            ->addJs(['freelancer-registration'])
+            ->addJs(['freelancer-registration', 'registration-common'])
 
     ->addController('user_update_employer')
         ->addAction('index')
-            ->addJs(['employer-registration'])
+            ->addJs(['employer-registration', 'registration-common'])
 
     ->addController('user_profile_freelancer')
         ->addAction('index')

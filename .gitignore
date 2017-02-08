@@ -23,3 +23,5 @@ coverage
 /modules/gateway/config/socket.php
 tags
 *.swp
+.php_cs.cache
+*@*.*.html

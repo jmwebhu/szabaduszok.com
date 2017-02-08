@@ -22,11 +22,9 @@ var EmployerReg = {
 	},
 	bindEvents: function () {
 		this.$submit.click(Default.submitClick);
-		
 		this.$isCompany.change(EmployerReg.isCompanyChange);
 	},
 	addWidgets: function () {
-		
 		this.$industries.select2({
 			theme: "bootstrap"
 		});		
