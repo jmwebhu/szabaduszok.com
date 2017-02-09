@@ -23,7 +23,7 @@ var ClickHandlerBase = {
         $('html, body').animate({scrollTop:$('ul.steps').position().bottom}, 10);
     },
     handle: function () {
-        var $step = this.getStep();
+        var $step = this.getStep();
 
         if ($step.length === 0) {
             return false;
