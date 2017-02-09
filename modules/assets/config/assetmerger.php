@@ -38,5 +38,5 @@ return array(
     'forceBuild' 		=> Kohana::PRODUCTION,
 
     'publishFolders'	=> ['pic','fonts','images','img'],
-    'onlyInclude'		=> (Kohana::$environment == Kohana::DEVELOPMENT),
+    'onlyInclude'		=> (Kohana::$environment == Kohana::DEVELOPMENT || Kohana::$environment == Kohana::STAGING),
 );
