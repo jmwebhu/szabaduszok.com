@@ -407,6 +407,7 @@ abstract class Entity_User extends Entity implements Notifiable, Conversation_Pa
 
     /**
      * @param array $post
+     * @param null $mailinglist
      * @return Entity_User
      * @throws Exception_UserRegistration
      */

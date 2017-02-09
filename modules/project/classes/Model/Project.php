@@ -5,86 +5,85 @@
  *
  * Felelosseg: Projekt lekerdezesek
  */
-
 class Model_Project extends ORM
 {
-    protected $_table_name  = 'projects';
+    protected $_table_name = 'projects';
     protected $_primary_key = 'project_id';
 
-	protected $_created_column = [
-		'column' => 'created_at',
-		'format' => 'Y-m-d H:i'
-	];
-
-	protected $_updated_column = [
-		'column' => 'updated_at',
-		'format' => 'Y-m-d H:i'
-	];
-
-    protected $_table_columns = [
-    	'project_id'        => ['type' => 'int',        'key' => 'PRI'],
-    	'user_id'           => ['type' => 'int',        'null' => true],
-        'name'              => ['type' => 'string',     'null' => true],
-    	'short_description' => ['type' => 'string',     'null' => true],
-    	'long_description'  => ['type' => 'string',     'null' => true],
-        'email'             => ['type' => 'string',     'null' => true],
-        'phonenumber'       => ['type' => 'string',     'null' => true],
-    	'is_active'         => ['type' => 'int',        'null' => true],
-    	'is_paid'           => ['type' => 'int',        'null' => true],
-        'search_text'       => ['type' => 'string',     'null' => true],
-    	'expiration_date'   => ['type' => 'datetime',   'null' => true],
-    	'salary_type'       => ['type' => 'int',        'null' => true],
-        'salary_low'        => ['type' => 'int',        'null' => true],
-        'salary_high'       => ['type' => 'int',        'null' => true],
-    	'slug'              => ['type' => 'string',     'null' => true],
-    	'created_at'        => ['type' => 'datetime',   'null' => true],
-    	'updated_at'        => ['type' => 'datetime',   'null' => true]
+    protected $_created_column = [
+        'column' => 'created_at',
+        'format' => 'Y-m-d H:i'
     ];
 
-    protected $_belongs_to  = [
-        'user'          => [
-            'model'         => 'User',
-            'foreign_key'   => 'user_id'
+    protected $_updated_column = [
+        'column' => 'updated_at',
+        'format' => 'Y-m-d H:i'
+    ];
+
+    protected $_table_columns = [
+        'project_id' => ['type' => 'int', 'key' => 'PRI'],
+        'user_id' => ['type' => 'int', 'null' => true],
+        'name' => ['type' => 'string', 'null' => true],
+        'short_description' => ['type' => 'string', 'null' => true],
+        'long_description' => ['type' => 'string', 'null' => true],
+        'email' => ['type' => 'string', 'null' => true],
+        'phonenumber' => ['type' => 'string', 'null' => true],
+        'is_active' => ['type' => 'int', 'null' => true],
+        'is_paid' => ['type' => 'int', 'null' => true],
+        'search_text' => ['type' => 'string', 'null' => true],
+        'expiration_date' => ['type' => 'datetime', 'null' => true],
+        'salary_type' => ['type' => 'int', 'null' => true],
+        'salary_low' => ['type' => 'int', 'null' => true],
+        'salary_high' => ['type' => 'int', 'null' => true],
+        'slug' => ['type' => 'string', 'null' => true],
+        'created_at' => ['type' => 'datetime', 'null' => true],
+        'updated_at' => ['type' => 'datetime', 'null' => true]
+    ];
+
+    protected $_belongs_to = [
+        'user' => [
+            'model' => 'User',
+            'foreign_key' => 'user_id'
         ]
     ];
 
-    protected $_has_many    = [
-    	'industries'    => [
-    		'model'     	=> 'Industry',
-    		'through'		=> 'projects_industries',
-   			'far_key'		=> 'industry_id',
-   			'foreign_key'	=> 'project_id',
-   		],
-   		'professions'   => [
-    		'model'     	=> 'Profession',
-    		'through'		=> 'projects_professions',
-    		'far_key'		=> 'profession_id',
-   			'foreign_key'	=> 'project_id',
-   		],
-    	'skills'        => [
-    		'model'     	=> 'Skill',
-   			'through'		=> 'projects_skills',
-   			'far_key'		=> 'skill_id',
-   			'foreign_key'	=> 'project_id',
-    	],
-        'partners'      => [
-            'model'     	=> 'Project_Partner',
-            'foreign_key'	=> 'project_id',
+    protected $_has_many = [
+        'industries' => [
+            'model' => 'Industry',
+            'through' => 'projects_industries',
+            'far_key' => 'industry_id',
+            'foreign_key' => 'project_id',
+        ],
+        'professions' => [
+            'model' => 'Profession',
+            'through' => 'projects_professions',
+            'far_key' => 'profession_id',
+            'foreign_key' => 'project_id',
+        ],
+        'skills' => [
+            'model' => 'Skill',
+            'through' => 'projects_skills',
+            'far_key' => 'skill_id',
+            'foreign_key' => 'project_id',
+        ],
+        'partners' => [
+            'model' => 'Project_Partner',
+            'foreign_key' => 'project_id',
         ],
     ];
 
     public function rules()
     {
         return [
-            'user_id'           => [['not_empty']],
-            'name'              => [['not_empty']],
+            'user_id' => [['not_empty']],
+            'name' => [['not_empty']],
             'short_description' => [['not_empty']],
-            'long_description'  => [['not_empty']],
-            'email'             => [['not_empty'], ['email'], ['email_domain']],
-            'phonenumber'       => [['not_empty']],
-            'salary_type'       => [['not_empty']],
-            'salary_low'        => [['not_empty'], ['numeric']],
-            'salary_high'       => [['numeric']]
+            'long_description' => [['not_empty']],
+            'email' => [['not_empty'], ['email'], ['email_domain']],
+            'phonenumber' => [['not_empty']],
+            'salary_type' => [['not_empty']],
+            'salary_low' => [['not_empty'], ['numeric']],
+            'salary_high' => [['numeric']]
         ];
     }
 
@@ -110,7 +109,7 @@ class Model_Project extends ORM
             $post['expiration_date'] = date('Y-m-d', strtotime('+1 month'));
         }
 
-        $post   = $this->setDefaultProperties($post);
+        $post = $this->setDefaultProperties($post);
         parent::submit($post);
 
         $this->saveSlug();
@@ -129,8 +128,8 @@ class Model_Project extends ORM
     public function inactivate()
     {
         try {
-            $error      = false;
-            $message    = '';
+            $error = false;
+            $message = '';
             Model_Database::trans_start();
             $this->throwExceptionIfCannotDelete();
 
@@ -138,13 +137,13 @@ class Model_Project extends ORM
             $this->save();
 
         } catch (Exception $ex) {
-            $error      = true;
-            $message    = 'Sajnos valami hiba történt...';
+            $error = true;
+            $message = 'Sajnos valami hiba történt...';
             Log::instance()->addException($ex);
 
         } catch (HTTP_Exception_403 $ex) {
-            $error      = true;
-            $message    = $ex->getMessage();
+            $error = true;
+            $message = $ex->getMessage();
 
         } finally {
             Model_Database::trans_end([!$error]);
@@ -154,7 +153,7 @@ class Model_Project extends ORM
             }
         }
 
-    	return ['error' => $error, 'message' => $message];
+        return ['error' => $error, 'message' => $message];
     }
 
     /**
@@ -162,7 +161,7 @@ class Model_Project extends ORM
      */
     protected function throwExceptionIfCannotDelete()
     {
-        $authorization  = new Authorization_Project($this);
+        $authorization = new Authorization_Project($this);
 
         if (!$authorization->canDelete()) {
             throw new HTTP_Exception_403('Nincs jogosultságod törölni a projektet');
@@ -177,9 +176,9 @@ class Model_Project extends ORM
     {
         $data = $post;
 
-        $data['user_id']    = Auth::instance()->get_user()->user_id;
-        $data['is_paid']    = 1;
-        $data['is_active']  = 1;
+        $data['user_id'] = Auth::instance()->get_user()->user_id;
+        $data['is_paid'] = 1;
+        $data['is_active'] = 1;
 
         return $data;
     }
@@ -189,9 +188,9 @@ class Model_Project extends ORM
      */
     protected function addRelations(array $post)
     {
-    	$this->removeAll('projects_industries', 'project_id');
-    	$this->removeAll('projects_professions', 'project_id');
-    	$this->removeAll('projects_skills', 'project_id');
+        $this->removeAll('projects_industries', 'project_id');
+        $this->removeAll('projects_professions', 'project_id');
+        $this->removeAll('projects_skills', 'project_id');
 
         $this->addRelation($post, new Model_Project_Industry(), new Model_Industry());
         $this->addRelation($post, new Model_Project_Profession(), new Model_Profession());
@@ -205,7 +204,7 @@ class Model_Project extends ORM
      */
     public function getCount()
     {
-    	return $this->baseSelect()->execute()->count();
+        return $this->baseSelect()->execute()->count();
     }
 
     /**
@@ -255,11 +254,11 @@ class Model_Project extends ORM
             return [];
         }
 
-    	return [
-    		'industries'	=> $this->getRelation(new Model_Project_Industry()),
-    		'professions'	=> $this->getRelation(new Model_Project_Profession()),
-    		'skills'		=> $this->getRelation(new Model_Project_Skill())
-    	];
+        return [
+            'industries' => $this->getRelation(new Model_Project_Industry()),
+            'professions' => $this->getRelation(new Model_Project_Profession()),
+            'skills' => $this->getRelation(new Model_Project_Skill())
+        ];
     }
 
     /**
@@ -268,8 +267,8 @@ class Model_Project extends ORM
     public function getPartners()
     {
         return [
-            'candidates'    => $this->partners->where('type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all(),
-            'participants'  => $this->partners->where('type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all()
+            'candidates' => $this->partners->where('type', '=', Model_Project_Partner::TYPE_CANDIDATE)->find_all(),
+            'participants' => $this->partners->where('type', '=', Model_Project_Partner::TYPE_PARTICIPANT)->find_all()
         ];
     }
 
@@ -279,8 +278,8 @@ class Model_Project extends ORM
      */
     protected function getRelation(ORM $relationModel)
     {
-        $relations          = $relationModel->getAll();
-        $projectRelations   = Arr::get($relations, $this->project_id, []);
+        $relations = $relationModel->getAll();
+        $projectRelations = Arr::get($relations, $this->project_id, []);
 
         return $projectRelations;
     }

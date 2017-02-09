@@ -10,11 +10,9 @@ abstract class Transaction_Message_Delete_Factory
     public static function createDelete(Message $message, Conversation_Participant $user)
     {
         if ($message->getSender()->getId() == $user->getId()) {
-            $type = new Transaction_Message_Delete_Outgoing($message, $user);
+            return new Transaction_Message_Delete_Outgoing($message, $user);
         } else {
-            $type = new Transaction_Message_Delete_Incoming($message, $user);
+            return new Transaction_Message_Delete_Incoming($message, $user);
         }
-
-        return $type;
     }
 }

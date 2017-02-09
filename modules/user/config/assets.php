@@ -12,6 +12,7 @@ AssetCollection::instance()
     // Regisztraciok
     ->setJs('freelancer-registration', 'sites/freelancer-registration.js')
     ->setJs('employer-registration', 'sites/employer-registration.js')
+    ->setJs('registration-common', 'sites/registration-common.js')
     
     // Profilok
     ->setJs('freelancer-profile', 'sites/freelancer-profile.js')
@@ -32,19 +33,19 @@ AssetManager::instance()
 
     ->addController('user_create_freelancer')
         ->addAction('index')
-            ->addJs(['freelancer-registration'])
+            ->addJs(['freelancer-registration', 'registration-common'])
 
     ->addController('user_create_employer')
         ->addAction('index')
-            ->addJs(['employer-registration'])
+            ->addJs(['employer-registration', 'registration-common'])
 
     ->addController('user_update_freelancer')
         ->addAction('index')
-            ->addJs(['freelancer-registration'])
+            ->addJs(['freelancer-registration', 'registration-common'])
 
     ->addController('user_update_employer')
         ->addAction('index')
-            ->addJs(['employer-registration'])
+            ->addJs(['employer-registration', 'registration-common'])
 
     ->addController('user_profile_freelancer')
         ->addAction('index')

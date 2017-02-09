@@ -77,6 +77,9 @@ abstract class Controller_User_Update extends Controller_User implements Control
         $this->context->formAction			= $viewhelper->getFormAction();
         $this->context->hasPasswordRules	= $viewhelper->hasPasswordRules();
         $this->context->hasPicture			= $viewhelper->hasPicture();
+        $this->context->userType            = $this->getUserType();
+
+        $this->context->needSteps           = false;
     }
 
     protected function handlePostRequest()

@@ -1,11 +1,6 @@
 <div class="panel">
-    <div class="panel-heading">
-        <h3 class="mg-clear tc-black">
-            Cím
-        </h3>
-    </div>
-
     <div class="panel-body">
+        <p>Cím megadása nem kötelező</p>
         <span class="ion ion-location pull-left icon-sm icon-dark-gray"></span>
         <div class="form-group">
             <label>
@@ -29,5 +24,10 @@
             </label>
             <input class="form-control" id="address-street" name="address_street" type="text" placeholder="Számlázási" value="{% if user.getAddressStreet() %}{{ user.getAddressStreet() }}{% else %}{{ post_session.address_street }}{% endif %}">
         </div>
+
+        <button class="btn btn-lg btn-block btn-primary next" type="button">
+            Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
+        </button>
+        <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
     </div>
 </div>

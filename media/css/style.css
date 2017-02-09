@@ -39,7 +39,10 @@ a,button{outline: none!important;} /* Prevent ugly blue glow on chrome and safar
 /* Sizes */
 
 .bloc-lg{
-	padding:100px 50px;
+        padding-top: 30px;
+        padding-bottom: 100px;
+        padding-left: 50px;
+        padding-right: 50px;
 }
 .bloc-md{
 	padding:50px;
@@ -415,6 +418,12 @@ button{
 }
 .icon-md{
 	font-size:30px!important;
+}
+.icon-md-lg {
+	font-size:35px!important;
+}
+.icon-lg{
+	font-size:40px!important;
 }
 .icon-xl{
 	font-size:100px!important;
@@ -1643,3 +1652,47 @@ a#messages-anchor {
 	padding-left: 22px !important;
 }
 
+ul.nav.steps {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+ul.nav.steps li {
+    color: #ccc;
+    background-color: #fafafa;
+    border-right: 1px solid #ddd;
+    font-size: 18px;
+}
+
+ul.nav.steps li:last-child {
+    border-right: none;
+    border-left: none;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+ul.nav.steps li:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+ul.nav.steps li.active {
+    background-color: #fff;
+    color: #000;
+}
+
+ul.nav.steps-freelancer li {
+    width: 20%;
+}
+
+ul.nav.steps-employer li {
+    width: 25%;
+}
+
+button.next:hover {
+    color: #fff;
+}
+
+ul.steps {
+    margin-bottom: 30px;
+}
