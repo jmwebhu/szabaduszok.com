@@ -1,3 +1,5 @@
+{% import 'User/write.twig' as buttons %}
+
 <div class="panel">
 	<div class="panel-body">
 		<p>Itt megadhatod más oldalakon szereplő profiljaid URL -jét, amit a felhasználók meg tudnak tekinteni.</p>
@@ -16,9 +18,8 @@
 				<input type="text" name="profiles[]" id="{{ profile.profile_id }}" value="{% if in_array(profile.profile_id, userProfileUrls|keys) %}{{ userProfileUrls[profile.profile_id] }}{% endif %}" class="form-control" placeholder="{{ profile.name }}">																																							
 			</div>
 		{% endfor %}
-                <button class="btn btn-lg btn-block btn-primary next" type="button">
-                    Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
-                </button>
-                <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
+                {{ buttons.nextButton() }} 
+                {{ buttons.submitButton(needSteps) }}
+                {{ buttons.prevButton() }}
 	</div>
 </div>

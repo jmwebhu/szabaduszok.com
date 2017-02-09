@@ -1,4 +1,5 @@
 {% extends "Templates/default.twig" %}
+{% import _self as buttons %}
 
 {% block content %}
     <div class="bloc bgc-anti-flash-white l-bloc tc-black" id="bloc-8">
@@ -105,9 +106,8 @@
                                             {% endif %}
                                         </div>
 
-                                        <button class="btn btn-lg btn-block btn-primary next" type="button">
-                                            Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
-                                        </button>
+                                        {{ _self.nextButton() }}
+                                        {{ _self.submitButton(needSteps) }}
                                     </div>
                                     <!-- end panel-body -->
                                 </div>
@@ -172,10 +172,9 @@
                                                 <textarea class="form-control" id="short-description" name="short_description" rows="4" cols="50" placeholder="Korábbi tapasztalataid, miben mennyire vagy jártas, stb">{% if user.getShortDescription() %}{{ user.getShortDescription() }}{% else %}{{ post_session.short_description }}{% endif %}</textarea>
                                             </div>
 
-                                            <button class="btn btn-lg btn-block btn-primary next" type="button">
-                                                Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
-                                            </button>
-                                            <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
+                                            {{ _self.nextButton() }}
+                                            {{ _self.submitButton(needSteps) }}
+                                            {{ _self.prevButton() }}
                                         {% endblock professionalProfile %}
                                     </div>
                                     <!-- end panel-body szakmai profil -->
@@ -233,10 +232,8 @@
                                             {% endif %}
                                         {% endblock credentials %}
                                         {% block buttons %}
-                                            <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
-                                                <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
-                                            </button>
-                                            <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
+                                            {{ _self.submitButton(false) }}
+                                            {{ _self.prevButton() }}
                                         {% endblock %}
                                     </div>
                                 </div>
@@ -252,3 +249,21 @@
     </div>
     <!-- end bloc-8 -->
 {% endblock content %}
+
+{% macro submitButton(isCreatePage) %}
+    {% if not isCreatePage %}
+    <button class="bloc-button btn btn-lg btn-block btn-lime-green" type="submit">
+        <span class="ion ion-checkmark icon-spacer icon-white"></span>Rögzít
+    </button>
+    {% endif %}
+{% endmacro %}
+
+{% macro nextButton() %}
+    <button class="btn btn-lg btn-block btn-primary next" type="button">
+        Tovább <span class="fa fa-chevron-right icon-spacer icon-white fs15"></span>
+    </button>
+{% endmacro %}
+
+{% macro prevButton() %}
+    <button class="btn btn-lg btn-link prev pull-right" type="button">Vissza</button>
+{% endmacro %}
