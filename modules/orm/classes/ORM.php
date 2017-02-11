@@ -76,8 +76,8 @@ class ORM extends Kohana_ORM
 
     	// _POST kapcsolatok
 		$postData = Arr::get($post, $relationEndModel->table_name(), []);
-                $postData = Arr::uniqueString($postData);
-                $postData = Arr::removeEmptyValues($postData);
+        $postData = Arr::uniqueString($postData);
+        $postData = Arr::removeEmptyValues($postData);
 
 		if (!empty($postData)) {
 			foreach ($postData as $value) {
@@ -91,7 +91,13 @@ class ORM extends Kohana_ORM
 				$cacheRelations[$this->{$thisPk}][] = $relation;
 			}
 
-			$this->add($relationEndModel->object_plural(), $relationIds);       
+            foreach ($relationIds as $i => $relationId) {
+                if (!$this->has($relationEndModel->object_plural(), $relationId)) {
+                    $this->add($relationEndModel->object_plural(), $relationId);
+                }
+			}
+
+			//$this->add($relationEndModel->object_plural(), $relationIds);
 			$cache->set($relationModel->table_name(), $cacheRelations);
 		}        
     }

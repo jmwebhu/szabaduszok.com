@@ -2,6 +2,8 @@
 
 class Model_User_Freelancer extends Model_User_Abstract
 {
+    private $_submitError = false;
+
     /**
      * @return array
      */
@@ -28,7 +30,9 @@ class Model_User_Freelancer extends Model_User_Abstract
     public function submit(array $data)
     {
         parent::submit($data);
-        $this->saveProjectNotification($data);
+        if (!$this->_submitError) {
+            $this->saveProjectNotification($data);
+        }
     }
 
     /**
@@ -75,16 +79,27 @@ class Model_User_Freelancer extends Model_User_Abstract
 
     /**
      * @param array $post
+     * @throws Exception
      */
     public function addRelations(array $post)
     {
-        parent::addRelations($post);
+        try {
+            parent::addRelations($post);
 
-        $this->removeAll('users_skills', 'user_id');
-        $this->removeAll('users_profiles', 'user_id');
+            $this->removeAll('users_skills', 'user_id');
+            $this->removeAll('users_profiles', 'user_id');
 
-        $this->addRelation($post, new Model_User_Skill(), new Model_Skill());
-        $this->addProfiles($post, new Model_Profile());
+            $this->addRelation($post, new Model_User_Skill(), new Model_Skill());
+            $this->addProfiles($post, new Model_Profile());
+
+        } catch (Exception $ex) {
+            $this->_submitError = true;
+
+            $this->removeAll('users_industries', 'user_id');
+            $this->removeAll('users_professions', 'user_id');
+            $this->removeAll('users_skills', 'user_id');
+            Cache::instance()->delete_all();
+        }
     }
 
     /**

@@ -1660,6 +1660,10 @@ class Kohana_ORM extends Model implements serializable {
 	 */
 	public function add($alias, $far_keys, $extra = null)
 	{
+	    if (is_array($far_keys)) {
+	        $far_keys = array_unique($far_keys);
+        }
+
 		$far_keys = ($far_keys instanceof ORM) ? $far_keys->pk() : $far_keys;
 
 		$columns = array($this->_has_many[$alias]['foreign_key'], $this->_has_many[$alias]['far_key']);
