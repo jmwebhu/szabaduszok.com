@@ -12,6 +12,7 @@ abstract class Model_User_Abstract extends Model_User
      */
     public function getCount()
     {
-        return AB::select()->from($this)->where('type', '=', $this->getType())->execute()->count();
+        return DB::select([DB::expr('COUNT(user_id)'), 'total_record'])->from($this->_table_name)->where('type', '=', $this->getType())->execute()->get('total_record');
+        //return AB::select()->from($this)->where('type', '=', $this->getType())->execute()->count();
     }
 }

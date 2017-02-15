@@ -274,6 +274,9 @@ class Model_Auth_User extends ORM {
             $url = ($user->type == 1) ? Route::url('freelancerProfile', ['slug' => $user->slug]) : Route::url('projectOwnerProfile', ['slug' => $user->slug]);
         }
 
+        /**
+         * @todo lehet, hogy ezert lassu
+         */
         $userModel				= new Model_User();
         $all					= $userModel->getAll();
         $all[$user->user_id]	= $user;
