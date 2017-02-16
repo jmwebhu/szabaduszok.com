@@ -75,4 +75,15 @@ class MainCest
         $I->see('Szabaduszok.com - Adatvédelem');
         $I->see('A szabályzat célja');
     }
+
+    public function testNavigateToLogin(\AcceptanceTester $I)
+    {
+        $I->wantTo('navigalas belepes oldalra');
+        $I->amOnPage('/');
+        $I->click('#nav-toggle');
+        $I->click('#login-anchor');
+        $I->seeInCurrentUrl('szabaduszok-belepes');
+        $I->see('Szabaduszok.com Belépés');
+        $I->see('Belépés');
+    }
 }
