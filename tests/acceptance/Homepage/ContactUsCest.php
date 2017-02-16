@@ -1,32 +1,35 @@
 <?php
 
 
+use Faker\Factory;
+
 class ContactUsCest
 {
     private $_faker = null;
 
     public function _before(\AcceptanceTester $I)
     {
+        $this->_faker = Factory::create();
     }
 
     public function testSendInvalidForm(\AcceptanceTester $I)
     {
-/*        $I->wantTo('irj nekunk hibas form');
+        $I->wantTo('irj nekunk hibas form');
         $I->amOnPage('/szabaduszok-irj-nekunk');
-        $I->fillField('Név*', $this->_faker->name);
-        $I->fillField('Email*', $this->_faker->email);
+        $I->fillField('name', $this->_faker->name);
+        $I->fillField('email', $this->_faker->email);
         $I->click('Elküld');
-        $I->see('Kérlek minden mezőt tölts ki', '.alert-danger');*/
+        $I->see('Kérlek minden mezőt tölts ki', '.alert-danger');
     }
 
     public function testSendValidForm(\AcceptanceTester $I)
     {
-/*        $I->wantTo('irj nekunk helyes form');
+        $I->wantTo('irj nekunk helyes form');
         $I->amOnPage('/szabaduszok-irj-nekunk');
-        $I->fillField('Név*', $this->_faker->name);
-        $I->fillField('Email*', $this->_faker->email);
-        $I->fillField('Üzenet*', $this->_faker->paragraph);
+        $I->fillField('name', $this->_faker->name);
+        $I->fillField('email', $this->_faker->email);
+        $I->fillField('message', $this->_faker->paragraph);
         $I->click('Elküld');
-        $I->see('Köszönjük, hogy írtál nekünk, a lehető leghamarabb válaszolni fogunk!', '.alert-success');*/
+        $I->see('Köszönjük, hogy írtál nekünk, a lehető leghamarabb válaszolni fogunk!', '.alert-success');
     }
 }
