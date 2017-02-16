@@ -277,11 +277,11 @@ class Model_Auth_User extends ORM {
         /**
          * @todo lehet, hogy ezert lassu
          */
-        $userModel				= new Model_User();
+/*        $userModel				= new Model_User();
         $all					= $userModel->getAll();
         $all[$user->user_id]	= $user;
 
-        Cache::instance()->set('users', $all);
+        Cache::instance()->set('users', $all);*/
 
         return $url;
     }
