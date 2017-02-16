@@ -25,3 +25,4 @@ tags
 *.swp
 .php_cs.cache
 *@*.*.html
+tests/_output/*
