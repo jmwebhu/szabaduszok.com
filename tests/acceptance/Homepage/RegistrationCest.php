@@ -126,4 +126,25 @@ class RegistrationCest
         $I->see($this->_data['description'], '.bottom-container');
         $I->see('Informatika', '.tag');
     }
+
+    public function testInvalidRegistrationAsEmployer(\AcceptanceTester $I)
+    {
+        $I->wantTo('megbizo regisztracio helytelen adatokkal');
+        $I->amOnPage('/megbizo-regisztracio');
+
+        $I->click('.next');
+        $I->click('.next');
+        $I->click('.next');
+        $I->click('.next');
+        $I->click('.btn-lime-green');
+
+        $I->see('Kérlek javítsd ki az alábbi hibákat', '.panel-heading');
+        $I->see('A vezetéknevet kérlek ne hagyd üresen', '.alert-danger');
+        $I->see('A keresztnevet kérlek ne hagyd üresen', '.alert-danger');
+        $I->see('Az e-mailt kérlek ne hagyd üresen', '.alert-danger');
+        $I->see('Az irányítószámot kérlek ne hagyd üresen', '.alert-danger');
+        $I->see('A várost kérlek ne hagyd üresen', '.alert-danger');
+        $I->see('A telefonszám mező nem lehet üres', '.alert-danger');
+        $I->see('Jelszó mező nem lehet üres', '.alert-danger');
+    }
 }
