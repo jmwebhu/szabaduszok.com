@@ -7,7 +7,7 @@ class ContactUsCest
 {
     private $_faker = null;
 
-    public function _before(\AcceptanceTester $I)
+    public function _before()
     {
         $this->_faker = Factory::create();
     }
