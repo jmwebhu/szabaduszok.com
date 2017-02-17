@@ -11,7 +11,7 @@ class Model_User_Employer extends Model_User_Abstract
         $parent['address_postal_code'][] = ['not_empty'];
 
         $employer = [
-            'address_city'          => [['not_empty'], ['alpha', [':value', true]]],
+            'address_city'          => [['not_empty']],
             'phonenumber'           => [['not_empty']]
         ];
 
