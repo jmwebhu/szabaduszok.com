@@ -86,4 +86,35 @@ class MainCest
         $I->see('Szabaduszok.com Belépés');
         $I->see('Belépés');
     }
+
+    public function testNavigateToRegistrationAsFreelancer(\AcceptanceTester $I)
+    {
+        $I->wantTo('navigalas szabaduszo regisztracio oldalra');
+        $I->amOnPage('/');
+        $I->click('#nav-toggle');
+        $I->click('#interested-anchor');
+        $I->click('Szabadúszó vagyok, csatlakozom!');
+
+        $I->see('Szabadúszó Regisztráció');
+        $I->see('1. lépés Személyes profil', 'li');
+        $I->see('2. lépés Szakmai profil', 'li');
+        $I->see('3. lépés Külső profilok', 'li');
+        $I->see('4. lépés Cím', 'li');
+        $I->see('5. lépés Jelszó', 'li');
+    }
+
+    public function testNavigateToRegistrationAsEmployeer(\AcceptanceTester $I)
+    {
+        $I->wantTo('navigalas megbizo regisztracio oldalra');
+        $I->amOnPage('/');
+        $I->click('#nav-toggle');
+        $I->click('#interested-anchor');
+        $I->click('Megbízó vagyok, csatlakozom!');
+
+        $I->see('Megbízó Regisztráció');
+        $I->see('1. lépés Személyes profil', 'li');
+        $I->see('2. lépés Szakmai profil', 'li');
+        $I->see('3. lépés Cím', 'li');
+        $I->see('4. lépés Jelszó', 'li');
+    }
 }
