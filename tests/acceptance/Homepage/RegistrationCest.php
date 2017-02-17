@@ -147,4 +147,68 @@ class RegistrationCest
         $I->see('A telefonszám mező nem lehet üres', '.alert-danger');
         $I->see('Jelszó mező nem lehet üres', '.alert-danger');
     }
+
+    public function testTabsAndNavigationAsFreelancer(\AcceptanceTester $I)
+    {
+        $I->amOnPage('/szabaduszo-regisztracio');
+
+        $I->see('Szabadúszó regisztráció');
+        $I->see('1. lépés Személyes profil', 'li');
+        $I->see('2. lépés Szakmai profil', 'li');
+        $I->see('3. lépés Külső profilok', 'li');
+        $I->see('4. lépés Cím', 'li');
+        $I->see('5. lépés Jelszó', 'li');
+
+        // Szemelyes profil
+        $I->see('Tovább');
+
+        // Szakmai profil
+        $I->click('.next');
+        $I->see('Tovább');
+        $I->see('Vissza');
+
+        // Kulso profilok
+        $I->click('.next');
+        $I->see('Tovább');
+        $I->see('Vissza');
+
+        // Cim
+        $I->click('.next');
+        $I->see('Tovább');
+        $I->see('Vissza');
+
+        // Jelszo
+        $I->click('.next');
+        $I->see('Rögzít');
+        $I->see('Vissza');
+    }
+
+    public function testTabsAndNavigationAsEmployer(\AcceptanceTester $I)
+    {
+        $I->amOnPage('/megbizo-regisztracio');
+
+        $I->see('Megbízó regisztráció');
+        $I->see('1. lépés Személyes profil', 'li');
+        $I->see('2. lépés Szakmai profil', 'li');
+        $I->see('3. lépés Cím', 'li');
+        $I->see('4. lépés Jelszó', 'li');
+
+        // Szemelyes profil
+        $I->see('Tovább');
+
+        // Szakmai profil
+        $I->click('.next');
+        $I->see('Tovább');
+        $I->see('Vissza');
+
+        // Cim
+        $I->click('.next');
+        $I->see('Tovább');
+        $I->see('Vissza');
+
+        // Jelszo
+        $I->click('.next');
+        $I->see('Rögzít');
+        $I->see('Vissza');
+    }
 }

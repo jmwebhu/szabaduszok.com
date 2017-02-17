@@ -95,12 +95,8 @@ class MainCest
         $I->click('#interested-anchor');
         $I->click('Szabadúszó vagyok, csatlakozom!');
 
+        $I->seeInCurrentUrl('/szabaduszo-regisztracio');
         $I->see('Szabadúszó Regisztráció');
-        $I->see('1. lépés Személyes profil', 'li');
-        $I->see('2. lépés Szakmai profil', 'li');
-        $I->see('3. lépés Külső profilok', 'li');
-        $I->see('4. lépés Cím', 'li');
-        $I->see('5. lépés Jelszó', 'li');
     }
 
     public function testNavigateToRegistrationAsEmployeer(\AcceptanceTester $I)
@@ -111,10 +107,7 @@ class MainCest
         $I->click('#interested-anchor');
         $I->click('Megbízó vagyok, csatlakozom!');
 
+        $I->seeInCurrentUrl('/megbizo-regisztracio');
         $I->see('Megbízó Regisztráció');
-        $I->see('1. lépés Személyes profil', 'li');
-        $I->see('2. lépés Szakmai profil', 'li');
-        $I->see('3. lépés Cím', 'li');
-        $I->see('4. lépés Jelszó', 'li');
     }
 }
