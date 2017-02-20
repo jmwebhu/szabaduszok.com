@@ -142,4 +142,40 @@ class ProjectPartnerCest
 
         $I->dontSee('Jelentkezés', 'div.panel-body a');
     }
+
+    public function testFreelancerCanApply(\AcceptanceTester $I)
+    {
+        $this->loginAsFreelancer($I);
+
+        $this->apply();
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->dontSee('Jelentkezés', 'div.panel-body a');
+        $I->see('Visszavonás', 'div.panel-body a');
+    }
+
+    public function testEmployerCannotApply(\AcceptanceTester $I)
+    {
+        $this->loginAsEmployer($I);
+
+        $this->apply();
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->dontSee('Jelentkezés', 'div.panel-body a');
+        $I->dontSee('Visszavonás', 'div.panel-body a');
+    }
+
+    protected function apply()
+    {
+        $data = [
+            'project_id' => $this->_project->getId(),
+            'user_id' => $this->_freelancer->getId(),
+            'extra_data' => [
+                'message' => $this->_freelancer->getShortDescription()
+            ]
+        ];
+
+        $content = HttpHelper::sendPost('projectpartner/ajax/apply', $data);
+    }
+
 }

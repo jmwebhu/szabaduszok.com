@@ -69,6 +69,7 @@ class Migrate
 
 	public static function mergeTags()
 	{
+	    return true;
 		self::mergeTagsSkills();
 		self::mergeTagsProfessions();
 	}	

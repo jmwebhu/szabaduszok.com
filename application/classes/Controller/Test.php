@@ -4,23 +4,7 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-        $lastName = 'Joo';
-        $firstName = 'Martin';
-        $slug = 'joo-martin';
-        $email = 'medhurst-antonina@szabaduszok.com';
-        $user = [
-            'lastname' => $lastName,
-            'firstname' => $firstName,
-            'email' => $email,
-            'password' => 'lB`5\"-p+6',
-            'slug' => $slug,
-            'type' => 1,
-            'min_net_hourly_wage' => 3000,
-            'short_description' => 'R\u00f6vid bemutatkoz\u00e1s',
-            'is_company' => 0
-        ];
 
-        DB::insert('users', array_keys($user))->values($user)->execute();
     }
     
     public function action_generatemessagesfreelancer()
