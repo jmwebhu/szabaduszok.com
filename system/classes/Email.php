@@ -25,7 +25,7 @@ class Email extends Kohana_Email
                     return true;
                 }
 
-                if (Kohana::$environment == Kohana::DEVELOPMENT) {
+                if (Kohana::$environment != Kohana::PRODUCTION) {
                     file_put_contents($to . ' ' . $subject . '.html', $message);
                     return true;
                 }
