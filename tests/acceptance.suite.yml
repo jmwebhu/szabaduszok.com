@@ -10,3 +10,11 @@ modules:
         - PhpBrowser:
             url: http://127.0.0.1:8888/szabaduszok.com
         - \Helper\Acceptance
+        - Db
+
+    config:
+        Db:
+            dsn: 'mysql:host=localhost:8889;dbname=test.szabaduszok.com'
+            user: 'root'
+            password: 'root'
+            dump: tests/_data/dump.sql

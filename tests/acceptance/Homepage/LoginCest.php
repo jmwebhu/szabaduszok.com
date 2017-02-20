@@ -1,8 +1,21 @@
 <?php
 
 
+use Faker\Factory;
+use Faker\Generator;
+
 class LoginCest
 {
+    /**
+     * @var Generator
+     */
+    private $_faker = null;
+
+    public function _before()
+    {
+        $this->_faker = Factory::create();
+    }
+
     public function testLoginWithValidDataFreelancer(\AcceptanceTester $I)
     {
         $I->wantTo('belepes helyes adatokkal szabaduszokent');
@@ -91,9 +104,27 @@ class LoginCest
 
     public function testPasswordReminderWithValidEmail(\AcceptanceTester $I)
     {
+        $lastName = $this->_faker->lastName;
+        $firstName = $this->_faker->firstName;
+        $slug = strtolower($lastName) . '-' . strtolower($firstName);
+        $email = $slug . '@szabaduszok.com';
+        $I->haveInDatabase('users', [
+            'lastname' => $lastName,
+            'firstname' => $firstName,
+            'email' => $email,
+            'password' => $this->_faker->password(),
+            'slug' => $slug,
+            'type' => 1,
+            'min_net_hourly_wage' => 3000,
+            'short_description' => 'Rövid bemutatkozás',
+            'is_company' => 0
+        ]);
+
+        var_dump($email);
+
         $I->wantTo('elfelejtett jelszo helyes e-mail cimmel');
         $I->amOnPage('/szabaduszok-elfelejtett-jelszo');
-        $I->fillField('email', 'm4rt1n.j00@gmail.com');
+        $I->fillField('email', $email);
         $I->click('.btn');
         $I->seeInCurrentUrl('/szabaduszok-belepes');
         $I->see('Szabaduszok.com Belépés');

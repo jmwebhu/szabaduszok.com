@@ -1,10 +1,13 @@
 <?php
 
-
 use Faker\Factory;
+use Faker\Generator;
 
 class ContactUsCest
 {
+    /**
+     * @var Generator
+     */
     private $_faker = null;
 
     public function _before()

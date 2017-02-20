@@ -4,6 +4,23 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
+        $lastName = 'Joo';
+        $firstName = 'Martin';
+        $slug = 'joo-martin';
+        $email = 'joom1@szabaduszok.com';
+        $user = [
+            'lastname' => $lastName,
+            'firstname' => $firstName,
+            'email' => $email,
+            'password' => 'asdfsdfs',
+            'slug' => $slug,
+            'type' => 1,
+            'min_net_hourly_wage' => 3000,
+            'short_description' => 'Rövid bemutatkozás',
+            'is_company' => 0
+        ];
+
+        DB::insert('users', array_keys($user))->values($user)->execute();
     }
     
     public function action_generatemessagesfreelancer()

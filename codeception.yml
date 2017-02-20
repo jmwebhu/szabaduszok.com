@@ -15,7 +15,7 @@ extensions:
 modules:
     config:
         Db:
-            dsn: ''
-            user: ''
-            password: ''
+            dsn: 'mysql:host=127.0.0.1:8888;dbname=test.szabaduszok.com'
+            user: 'root'
+            password: 'root'
             dump: tests/_data/dump.sql
