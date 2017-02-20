@@ -2,7 +2,8 @@ var Default = {
     initSocket: function () {
         Default.socket = io.connect(SOCKETURL, {
             query: 'room=' + USERID,
-            autoConnect: true
+            autoConnect: true,
+            secure: true
         });
 
         Default.socket.on("new_message", function (data) {
