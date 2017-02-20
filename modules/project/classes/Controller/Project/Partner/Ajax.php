@@ -23,7 +23,7 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     {
         $partner        = new Model_Project_Partner();
         $data           = Input::post_all();
-        $user           = Model_User::createUser(Entity_User::TYPE_FREELANCER, Arr::get($data, 'user_id'));
+        $user           = new Model_User(Arr::get($data, 'user_id'));
         $project        = AB::select()->from(new Model_Project())->where('project_id', '=', Arr::get($data, 'project_id'))->execute()->current();
         $authorization  = new Authorization_User($project, $user);
 
@@ -33,7 +33,7 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function undoApplication()
     {
         $partner                = new Model_Project_Partner(Input::post('project_partner_id'));
-        $user                   = Model_User::createUser(Entity_User::TYPE_FREELANCER, $partner->user_id);
+        $user                   = new Model_User($partner->user_id);
         $authorization          = new Authorization_User($partner->project, $user);
 
         $this->_jsonResponse    = json_encode($partner->undoApplication($authorization, Input::post('extra_data', [])));
@@ -42,7 +42,7 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function approveApplication()
     {
         $partner        = new Model_Project_Partner(Input::post('project_partner_id'));
-        $user           = Model_User::createUser(Entity_User::TYPE_EMPLOYER, Auth::instance()->get_user()->user_id);
+        $user           = new Model_User(Auth::instance()->get_user()->user_id);
         $authorization  = new Authorization_User($partner->project, $user);
 
         $this->_jsonResponse = json_encode($partner->approveApplication($authorization, Input::post('extra_data', [])));
@@ -51,7 +51,7 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function rejectApplication()
     {
         $partner        = new Model_Project_Partner(Input::post('project_partner_id'));
-        $user           = Model_User::createUser(Entity_User::TYPE_EMPLOYER, Auth::instance()->get_user()->user_id);
+        $user           = new Model_User(Auth::instance()->get_user()->user_id);
         $authorization  = new Authorization_User($partner->project, $user);
 
         $this->_jsonResponse = json_encode($partner->rejectApplication($authorization, Input::post('extra_data', [])));
@@ -60,7 +60,7 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function cancelParticipation()
     {
         $partner        = new Model_Project_Partner(Input::post('project_partner_id'));
-        $user           = Model_User::createUser(Entity_User::TYPE_EMPLOYER, Auth::instance()->get_user()->user_id);
+        $user           = new Model_User(Auth::instance()->get_user()->user_id);
         $authorization  = new Authorization_User($partner->project, $user);
 
         $this->_jsonResponse = json_encode($partner->cancelParticipation($authorization, Input::post('extra_data', [])));

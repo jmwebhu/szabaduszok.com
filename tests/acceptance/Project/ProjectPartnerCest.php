@@ -36,6 +36,11 @@ class ProjectPartnerCest
      */
     private $_employerRawPassword;
 
+    /**
+     * @var int
+     */
+    private $_projectPartnerId;
+
     public function _before(\AcceptanceTester $I)
     {
         $this->_faker = Factory::create();
@@ -146,36 +151,50 @@ class ProjectPartnerCest
     public function testFreelancerCanApply(\AcceptanceTester $I)
     {
         $this->loginAsFreelancer($I);
-
-        $this->apply();
-        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
-
-        $I->dontSee('Jelentkezés', 'div.panel-body a');
-        $I->see('Visszavonás', 'div.panel-body a');
+        $this->apply($I, $this->_freelancer, true);
     }
 
     public function testEmployerCannotApply(\AcceptanceTester $I)
     {
         $this->loginAsEmployer($I);
-
-        $this->apply();
-        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
-
-        $I->dontSee('Jelentkezés', 'div.panel-body a');
-        $I->dontSee('Visszavonás', 'div.panel-body a');
+        $this->apply($I, $this->_employer, false);
     }
 
-    protected function apply()
+    protected function apply(\AcceptanceTester $I, Entity_User $user, $success)
     {
         $data = [
             'project_id' => $this->_project->getId(),
-            'user_id' => $this->_freelancer->getId(),
+            'user_id' => $user->getId(),
             'extra_data' => [
-                'message' => $this->_freelancer->getShortDescription()
+                'message' => $user->getShortDescription()
             ]
         ];
 
         $content = HttpHelper::sendPost('projectpartner/ajax/apply', $data);
+        $this->_projectPartnerId = Arr::get($content, 'id', 0);
+
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        if ($success) {
+            $I->dontSee('Jelentkezés', 'div.panel-body a');
+            $I->see('Visszavonás', 'div.panel-body a');
+            $I->see($user->getName(), 'div#candidates');
+        } else {
+            $I->dontSee('Jelentkezés', 'div.panel-body a');
+            $I->dontSee('Visszavonás', 'div.panel-body a');
+            $I->dontSee($user->getName(), 'div#candidates');
+        }
     }
 
+    protected function undoApplication()
+    {
+        $data = [
+            'project_partner_id' => $this->_projectPartnerId,
+            'extra_data' => [
+                'message' => 'Visszavonás'
+            ]
+        ];
+
+        $content = HttpHelper::sendPost('projectpartner/ajax/undoApplication', $data);
+    }
 }
