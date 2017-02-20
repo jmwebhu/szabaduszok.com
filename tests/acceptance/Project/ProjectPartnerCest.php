@@ -220,6 +220,46 @@ class ProjectPartnerCest
         $I->see('Törlés', 'div#participants');
     }
 
+    public function testEmployerCanRejectApplication(\AcceptanceTester $I)
+    {
+        // Jelentkezes
+        $this->loginAsFreelancer($I);
+        $this->apply($I, $this->_freelancer, true);
+        $this->logout();
+
+        // Elutasitas
+        $this->loginAsEmployer($I);
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->see($this->_freelancer->getName(), 'div#candidates');
+        $I->see($this->_freelancer->getShortDescription(), 'div#candidates');
+        $I->see('Jóváhagyás', 'div#candidates');
+
+        $this->rejectApplication();
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->dontSee($this->_freelancer->getName(), 'div#candidates');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#candidates');
+        $I->dontSee('Jóváhagyás', 'div#candidates');
+
+        $I->dontSee($this->_freelancer->getName(), 'div#participants');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#participants');
+        $I->dontSee('Törlés', 'div#participants');
+        $this->logout();
+
+        $this->loginAsFreelancer($I);
+
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->dontSee($this->_freelancer->getName(), 'div#candidates');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#candidates');
+        $I->dontSee('Jóváhagyás', 'div#candidates');
+
+        $I->dontSee($this->_freelancer->getName(), 'div#participants');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#participants');
+        $this->logout();
+    }
+
     protected function apply(\AcceptanceTester $I, Entity_User $user, $success)
     {
         $data = [
@@ -270,6 +310,19 @@ class ProjectPartnerCest
         ];
 
         HttpHelper::sendPost('projectpartner/ajax/approveApplication', $data);
+    }
+
+    protected function rejectApplication()
+    {
+        $data = [
+            'project_partner_id' => $this->_projectPartnerId,
+            'user_id' => $this->_employer->getId(),
+            'extra_data' => [
+                'message' => 'Elutasítom'
+            ]
+        ];
+
+        HttpHelper::sendPost('projectpartner/ajax/rejectApplication', $data);
     }
 
     protected function logout()
