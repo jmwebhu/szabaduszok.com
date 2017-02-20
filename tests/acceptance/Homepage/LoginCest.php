@@ -11,32 +11,103 @@ class LoginCest
      */
     private $_faker = null;
 
+    /**
+     * @var Entity_User
+     */
+    private $_freelancer = null;
+
+    /**
+     * @var Entity_User
+     */
+    private $_employer = null;
+
+    /**
+     * @var string
+     */
+    private $_rawPasswordFreelancer;
+
+    /**
+     * @var string
+     */
+    private $_rawPasswordEmployer;
+
     public function _before()
     {
         $this->_faker = Factory::create();
+        $lastName = $this->_faker->lastName;
+        $firstName = $this->_faker->firstName;
+
+        $slug = URL::slug($lastName . ' ' . $firstName);
+        $email = $slug . '@szabaduszok.com';
+
+        $this->_rawPasswordFreelancer = $this->_faker->password();
+        $paragraph = $this->_faker->paragraph();
+
+        $data = [
+            'lastname' => $lastName,
+            'firstname' => $firstName,
+            'email' => $email,
+            'password' => $this->_rawPasswordFreelancer,
+            'password_confirm' => $this->_rawPasswordFreelancer,
+            'min_net_hourly_wage' => 3000,
+            'short_description' => $paragraph,
+        ];
+
+        $entity = new Entity_User_Freelancer;
+        $this->_freelancer = $entity->submitUser($data);
+
+        $lastName = $this->_faker->lastName;
+        $firstName = $this->_faker->firstName;
+
+        $slug = URL::slug($lastName . ' ' . $firstName);
+        $email = $slug . '@szabaduszok.com';
+
+        $this->_rawPasswordEmployer = $this->_faker->password();
+        $paragraph = $this->_faker->paragraph();
+
+        $data = [
+            'lastname' => $lastName,
+            'firstname' => $firstName,
+            'email' => $email,
+            'password' => $this->_rawPasswordEmployer,
+            'password_confirm' => $this->_rawPasswordEmployer,
+            'short_description' => $paragraph,
+            'phonenumber' => $this->_faker->phoneNumber,
+            'address_city' => $this->_faker->city,
+            'address_postal_code' => $this->_faker->randomNumber(4)
+        ];
+
+        $entity = new Entity_User_Employer;
+        $this->_employer = $entity->submitUser($data);
+    }
+
+    public function _after()
+    {
+        $this->_freelancer->delete();
+        $this->_employer->delete();
     }
 
     public function testLoginWithValidDataFreelancer(\AcceptanceTester $I)
     {
         $I->wantTo('belepes helyes adatokkal szabaduszokent');
         $I->amOnPage('/szabaduszok-belepes');
-        $I->fillField('email', 'm4rt1n.j00@gmail.com');
-        $I->fillField('password', 'Deth4Life01');
+        $I->fillField('email', $this->_freelancer->getEmail());
+        $I->fillField('password', $this->_rawPasswordFreelancer);
         $I->click('.btn');
-        $I->seeInCurrentUrl('szabaduszo/joo-martin');
-        $I->see('Joó Martin');
+        $I->seeInCurrentUrl('szabaduszo/' . $this->_freelancer->getSlug());
+        $I->see($this->_freelancer->getName());
         $I->see('Szabadúszó profil');
     }
 
-    public function testLoginWithValidDataEmployeer(\AcceptanceTester $I)
+    public function testLoginWithValidDataEmployer(\AcceptanceTester $I)
     {
         $I->wantTo('belepes helyes adatokkal megbizokent');
         $I->amOnPage('/szabaduszok-belepes');
-        $I->fillField('email', 'joomartin@jmweb.hu');
-        $I->fillField('password', 'Deth4Life01');
+        $I->fillField('email', $this->_employer->getEmail());
+        $I->fillField('password', $this->_rawPasswordEmployer);
         $I->click('.btn');
-        $I->seeInCurrentUrl('megbizo/joo-martin');
-        $I->see('Joó Martin');
+        $I->seeInCurrentUrl('megbizo/' . $this->_employer->getSlug());
+        $I->see($this->_employer->getName());
         $I->see('Megbízó profil');
     }
 
@@ -45,7 +116,7 @@ class LoginCest
         $I->wantTo('belepes helytelen e-mail cimmel');
         $I->amOnPage('/szabaduszok-belepes');
         $I->fillField('email', 'm4rt1n12.j00@gmail.com');
-        $I->fillField('password', 'Deth4Life01');
+        $I->fillField('password', $this->_rawPasswordFreelancer);
         $I->click('.btn');
         $I->seeInCurrentUrl('szabaduszok-belepes');
         $I->see('Hibás e-mail vagy jelszó. Kérjük próbáld meg újra!', '.error-label');
@@ -56,7 +127,7 @@ class LoginCest
         $I->wantTo('belepes helytelen jelszoval');
         $I->amOnPage('/szabaduszok-belepes');
         $I->fillField('email', 'm4rt1n.j00@gmail.com');
-        $I->fillField('password', 'Dethew4Lasdfife01');
+        $I->fillField('password', 'sdfjshdfPass222');
         $I->click('.btn');
         $I->seeInCurrentUrl('szabaduszok-belepes');
         $I->see('Hibás e-mail vagy jelszó. Kérjük próbáld meg újra!', '.error-label');
@@ -67,7 +138,7 @@ class LoginCest
         $I->wantTo('belepes helytelen email cimmel es jelszoval');
         $I->amOnPage('/szabaduszok-belepes');
         $I->fillField('email', 'm4rtasdfas1n.j00@gmail.com');
-        $I->fillField('password', 'Dethew4Lasdasdffife01');
+        $I->fillField('password', 'invssssfOPassWo');
         $I->click('.btn');
         $I->seeInCurrentUrl('szabaduszok-belepes');
         $I->see('Hibás e-mail vagy jelszó. Kérjük próbáld meg újra!', '.error-label');
@@ -104,27 +175,9 @@ class LoginCest
 
     public function testPasswordReminderWithValidEmail(\AcceptanceTester $I)
     {
-        $lastName = $this->_faker->lastName;
-        $firstName = $this->_faker->firstName;
-        $slug = strtolower($lastName) . '-' . strtolower($firstName);
-        $email = $slug . '@szabaduszok.com';
-        $I->haveInDatabase('users', [
-            'lastname' => $lastName,
-            'firstname' => $firstName,
-            'email' => $email,
-            'password' => $this->_faker->password(),
-            'slug' => $slug,
-            'type' => 1,
-            'min_net_hourly_wage' => 3000,
-            'short_description' => 'Rövid bemutatkozás',
-            'is_company' => 0
-        ]);
-
-        var_dump($email);
-
         $I->wantTo('elfelejtett jelszo helyes e-mail cimmel');
         $I->amOnPage('/szabaduszok-elfelejtett-jelszo');
-        $I->fillField('email', $email);
+        $I->fillField('email', $this->_freelancer->getEmail());
         $I->click('.btn');
         $I->seeInCurrentUrl('/szabaduszok-belepes');
         $I->see('Szabaduszok.com Belépés');

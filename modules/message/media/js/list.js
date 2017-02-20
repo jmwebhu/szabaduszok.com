@@ -14,7 +14,7 @@ var MessageList = {
         MessageList.socket = io.connect(SOCKETURL, {
             query: 'room=' + USERID ,
             autoConnect: true,
-            //secure: true
+            secure: true
         });
 
         MessageList.socket.on("new_message", function(data) {
