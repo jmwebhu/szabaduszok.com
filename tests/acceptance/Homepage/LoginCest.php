@@ -34,23 +34,19 @@ class LoginCest
     public function _before()
     {
         $this->_faker = Factory::create();
+
         $lastName = $this->_faker->lastName;
         $firstName = $this->_faker->firstName;
-
-        $slug = URL::slug($lastName . ' ' . $firstName);
-        $email = $slug . '@szabaduszok.com';
-
         $this->_rawPasswordFreelancer = $this->_faker->password();
-        $paragraph = $this->_faker->paragraph();
 
         $data = [
             'lastname' => $lastName,
             'firstname' => $firstName,
-            'email' => $email,
+            'email' => URL::slug($lastName . ' ' . $firstName) . '@szabaduszok.com',
             'password' => $this->_rawPasswordFreelancer,
             'password_confirm' => $this->_rawPasswordFreelancer,
             'min_net_hourly_wage' => 3000,
-            'short_description' => $paragraph,
+            'short_description' => $this->_faker->paragraph(),
         ];
 
         $entity = new Entity_User_Freelancer;
@@ -59,22 +55,18 @@ class LoginCest
         $lastName = $this->_faker->lastName;
         $firstName = $this->_faker->firstName;
 
-        $slug = URL::slug($lastName . ' ' . $firstName);
-        $email = $slug . '@szabaduszok.com';
-
         $this->_rawPasswordEmployer = $this->_faker->password();
-        $paragraph = $this->_faker->paragraph();
 
         $data = [
             'lastname' => $lastName,
             'firstname' => $firstName,
-            'email' => $email,
+            'email' => URL::slug($lastName . ' ' . $firstName) . '@szabaduszok.com',
             'password' => $this->_rawPasswordEmployer,
             'password_confirm' => $this->_rawPasswordEmployer,
-            'short_description' => $paragraph,
+            'short_description' => $this->_faker->paragraph(),
             'phonenumber' => $this->_faker->phoneNumber,
             'address_city' => $this->_faker->city,
-            'address_postal_code' => $this->_faker->randomNumber(4)
+            'address_postal_code' => 1010
         ];
 
         $entity = new Entity_User_Employer;
