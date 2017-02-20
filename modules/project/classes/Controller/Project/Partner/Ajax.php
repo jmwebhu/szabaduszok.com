@@ -42,7 +42,8 @@ class Controller_Project_Partner_Ajax extends Controller_Ajax
     protected function approveApplication()
     {
         $partner        = new Model_Project_Partner(Input::post('project_partner_id'));
-        $user           = new Model_User(Auth::instance()->get_user()->user_id);
+        $userId         = (Input::post('user_id')) ? Input::post('user_id') : Auth::instance()->get_user()->user_id;
+        $user           = new Model_User($userId);
         $authorization  = new Authorization_User($partner->project, $user);
 
         $this->_jsonResponse = json_encode($partner->approveApplication($authorization, Input::post('extra_data', [])));

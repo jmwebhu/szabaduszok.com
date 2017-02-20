@@ -160,6 +160,66 @@ class ProjectPartnerCest
         $this->apply($I, $this->_employer, false);
     }
 
+    public function testFreelancerCanUndoApplication(\AcceptanceTester $I)
+    {
+        $this->loginAsFreelancer($I);
+        $this->apply($I, $this->_freelancer, true);
+        $this->undoApplication();
+
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+        $I->see('Jelentkezés', 'div.panel-body a');
+        $I->dontSee('Visszavonás', 'div.panel-body a');
+        $I->dontSee($this->_freelancer->getName(), 'div#candidates');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#candidates');
+    }
+
+    public function testEmployerCanApproveApplication(\AcceptanceTester $I)
+    {
+        // Jelentkezes
+        $this->loginAsFreelancer($I);
+        $this->apply($I, $this->_freelancer, true);
+        $this->logout();
+
+        // Jovahagyas
+        $this->loginAsEmployer($I);
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->see($this->_freelancer->getName(), 'div#candidates');
+        $I->see($this->_freelancer->getShortDescription(), 'div#candidates');
+        $I->see('Jóváhagyás', 'div#candidates');
+
+        $this->approveApplication();
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->dontSee($this->_freelancer->getName(), 'div#candidates');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#candidates');
+        $I->dontSee('Jóváhagyás', 'div#candidates');
+
+        $I->see($this->_freelancer->getName(), 'div#participants');
+        $I->see($this->_freelancer->getShortDescription(), 'div#participants');
+        $I->see('Törlés', 'div#participants');
+        $this->logout();
+
+        $this->loginAsFreelancer($I);
+
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->dontSee($this->_freelancer->getName(), 'div#candidates');
+        $I->dontSee($this->_freelancer->getShortDescription(), 'div#candidates');
+        $I->dontSee('Jóváhagyás', 'div#candidates');
+
+        $I->see($this->_freelancer->getName(), 'div#participants');
+        $I->see($this->_freelancer->getShortDescription(), 'div#participants');
+        $this->logout();
+
+        $this->loginAsEmployer($I);
+        $I->amOnPage('/szabaduszo-projekt/' . $this->_project->getSlug());
+
+        $I->see($this->_freelancer->getName(), 'div#participants');
+        $I->see($this->_freelancer->getShortDescription(), 'div#participants');
+        $I->see('Törlés', 'div#participants');
+    }
+
     protected function apply(\AcceptanceTester $I, Entity_User $user, $success)
     {
         $data = [
@@ -179,6 +239,7 @@ class ProjectPartnerCest
             $I->dontSee('Jelentkezés', 'div.panel-body a');
             $I->see('Visszavonás', 'div.panel-body a');
             $I->see($user->getName(), 'div#candidates');
+            $I->see($user->getShortDescription(), 'div#candidates');
         } else {
             $I->dontSee('Jelentkezés', 'div.panel-body a');
             $I->dontSee('Visszavonás', 'div.panel-body a');
@@ -195,6 +256,24 @@ class ProjectPartnerCest
             ]
         ];
 
-        $content = HttpHelper::sendPost('projectpartner/ajax/undoApplication', $data);
+        HttpHelper::sendPost('projectpartner/ajax/undoApplication', $data);
+    }
+
+    protected function approveApplication()
+    {
+        $data = [
+            'project_partner_id' => $this->_projectPartnerId,
+            'user_id' => $this->_employer->getId(),
+            'extra_data' => [
+                'message' => 'Jóváhagyom'
+            ]
+        ];
+
+        HttpHelper::sendPost('projectpartner/ajax/approveApplication', $data);
+    }
+
+    protected function logout()
+    {
+        Auth::instance()->logout(true);
     }
 }

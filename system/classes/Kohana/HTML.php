@@ -251,7 +251,7 @@ class Kohana_HTML {
 		// Set the script type
 		$attributes['type'] = 'text/javascript';
 
-        if (Kohana::$environment != Kohana::DEVELOPMENT) {
+        if (Kohana::$environment != Kohana::DEVELOPMENT && Kohana::$environment != Kohana::TESTING) {
             return '<script'.HTML::attributes($attributes).' async></script>';
         }
 
