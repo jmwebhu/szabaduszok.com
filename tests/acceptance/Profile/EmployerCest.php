@@ -4,7 +4,7 @@
 use Faker\Factory;
 use Faker\Generator;
 
-class FreelancerCest
+class EmployerCest
 {
     /**
      * @var Generator
@@ -14,7 +14,7 @@ class FreelancerCest
     /**
      * @var Entity_User
      */
-    private $_freelancer = null;
+    private $_employer = null;
 
     /**
      * @var string
@@ -35,16 +35,17 @@ class FreelancerCest
             'email' => URL::slug($lastName . ' ' . $firstName) . '@szabaduszok.com',
             'password' => $this->_rawPassword,
             'password_confirm' => $this->_rawPassword,
-            'min_net_hourly_wage' => 3000,
             'short_description' => $this->_faker->paragraph(),
-            'industries' => [1]
+            'phonenumber' => $this->_faker->phoneNumber,
+            'address_city' => $this->_faker->city,
+            'address_postal_code' => 1010
         ];
 
-        $entity = new Entity_User_Freelancer;
-        $this->_freelancer = $entity->submitUser($data);
+        $entity = new Entity_User_Employer();
+        $this->_employer = $entity->submitUser($data);
 
         $I->amOnPage('/szabaduszok-belepes');
-        $I->fillField('email', $this->_freelancer->getEmail());
+        $I->fillField('email', $this->_employer->getEmail());
         $I->fillField('password', $this->_rawPassword);
 
         // Belepes
@@ -56,19 +57,18 @@ class FreelancerCest
 
     public function _after()
     {
-        $this->_freelancer->delete();
+        $this->_employer->delete();
     }
 
     public function testTabsAndNavigation(\AcceptanceTester $I)
     {
         $I->wantTo('profil szerkesztes tabok es navigalas');
 
-        $I->seeInCurrentUrl('szabaduszo-profil-szerkesztes/' . $this->_freelancer->getSlug());
-        $I->see('Profil szerkesztése: ' . $this->_freelancer->getName());
+        $I->seeInCurrentUrl('megbizo-profil-szerkesztes/' . $this->_employer->getSlug());
+        $I->see('Profil szerkesztése: ' . $this->_employer->getName());
 
         $I->see('Személyes profil', 'li');
         $I->see('Szakmai profil', 'li');
-        $I->see('Külső profilok', 'li');
         $I->see('Cím', 'li');
         $I->see('Jelszó', 'li');
 
@@ -77,12 +77,6 @@ class FreelancerCest
         $I->see('Rögzít');
 
         // Szakmai profil
-        $I->click('.next');
-        $I->see('Tovább');
-        $I->see('Rögzít');
-        $I->see('Vissza');
-
-        // Kulso profilok
         $I->click('.next');
         $I->see('Tovább');
         $I->see('Rögzít');
@@ -101,22 +95,9 @@ class FreelancerCest
 
         $I->click('Rögzít');
 
-        $I->seeInCurrentUrl('szabaduszo/' . $this->_freelancer->getSlug());
-        $I->see($this->_freelancer->getName());
-        $I->see('Szabadúszó profil');
+        $I->seeInCurrentUrl('megbizo/' . $this->_employer->getSlug());
+        $I->see($this->_employer->getName());
+        $I->see('Megbízó profil');
     }
 
-    public function testChangeProjectNotification(\AcceptanceTester $I)
-    {
-        $I->click('#nav-toggle');
-        $I->click('#profile-anchor');
-
-        $I->selectOption('industries[]', 'Pénzügy');
-        $I->selectOption('industries[]', 'Ipar');
-
-        $I->selectOption('#skill-relation', 'Mindegyikét (ÉS kapcsolat)');
-        $I->click('#save-project-notification');
-
-        $I->cantSee('Hiba');
-    }
 }
