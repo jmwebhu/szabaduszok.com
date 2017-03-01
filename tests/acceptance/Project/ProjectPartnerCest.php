@@ -131,6 +131,7 @@ class ProjectPartnerCest
 
     public function testFreelancerCanSeeApply(\AcceptanceTester $I)
     {
+        $I->wantTo('szabaduszo latja a jelentkezes gombot');
         $this->loginAsFreelancer($I);
 
         $I->see('Jelentkezés', 'div.panel-body a');
@@ -138,6 +139,7 @@ class ProjectPartnerCest
 
     public function testEmployerCannotSeeApply(\AcceptanceTester $I)
     {
+        $I->wantTo('megbizo nem latja a jelentkezes gombot');
         $this->loginAsEmployer($I);
 
         $I->dontSee('Jelentkezés', 'div.panel-body a');
@@ -145,6 +147,7 @@ class ProjectPartnerCest
 
     public function testFreelancerCanApply(\AcceptanceTester $I)
     {
+        $I->wantTo('szabaduszo jelentkezhet a projektre');
         $this->loginAsFreelancer($I);
 
         $this->apply();
@@ -156,6 +159,7 @@ class ProjectPartnerCest
 
     public function testEmployerCannotApply(\AcceptanceTester $I)
     {
+        $I->wantTo('megbizo nem jelentkezhet a projektre');
         $this->loginAsEmployer($I);
 
         $this->apply();
