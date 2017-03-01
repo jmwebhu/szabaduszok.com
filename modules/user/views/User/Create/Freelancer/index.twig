@@ -36,6 +36,14 @@
         </select>
     </div>
 
+    <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
+    <div class="form-group">
+        <label>
+            Minimum nettó órabér*
+        </label>
+        <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control"  value="{% if user.getMinNetHourlyWage() %}{{ user.getMinNetHourlyWage() }}{% else %}{{post_session.min_net_hourly_wage }}{% endif %}">
+    </div>
+
     <span class="ion ion-android-calendar pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
     <div class="form-group">
         <label>
@@ -50,14 +58,6 @@
             Weboldal
         </label>
         <input class="form-control" id="webpage" name="webpage" type="text"  value="{% if user.getWebpage() %}{{ user.getWebpage() }}{% else %}{{post_session.webpage }}{% endif %}">
-    </div>
-
-    <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
-    <div class="form-group">
-        <label>
-            Minimum nettó órabér*
-        </label>
-        <input type="text" id="min-net-hourly-wage" name="min_net_hourly_wage" class="form-control"  value="{% if user.getMinNetHourlyWage() %}{{ user.getMinNetHourlyWage() }}{% else %}{{post_session.min_net_hourly_wage }}{% endif %}">
     </div>
 
     <span class="ion ion-android-attach pull-left icon-sm icon-dark-gray"></span>

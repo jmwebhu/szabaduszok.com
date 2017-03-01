@@ -13,7 +13,7 @@ class Model_User_Freelancer extends Model_User_Abstract
         $freelancer = [
             'min_net_hourly_wage'   => [['not_empty'], ['numeric']],
             'webpage'               => [['url']],
-            'professional_experience' => [['not_empty'], ['numeric']]
+            'professional_experience' => [['numeric']]
         ];
 
         return array_merge($parent, $freelancer);

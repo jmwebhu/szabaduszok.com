@@ -61,7 +61,6 @@ class Model_User_Test extends Unittest_TestCase
         $this->assertTrue(in_array(['not_empty'], $rules['firstname']));
         $this->assertTrue(in_array(['not_empty'], $rules['password']));
         $this->assertTrue(in_array(['not_empty'], $rules['min_net_hourly_wage']));
-        $this->assertTrue(in_array(['not_empty'], $rules['professional_experience']));
     }
 
     /**

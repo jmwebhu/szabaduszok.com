@@ -4,7 +4,8 @@ class Controller_Test extends Controller_DefaultTemplate
 {
     public function action_index()
     {
-
+        echo Debug::vars(Valid::numeric(210));
+        exit;
     }
     
     public function action_generatemessagesfreelancer()
