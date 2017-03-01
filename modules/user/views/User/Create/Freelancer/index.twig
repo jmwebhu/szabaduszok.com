@@ -36,6 +36,14 @@
         </select>
     </div>
 
+    <span class="ion ion-social-usd pull-left icon-sm project-dollar-sign icon-dark-gray"></span>
+    <div class="form-group">
+        <label>
+            Szakmai tapasztalat években
+        </label>
+        <input type="text" id="professional_experience" name="professional_experience" class="form-control"  value="{% if user.getProfessionalExperience() %}{{ user.getProfessionalExperience() }}{% else %}{{post_session.professional_experience }}{% endif %}">
+    </div>
+
     <span class="fa fa-chrome pull-left icon-sm icon-dark-gray"></span>
     <div class="form-group">
         <label>

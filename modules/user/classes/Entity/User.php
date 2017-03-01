@@ -462,7 +462,8 @@ abstract class Entity_User extends Entity implements Notifiable, Conversation_Pa
      */
     protected function fixPost(array $post)
     {
-        return Text_User::fixPostalCode($post);
+        $post = Text_User::fixPostalCode($post);
+        return Text_User::fixProfessionalExperience($post);
     }
 
     /**

@@ -320,7 +320,8 @@ class Entity_User_Test extends Unittest_TestCase
             'phonenumber'           => '06301923380',
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
-            'webpage'               => 'szabaduszok.com'
+            'webpage'               => 'szabaduszok.com',
+            'professional_experience'  => '5'
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -338,6 +339,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('2500', $freelancer->getMinNetHourlyWage());
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
+        $this->assertEquals('5', $freelancer->getProfessionalExperience());
     }
 
     /**
@@ -360,7 +362,7 @@ class Entity_User_Test extends Unittest_TestCase
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
             'webpage'               => 'szabaduszok.com',
-            'profiles'              => $profiles
+            'profiles'              => $profiles,
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -380,6 +382,48 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
 
         $this->assertUserProfilesExistInDatabase($profiles, $freelancer->getUserId());
+    }
+
+    public function testSubmitFreelancerProfessionalExperience()
+    {
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $data = [
+            'lastname' => 'Joó',
+            'firstname' => 'Martin',
+            'email' => uniqid() . '@szabaduszok.com',
+            'password' => 'Password123',
+            'password_confirm' => 'Password123',
+            'address_postal_code' => '9700',
+            'address_city' => 'Szombathely',
+            'phonenumber' => '06301923380',
+            'short_description' => 'Rövid bemutatkozás',
+            'min_net_hourly_wage' => '2500',
+            'webpage' => 'szabaduszok.com',
+            'professional_experience' => '5'
+        ];
+
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+        $this->assertEquals('5', $freelancer->getProfessionalExperience());
+
+        $data['professional_experience'] = '2.5';
+        $data['email'] = uniqid() . '@szabaduszok.com';
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $orm = ORM::factory('User_Freelancer', $freelancer->getUserId());
+        $this->assertEquals('2.5', $orm->professional_experience);
+
+
+        $data['professional_experience'] = '2,5';
+        $data['email'] = uniqid() . '@szabaduszok.com';
+        $freelancer = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer->getUserId();
+
+        $orm = ORM::factory('User_Freelancer', $freelancer->getUserId());
+        $this->assertEquals('2.5', $orm->professional_experience);
     }
 
     /**

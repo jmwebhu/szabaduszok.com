@@ -21,12 +21,21 @@
                 <span class="ion ion-social-usd icon-sm project-dollar-sign icon-dark-gray"></span>
             </div>
             <div class="col-95 fs18">
-                {% if user.getMinNetHourlyWage() is not null %}
+                {% if user.getMinNetHourlyWage() %}
                     {{ user.getMinNetHourlyWage()|number_format(0, '.', ' ') }} Ft /óra
                 {% else %}
                     Nincs adat
                 {% endif %}
             </div>
+
+            {% if user.getProfessionalExperience() %}
+                <div class="col-5 fs18">
+                    <span class="ion ion-social-usd icon-sm project-dollar-sign icon-dark-gray"></span>
+                </div>
+                <div class="col-95 fs18">
+                    {{ user.getProfessionalExperience()|round(2) }} év szakmai tapasztalat
+                </div>
+            {% endif %}
 
             {% if user.getWebpage() %}
                 <div class="col-5 fs15 pt1 mrp1 mlm1 mb1">

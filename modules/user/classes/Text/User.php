@@ -69,4 +69,10 @@ class Text_User
 
         return $urlWithHttp;
     }
+
+    public static function fixProfessionalExperience($post)
+    {
+        $post['professional_experience'] = str_replace(',', '.', $post['professional_experience']);
+        return $post;
+    }
 }
