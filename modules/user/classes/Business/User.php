@@ -19,6 +19,7 @@ abstract class Business_User extends Business
             $sb->append($this->_model->getRelationString($relation))->append(' ');
         }
 
+
         return $sb->get();
     }
 
