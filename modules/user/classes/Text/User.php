@@ -70,9 +70,15 @@ class Text_User
         return $urlWithHttp;
     }
 
+    /**
+     * @param $post
+     * @return mixed
+     */
     public static function fixProfessionalExperience($post)
     {
-        $post['professional_experience'] = str_replace(',', '.', $post['professional_experience']);
+        $original = Arr::get($post, 'professional_experience', '');
+        $post['professional_experience'] = str_replace(',', '.', $original);
+
         return $post;
     }
 }
