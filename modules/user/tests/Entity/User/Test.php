@@ -321,7 +321,8 @@ class Entity_User_Test extends Unittest_TestCase
             'short_description'     => 'Rövid bemutatkozás',
             'min_net_hourly_wage'   => '2500',
             'webpage'               => 'szabaduszok.com',
-            'professional_experience'  => '5'
+            'professional_experience'  => '5',
+            'is_able_to_bill'       => 'on'
         ];
 
         $freelancer->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
@@ -340,6 +341,7 @@ class Entity_User_Test extends Unittest_TestCase
         $this->assertEquals('1', $freelancer->getSkillRelation());
         $this->assertEquals('1', $freelancer->getNeedProjectNotification());
         $this->assertEquals('5', $freelancer->getProfessionalExperience());
+        $this->assertEquals(1, $freelancer->getIsAbleToBill());
     }
 
     /**
@@ -424,6 +426,55 @@ class Entity_User_Test extends Unittest_TestCase
 
         $orm = ORM::factory('User_Freelancer', $freelancer->getUserId());
         $this->assertEquals('2.5', $orm->professional_experience);
+    }
+
+    public function testSubmitFreelancerAbleToBill()
+    {
+        $freelancer1 = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $freelancer1Email = uniqid() . '@szabaduszok.com';
+        $freelancer2Email = uniqid() . '@szabaduszok.com';
+
+        $data = [
+            'lastname' => 'Joó',
+            'firstname' => 'Martin',
+            'email' => $freelancer1Email,
+            'password' => 'Password123',
+            'password_confirm' => 'Password123',
+            'address_postal_code' => '9700',
+            'address_city' => 'Szombathely',
+            'phonenumber' => '06301923380',
+            'short_description' => 'Rövid bemutatkozás',
+            'min_net_hourly_wage' => '2500',
+            'webpage' => 'szabaduszok.com',
+            'professional_experience' => '5',
+        ];
+
+        $freelancer1->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer1->getUserId();
+        $orm = ORM::factory('User_Freelancer', $freelancer1->getUserId());
+        $this->assertEquals(0, $orm->is_able_to_bill);
+
+        $data['is_able_to_bill'] = 'on';
+        $data['email'] = $freelancer2Email;
+        $freelancer2 = Entity_User::createUser(Entity_User::TYPE_FREELANCER);
+        $freelancer2->submitUser($data, $this->getMailinglistMockToCreate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        self::$_insertedUserIds[] = $freelancer2->getUserId();
+        $orm = ORM::factory('User_Freelancer', $freelancer2->getUserId());
+        $this->assertEquals(1, $orm->is_able_to_bill);
+
+        $data['is_able_to_bill'] = 'on';
+        $data['email'] = $freelancer1Email;
+        $data['user_id'] = $freelancer1->getId();
+        $freelancer1->submitUser($data, $this->getMailinglistMockToUpdate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        $orm = ORM::factory('User_Freelancer', $freelancer2->getUserId());
+        $this->assertEquals(1, $orm->is_able_to_bill);
+
+        $data['is_able_to_bill'] = 'off';
+        $data['email'] = $freelancer2Email;
+        $data['user_id'] = $freelancer2->getId();
+        $freelancer2->submitUser($data, $this->getMailinglistMockToUpdate('Gateway_Mailinglist_Mailchimp_Freelancer'));
+        $orm = ORM::factory('User_Freelancer', $freelancer2->getUserId());
+        $this->assertEquals(0, $orm->is_able_to_bill);
     }
 
     /**

@@ -60,6 +60,14 @@
         <input class="form-control" id="webpage" name="webpage" type="text"  value="{% if user.getWebpage() %}{{ user.getWebpage() }}{% else %}{{post_session.webpage }}{% endif %}">
     </div>
 
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" id="is-able-to-bill" name="is_able_to_bill" {% if user.getIsAbleToBill() or post_session.is_able_to_bill == 'on' %}checked{% endif %}><strong>Számlaképes?</strong>
+        </label>
+    </div>
+
+    <br/>
+
     <span class="ion ion-android-attach pull-left icon-sm icon-dark-gray"></span>
     <div class="form-group">
         <label>

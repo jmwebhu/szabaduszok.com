@@ -27,15 +27,27 @@ class Text_User_Test extends Unittest_TestCase
     }
 
     /**
-     * @covers Text_User::alterCheckboxValue()
+     * @covers Text_User::alterCheckboxCompanyValue()
      */
-    public function testAlterCheckboxValues()
+    public function testAlterCheckboxCompanyValue()
     {
-        $this->assertEquals(['is_company' => 1, 'company_name' => 'Szabaduszok.com Zrt.'], Text_User::alterCheckboxValue(['is_company' => 'on', 'company_name' => 'Szabaduszok.com Zrt.']));
-        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxValue(['is_company' => 'off', 'company_name' => 'Szabaduszok.com Zrt.']));
-        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxValue(['is_company' => 'off', 'company_name' => '']));
-        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxValue(['is_company' => '', 'company_name' => '']));
-        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxValue([]));
+        $this->assertEquals(['is_company' => 1, 'company_name' => 'Szabaduszok.com Zrt.'], Text_User::alterCheckboxCompanyValue(['is_company' => 'on', 'company_name' => 'Szabaduszok.com Zrt.']));
+        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxCompanyValue(['is_company' => 'off', 'company_name' => 'Szabaduszok.com Zrt.']));
+        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxCompanyValue(['is_company' => 'off', 'company_name' => '']));
+        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxCompanyValue(['is_company' => '', 'company_name' => '']));
+        $this->assertEquals(['is_company' => 0, 'company_name' => null], Text_User::alterCheckboxCompanyValue([]));
+    }
+
+    /**
+     * @covers Text_User::alterCheckboxAbleToBillValue()
+     */
+    public function testAlterCheckboxAbleToBillValue()
+    {
+        $this->assertEquals(['is_able_to_bill' => 1], Text_User::alterCheckboxAbleToBillValue(['is_able_to_bill' => 'on']));
+        $this->assertEquals(['is_able_to_bill' => 0], Text_User::alterCheckboxAbleToBillValue(['is_able_to_bill' => 'off']));
+        $this->assertEquals(['is_able_to_bill' => 0], Text_User::alterCheckboxAbleToBillValue(['is_able_to_bill' => '']));
+        $this->assertEquals(['is_able_to_bill' => 0], Text_User::alterCheckboxAbleToBillValue(['is_able_to_bill' => null]));
+        $this->assertEquals(['is_able_to_bill' => 0], Text_User::alterCheckboxAbleToBillValue([]));
     }
 
     /**

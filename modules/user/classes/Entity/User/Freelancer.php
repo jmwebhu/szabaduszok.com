@@ -33,6 +33,11 @@ class Entity_User_Freelancer extends Entity_User
     protected $_professional_experience;
 
     /**
+     * @var bool
+     */
+    protected $_is_able_to_bill;
+
+    /**
      * @return string
      */
     public function getTypeSlug()
@@ -89,6 +94,14 @@ class Entity_User_Freelancer extends Entity_User
     }
 
     /**
+     * @return bool
+     */
+    public function getIsAbleToBill()
+    {
+        return $this->_is_able_to_bill;
+    }
+
+    /**
      * @param string $cvPath
      */
     public function setCvPath($cvPath)
@@ -124,6 +137,7 @@ class Entity_User_Freelancer extends Entity_User
     protected function fixPost(array $post)
     {
         $data = parent::fixPost($post);
+        $data = Text_User::alterCheckboxAbleToBillValue($data);
         return Text_User::fixUrl($data, 'webpage');
     }
 

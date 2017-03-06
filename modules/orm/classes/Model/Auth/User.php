@@ -216,7 +216,7 @@ class Model_Auth_User extends ORM {
     }
 
     /**
-     * @param strin $password
+     * @param string $password
      * @return array
      */
     public static function getHashedCredentials($password, $passwordConfirm = null)
