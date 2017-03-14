@@ -10,6 +10,9 @@ $freelancer = [
 	],
 	'webpage'		=> [
 		'url' 		=> 'A weboldalnál kérlek érvényes URL -t adj meg'
+	],
+    'professional_experience'		=> [
+		'numeric' 	=> 'A szakmai tapasztalatnál kérlek csak számot adj meg'
 	]
 ];
 

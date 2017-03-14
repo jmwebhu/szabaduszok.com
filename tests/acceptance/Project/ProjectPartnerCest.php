@@ -41,7 +41,7 @@ class ProjectPartnerCest
      */
     private $_projectPartnerId;
 
-    public function _before(\AcceptanceTester $I)
+    public function _before()
     {
         $this->_faker = Factory::create();
 
@@ -136,6 +136,7 @@ class ProjectPartnerCest
 
     public function testFreelancerCanSeeApply(\AcceptanceTester $I)
     {
+        $I->wantTo('szabaduszo latja a jelentkezes gombot');
         $this->loginAsFreelancer($I);
 
         $I->see('Jelentkezés', 'div.panel-body a');
@@ -143,6 +144,7 @@ class ProjectPartnerCest
 
     public function testEmployerCannotSeeApply(\AcceptanceTester $I)
     {
+        $I->wantTo('megbizo nem latja a jelentkezes gombot');
         $this->loginAsEmployer($I);
 
         $I->dontSee('Jelentkezés', 'div.panel-body a');
@@ -150,6 +152,7 @@ class ProjectPartnerCest
 
     public function testFreelancerCanApply(\AcceptanceTester $I)
     {
+        $I->wantTo('szabaduszo jelentkezhet a projektre');
         $this->loginAsFreelancer($I);
         $this->apply($I, $this->_freelancer, true);
     }
@@ -222,6 +225,8 @@ class ProjectPartnerCest
 
     public function testEmployerCanRejectApplication(\AcceptanceTester $I)
     {
+        $I->wantTo('megbizo elutasithatja a szabaduszo jelentkezeset');
+
         // Jelentkezes
         $this->loginAsFreelancer($I);
         $this->apply($I, $this->_freelancer, true);

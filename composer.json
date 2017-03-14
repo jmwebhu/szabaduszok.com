@@ -3,7 +3,8 @@
 		"phpunit/phpunit": "3.7.24 - 4",
 		"phpmd/phpmd" : "@stable",
 		"squizlabs/php_codesniffer": "2.*",
-		"fzaninotto/faker": "~1.4"
+		"fzaninotto/faker": "~1.4",
+		"phpmetrics/phpmetrics": "dev-master"
 	},
 	"require": {
 		"codeception/codeception": "^2.2"

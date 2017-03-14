@@ -116,4 +116,37 @@ abstract class Unittest_TestCase extends Kohana_Unittest_TestCase
             }
         }
     }
+    
+    protected function getMockObjects(array $data, array $constructorArgs = [])
+    {
+        $mocks = [];
+        foreach ($data as $class => $methods) {
+            $mock = $this->getMockBuilder($class)
+                ->setConstructorArgs($constructorArgs)
+                ->setMethods(array_keys($methods))
+                ->getMock();
+
+            foreach ($methods as $method => $attributes) {
+                $times = Arr::get($attributes, 'times', 'any');
+                $mock->expects($this->{$times}())
+                    ->method($method)
+                    ->will($this->returnValue($attributes['return']));
+            }
+
+            $mocks[$class] = $mock;
+        }
+
+        return $mocks;
+    }
+
+    protected function getMockObject($class, array $methods, array $constructorArgs = [])
+    {
+        $data = [
+            $class => $methods
+        ];
+
+        $objects = $this->getMockObjects($data, $constructorArgs);
+
+        return $objects[$class];
+    }
 }

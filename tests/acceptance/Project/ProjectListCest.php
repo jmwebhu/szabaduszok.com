@@ -109,8 +109,7 @@ class ProjectListCest
     {
         $I->wantTo('projekt lista alap megjelenes');
 
-        $I->see('Admin rendszer', '.project-title-header');
-        $I->see('Teszt IT', '.project-title-header');
+        $I->see('A marketing projekt', '.project-title-header');
         $I->see($this->_project->getName(), '.project-title-header');
     }
 
@@ -121,17 +120,26 @@ class ProjectListCest
         $I->selectOption('industries[]', 'Informatika');
         $I->click('#complex-submit');
 
-        $I->see('Admin rendszer', '.project-title-header');
         $I->dontSee($this->_project->getName());
+    }
+
+    public function testSearchInListWithMyProject(\AcceptanceTester $I)
+    {
+        $I->wantTo('projekt lista kereses');
+
+        $I->selectOption('industries[]', 'Marketing');
+        $I->click('#complex-submit');
+
+        $I->see($this->_project->getName());
     }
 
     public function testClickOnProject(\AcceptanceTester $I)
     {
         $I->wantTo('projektre kattintas');
 
-        $I->click('Admin rendszer');
+        $I->click('A marketing projekt');
 
-        $I->seeInCurrentUrl('szabaduszo-projekt/admin-rendszer');
-        $I->see('Admin rendszer');
+        $I->seeInCurrentUrl('szabaduszo-projekt/a-marketing-projekt');
+        $I->see('A marketing projekt');
     }
 }

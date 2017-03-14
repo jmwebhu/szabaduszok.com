@@ -48,4 +48,15 @@ class Text_User_Test extends Unittest_TestCase
         $this->assertEquals('http://szabaduszok.com', $this->invokeMethod($text, 'addHttpTo', ['http://szabaduszok.com']));
         $this->assertEquals('https://szabaduszok.com', $this->invokeMethod($text, 'addHttpTo', ['https://szabaduszok.com']));
     }
+    
+    /** @test */
+    function it_replace_commas_to_dots_in_professional_experience()
+    {
+        $this->assertEquals(['professional_experience' => '12.5'], Text_User::fixProfessionalExperience(['professional_experience' => '12,5']));
+        $this->assertEquals(['professional_experience' => '12.5'], Text_User::fixProfessionalExperience(['professional_experience' => '12.5']));
+        $this->assertEquals(['professional_experience' => '4'], Text_User::fixProfessionalExperience(['professional_experience' => '4']));
+
+        $this->assertEquals(['professional_experience' => ''], Text_User::fixProfessionalExperience(['professional_experience' => '']));
+        $this->assertEquals(['professional_experience' => ''], Text_User::fixProfessionalExperience([]));
+    }
 }

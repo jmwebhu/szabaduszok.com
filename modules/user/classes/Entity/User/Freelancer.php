@@ -28,6 +28,11 @@ class Entity_User_Freelancer extends Entity_User
     protected $_webpage;
 
     /**
+     * @var float
+     */
+    protected $_professional_experience;
+
+    /**
      * @return string
      */
     public function getTypeSlug()
@@ -73,6 +78,14 @@ class Entity_User_Freelancer extends Entity_User
     public function getWebpage()
     {
         return $this->_webpage;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProfessionalExperience()
+    {
+        return $this->_professional_experience;
     }
 
     /**

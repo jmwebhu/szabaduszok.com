@@ -94,7 +94,35 @@ class Viewhelper_Project_Test extends Unittest_TestCase
         $this->assertEquals('06301923380', $editWithPhonenumber);
         $this->assertEquals('0694310320', $editWithoutPhonenumber);
     }
-    
+
+    /** @test */
+    function it_gets_salary_by_low_and_high_if_they_are_equal()
+    {
+        $viewhelper = new Viewhelper_Project;
+
+        $project = $this->getMockObject('Entity_Project', ['isSalariesEqual' => ['return' => true], 'getSalaryLow' => ['return' => 2500]]);
+        $salaryInt = $this->invokeMethod($viewhelper, 'getSalaryByLowHigh', [$project]);
+        $this->assertEquals('2 500', $salaryInt);
+
+        $project = $this->getMockObject('Entity_Project', ['isSalariesEqual' => ['return' => true], 'getSalaryLow' => ['return' => 25000.5]]);
+        $salaryFloat = $this->invokeMethod($viewhelper, 'getSalaryByLowHigh', [$project]);
+        $this->assertEquals('25 001', $salaryFloat);
+    }
+
+    /** @test */
+    function it_gets_salary_by_low_and_high_if_they_are_not_equal()
+    {
+        $viewhelper = new Viewhelper_Project;
+
+        $project = $this->getMockObject('Entity_Project', ['isSalariesEqual' => ['return' => false], 'getSalaryLow' => ['return' => 2500], 'getSalaryHigh' => ['return' => 5000]]);
+        $salaryInt = $this->invokeMethod($viewhelper, 'getSalaryByLowHigh', [$project]);
+        $this->assertEquals('2 500 - 5 000', $salaryInt);
+
+        $project = $this->getMockObject('Entity_Project', ['isSalariesEqual' => ['return' => false], 'getSalaryLow' => ['return' => 97500.1], 'getSalaryHigh' => ['return' => 125000]]);
+        $salaryFloat = $this->invokeMethod($viewhelper, 'getSalaryByLowHigh', [$project]);
+        $this->assertEquals('97 500 - 125 000', $salaryFloat);
+    }
+
     public function testGetSalaryDataProvider()
     {
         // Oraber, nincs felso

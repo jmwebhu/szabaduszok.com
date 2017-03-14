@@ -51,6 +51,7 @@ class Model_User extends Model_Auth_User
 		'need_project_notification'	=> ['type' => 'int', 'null' => true],
 		'webpage'					=> ['type' => 'string', 'null' => true],
         'salt'                      => ['type' => 'string', 'null' => true],
+        'professional_experience'   => ['type' => 'int', 'null' => true],
 	];
 	
     protected $_has_many = [
@@ -118,7 +119,7 @@ class Model_User extends Model_Auth_User
             'firstname'             => [['not_empty']],
             'email'                 => [['not_empty'], ['email'], ['email_domain']],
             'password'              => [['not_empty'], ['min_length', [':value', 6]]],
-            'address_postal_code'   => [['numeric'], ['min_length', [':value', 4]]]
+            'address_postal_code'   => [['numeric'], ['min_length', [':value', 4]]],
         ];
     }
 

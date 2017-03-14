@@ -55,6 +55,7 @@ class Model_User_Test extends Unittest_TestCase
         $this->assertArrayHasKey('address_postal_code', $rules);
         $this->assertArrayHasKey('min_net_hourly_wage', $rules);
         $this->assertArrayHasKey('webpage', $rules);
+        $this->assertArrayHasKey('professional_experience', $rules);
 
         $this->assertTrue(in_array(['not_empty'], $rules['lastname']));
         $this->assertTrue(in_array(['not_empty'], $rules['firstname']));

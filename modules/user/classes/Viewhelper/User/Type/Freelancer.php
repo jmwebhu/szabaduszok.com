@@ -48,4 +48,9 @@ abstract class Viewhelper_User_Type_Freelancer extends Viewhelper_User_Type
 
         return false;
     }
+
+    public function hasProfessionalExperience()
+    {
+        return $this->_user->getProfessionalExperience();
+    }
 }
