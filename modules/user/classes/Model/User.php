@@ -37,7 +37,7 @@ class Model_User extends Model_Auth_User
 		'profile_picture_path'		=> ['type' => 'string', 'null' => true],
 		'list_picture_path'			=> ['type' => 'string', 'null' => true],
 		'cv_path'					=> ['type' => 'string', 'null' => true],
-		'is_company'				=> ['type' => 'int', 'null' => true],
+		'is_company'				=> ['type' => 'tinyint', 'null' => true],
 		'company_name'				=> ['type' => 'string', 'null' => true],
 		'created_at'				=> ['type' => 'datetime', 'null' => true],
 		'updated_at'				=> ['type' => 'datetime', 'null' => true],
@@ -45,13 +45,14 @@ class Model_User extends Model_Auth_User
 		'raters_count'				=> ['type' => 'int', 'null' => true],
 		'rating_points_avg'			=> ['type' => 'decimal', 'null' => true],
 		'skill_relation'			=> ['type' => 'int', 'null' => true],
-		'is_admin'					=> ['type' => 'int', 'null' => true],
+		'is_admin'					=> ['type' => 'tinyint', 'null' => true],
 		'search_text'				=> ['type' => 'string', 'null' => true],
 		'landing_page_id'			=> ['type' => 'int', 'null' => true],
 		'need_project_notification'	=> ['type' => 'int', 'null' => true],
 		'webpage'					=> ['type' => 'string', 'null' => true],
         'salt'                      => ['type' => 'string', 'null' => true],
         'professional_experience'   => ['type' => 'int', 'null' => true],
+        'is_able_to_bill'           => ['type' => 'tinyint', 'null' => true],
 	];
 	
     protected $_has_many = [
@@ -172,6 +173,8 @@ class Model_User extends Model_Auth_User
      */
     public function submit(array $data)
     {
+        //echo Debug::vars($data);exit;
+        
         $id = Arr::get($data, 'user_id');
 
         if ($id) {

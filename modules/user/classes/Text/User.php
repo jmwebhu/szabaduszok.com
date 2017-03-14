@@ -37,7 +37,7 @@ class Text_User
      * @param array $post
      * @return array
      */
-    public static function alterCheckboxValue(array $post)
+    public static function alterCheckboxCompanyValue(array $post)
     {
         $data       = $post;
         $isCompany  = Arr::get($post, 'is_company', false);
@@ -50,6 +50,20 @@ class Text_User
             $data['is_company']     = 0;
             $data['company_name']   = null;
         }
+
+        return $data;
+    }    
+    
+    /**
+     * @param array $post
+     * @return array
+     */
+    public static function alterCheckboxAbleToBillValue(array $post)
+    {
+        $data = $post;
+        $isAbleToBill  = Arr::get($post, 'is_able_to_bill', false);
+
+        $data['is_able_to_bill'] = ($isAbleToBill == 'on') ? 1 : 0;
 
         return $data;
     }

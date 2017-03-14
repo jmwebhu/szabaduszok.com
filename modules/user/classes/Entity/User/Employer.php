@@ -85,6 +85,6 @@ class Entity_User_Employer extends Entity_User
     protected function fixPost(array $post)
     {
         $data = parent::fixPost($post);
-        return Text_User::alterCheckboxValue($data);
+        return Text_User::alterCheckboxCompanyValue($data);
     }
 }

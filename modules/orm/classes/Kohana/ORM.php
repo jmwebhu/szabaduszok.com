@@ -370,8 +370,18 @@ class Kohana_ORM extends Model implements serializable {
 					$this->$index = NULL;
 				}
 			}
-		}
 
+			// A checkbox ertekek on/off lecserelesere
+			/*$tmpValue = Arr::get($post, $index);
+            if ($value['type'] == 'tinyint' && $tmpValue == 'on') {
+                $this->{$index} = 1;
+            }
+
+            if ($value['type'] == 'tinyint' && !$tmpValue) {
+                $this->{$index} = 0;
+            }*/
+		}
+		
 		return $this;
 	}
 
