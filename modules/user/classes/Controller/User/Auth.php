@@ -100,9 +100,8 @@ class Controller_User_Auth extends Controller_User
             return false;
         }
 
-        if (Session::instance()->get('redirect_url')) {
-            $this->_url = Session::instance()->get('redirect_url');
-            Session::instance()->delete('redirect_url');
+        if ($url = Session::instance()->get_once('redirect_url')) {
+            $this->_url = $url;
         }
 
         header('Location: ' . $this->_url, true, 302);
