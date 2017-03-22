@@ -27,11 +27,13 @@
 								<div class="divider-h project-title-divider">
 									<span class="divider"></span>
 								</div>
-								
-								<span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray"></span>
-								{% for profession in relations[project.getProjectId()]['professions'] %}
-								<span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
-								{% endfor %}		
+
+                                {% if relations[project.getProjectId()]['professions'] %}
+									<span class="ion ion-university pull-left icon-sm project-profession-sign icon-dark-gray"></span>
+									{% for profession in relations[project.getProjectId()]['professions'] %}
+										<span id="{{ profession.profession_id }}" class="tag profession-list">{{ profession.name }}</span>
+									{% endfor %}
+								{% endif %}
 							
 								
 								<h4 class="mg-md db cb pt10 project-salary">
@@ -47,11 +49,13 @@
 								<p class="text-left text-right project-share-date">
 									Megosztva: {{ project.getCreatedAt()|date('Y-m-d') }}
 								</p>
-								
-								<span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray"></span>
-								{% for skill in relations[project.getProjectId()]['skills'] %}
-								<span id="{{ skill.skill_id }}" class="tag skill-list">{{ skill.name }}</span>
-								{% endfor %}	
+
+                                {% if relations[project.getProjectId()]['skills'] %}
+                                    <span class="ion ion-wrench pull-left icon-sm project-skill-sign project-list-skill-sign icon-dark-gray"></span>
+                                    {% for skill in relations[project.getProjectId()]['skills'] %}
+                                    <span id="{{ skill.skill_id }}" class="tag skill-list">{{ skill.name }}</span>
+                                    {% endfor %}
+								{% endif %}
 							</div>
 						</div>
 					</a>
