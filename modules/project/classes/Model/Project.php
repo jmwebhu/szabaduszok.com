@@ -1,10 +1,5 @@
 <?php
 
-/**
- * class Model_Project
- *
- * Felelosseg: Projekt lekerdezesek
- */
 class Model_Project extends ORM
 {
     protected $_table_name = 'projects';

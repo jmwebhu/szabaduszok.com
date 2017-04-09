@@ -165,6 +165,7 @@ Kohana::modules(array(
     'listview'    => MODPATH.'listview',
     'notification'    => MODPATH.'notification',
     'message'    => MODPATH.'message',
+    'subscription'    => MODPATH.'subscription',
 
 	));
 

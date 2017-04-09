@@ -2,7 +2,12 @@
 
 class Controller_Test extends Controller_DefaultTemplate
 {
-    public function action_index() { }
+    public function action_index()
+    {
+        $sub = new Model_Subscription(1);
+        echo Debug::vars($sub->object());
+        exit;
+    }
     
     public function action_generatemessagesfreelancer()
     {

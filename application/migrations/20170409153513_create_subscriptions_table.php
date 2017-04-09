@@ -13,13 +13,14 @@ class create_subscriptions_table extends Migration
                 'user_type'       => ['integer'],
                 'price'           => ['integer'],
                 'usable_products' => ['text'],
-                'code_name'       => ['string[255]']
-            ]
+                'hash'            => ['string[255]'],
+            ],
+            'subscription_id'
         );
     }
 
     public function down()
     {
-         $this->drop_table('subscriptions');
+        $this->drop_table('subscriptions');
     }
 }
