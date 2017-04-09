@@ -2,6 +2,7 @@
 
 define('UNITTEST', true);
 
+
 /**
  * The directory in which your application specific resources are located.
  * The application directory must contain the bootstrap.php file.
@@ -41,6 +42,8 @@ define('EXT', '.php');
  * compensate.
  */
 define('DOCROOT', realpath(dirname(__FILE__).'/../../').DIRECTORY_SEPARATOR);
+
+require DOCROOT . 'vendor/autoload.php';
 
 /**
  * Set the PHP error reporting level. If you set this in php.ini, you remove this.

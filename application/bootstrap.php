@@ -4,8 +4,11 @@
 
 // Load the core Kohana class
 require SYSPATH.'classes/Kohana/Core'.EXT;
+require DOCROOT . 'vendor/autoload.php';
 
 $baseconfig = include "config/base.php";
+
+
 
 if (is_file(APPPATH.'classes/Kohana'.EXT))
 {
@@ -17,6 +20,9 @@ else
 	// Load empty core extension
 	require SYSPATH.'classes/Kohana'.EXT;
 }
+
+Kohana::$factory = \Joomartin\Utils\Kohana\Testing\ModelFactory::instance();
+require 'config/model_factory.php';
 
 /**
  * Set the default time zone.
@@ -130,6 +136,8 @@ Kohana::$log->attach(new Log_File(APPPATH.'logs'));
  * Attach a file reader to config. Multiple readers are supported.
  */
 Kohana::$config->attach(new Config_File);
+
+
 
 /**
  * Enable modules. Modules are referenced by a relative or absolute path.

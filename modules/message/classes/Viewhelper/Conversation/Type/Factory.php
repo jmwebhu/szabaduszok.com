@@ -3,8 +3,9 @@
 abstract class Viewhelper_Conversation_Type_Factory
 {
     /**
-     * @param  Conversatoin $conversation 
-     * @return Conversation_Viewhelper_Type                     
+     * @param Conversation|Conversatoin $conversation
+     * @param null $authUser
+     * @return Conversation_Viewhelper_Type
      */
     public static function createType(Conversation $conversation, $authUser = null)
     {

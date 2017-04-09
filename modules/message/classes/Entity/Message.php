@@ -133,6 +133,8 @@ class Entity_Message extends Entity implements Message, Notification_Subject
 
     /**
      * @param array $data
+     * @param Gateway_Socket_Message|null $socket
+     * @return bool|int
      */
     public function submit(array $data, Gateway_Socket_Message $socket = null)
     {
