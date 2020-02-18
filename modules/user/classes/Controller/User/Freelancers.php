@@ -31,6 +31,16 @@ class Controller_User_Freelancers extends Controller_List
 
     protected function doSearch()
     {
+        try {
+            DB::insert('search_logs', ['content', 'user_id', 'created_at'])
+                ->values([
+                    'content'       => json_encode(Input::post_all()),
+                    'user_id'       => Auth::instance()->get_user()->user_id,
+                    'created_at'    => date('Y-m-d H:i:s')
+                ])
+                ->execute();
+        } catch (Exception $e) {}
+
         $this->_entity->setSearch(Search_Factory_User::makeSearch(Input::post_all()));
         $this->_matchedModels = $this->_entity->search();
     }
