@@ -4,22 +4,22 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
 {
     public function action_index()
     {
-        try {
+        try {            
             $loggedIn = Auth::instance()->get_user();
-            $this->throwForbiddenExceptionIfNot($loggedIn->loaded());
+            $this->throwForbiddenExceptionIfNot($loggedIn->loaded());            
 
             $this->handleSessionError();
             $slug = $this->request->param('slug');
-            $this->throwNotFoundExceptionIfNot($slug);
+            $this->throwNotFoundExceptionIfNot($slug);            
 
             $userModel = $this->getUserModel();
             $userModel = $userModel->getBySlug($slug);
-            $this->throwNotFoundExceptionIfNot($userModel->loaded());
+            $this->throwNotFoundExceptionIfNot($userModel->loaded());            
 
             $this->_user        = Entity_User::createUser($this->getUserType(), $userModel);
-            $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);
+            $this->_viewhelper  = Viewhelper_User_Factory::createViewhelper($this->_user, Viewhelper_User::ACTION_CREATE);            
 
-            $this->setContext();
+            $this->setUp();
 
         } catch (HTTP_Exception_404 $exnf) {
             Session::instance()->set('error', $exnf->getMessage());
@@ -38,20 +38,20 @@ abstract class Controller_User_Profile extends Controller_User implements Contro
         }
     }
 
-    protected function setContext()
+    protected function setUp()
     {
         $this->context->user            = $this->_user;
         $this->context->title           = $this->getTitle() . ' ' . $this->_user->getName();
-        $this->context->profileTitle    = $this->getTitle();
+        $this->context->profileTitle    = $this->getTitle();        
 
         $authorization              = new Authorization_User($this->_user->getModel());
 
         $this->context->canRate     = (int)$authorization->canRate();
-        $this->context->canEdit     = (int)$authorization->canEdit();
+        $this->context->canEdit     = (int)$authorization->canEdit();        
 
         if ($this->context->canEdit) {
             $this->context->editUrl = $this->_viewhelper->getEditUrl();
-        }
+        }        
 
         $loggedUser                 = Auth::instance()->get_user();
         $ownRating                  = Model_User_Rating::getRating($loggedUser, $this->_user->getModel());
